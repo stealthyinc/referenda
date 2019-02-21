@@ -24,7 +24,7 @@ export class Blogposts extends React.Component {
   };
 
   state = {
-    data: data.getArticles('post'),
+    data: data.getArticles('article'),
   };
 
   extractItemKey = (item) => `${item.id}`;

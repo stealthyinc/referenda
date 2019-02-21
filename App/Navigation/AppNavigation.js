@@ -1,8 +1,10 @@
 import React from 'react'
 import { createDrawerNavigator, createBottomTabNavigator, TabBarBottom, createSwitchNavigator } from 'react-navigation'
 import { createStackNavigator, createAppContainer } from 'react-navigation'
-import Ionicons from 'react-native-vector-icons/Ionicons'
+import CameraScreen from '../Containers/CameraScreen'
+import VideoScreen from '../Containers/VideoScreen'
 
+import Ionicons from 'react-native-vector-icons/Ionicons'
 import { AppRoutes } from '../Navigation/RoutesBuilder'
 import * as Screens from '../Screens'
 import { withRkTheme } from 'react-native-ui-kitten'
@@ -61,7 +63,7 @@ const FeedNav = createStackNavigator({
   Article: {
     screen: Screens.Article
   },
-  ProfileV1: {
+  Profile: {
     screen: Screens.ProfileV1
   },
   Comments: {
@@ -89,6 +91,9 @@ const FeedNav = createStackNavigator({
 const MessageNav = createStackNavigator({
   Home: {
     screen: Screens.ChatList
+  },
+  ProfileV1: {
+    screen: Screens.ProfileV1
   },
   Chat: {
     screen: Screens.Chat
@@ -129,8 +134,29 @@ const NotificationNav = createStackNavigator({
   }),
 })
 
+const CameraNav = createStackNavigator({
+  Home: {
+    screen: CameraScreen
+  }
+}, {
+  initialRouteName: '',
+  headerMode: 'screen',
+  cardStyle: { backgroundColor: 'transparent' },
+  transitionConfig: Transition,
+  navigationOptions: ({ navigation }) => ({
+    gesturesEnabled: false,
+    tabBarIcon: ({ focused, tintColor }) => {
+      const { routeName } = navigation.state
+      let iconName = `ios-camera`
+      return <Ionicons name={iconName} size={30} color={tintColor} />
+    },
+    headerStyle: styles.header
+  }),
+})
+
 const TabNav = createBottomTabNavigator({
   Feed: FeedNav,
+  Camera: CameraNav,
   Notifications: NotificationNav,
   Messages: MessageNav
 }, {

@@ -35,13 +35,18 @@ export class Article extends React.Component {
   }
 
   onAvatarPressed = () => {
-    this.props.navigation.navigate('ProfileV1', { id: this.data.user.id });
+    this.props.navigation.navigate('Profile', { id: this.data.user.id });
   };
 
   render = () => (
     <ScrollView style={styles.root}>
       <RkCard rkType='article'>
-        <Image rkCardImg source={this.data.photo} />
+        <TouchableOpacity
+          delayPressIn={70}
+          activeOpacity={0.8}
+          onPress={() =>  this.props.navigation.navigate('Video')}>
+          <Image rkCardImg source={this.data.photo} />
+        </TouchableOpacity>
         <View rkCardHeader>
           <View>
             <RkText style={styles.title} rkType='header4'>{this.data.header}</RkText>
@@ -72,5 +77,5 @@ const styles = RkStyleSheet.create(theme => ({
   },
   title: {
     marginBottom: 5,
-  },
+  }
 }));
