@@ -19,9 +19,14 @@ import { KittenTheme } from '../../Config/Theme';
 import { scale, scaleVertical } from '../../Utils/scale';
 import NavigationType from '../../Navigation/propTypes';
 
+import verified from './../../Assets/images/verified.png'
+
 const delay = 500;
 
 export class SplashScreen extends React.Component {
+  static navigationOptions = {
+    header: null
+  };
   static propTypes = {
     navigation: NavigationType.isRequired,
   };
@@ -58,24 +63,35 @@ export class SplashScreen extends React.Component {
     this.props.navigation.dispatch(toHome);
   };
 
+//           style={[styles.image, { width: Dimensions.get('window').width }]}
   render = () => (
     <View style={styles.container}>
-      <View>
-        <Image
-          style={[styles.image, { width: Dimensions.get('window').width }]}
-          source={null}
-        />
-        <View style={styles.text}>
-          <RkText rkType='logo' style={styles.appName}>Referenda</RkText>
-          <RkText rkType='light' style={styles.hero}>Stealthy Inc.</RkText>
-        </View>
+      <View id='top-spacer' style={{flex: 4}}/>
+
+      <View style={styles.text}>
+        <RkText rkType='basic' style={styles.appName}>Referenda</RkText>
       </View>
+
+      <View id='mid-spacer' style={{alignItems: 'center', flex: 14}}>
+        <Image
+          id='splash-screen-img'
+          style={{height:'75%', width:'75%', marginTop:'12%', resizeMode: 'contain'}}
+          source={verified}/>
+      </View>
+
+      <View style={styles.text}>
+        <RkText rkType='light' style={styles.hero}>Stealthy Inc.</RkText>
+      </View>
+
+      <View id='bottom-spacer-1' style={{flex: 1}}/>
+
       <ProgressBar
         color={RkTheme.current.colors.accent}
         style={styles.progress}
         progress={this.state.progress}
-        width={scale(320)}
-      />
+        width={scale(320)}/>
+
+      <View id='bottom-spacer-2' style={{flex: 1}}/>
     </View>
   );
 }
@@ -87,14 +103,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   image: {
-    resizeMode: 'cover',
-    height: scaleVertical(330),
+    resizeMode: 'contain',
   },
   text: {
     alignItems: 'center',
   },
   hero: {
-    fontSize: 37,
+    fontSize: 20,
   },
   appName: {
     fontSize: 62,
