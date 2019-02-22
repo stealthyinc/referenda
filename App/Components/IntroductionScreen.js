@@ -18,7 +18,9 @@ import censor from '../Assets/images/censor.png'
 // From: https://www.pexels.com/photo/man-wearing-gray-coat-standing-in-the-middle-of-the-road-936142/
 import chat from '../Assets/images/launch1l-your-voice.jpg'
 // From: https://www.pexels.com/photo/dark-fire-time-paper-33930/
-import security from '../Assets/images/launch2-your-time.jpg'
+// import security from '../Assets/images/launch2-your-time.jpg'
+// From: https://www.pexels.com/photo/clear-glass-with-red-sand-grainer-39396/
+import security from '../Assets/images/launch2a-your-time.jpg'
 // From: https://www.pexels.com/photo/boy-holding-sparkler-1565521/
 import blockchain from '../Assets/images/launch3-your-community.jpg'
 
