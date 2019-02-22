@@ -12,7 +12,7 @@ const moment = require('moment');
 
 export class Notifications extends React.Component {
   static navigationOptions = {
-    title: 'Notifications',
+    title: 'Notifications'.toUpperCase(),
   };
 
   state = {
