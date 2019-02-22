@@ -60,7 +60,7 @@ const slides = [
   {
     key: 'somethun',
     title: 'Your voice matters.',
-    text: 'Referenda makes your voice heard by your political representatives on issues that are important to you.',
+    text: 'Referenda makes your voice heard by your political representatives on issues that matter to you for actionable change.',
     image: chat,
     imageStyle: styles.image,
     colors: ['#63E2FF', '#B066FE'],

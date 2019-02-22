@@ -20,7 +20,7 @@ export class Blogposts extends React.Component {
     navigation: NavigationType.isRequired,
   };
   static navigationOptions = {
-    title: 'Blogposts'.toUpperCase(),
+    title: 'Proposals'.toUpperCase(),
   };
 
   state = {
