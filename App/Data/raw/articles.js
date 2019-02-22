@@ -1,10 +1,12 @@
 const articles = [{
   id: 1,
-  photo: require('../img/photo1.png'),
+  photo: require('../img/warren1.jpg'),
   type: 'article',
   time: -300,
-  header: 'Plants Of Our Nature',
-  text: 'Ferns are a very old group of plants. They first appeared on Earth in the middle Devonian Era about 360 million years ago, just before the Carboniferous Era. Most of the modern fern families we see today first appeared in the Late Cretaceous about 45 or 50 million years ago – during the age of the dinosaurs!',
+  header: 'Universal Child Care',
+  text: `Democratic presidential candidate Elizabeth Warren proposed a universal child care plan that would limit American families’ expenses to 7 percent of ` +
+  `income regardless of how many children they have in care -- paid for by a tax on the ultra-wealthy. \nThe Massachusetts senator’s plan, unveiled Tuesday on ` + 
+  `Medium.com, would make child care free for families with incomes below 200 percent of the poverty level, or less than $51,500 for a family of four. `,
   comments: [{
     id: 1,
     text: 'Aliquam sit amet diam in magna bibendum imperdiet. Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis. Fusce posuere felis sed lacus. Morbi sem mauris, laoreet ut, rhoncus aliquet, pulvinar sed, nisl. Nunc rhoncus dui vel sem.',
@@ -40,41 +42,42 @@ const articles = [{
   }],
 }, {
   id: 2,
-  photo: require('../img/photo2.png'),
+  photo: require('../img/bernie1.jpg'),
   type: 'article',
   time: -1373,
-  header: 'Balloon Trip',
-  text: 'Mostly it’s about hot air - for without that balloons are just big empty bags with baskets on the bottom. ' +
-  'The Montgolfier brothers had great hopes when they made the first manned flight. ' +
-  'They thought balloons would take off as an available means of commercial flight. ' +
-  'Instead, they have remained the province of sport, adventure and enjoyment. ' +
-  'Modern balloons are a lot more sophisticated than their ancestors, ' +
-  'but they still retain the essential characteristics which makes them so attractive. ' +
-  'A plane is claustrophobic and very noisy. Balloons are so gentle and majestic and silent when the burner’s not working.',
+  header: 'Save Social Security ',
+  text: `Sen. Bernie Sanders has a plan to add more than 50 years of sustainability to Social Security, the New Deal-era program that's facing a looming cash crunch.` +
+  `The proposal would shore up Social Security with payroll taxes on income above $250,000, the Vermont independent announced Wednesday. \nIt's the latest in a flurry ` + 
+  `of ambitious legislation being floated by lawmakers with their eyes on the 2020 Democratic presidential nomination.`,
   comments: [],
 }, {
   id: 3,
-  photo: require('../img/photo3.png'),
+  photo: require('../img/guadido1.jpg'),
   type: 'article',
   time: -2446,
-  header: 'Sea World',
-  text: 'The worlds oceans cover two thirds of our planet. As we take a dive from the rocks or paddle out from the beach, we are entering a place which is teeming with marine life. ' +
-  'From fish to crabs to octopuses or even sea creatures that have not yet been discovered, the oceans and its coastlines are an amazing and interesting foray of water wildlife.',
+  header: 'Parlamento Andino',
+  text: `Este jueves, el Parlamento Andino acordó reconocer a Juan Guaidó como Presidente encargado de Venezuela. `+ 
+  `\nLa decisión fue tomada en la sesión plenaria realizada este 21 de febrero en Bogotá, Colombia, en la que participaron ` + 
+  `parlamentarios de Perú, Ecuador, Bolivia, Colombia y Chile, país que estuvo representado por el senador de la UDI Alejandro ` +
+  `García Huidobro tras decisión de la Cámara Alta.`,
   comments: [],
-}, {
+},
+{
   id: 4,
-  photo: require('../img/photo4.png'),
+  photo: require('../img/kamala1.jpg'),
   type: 'article',
-  time: -3519,
-  header: 'Flowers',
-  text: 'Flowers did not always exist; they first appeared 140 million years ago. Before that, ferns and cone bearing trees dominated the earth. ' +
-  'Several centuries ago in Holland, tulips were more valuable than gold. ' +
-  'Broccoli is actually a flower. Some plants such as orchids do not need soil to grow-they get all of their nutrients from the air.',
+  time: -2446,
+  header: 'The Senator I Am Today',
+  text: `When I was a young girl, I once spent an afternoon making lemon bars. I found a recipe in one of my mother’s cookbooks and set about beating the eggs, mixing ` +
+  `the ingredients, and greasing the pan. \nThe lemon bars turned out beautifully, and I was excited to show them off. So I put them on a plate, covered them with Saran ` +
+  `Wrap, and walked two doors down to our neighbor, Mrs. Shelton, who was drinking tea and laughing with her sister and my mother. I proudly showed off my creation, ` +
+  `and Mrs. Shelton took a big bite.`,
   comments: [],
-}, {
+}, 
+{
   id: 5,
   photo: require('../img/photo5.png'),
-  type: 'article',
+  type: 'article1',
   time: -4592,
   header: 'Birds Of Our Planet',
   text: 'Birds have feathers, wings, lay eggs and are warm blooded. There are around 10000 different species of birds worldwide. ' +
@@ -85,7 +88,7 @@ const articles = [{
 }, {
   id: 6,
   photo: require('../img/photo6.png'),
-  type: 'article',
+  type: 'article1',
   time: -5665,
   header: 'Mountains',
   text: 'Mountains make up about one-fifth of the world\'s landscape, and provide homes to at least one-tenth of the world\'s people. ' +
