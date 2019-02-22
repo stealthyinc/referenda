@@ -3,6 +3,7 @@ import { createDrawerNavigator, createBottomTabNavigator, TabBarBottom, createSw
 import { createStackNavigator, createAppContainer } from 'react-navigation'
 import CameraScreen from '../Containers/CameraScreen'
 import VideoScreen from '../Containers/VideoScreen'
+import IntroductionScreen from '../Components/IntroductionScreen'
 
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { AppRoutes } from '../Navigation/RoutesBuilder'
@@ -44,6 +45,9 @@ const AuthNav = createStackNavigator({
     screen: Screens.SplashScreen
   },
   Home: {
+    screen: IntroductionScreen
+  },
+  SignIn: {
     screen: Screens.LoginV2
   },
   SignUp: {
