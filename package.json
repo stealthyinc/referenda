@@ -62,7 +62,7 @@
     "react-native-svg": "^9.2.4",
     "react-native-tcp": "^3.3.0",
     "react-native-udp": "^2.5.0",
-    "react-native-ui-kitten": "git+https://github.com/akveo/react-native-ui-kitten.git",
+    "react-native-ui-kitten": "^3.1.2",
     "react-native-vector-icons": "6.1.0",
     "react-native-video": "^4.4.0",
     "react-navigation": "3.0.0",
@@ -109,7 +109,7 @@
     "reactotron-react-native": "^2.1.0",
     "reactotron-redux": "^2.1.0",
     "reactotron-redux-saga": "^2.1.0",
-    "rn-nodeify": "^10.0.1",
+    "rn-nodeify": "github:tradle/rn-nodeify",
     "snazzy": "^8.0.0",
     "standard": "10.0.2"
   },

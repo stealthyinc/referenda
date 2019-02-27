@@ -8,8 +8,6 @@ target 'referenda' do
   # Pods for referenda
   pod 'Amplitude-iOS', '~> 4.3.1'
 
-  pod 'RNKeychain', :path => '../node_modules/react-native-keychain'
-
   post_install do |installer|
     installer.pods_project.targets.each do |target|
         target.build_configurations.each do |config|

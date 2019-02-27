@@ -44,7 +44,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Referenda needs access to your camera to record video.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string/>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Referenda needs access to your microphone to record video.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>

@@ -137,6 +137,9 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-udp')
+    compile project(':react-native-tcp')
+    compile project(':react-native-os')
     compile project(':react-native-keychain')
     compile project(':react-native-amplitude-analytics')
     compile project(':react-native-randombytes')
