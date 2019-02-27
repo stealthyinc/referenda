@@ -3,6 +3,9 @@ package com.referenda;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.oblador.keychain.KeychainPackage;
+import com.sudoplz.reactnativeamplitudeanalytics.RNAmplitudeSDKPackage;
+import com.bitgo.randombytes.RandomBytesPackage;
 import org.reactnative.camera.RNCameraPackage;
 import com.brentvatne.react.ReactVideoPackage;
 import com.horcrux.svg.SvgPackage;
@@ -32,6 +35,9 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new KeychainPackage(),
+            new RNAmplitudeSDKPackage(),
+            new RandomBytesPackage(),
             new RNCameraPackage(),
             new ReactVideoPackage(),
             new SvgPackage(),

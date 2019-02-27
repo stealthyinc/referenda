@@ -1,6 +1,8 @@
 import React from 'react'
 import { createDrawerNavigator, createBottomTabNavigator, TabBarBottom, createSwitchNavigator } from 'react-navigation'
 import { createStackNavigator, createAppContainer } from 'react-navigation'
+import KeychainScreen from '../Containers/KeychainScreen'
+// import CalendarScreen from '../Containers/CalendarScreen'
 import CameraScreen from '../Containers/CameraScreen'
 import VideoScreen from '../Containers/VideoScreen'
 import IntroductionScreen from '../Components/IntroductionScreen'
@@ -62,6 +64,9 @@ const AuthNav = createStackNavigator({
 
 const FeedNav = createStackNavigator({
   Home: {
+    screen: KeychainScreen
+  },
+  Blog: {
     screen: Screens.Blogposts
   },
   Article: {
@@ -158,9 +163,30 @@ const CameraNav = createStackNavigator({
   }),
 })
 
+// const EventsNav = createStackNavigator({
+//   Home: {
+//     screen: CalendarScreen
+//   }
+// }, {
+//   initialRouteName: '',
+//   headerMode: 'screen',
+//   cardStyle: { backgroundColor: 'transparent' },
+//   transitionConfig: Transition,
+//   navigationOptions: ({ navigation }) => ({
+//     gesturesEnabled: false,
+//     tabBarIcon: ({ focused, tintColor }) => {
+//       const { routeName } = navigation.state
+//       let iconName = `ios-calendar`
+//       return <Ionicons name={iconName} size={30} color={tintColor} />
+//     },
+//     headerStyle: styles.header
+//   }),
+// })
+
 const TabNav = createBottomTabNavigator({
   Feed: FeedNav,
   Camera: CameraNav,
+  // Events: EventsNav,
   Notifications: NotificationNav,
   Messages: MessageNav
 }, {
@@ -182,7 +208,7 @@ export default createAppContainer(
     }, 
     {
       headerMode: 'none',
-      initialRouteName: 'Auth',
+      initialRouteName: 'Tab',
       navigationOptions: {
         headerStyle: styles.header
       }
