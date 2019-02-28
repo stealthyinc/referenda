@@ -1,8 +1,7 @@
 import React from 'react'
-import { createDrawerNavigator, createBottomTabNavigator, TabBarBottom, createSwitchNavigator } from 'react-navigation'
+import { createBottomTabNavigator, TabBarBottom, createSwitchNavigator } from 'react-navigation'
 import { createStackNavigator, createAppContainer } from 'react-navigation'
 import KeychainScreen from '../Containers/KeychainScreen'
-// import CalendarScreen from '../Containers/CalendarScreen'
 import CameraScreen from '../Containers/CameraScreen'
 import AuthLoadingScreen from '../Containers/AuthLoadingScreen'
 import VideoScreen from '../Containers/VideoScreen'
@@ -15,33 +14,6 @@ import { withRkTheme } from 'react-native-ui-kitten'
 import Transition from './Transitions';
 
 import styles from './Styles/NavigationStyles'
-
-// Manifest of possible screens
-// const PrimaryNav = createStackNavigator({
-//   First: {
-//     screen: Screens.SplashScreen,
-//   },
-//   Home: {
-//     screen: createDrawerNavigator(
-//       {
-//         ...AppRoutes,
-//       },
-//       {
-//         contentComponent: (props) => {
-//           const SideMenu = withRkTheme(Screens.SideMenu);
-//           return <SideMenu {...props} />;
-//         },
-//       },
-//     ),
-//   },
-// }, {
-//   // Default config for all screens
-//   headerMode: 'none',
-//   initialRouteName: '',
-//   navigationOptions: {
-//     headerStyle: styles.header
-//   }
-// })
 
 const LoadNav = createStackNavigator({
   First: {
@@ -175,26 +147,6 @@ const CameraNav = createStackNavigator({
   }),
 })
 
-// const EventsNav = createStackNavigator({
-//   Home: {
-//     screen: CalendarScreen
-//   }
-// }, {
-//   initialRouteName: '',
-//   headerMode: 'screen',
-//   cardStyle: { backgroundColor: 'transparent' },
-//   transitionConfig: Transition,
-//   navigationOptions: ({ navigation }) => ({
-//     gesturesEnabled: false,
-//     tabBarIcon: ({ focused, tintColor }) => {
-//       const { routeName } = navigation.state
-//       let iconName = `ios-calendar`
-//       return <Ionicons name={iconName} size={30} color={tintColor} />
-//     },
-//     headerStyle: styles.header
-//   }),
-// })
-
 const TabNav = createBottomTabNavigator({
   Feed: FeedNav,
   Camera: CameraNav,
@@ -221,7 +173,7 @@ export default createAppContainer(
     }, 
     {
       headerMode: 'none',
-      initialRouteName: 'Load',
+      initialRouteName: 'App',
       navigationOptions: {
         headerStyle: styles.header
       }
