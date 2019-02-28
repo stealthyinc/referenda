@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import {
   FlatList,
   View,
@@ -9,14 +10,36 @@ import {
   RkCard, RkStyleSheet,
   RkText,
 } from 'react-native-ui-kitten';
-import { Avatar } from '../../Components';
-import { data } from '../../Data';
-import NavigationType from '../../Navigation/propTypes';
+import { Avatar } from '../Components';
+import { data } from '../Data';
+import NavigationType from '../Navigation/propTypes';
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import SettingsActions from '../Redux/SettingsRedux'
 
 const moment = require('moment');
+// Add Actions - replace 'Your' with whatever your reducer is called :)
+// import YourActions from '../Redux/YourRedux'
 
-export class Blogposts extends React.Component {
+// Styles
+const styles = RkStyleSheet.create(theme => ({
+  container: {
+    backgroundColor: theme.colors.screen.scroll,
+    paddingVertical: 8,
+    paddingHorizontal: 14,
+  },
+  card: {
+    marginVertical: 8,
+  },
+  userInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  avatar: {
+    marginRight: 17,
+  },
+}));
+
+class FeedScreen extends Component {
   static propTypes = {
     navigation: NavigationType.isRequired,
   };
@@ -39,19 +62,13 @@ export class Blogposts extends React.Component {
   };
 
   async componentDidMount () {
-    this.props.navigation.setParams({ navigation: this.props.navigation, drawer: this.toggleControlPanel })
+    this.props.navigation.setParams({ navigation: this.props.navigation, drawer: this.props.settingsMenuToggle })
   }
 
   extractItemKey = (item) => `${item.id}`;
 
   onItemPressed = (item) => {
     this.props.navigation.navigate('Article', { id: item.id });
-  };
-
-  toggleControlPanel = () => {
-    this.setState({
-      isOpen: !this.state.isOpen,
-    });
   };
 
   renderItem = ({ item }) => (
@@ -90,20 +107,15 @@ export class Blogposts extends React.Component {
   );
 }
 
-const styles = RkStyleSheet.create(theme => ({
-  container: {
-    backgroundColor: theme.colors.screen.scroll,
-    paddingVertical: 8,
-    paddingHorizontal: 14,
-  },
-  card: {
-    marginVertical: 8,
-  },
-  userInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  avatar: {
-    marginRight: 17,
-  },
-}));
+const mapStateToProps = (state) => {
+  return {
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    settingsMenuToggle: () => dispatch(SettingsActions.settingsMenuToggle())
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(FeedScreen)

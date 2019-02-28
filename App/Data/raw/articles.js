@@ -1,12 +1,12 @@
 const articles = [{
   id: 1,
-  photo: require('../img/warren1.jpg'),
+  photo: require('../img/democracy1.png'),
   type: 'article',
   time: -300,
   header: 'Universal Child Care',
-  text: `Democratic presidential candidate Elizabeth Warren proposed a universal child care plan that would limit American families’ expenses to 7 percent of ` +
-  `income regardless of how many children they have in care -- paid for by a tax on the ultra-wealthy. \nThe Massachusetts senator’s plan, unveiled Tuesday on ` + 
-  `Medium.com, would make child care free for families with incomes below 200 percent of the poverty level, or less than $51,500 for a family of four. `,
+  text: `CA 12th district congressional candidate Agatha Bacelar proposed a universal child care plan that would limit American families’ expenses to 7 percent of ` +
+  `income regardless of how many children they have in care -- paid for by a tax on the ultra-wealthy. \n\nIt's the latest in a flurry ` + 
+  `of ambitious legislation being floated by lawmakers with their eyes on the 2020 elections.`,
   comments: [{
     id: 1,
     text: 'Aliquam sit amet diam in magna bibendum imperdiet. Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis. Fusce posuere felis sed lacus. Morbi sem mauris, laoreet ut, rhoncus aliquet, pulvinar sed, nisl. Nunc rhoncus dui vel sem.',
@@ -42,18 +42,17 @@ const articles = [{
   }],
 }, {
   id: 2,
-  photo: require('../img/bernie1.jpg'),
+  photo: require('../img/democracy2.jpg'),
   type: 'article',
   time: -1373,
   header: 'Save Social Security ',
-  text: `Sen. Bernie Sanders has a plan to add more than 50 years of sustainability to Social Security, the New Deal-era program that's facing a looming cash crunch.` +
-  `The proposal would shore up Social Security with payroll taxes on income above $250,000, the Vermont independent announced Wednesday. \nIt's the latest in a flurry ` + 
-  `of ambitious legislation being floated by lawmakers with their eyes on the 2020 Democratic presidential nomination.`,
+  text: `Congressional hopeful Agatha Bacelar has a plan to add more than 50 years of sustainability to Social Security, the New Deal-era program that's facing a looming cash crunch.` +
+  `\n\nThe proposal would shore up Social Security with payroll taxes on income above $250,000, the Vermont independent announced Wednesday.`,
   comments: [],
 }, {
   id: 3,
   photo: require('../img/guadido1.jpg'),
-  type: 'article',
+  type: 'article1',
   time: -2446,
   header: 'Parlamento Andino',
   text: `Este jueves, el Parlamento Andino acordó reconocer a Juan Guaidó como Presidente encargado de Venezuela. `+ 
@@ -65,7 +64,7 @@ const articles = [{
 {
   id: 4,
   photo: require('../img/kamala1.jpg'),
-  type: 'article',
+  type: 'article1',
   time: -2446,
   header: 'The Senator I Am Today',
   text: `When I was a young girl, I once spent an afternoon making lemon bars. I found a recipe in one of my mother’s cookbooks and set about beating the eggs, mixing ` +

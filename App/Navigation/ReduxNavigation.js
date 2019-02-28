@@ -5,9 +5,12 @@ import {
   reduxifyNavigator
 } from 'react-navigation-redux-helpers'
 import { connect } from 'react-redux'
+import SettingsActions from '../Redux/SettingsRedux'
 import AppNavigation from './AppNavigation'
 import { Bootstrap } from '../Config/Bootstrap'
 import { data } from '../Data'
+import SideMenu from 'react-native-side-menu'
+import Settings from '../Components/SettingsScreen'
 
 createReactNavigationReduxMiddleware(
   'root',
@@ -38,13 +41,27 @@ class ReduxNavigation extends Component {
     if (Platform.OS === 'ios') return
     BackHandler.removeEventListener('hardwareBackPress', undefined)
   }
-  
+
   render () {
-    return <ReduxAppNavigator dispatch={this.props.dispatch} state={this.props.nav} />
+    return (
+      <SideMenu
+        menu={<Settings />}
+        isOpen={this.props.open}
+        openMenuOffset={300}
+        onChange={isOpen => this.props.dispatch(SettingsActions.settingsMenuUpdate(isOpen))}
+      >
+        <ReduxAppNavigator dispatch={this.props.dispatch} state={this.props.nav} />
+
+      </SideMenu>
+    )
   }
 }
 
-const mapStateToProps = state => ({
-  nav: state.nav
-})
+const mapStateToProps = (state) => {
+  return {
+    nav: state.nav,
+    open: state.settings.open
+  }
+}
+
 export default connect(mapStateToProps)(ReduxNavigation)

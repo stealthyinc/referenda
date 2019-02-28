@@ -18,10 +18,6 @@ import {
 import { FontAwesome } from '../Assets/icons';
 
 export default class SettingsScreen extends Component {
-  static navigationOptions = {
-    title: 'Settings'.toUpperCase(),
-  };
-
   state = {
     sendPush: true,
     shouldRefresh: false,

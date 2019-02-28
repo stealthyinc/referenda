@@ -17,10 +17,6 @@ import {
 import { FontAwesome } from '../../Assets/icons';
 
 export class Settings extends React.Component {
-  static navigationOptions = {
-    title: 'Settings'.toUpperCase(),
-  };
-
   state = {
     sendPush: true,
     shouldRefresh: false,

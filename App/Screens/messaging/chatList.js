@@ -23,7 +23,7 @@ export class ChatList extends React.Component {
     navigation: NavigationType.isRequired,
   };
   static navigationOptions = {
-    title: 'Chats'.toUpperCase(),
+    title: 'Messages'.toUpperCase(),
   };
 
   state = {

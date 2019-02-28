@@ -1,6 +1,7 @@
 import React from 'react'
 import { createBottomTabNavigator, TabBarBottom, createSwitchNavigator } from 'react-navigation'
 import { createStackNavigator, createAppContainer } from 'react-navigation'
+import FeedScreen from '../Containers/FeedScreen'
 import KeychainScreen from '../Containers/KeychainScreen'
 import CameraScreen from '../Containers/CameraScreen'
 import AuthLoadingScreen from '../Containers/AuthLoadingScreen'
@@ -51,7 +52,7 @@ const AuthNav = createStackNavigator({
 
 const FeedNav = createStackNavigator({
   Home: {
-    screen: Screens.Blogposts
+    screen: FeedScreen
   },
   Article: {
     screen: Screens.Article
@@ -156,6 +157,7 @@ const TabNav = createBottomTabNavigator({
 }, {
   tabBarOptions: {
     activeTintColor: '#34bbed',
+    showLabel: false,
     inactiveTintColor: 'gray'
   },
   tabBarComponent: TabBarBottom,
@@ -173,7 +175,7 @@ export default createAppContainer(
     }, 
     {
       headerMode: 'none',
-      initialRouteName: 'App',
+      initialRouteName: 'Load',
       navigationOptions: {
         headerStyle: styles.header
       }
