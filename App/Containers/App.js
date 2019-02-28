@@ -4,10 +4,10 @@ import React, { Component } from 'react'
 import { Provider } from 'react-redux'
 import RootContainer from './RootContainer'
 import createStore from '../Redux'
+const { RefCrypto } = require('../Utils/RefCrypto')
 console.disableYellowBox = true;
 // create our store
 const store = createStore()
-const { Bip39 } = require ('../Utils/Bip39')
 /**
  * Provides an entry point into our application.  Both index.ios.js and index.android.js
  * call this component first.
@@ -19,7 +19,6 @@ const { Bip39 } = require ('../Utils/Bip39')
  */
 class App extends Component {
   render () {
-    console.log('generateMnemonic phrases', Bip39.generateMnemonic())
     return (
       <Provider store={store}>
         <RootContainer />

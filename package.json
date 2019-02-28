@@ -21,14 +21,18 @@
     "lint": "standard --verbose | snazzy",
     "lintdiff": "git diff --name-only --cached --relative | grep '\\.js$' | xargs standard | snazzy",
     "fixcode": "standard --fix",
-    "git-hook": "npm run lint -s && npm run test -s"
+    "git-hook": "npm run lint -s && npm run test -s",
+    "postinstall": "rn-nodeify --install buffer,stream,assert,events,crypto,vm --hack && cd node_modules/bs58 && yarn add base-x@3.0.4 && cd ../../"
   },
   "dependencies": {
     "@tradle/react-native-http": "^2.0.1",
     "apisauce": "^0.14.2",
     "aws-amplify": "^1.1.19",
     "aws-amplify-react-native": "^2.1.7",
+    "bitcoinjs-lib": "^4.0.3",
     "browserify-zlib": "^0.1.4",
+    "buffer": "5",
+    "buffer-reverse": "^1.0.1",
     "dns.js": "^1.0.1",
     "events": "^1.1.1",
     "format-json": "^1.0.3",

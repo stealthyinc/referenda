@@ -4,6 +4,7 @@ import { createStackNavigator, createAppContainer } from 'react-navigation'
 import KeychainScreen from '../Containers/KeychainScreen'
 // import CalendarScreen from '../Containers/CalendarScreen'
 import CameraScreen from '../Containers/CameraScreen'
+import AuthLoadingScreen from '../Containers/AuthLoadingScreen'
 import VideoScreen from '../Containers/VideoScreen'
 import IntroductionScreen from '../Components/IntroductionScreen'
 
@@ -42,10 +43,21 @@ import styles from './Styles/NavigationStyles'
 //   }
 // })
 
-const AuthNav = createStackNavigator({
+const LoadNav = createStackNavigator({
   First: {
     screen: Screens.SplashScreen
   },
+  Home: {
+    screen: AuthLoadingScreen
+  }
+}, {
+  initialRouteName: '',
+  navigationOptions: {
+    headerStyle: styles.header
+  }
+})
+
+const AuthNav = createStackNavigator({
   Home: {
     screen: IntroductionScreen
   },
@@ -54,6 +66,9 @@ const AuthNav = createStackNavigator({
   },
   SignUp: {
     screen: Screens.SignUp
+  },
+  Keychain: {
+    screen: KeychainScreen
   }
 }, {
   initialRouteName: '',
@@ -64,9 +79,6 @@ const AuthNav = createStackNavigator({
 
 const FeedNav = createStackNavigator({
   Home: {
-    screen: KeychainScreen
-  },
-  Blog: {
     screen: Screens.Blogposts
   },
   Article: {
@@ -203,12 +215,13 @@ const TabNav = createBottomTabNavigator({
 export default createAppContainer(
   createSwitchNavigator(
     {
+      Load: LoadNav,
       Auth: AuthNav,
-      Tab: TabNav
+      App: TabNav
     }, 
     {
       headerMode: 'none',
-      initialRouteName: 'Tab',
+      initialRouteName: 'Load',
       navigationOptions: {
         headerStyle: styles.header
       }
