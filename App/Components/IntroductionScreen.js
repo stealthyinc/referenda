@@ -199,7 +199,7 @@ export default class Introduction extends Component {
         renderItem={this._renderItem}
         bottomButton
         buttonStyle={{borderRadius:15, backgroundColor:'#FF8C00'}}
-        onDone={() => this.props.navigation.navigate('SignIn')}
+        onDone={() => this.props.navigation.navigate('Login')}
         dotStyle={{backgroundColor: 'black'}}
         activeDotStyle={{backgroundColor: 'green'}}
       />

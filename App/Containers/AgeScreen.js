@@ -1,10 +1,8 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux'
+import React, { Component } from 'react'
 import {
   View,
   Image,
   Keyboard,
-  SegmentedControlIOS,
 } from 'react-native';
 import {
   RkButton,
@@ -17,27 +15,14 @@ import {
 import { GradientButton } from '../Components/';
 import { scaleVertical } from '../Utils/scale';
 import NavigationType from '../Navigation/propTypes';
+import { connect } from 'react-redux'
 
-import * as Keychain from 'react-native-keychain';
-
-const ACCESS_CONTROL_OPTIONS = ['None', 'Passcode', 'Password'];
-const ACCESS_CONTROL_MAP = [null, Keychain.ACCESS_CONTROL.DEVICE_PASSCODE, Keychain.ACCESS_CONTROL.APPLICATION_PASSWORD, Keychain.ACCESS_CONTROL.BIOMETRY_CURRENT_SET]
-
-class KeychainScreen extends Component {
+class AgeScreen extends Component {
   static navigationOptions = {
     header: null,
-  }
-
+  };
   static propTypes = {
     navigation: NavigationType.isRequired,
-  };
-
-  state = {
-    username: '',
-    password: '',
-    status: '',
-    biometryType: null,
-    accessControl: null,
   };
 
   getThemeImageSource = (theme) => (
@@ -49,53 +34,8 @@ class KeychainScreen extends Component {
     <Image style={styles.image} source={this.getThemeImageSource(RkTheme.current)} />
   );
 
-  componentDidMount() {
-    Keychain.getSupportedBiometryType().then(biometryType => {
-      this.setState({ biometryType });
-    });
-  }
-
-  async save(accessControl) {
-    try {
-      await Keychain.setGenericPassword(
-        this.state.username,
-        this.state.password,
-        { accessControl: this.state.accessControl }
-      );
-      this.setState({ username: '', password: '', status: 'Credentials saved!' });
-    } catch (err) {
-      this.setState({ status: 'Could not save credentials, ' + err });
-    }
-  }
-
-  async load() {
-    try {
-      const credentials = await Keychain.getGenericPassword();
-      if (credentials) {
-        this.setState({ ...credentials, status: 'Credentials loaded!' });
-      } else {
-        this.setState({ status: 'No credentials stored.' });
-      }
-    } catch (err) {
-      this.setState({ status: 'Could not load credentials. ' + err });
-    }
-  }
-
-  async reset() {
-    try {
-      await Keychain.resetGenericPassword();
-      this.setState({
-        status: 'Credentials Reset!',
-        username: '',
-        password: '',
-      });
-    } catch (err) {
-      this.setState({ status: 'Could not reset credentials, ' + err });
-    }
-  }
-
-  onSignUpButtonPressed = () => {
-    this.props.navigation.navigate('App');
+  onAgeButtonPressed = () => {
+    this.props.navigation.navigate('Keychain');
   };
 
   onSignInButtonPressed = () => {
@@ -109,24 +49,16 @@ class KeychainScreen extends Component {
       onResponderRelease={() => Keyboard.dismiss()}>
       <View style={{ alignItems: 'center' }}>
         {this.renderImage()}
-        <RkText rkType='h1'>Access Control</RkText>
+        <RkText rkType='h1'>Age</RkText>
       </View>
       <View style={styles.content}>
         <View>
-          <SegmentedControlIOS
-            selectedIndex={0}
-            values={this.state.biometryType ? [...ACCESS_CONTROL_OPTIONS, this.state.biometryType] : ACCESS_CONTROL_OPTIONS}
-            onChange={({ nativeEvent }) => {
-              this.setState({
-                accessControl: ACCESS_CONTROL_MAP[nativeEvent.selectedSegmentIndex],
-              });
-            }}
-          />
+          <RkTextInput rkType='rounded' placeholder='Age' />
           <GradientButton
             style={styles.save}
             rkType='large'
             text='NEXT'
-            onPress={this.onSignUpButtonPressed}
+            onPress={this.onAgeButtonPressed}
           />
         </View>
         <View style={styles.footer}>
@@ -185,4 +117,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(KeychainScreen)
+export default connect(mapStateToProps, mapDispatchToProps)(AgeScreen)

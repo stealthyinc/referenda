@@ -1,6 +1,9 @@
 import React from 'react'
 import { createBottomTabNavigator, TabBarBottom, createSwitchNavigator } from 'react-navigation'
 import { createStackNavigator, createAppContainer } from 'react-navigation'
+import AgeScreen from '../Containers/AgeScreen'
+import TelephoneScreen from '../Containers/TelephoneScreen'
+import LoginScreen from '../Containers/LoginScreen'
 import FeedScreen from '../Containers/FeedScreen'
 import KeychainScreen from '../Containers/KeychainScreen'
 import CameraScreen from '../Containers/CameraScreen'
@@ -34,11 +37,14 @@ const AuthNav = createStackNavigator({
   Home: {
     screen: IntroductionScreen
   },
-  SignIn: {
-    screen: Screens.LoginV2
+  Login: {
+    screen: LoginScreen
   },
-  SignUp: {
-    screen: Screens.SignUp
+  Telephone: {
+    screen: TelephoneScreen
+  },
+  Age: {
+    screen: AgeScreen
   },
   Keychain: {
     screen: KeychainScreen
@@ -75,8 +81,8 @@ const FeedNav = createStackNavigator({
     gesturesEnabled: false,
     tabBarIcon: ({ focused, tintColor }) => {
       const { routeName } = navigation.state
-      let iconName = `ios-paper`
-      return <Ionicons name={iconName} size={30} color={tintColor} />
+      let iconName = `ios-globe`
+      return <Ionicons name={iconName} size={34} color={tintColor} />
     },
     headerStyle: styles.header
   }),
@@ -101,8 +107,8 @@ const MessageNav = createStackNavigator({
     gesturesEnabled: false,
     tabBarIcon: ({ focused, tintColor }) => {
       const { routeName } = navigation.state
-      let iconName = `ios-chatboxes`
-      return <Ionicons name={iconName} size={30} color={tintColor} />
+      let iconName = `ios-chatbubbles`
+      return <Ionicons name={iconName} size={34} color={tintColor} />
     },
     headerStyle: styles.header
   }),
@@ -122,7 +128,7 @@ const NotificationNav = createStackNavigator({
     tabBarIcon: ({ focused, tintColor }) => {
       const { routeName } = navigation.state
       let iconName = `ios-notifications`
-      return <Ionicons name={iconName} size={30} color={tintColor} />
+      return <Ionicons name={iconName} size={34} color={tintColor} />
     },
     headerStyle: styles.header
   }),
@@ -141,8 +147,8 @@ const CameraNav = createStackNavigator({
     gesturesEnabled: false,
     tabBarIcon: ({ focused, tintColor }) => {
       const { routeName } = navigation.state
-      let iconName = `ios-camera`
-      return <Ionicons name={iconName} size={30} color={tintColor} />
+      let iconName = `ios-play-circle`
+      return <Ionicons name={iconName} size={34} color={tintColor} />
     },
     headerStyle: styles.header
   }),

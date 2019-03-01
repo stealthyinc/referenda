@@ -19,7 +19,7 @@ class AuthLoadingScreen extends React.Component {
   }
   // Fetch the token from storage then navigate to our appropriate place
   _bootstrapAsync = async () => {
-    if (true) {
+    if (false) {
       this.props.navigation.navigate('App')
     }
     else {

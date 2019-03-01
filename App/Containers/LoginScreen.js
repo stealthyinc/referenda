@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import {
   View,
   Image,
@@ -12,12 +13,14 @@ import {
   RkTheme,
   RkStyleSheet,
 } from 'react-native-ui-kitten';
-import { FontAwesome } from '../../Assets/icons';
-import { GradientButton } from '../../Components/gradientButton';
-import { scaleVertical } from '../../Utils/scale';
-import NavigationType from '../../Navigation/propTypes';
+import { FontAwesome } from '../Assets/icons';
+import { GradientButton } from '../Components/gradientButton';
+import { scaleVertical } from '../Utils/scale';
+import NavigationType from '../Navigation/propTypes';
+// Add Actions - replace 'Your' with whatever your reducer is called :)
+// import YourActions from '../Redux/YourRedux'
 
-export class LoginV2 extends React.Component {
+class LoginScreen extends Component {
   static propTypes = {
     navigation: NavigationType.isRequired,
   };
@@ -30,12 +33,12 @@ export class LoginV2 extends React.Component {
   };
 
   onSignUpButtonPressed = () => {
-    this.props.navigation.navigate('SignUp');
+    this.props.navigation.navigate('Telephone');
   };
 
   getThemeImageSource = (theme) => (
     theme.name === 'light' ?
-      require('../../Assets/images/verified.png') : require('../../Assets/images/logoDark.png')
+      require('../Assets/images/verified.png') : require('../Assets/images/logoDark.png')
   );
 
   renderImage = () => (
@@ -114,3 +117,15 @@ const styles = RkStyleSheet.create(theme => ({
   },
   footer: {},
 }));
+
+const mapStateToProps = (state) => {
+  return {
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(LoginScreen)
