@@ -48,10 +48,10 @@ class ReduxNavigation extends Component {
         menu={<Settings />}
         isOpen={this.props.open}
         openMenuOffset={300}
+        disableGestures={true}
         onChange={isOpen => this.props.dispatch(SettingsActions.settingsMenuUpdate(isOpen))}
       >
         <ReduxAppNavigator dispatch={this.props.dispatch} state={this.props.nav} />
-
       </SideMenu>
     )
   }

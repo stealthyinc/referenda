@@ -16,6 +16,7 @@ import { GradientButton } from '../Components/';
 import { scaleVertical } from '../Utils/scale';
 import NavigationType from '../Navigation/propTypes';
 import { connect } from 'react-redux'
+import * as Keychain from 'react-native-keychain';
 
 class TelephoneScreen extends Component {
   static navigationOptions = {
@@ -41,6 +42,25 @@ class TelephoneScreen extends Component {
   onSignInButtonPressed = () => {
     this.props.navigation.navigate('Login');
   };
+
+  state = {
+    username: '',
+    password: '',
+    status: ''
+  }
+
+  async reset() {
+    try {
+      await Keychain.resetGenericPassword();
+      this.setState({
+        status: 'Credentials Reset!',
+        username: '',
+        password: '',
+      });
+    } catch (err) {
+      this.setState({ status: 'Could not reset credentials, ' + err });
+    }
+  }
 
   render = () => (
     <RkAvoidKeyboard

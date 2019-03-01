@@ -70,19 +70,6 @@ class KeychainScreen extends Component {
     }
   }
 
-  // async reset() {
-  //   try {
-  //     await Keychain.resetGenericPassword();
-  //     this.setState({
-  //       status: 'Credentials Reset!',
-  //       username: '',
-  //       password: '',
-  //     });
-  //   } catch (err) {
-  //     this.setState({ status: 'Could not reset credentials, ' + err });
-  //   }
-  // }
-
   onSignUpButtonPressed = () => {
     this.save()
     this.props.navigation.navigate('App');

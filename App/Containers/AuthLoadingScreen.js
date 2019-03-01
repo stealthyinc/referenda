@@ -11,7 +11,7 @@ import {
 import { connect } from 'react-redux'
 import Config from 'react-native-config'
 import verified from '../Assets/images/verified.png'
-import * as Keychain from 'react-native-keychain';
+// import * as Keychain from 'react-native-keychain';
 
 class AuthLoadingScreen extends React.Component {
   constructor (props) {

@@ -23,7 +23,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>5</string>
+	<string>10</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -42,9 +42,9 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Referenda needs access to your camera to record video.</string>
 	<key>NSFaceIDUsageDescription</key>
-	<string>Referenda needs access to Face ID to save your password to the keychain</string>
+	<string>Referenda needs access to Face ID to save your password to the keychain.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>Referenda needs access to your location to verify your constituency.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Referenda needs access to your microphone to record video.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>

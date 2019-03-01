@@ -32,7 +32,8 @@ class LoginScreen extends Component {
 
   state = {
     username: '',
-    password: ''
+    password: '',
+    status: ''
   }
 
   componentDidMount() {
@@ -70,8 +71,8 @@ class LoginScreen extends Component {
   );
 
   render () {
-    const username = 'Username' //this.state.username ? this.state.username : 'Username'
-    const password = 'Password' //this.state.password ? this.state.password : 'Password'
+    const username = this.state.username ? this.state.username : 'Username'
+    const password = this.state.password ? this.state.password : 'Password'
     return (
       <RkAvoidKeyboard
         style={styles.screen}
