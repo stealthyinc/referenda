@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 import {
+  Text,
   View,
   Image,
   Keyboard,
+  TouchableOpacity
 } from 'react-native';
 import {
   RkButton,
@@ -10,6 +12,7 @@ import {
   RkTextInput,
   RkStyleSheet,
   RkTheme,
+  RkPicker,
   RkAvoidKeyboard,
 } from 'react-native-ui-kitten';
 import { GradientButton } from '../Components/';
@@ -17,12 +20,68 @@ import { scaleVertical } from '../Utils/scale';
 import NavigationType from '../Navigation/propTypes';
 import { connect } from 'react-redux'
 
+const data = [
+     [{key: 1, value: 'Jun'},
+     {key: 2, value: 'Feb'},
+     {key: 3, value: 'Mar'},
+     {key: 4, value: 'Apr'}],
+     [1, 2, 3, 4, 5],
+     [2017, 2018, 2019]
+]
+
 class AgeScreen extends Component {
   static navigationOptions = {
     header: null,
   };
   static propTypes = {
     navigation: NavigationType.isRequired,
+  };
+
+  state = {
+    pickerVisible: false,
+    pickedValue: [{ key: 8, value: 'Jan' }, 26, 2001],
+  };
+
+  constructor(props) {
+    super(props);
+    this.pickerItems = {
+      days: this.generateArrayFromRange(1, 31),
+      months: [
+        { key: 1, value: 'Jun' },
+        { key: 2, value: 'Feb' },
+        { key: 3, value: 'Mar' },
+        { key: 4, value: 'Apr' },
+        { key: 5, value: 'May' },
+        { key: 6, value: 'Jun' },
+        { key: 7, value: 'Jul' },
+        { key: 8, value: 'Aug' },
+        { key: 9, value: 'Sep' },
+        { key: 10, value: 'Oct' },
+        { key: 11, value: 'Nov' },
+        { key: 12, value: 'Dec' },
+      ],
+      years: this.generateArrayFromRange(1915, 2001),
+    };
+  }
+
+  onDateTouchablePress = () => {
+    this.setState({ pickerVisible: true });
+  };
+
+  onPickerCancelButtonPress = () => {
+    this.setState({ pickerVisible: false });
+  };
+
+  onPickerConfirmButtonPress = (value) => {
+    this.setState({
+      pickedValue: value,
+      pickerVisible: false,
+    });
+  };
+
+  // eslint-disable-next-line arrow-body-style
+  generateArrayFromRange = (start, finish) => {
+    return Array(...Array((finish - start) + 1)).map((_, i) => start + i);
   };
 
   getThemeImageSource = (theme) => (
@@ -52,8 +111,24 @@ class AgeScreen extends Component {
         <RkText rkType='h1'>Age</RkText>
       </View>
       <View style={styles.content}>
+        <View style={styles.componentRow}>
+          <TouchableOpacity onPress={this.onDateTouchablePress}>
+            <RkText rkType='primary'>
+              {this.state.pickedValue[0].value}.
+              {this.state.pickedValue[1]}.
+              {this.state.pickedValue[2]}
+            </RkText>
+          </TouchableOpacity>
+          <RkPicker
+            title='Set Age'
+            data={[this.pickerItems.months, this.pickerItems.days, this.pickerItems.years]}
+            selectedOptions={this.state.pickedValue}
+            visible={this.state.pickerVisible}
+            onConfirm={this.onPickerConfirmButtonPress}
+            onCancel={this.onPickerCancelButtonPress}
+          />
+        </View>
         <View>
-          <RkTextInput rkType='rounded' placeholder='Age' />
           <GradientButton
             style={styles.save}
             rkType='large'
@@ -75,6 +150,14 @@ class AgeScreen extends Component {
 }
 
 const styles = RkStyleSheet.create(theme => ({
+  componentRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 25,
+  },
+  caption: {
+    marginLeft: 16,
+  },
   screen: {
     padding: 16,
     flex: 1,
