@@ -47,21 +47,36 @@ class TelephoneScreen extends Component {
       style={styles.screen}
       onStartShouldSetResponder={() => true}
       onResponderRelease={() => Keyboard.dismiss()}>
-      <View style={{ alignItems: 'center' }}>
-        {this.renderImage()}
-        <RkText rkType='h1'>Telephone</RkText>
-      </View>
-      <View style={styles.content}>
-        <View>
-          <RkTextInput rkType='rounded' placeholder='Telephone' />
+
+      <View id="width-limiter" style={{flexDirection: 'column', flex: 1, width: '95%'}}>
+
+        <View id="top-spacer" style={{height: '10%'}}/>
+
+        <View style={{ alignItems: 'center', height: '20%' }}>
+          {this.renderImage()}
+          <RkText rkType='h1' style={{color: 'white'}}>Phone Number</RkText>
+        </View>
+
+        <View id="top-content-spacer" style={{height: '5%'}}/>
+
+        <View style={{alignItems: 'flex-start', flex: 1}}>
+          <View class='text-spacer' style={{height: 10}} />
+          <RkText rkType='h6' style={{color: 'white'}}>Referenda requires your phone number to provide you unique access to our service. This prevents bots and other false identities from participating on the platform.</RkText>
+          <View class='text-spacer' style={{height: 10}} />
+          <RkText rkType='h6' style={{color: 'white'}}>Importantly, we do not store your phone number. Instead we store a unique one-way hash of your number, protecting your identity.</RkText>
+        </View>
+
+        <View style={{height: '25%'}}>
+          <View style={{flex: 1}} />
+          <RkTextInput rkType='rounded' placeholder='Phone Number' />
           <GradientButton
-            style={styles.save}
+            style={[styles.save, {marginTop: 5, height: 40}]}
             rkType='large'
-            text='NEXT'
+            text='Next'
             onPress={this.onTelephoneButtonPressed}
           />
-        </View>
-        <View style={styles.footer}>
+
+          <View id='footer-spacer' style={{height: 10}} />
           <View style={styles.textRow}>
             <RkText rkType='primary3'>Already have an account?</RkText>
             <RkButton rkType='clear' onPress={this.onSignInButtonPressed}>
@@ -69,6 +84,8 @@ class TelephoneScreen extends Component {
             </RkButton>
           </View>
         </View>
+
+        <View id="bottom-spacer" style={{height: '5%'}}/>
       </View>
     </RkAvoidKeyboard>
   )
@@ -76,26 +93,31 @@ class TelephoneScreen extends Component {
 
 const styles = RkStyleSheet.create(theme => ({
   screen: {
-    padding: 16,
+    padding: 0,
+    margin: 0,
+    width: '100%',
     flex: 1,
+    alignItems: 'center',
     justifyContent: 'space-around',
-    backgroundColor: theme.colors.screen.base,
+    // backgroundColor: theme.colors.screen.base,
+    backgroundColor: '#a2a2a2'
   },
   image: {
-    marginBottom: 10,
-    height: scaleVertical(77),
+    height: '100%',
+    // marginBottom: 10,
+    // height: scaleVertical(77),
     resizeMode: 'contain',
   },
   content: {
     justifyContent: 'space-between',
   },
   save: {
-    marginVertical: 20,
+    // marginVertical: 20,
   },
   buttons: {
     flexDirection: 'row',
-    marginBottom: 24,
-    marginHorizontal: 24,
+    // marginBottom: 24,
+    // marginHorizontal: 24,
     justifyContent: 'space-around',
   },
   footer: {

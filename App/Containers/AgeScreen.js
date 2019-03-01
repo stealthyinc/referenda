@@ -101,84 +101,104 @@ class AgeScreen extends Component {
     this.props.navigation.navigate('Telephone');
   };
 
-  render = () => (
-    <RkAvoidKeyboard
-      style={styles.screen}
-      onStartShouldSetResponder={() => true}
-      onResponderRelease={() => Keyboard.dismiss()}>
-      <View style={{ alignItems: 'center' }}>
-        {this.renderImage()}
-        <RkText rkType='h1'>Age</RkText>
-      </View>
-      <View style={styles.content}>
-        <View style={styles.componentRow}>
-          <TouchableOpacity onPress={this.onDateTouchablePress}>
-            <RkText rkType='primary'>
-              {this.state.pickedValue[0].value}.
-              {this.state.pickedValue[1]}.
-              {this.state.pickedValue[2]}
-            </RkText>
-          </TouchableOpacity>
-          <RkPicker
-            title='Set Age'
-            data={[this.pickerItems.months, this.pickerItems.days, this.pickerItems.years]}
-            selectedOptions={this.state.pickedValue}
-            visible={this.state.pickerVisible}
-            onConfirm={this.onPickerConfirmButtonPress}
-            onCancel={this.onPickerCancelButtonPress}
-          />
-        </View>
-        <View>
-          <GradientButton
-            style={styles.save}
-            rkType='large'
-            text='NEXT'
-            onPress={this.onAgeButtonPressed}
-          />
-        </View>
-        <View style={styles.footer}>
-          <View style={styles.textRow}>
-            <RkText rkType='primary3'>Already have an account?</RkText>
-            <RkButton rkType='clear' onPress={this.onSignInButtonPressed}>
-              <RkText rkType='header6'> Sign in now</RkText>
-            </RkButton>
+  render = () => {
+    const dob = `${this.state.pickedValue[0].value}-${this.state.pickedValue[1]}-${this.state.pickedValue[2]}`
+//this.onDateTouchablePress
+    return (
+      <RkAvoidKeyboard
+        style={styles.screen}
+        onStartShouldSetResponder={() => true}
+        onResponderRelease={() => Keyboard.dismiss()}>
+
+        <View id="width-limiter" style={{flexDirection: 'column', flex: 1, width: '95%'}}>
+
+          <View id="top-spacer" style={{height: '10%'}}/>
+
+          <View style={{ alignItems: 'center', height: '20%' }}>
+            {this.renderImage()}
+            <RkText rkType='h1' style={{color: 'white'}}>Age</RkText>
           </View>
+
+          <View id="top-content-spacer" style={{height: '5%'}}/>
+
+          <View style={{alignItems: 'flex-start', flex: 1}}>
+            <View class='text-spacer' style={{height: 10}} />
+            <RkText rkType='h6' style={{color: 'white'}}>Referenda is a platform for adults of voting age (18). Please confirm your eligibilty to use Referenda by providing your date of birth below.</RkText>
+          </View>
+
+          <View style={{height: '25%'}}>
+            <View style={{flex: 1}} />
+
+            <View style={styles.componentRow}>
+              <RkTextInput rkType='rounded' placeholder={dob} onFocus={this.onDateTouchablePress}/>
+              <RkPicker
+                title='Set Age'
+                data={[this.pickerItems.months, this.pickerItems.days, this.pickerItems.years]}
+                selectedOptions={this.state.pickedValue}
+                visible={this.state.pickerVisible}
+                onConfirm={this.onPickerConfirmButtonPress}
+                onCancel={this.onPickerCancelButtonPress}
+              />
+            </View>
+
+            <GradientButton
+              style={[styles.save, {marginTop: 5, height: 40}]}
+              rkType='large'
+              text='Next'
+              onPress={this.onAgeButtonPressed}
+            />
+
+            <View id='footer-spacer' style={{height: 10}} />
+            <View style={styles.textRow}>
+              <RkText rkType='primary3'>Already have an account?</RkText>
+              <RkButton rkType='clear' onPress={this.onSignInButtonPressed}>
+                <RkText rkType='header6'> Sign in now</RkText>
+              </RkButton>
+            </View>
+          </View>
+
+          <View id="bottom-spacer" style={{height: '5%'}}/>
         </View>
-      </View>
-    </RkAvoidKeyboard>
-  )
+      </RkAvoidKeyboard>);
+    }
 }
 
 const styles = RkStyleSheet.create(theme => ({
   componentRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 25,
+    // flexDirection: 'row',
+    // alignItems: 'center',
+    // marginBottom: 25,
   },
   caption: {
     marginLeft: 16,
   },
   screen: {
-    padding: 16,
+    // padding: 16,
+    padding: 0,
+    margin: 0,
+    width: '100%',
     flex: 1,
+    alignItems: 'center',
     justifyContent: 'space-around',
-    backgroundColor: theme.colors.screen.base,
+    // backgroundColor: theme.colors.screen.base,
+    backgroundColor: '#a2a2a2'
   },
   image: {
-    marginBottom: 10,
-    height: scaleVertical(77),
+    // marginBottom: 10,
+    // height: scaleVertical(77),
+    height: '100%',
     resizeMode: 'contain',
   },
   content: {
     justifyContent: 'space-between',
   },
   save: {
-    marginVertical: 20,
+    // marginVertical: 20,
   },
   buttons: {
     flexDirection: 'row',
-    marginBottom: 24,
-    marginHorizontal: 24,
+    // marginBottom: 24,
+    // marginHorizontal: 24,
     justifyContent: 'space-around',
   },
   footer: {

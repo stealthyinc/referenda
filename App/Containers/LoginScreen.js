@@ -36,7 +36,7 @@ class LoginScreen extends Component {
   }
 
   componentDidMount() {
-    this.load()    
+    this.load()
   }
 
   async load() {
@@ -70,38 +70,54 @@ class LoginScreen extends Component {
   );
 
   render () {
-    const username = this.state.username ? this.state.username : 'Username'
-    const password = this.state.password ? this.state.password : 'Password'
+    const username = 'Username' //this.state.username ? this.state.username : 'Username'
+    const password = 'Password' //this.state.password ? this.state.password : 'Password'
     return (
       <RkAvoidKeyboard
         style={styles.screen}
         onStartShouldSetResponder={() => true}
         onResponderRelease={() => Keyboard.dismiss()}>
-        <View style={styles.header}>
-          {this.renderImage()}
-          <RkText rkType='h1'>Sign In</RkText>
-          {/*<RkText rkType='light h1'>React Native</RkText>*/}
-        </View>
-        <View style={styles.content}>
-          <View>
+
+        <View id="width-limiter" style={{flexDirection: 'column', flex: 1, width: '95%'}}>
+
+          <View id="top-spacer" style={{height: '10%'}}/>
+
+          <View style={{ alignItems: 'center', height: '20%' }}>
+            {this.renderImage()}
+            <RkText rkType='h1' style={{color: 'white'}}>Sign In</RkText>
+          </View>
+
+          <View id="top-content-spacer" style={{height: '5%'}}/>
+
+          <View style={{alignItems: 'flex-start', flex: 1}}/>
+
+          <View style={{height: '35%'}}>
+
+            <View style={{flex: 1}} />
+
             <RkTextInput rkType='rounded' placeholder={username} />
             <RkTextInput rkType='rounded' placeholder={password} secureTextEntry />
             <GradientButton
-              style={styles.save}
+              style={[styles.save, {marginTop: 5, height:40}]}
               rkType='large'
-              text='LOGIN'
+              text='Sign In'
               onPress={this.onLoginButtonPressed}
             />
-          </View>
-          <View style={styles.footer}>
+
+            <View id='footer-spacer' style={{height: 10}} />
+
             <View style={styles.textRow}>
               <RkText rkType='primary3'>Don’t have an account?</RkText>
               <RkButton rkType='clear' onPress={this.onSignUpButtonPressed}>
                 <RkText rkType='header6'> Sign up now</RkText>
               </RkButton>
             </View>
+
           </View>
+
+          <View id="bottom-spacer" style={{height: '5%'}}/>
         </View>
+
       </RkAvoidKeyboard>
     );
   }
@@ -109,13 +125,20 @@ class LoginScreen extends Component {
 
 const styles = RkStyleSheet.create(theme => ({
   screen: {
-    padding: scaleVertical(16),
+    // padding: scaleVertical(16),
+    padding: 0,
+    margin: 0,
+    width: '100%',
     flex: 1,
-    justifyContent: 'space-between',
-    backgroundColor: theme.colors.screen.base,
+    alignItems: 'center',
+    // justifyContent: 'space-between',
+    justifyContent: 'space-around',
+    // backgroundColor: theme.colors.screen.base,
+    backgroundColor: '#a2a2a2'
   },
   image: {
-    height: scaleVertical(77),
+    // height: scaleVertical(77),
+    height: '100%',
     resizeMode: 'contain',
   },
   header: {
@@ -128,12 +151,12 @@ const styles = RkStyleSheet.create(theme => ({
     justifyContent: 'space-between',
   },
   save: {
-    marginVertical: 20,
+    // marginVertical: 20,
   },
   buttons: {
     flexDirection: 'row',
-    marginBottom: scaleVertical(24),
-    marginHorizontal: 24,
+    // marginBottom: scaleVertical(24),
+    // marginHorizontal: 24,
     justifyContent: 'space-around',
   },
   textRow: {

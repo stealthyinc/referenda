@@ -97,14 +97,38 @@ class KeychainScreen extends Component {
       style={styles.screen}
       onStartShouldSetResponder={() => true}
       onResponderRelease={() => Keyboard.dismiss()}>
-      <View style={{ alignItems: 'center' }}>
-        {this.renderImage()}
-        <RkText rkType='h1'>Access Control</RkText>
-      </View>
-      <View style={styles.content}>
-        <View>
+
+      <View id="width-limiter" style={{flexDirection: 'column', flex: 1, width: '95%'}}>
+
+        <View id="top-spacer" style={{height: '10%'}}/>
+
+        <View style={{ alignItems: 'center', height: '20%' }}>
+          {this.renderImage()}
+          <RkText rkType='h1' style={{color: 'white'}}>Security</RkText>
+        </View>
+
+        <View id="top-content-spacer" style={{height: '5%'}}/>
+
+        <View style={{alignItems: 'flex-start', flex: 1}}>
+          <View class='text-spacer' style={{height: 10}} />
+          <RkText rkType='h6' style={{color: 'white'}}>Your data is owned by you, encrypted with your encrpyption keys and then stored on cloud storage. You own the encryption keys--that means nobody, not even us at referenda can access your data.</RkText>
+          <View class='text-spacer' style={{height: 10}} />
+          <RkText rkType='h6' style={{color: 'white'}}>Secure your encryption keys on this device by using a passcode or Face ID.</RkText>
+        </View>
+
+        <View style={{height: '25%'}}>
+          <View style={{flex: 1}} />
+
           <SegmentedControlIOS
             selectedIndex={0}
+            style={{marginBottom:10,
+                    height: 40,
+                    tintColor: '#a2a2a2',
+                    backgroundColor: 'white',
+                    borderStyle:'solid',
+                    borderWidth:1,
+                    borderColor:'white',
+                    borderRadius:15}}
             values={this.state.biometryType ? [...ACCESS_CONTROL_OPTIONS, this.state.biometryType] : ACCESS_CONTROL_OPTIONS}
             onChange={({ nativeEvent }) => {
               this.setState({
@@ -113,13 +137,14 @@ class KeychainScreen extends Component {
             }}
           />
           <GradientButton
-            style={styles.save}
+            style={[styles.save, {marginTop: 5, height: 40}]}
             rkType='large'
-            text='NEXT'
+            text='Next'
             onPress={this.onSignUpButtonPressed}
           />
-        </View>
-        <View style={styles.footer}>
+
+          <View id='footer-spacer' style={{height: 10}} />
+
           <View style={styles.textRow}>
             <RkText rkType='primary3'>Already have an account?</RkText>
             <RkButton rkType='clear' onPress={this.onSignInButtonPressed}>
@@ -127,6 +152,8 @@ class KeychainScreen extends Component {
             </RkButton>
           </View>
         </View>
+
+         <View id="bottom-spacer" style={{height: '5%'}}/>
       </View>
     </RkAvoidKeyboard>
   )
@@ -134,26 +161,32 @@ class KeychainScreen extends Component {
 
 const styles = RkStyleSheet.create(theme => ({
   screen: {
-    padding: 16,
+    // padding: 16,
+    padding: 0,
+    margin: 0,
+    width: '100%',
     flex: 1,
+    alignItems: 'center',
     justifyContent: 'space-around',
-    backgroundColor: theme.colors.screen.base,
+    // backgroundColor: theme.colors.screen.base,
+    backgroundColor: '#a2a2a2'
   },
   image: {
-    marginBottom: 10,
-    height: scaleVertical(77),
+    // marginBottom: 10,
+    height: '100%',
+    // height: scaleVertical(77),
     resizeMode: 'contain',
   },
   content: {
     justifyContent: 'space-between',
   },
   save: {
-    marginVertical: 20,
+    // marginVertical: 20,
   },
   buttons: {
     flexDirection: 'row',
-    marginBottom: 24,
-    marginHorizontal: 24,
+    // marginBottom: 24,
+    // marginHorizontal: 24,
     justifyContent: 'space-around',
   },
   footer: {
