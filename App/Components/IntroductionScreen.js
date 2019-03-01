@@ -2,10 +2,17 @@ import React, { Component } from 'react'
 import {
   Animated,
   Image,
+  ImageBackground,
   StyleSheet,
   Text,
   View
 } from 'react-native'
+
+import {
+  RkButton,
+  RkText,
+  RkStyleSheet,
+} from 'react-native-ui-kitten'
 
 import AppIntroSlider from 'react-native-app-intro-slider';
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -16,15 +23,16 @@ import folder from '../Assets/images/folder.png'
 
 import censor from '../Assets/images/censor.png'
 // From: https://www.pexels.com/photo/man-wearing-gray-coat-standing-in-the-middle-of-the-road-936142/
-import chat from '../Assets/images/launch1l-your-voice.jpg'
+import chat from '../Assets/images/launch1-your-voice.jpg'
 // From: https://www.pexels.com/photo/dark-fire-time-paper-33930/
 // import security from '../Assets/images/launch2-your-time.jpg'
 // From: https://www.pexels.com/photo/clear-glass-with-red-sand-grainer-39396/
-import security from '../Assets/images/launch2a-your-time.jpg'
+import security from '../Assets/images/launch2c-your-time.jpg'
 // From: https://www.pexels.com/photo/boy-holding-sparkler-1565521/
-import blockchain from '../Assets/images/launch3-your-community.jpg'
+import blockchain from '../Assets/images/launch3b-your-community.jpg'
 
 import verified from '../Assets/images/verified.png'
+
 import { GradientButton } from './gradientButton'
 
 
@@ -60,7 +68,7 @@ const slides = [
   {
     key: 'somethun',
     title: 'Your voice matters.',
-    text: 'Referenda makes your voice heard by your political representatives on issues that matter to you for actionable change.',
+    text: 'Referenda makes your voice heard by your political leaders for actionable change.',
     image: chat,
     imageStyle: styles.image,
     colors: ['#63E2FF', '#B066FE'],
@@ -68,7 +76,7 @@ const slides = [
   {
     key: 'somethun1',
     title: 'Your time is important.',
-    text: 'Don\'t waste time sending form emails or making scripted calls that often go ignored. Representatives listen and even interact with you on Referenda.',
+    text: 'Interact with your representatives on Referenda, instead of sending form emails and making scripted calls that get ignored.',
     image: security,
     colors: ['#A3A1FF', '#3A3897'],
   },
@@ -81,83 +89,6 @@ const slides = [
   },
 ];
 
-//
-// const styles = StyleSheet.create({
-//   buttonCircle: {
-//     width: 40,
-//     height: 40,
-//     backgroundColor: 'rgba(0, 0, 0, .2)',
-//     borderRadius: 20,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//   },
-//   image: {
-//     width: '100%',
-//     height: '60%',
-//   },
-//   title: {
-//     fontSize: 62,
-//     color: 'white'
-//   },
-//   text: {
-//     fontSize: 24,
-//     color: 'white'
-//   }
-// });
-
-// const slides = [
-//   {
-//     key: 'Secure Messaging',
-//     title: 'Referenda',
-//     text: 'Chat with your friends without Zuck snooping',
-//     image: chat,
-//     imageStyle: styles.image,
-//     titleStyle: styles.title,
-//     textStyle: styles.text,
-//     backgroundColor: 'black'
-//   },
-//   {
-//     key: 'Private Cloud Storage',
-//     title: 'Referenda',
-//     text: `You own your data,\naccessible by you alone`,
-//     image: folder,
-//     imageStyle: styles.image,
-//     titleStyle: styles.title,
-//     textStyle: styles.text,
-//     backgroundColor: 'black'
-//   },
-//   {
-//     key: 'Individual Encryption',
-//     title: 'Referenda',
-//     text: 'You hold your encryption keys, not a big company',
-//     image: security,
-//     imageStyle: styles.image,
-//     titleStyle: styles.title,
-//     textStyle: styles.text,
-//     backgroundColor: 'black'
-//   },
-//   {
-//     key: 'Blockchain Identity',
-//     title: 'Referenda',
-//     text: 'Find your friends without a central database',
-//     image: blockchain,
-//     imageStyle: styles.image,
-//     titleStyle: styles.title,
-//     textStyle: styles.text,
-//     backgroundColor: 'black'
-//   },
-//   {
-//     key: 'Censorship Free',
-//     title: 'Referenda',
-//     text: 'Nobody can prohibit your freedom of expression',
-//     image: censor,
-//     imageStyle: styles.image,
-//     titleStyle: styles.title,
-//     textStyle: styles.text,
-//     backgroundColor: 'black'
-//   },
-// ];
-
 export default class Introduction extends Component {
   static navigationOptions = {
     header: null
@@ -167,40 +98,69 @@ export default class Introduction extends Component {
     super(props)
   }
 
-  _renderItem = props => (
-    <View
-      style={[styles.mainContent, {
-        paddingTop: props.topSpacer,
-        paddingBottom: props.bottomSpacer,
-        width: props.width,
-        height: props.height,
-        backgroundColor: 'white'
-      }]}
-    >
-      <View style={{width:'100%', flexDirection:'row', justifyContent: 'flex-start'}}>
-        <Image
-          id='splash-screen-img'
-          style={{height:'100%', marginLeft:'4%', marginRight:'2%', width:'10%', resizeMode: 'contain'}}
-          source={verified}/>
-        <Text style={{fontSize:32, textAlign:'left', color:'black'}}>Referenda</Text>
-      </View>
-      <Image style={styles.image} source={props.image} />
-      <View>
-        <Text style={styles.title}>{props.title}</Text>
-        <Text style={styles.text}>{props.text}</Text>
-      </View>
-    </View>
-  );
+  // ImageBackground was Image sandwiched btwn views with style={styles.image}
+  _renderItem = (props) => {
+    // let titleColor = (props.title === 'Your time is important.') ?
+    //   'black' : 'white'
+    let titleColor = 'white'
+
+    return (
+      <ImageBackground style={{flex: 1}} source={props.image} >
+        <View
+          style={[styles.mainContent, {
+            paddingTop: props.topSpacer,
+            paddingBottom: props.bottomSpacer,
+            width: props.width,
+            height: props.height,
+            backgroundColor: 'transparent'
+          }]}
+        >
+          <View style={{width:'100%', flexDirection:'row', justifyContent: 'flex-start'}}>
+            <Image
+              id='splash-screen-img'
+              style={{height:'100%', marginLeft:'4%', marginRight:'2%', width:'10%', resizeMode: 'contain'}}
+              source={verified}/>
+            <Text style={{fontSize:32, textAlign:'left', color:titleColor}}>Referenda</Text>
+          </View>
+          <View id='middle-spacer' style={{height: '70%'}} />
+          <View>
+            <Text style={[styles.title, {color:titleColor}]}>{props.title}</Text>
+            <Text style={[styles.text, {color:titleColor}]}>{props.text}</Text>
+          </View>
+          <View id='middle-bottom-spacer' style={{height: '8%'}} />
+          <View id='button-view' style={{height: 40,
+                                         width: '95%',
+                                         flexDirection: 'row',
+                                         justifyContent: 'space-between'}}>
+            <GradientButton
+              colors={['#d2d2d2', '#828282']}
+              style={[{height:'100%', width:'35%'}]}
+              rkType='large'
+              text='Sign In'
+              onPress={() => this.props.navigation.navigate('Login')}
+            />
+            <GradientButton
+              style={[{height:'100%', width:'35%'}]}
+              rkType='large'
+              text='Sign Up'
+              onPress={() => this.props.navigation.navigate('Telephone')}
+            />
+          </View>
+        </View>
+      </ImageBackground>
+    );
+  }
 
   render() {
     return (
       <AppIntroSlider
         slides={slides}
         renderItem={this._renderItem}
-        bottomButton
+        hideNextButton
+        hideDoneButton
         buttonStyle={{borderRadius:15, backgroundColor:'#FF8C00'}}
         onDone={() => this.props.navigation.navigate('Login')}
-        dotStyle={{backgroundColor: 'black'}}
+        dotStyle={{backgroundColor: 'white'}}
         activeDotStyle={{backgroundColor: 'green'}}
       />
     );
