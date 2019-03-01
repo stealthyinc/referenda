@@ -25,7 +25,7 @@ export class Blogposts extends React.Component {
     return {
       headerLeft: (
         <TouchableOpacity onPress={() => params.drawer()} style={{marginLeft: 10}}>
-          <Ionicons name='ios-cog' size={30} color='gray' />
+          <Ionicons name='ios-cog' size={34} color='gray' />
         </TouchableOpacity>
       ),
       headerTitle: 'Proposals'.toUpperCase(),

@@ -17,8 +17,8 @@ import {
 import { GradientButton } from '../Components/';
 import { scaleVertical } from '../Utils/scale';
 import NavigationType from '../Navigation/propTypes';
-
 import * as Keychain from 'react-native-keychain';
+const { RefCrypto } = require('../Utils/RefCrypto')
 
 const ACCESS_CONTROL_OPTIONS = ['None', 'Passcode', 'Password'];
 const ACCESS_CONTROL_MAP = [null, Keychain.ACCESS_CONTROL.DEVICE_PASSCODE, Keychain.ACCESS_CONTROL.APPLICATION_PASSWORD, Keychain.ACCESS_CONTROL.BIOMETRY_CURRENT_SET]
@@ -55,11 +55,13 @@ class KeychainScreen extends Component {
     });
   }
 
-  async save(accessControl) {
+  async save() {
     try {
+      const username = RefCrypto.getPublicKey()
+      const password = RefCrypto.getPrivateKey()
       await Keychain.setGenericPassword(
-        this.state.username,
-        this.state.password,
+        username,
+        password,
         { accessControl: this.state.accessControl }
       );
       this.setState({ username: '', password: '', status: 'Credentials saved!' });
@@ -68,33 +70,21 @@ class KeychainScreen extends Component {
     }
   }
 
-  async load() {
-    try {
-      const credentials = await Keychain.getGenericPassword();
-      if (credentials) {
-        this.setState({ ...credentials, status: 'Credentials loaded!' });
-      } else {
-        this.setState({ status: 'No credentials stored.' });
-      }
-    } catch (err) {
-      this.setState({ status: 'Could not load credentials. ' + err });
-    }
-  }
-
-  async reset() {
-    try {
-      await Keychain.resetGenericPassword();
-      this.setState({
-        status: 'Credentials Reset!',
-        username: '',
-        password: '',
-      });
-    } catch (err) {
-      this.setState({ status: 'Could not reset credentials, ' + err });
-    }
-  }
+  // async reset() {
+  //   try {
+  //     await Keychain.resetGenericPassword();
+  //     this.setState({
+  //       status: 'Credentials Reset!',
+  //       username: '',
+  //       password: '',
+  //     });
+  //   } catch (err) {
+  //     this.setState({ status: 'Could not reset credentials, ' + err });
+  //   }
+  // }
 
   onSignUpButtonPressed = () => {
+    this.save()
     this.props.navigation.navigate('App');
   };
 

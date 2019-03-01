@@ -11,14 +11,16 @@ import {
 import { connect } from 'react-redux'
 import Config from 'react-native-config'
 import verified from '../Assets/images/verified.png'
+import * as Keychain from 'react-native-keychain';
 
 class AuthLoadingScreen extends React.Component {
   constructor (props) {
     super(props)
-    this._bootstrapAsync()
+    this._bootstrapAsync()   
   }
   // Fetch the token from storage then navigate to our appropriate place
   _bootstrapAsync = async () => {
+    // const credentials = await Keychain.getGenericPassword();
     if (false) {
       this.props.navigation.navigate('App')
     }

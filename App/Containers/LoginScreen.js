@@ -17,6 +17,7 @@ import { FontAwesome } from '../Assets/icons';
 import { GradientButton } from '../Components/gradientButton';
 import { scaleVertical } from '../Utils/scale';
 import NavigationType from '../Navigation/propTypes';
+import * as Keychain from 'react-native-keychain';
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
 
@@ -24,9 +25,32 @@ class LoginScreen extends Component {
   static propTypes = {
     navigation: NavigationType.isRequired,
   };
+
   static navigationOptions = {
     header: null,
   };
+
+  state = {
+    username: '',
+    password: ''
+  }
+
+  componentDidMount() {
+    this.load()    
+  }
+
+  async load() {
+    try {
+      const credentials = await Keychain.getGenericPassword();
+      if (credentials) {
+        this.setState({ ...credentials, status: 'Credentials loaded!' });
+      } else {
+        this.setState({ status: 'No credentials stored.' });
+      }
+    } catch (err) {
+      this.setState({ status: 'Could not load credentials. ' + err });
+    }
+  }
 
   onLoginButtonPressed = () => {
     this.props.navigation.navigate('App');
@@ -45,38 +69,42 @@ class LoginScreen extends Component {
     <Image style={styles.image} source={this.getThemeImageSource(RkTheme.current)} />
   );
 
-  render = () => (
-    <RkAvoidKeyboard
-      style={styles.screen}
-      onStartShouldSetResponder={() => true}
-      onResponderRelease={() => Keyboard.dismiss()}>
-      <View style={styles.header}>
-        {this.renderImage()}
-        <RkText rkType='h1'>Sign In</RkText>
-        {/*<RkText rkType='light h1'>React Native</RkText>*/}
-      </View>
-      <View style={styles.content}>
-        <View>
-          <RkTextInput rkType='rounded' placeholder='Username' />
-          <RkTextInput rkType='rounded' placeholder='Password' secureTextEntry />
-          <GradientButton
-            style={styles.save}
-            rkType='large'
-            text='LOGIN'
-            onPress={this.onLoginButtonPressed}
-          />
+  render () {
+    const username = this.state.username ? this.state.username : 'Username'
+    const password = this.state.password ? this.state.password : 'Password'
+    return (
+      <RkAvoidKeyboard
+        style={styles.screen}
+        onStartShouldSetResponder={() => true}
+        onResponderRelease={() => Keyboard.dismiss()}>
+        <View style={styles.header}>
+          {this.renderImage()}
+          <RkText rkType='h1'>Sign In</RkText>
+          {/*<RkText rkType='light h1'>React Native</RkText>*/}
         </View>
-        <View style={styles.footer}>
-          <View style={styles.textRow}>
-            <RkText rkType='primary3'>Don’t have an account?</RkText>
-            <RkButton rkType='clear' onPress={this.onSignUpButtonPressed}>
-              <RkText rkType='header6'> Sign up now</RkText>
-            </RkButton>
+        <View style={styles.content}>
+          <View>
+            <RkTextInput rkType='rounded' placeholder={username} />
+            <RkTextInput rkType='rounded' placeholder={password} secureTextEntry />
+            <GradientButton
+              style={styles.save}
+              rkType='large'
+              text='LOGIN'
+              onPress={this.onLoginButtonPressed}
+            />
+          </View>
+          <View style={styles.footer}>
+            <View style={styles.textRow}>
+              <RkText rkType='primary3'>Don’t have an account?</RkText>
+              <RkButton rkType='clear' onPress={this.onSignUpButtonPressed}>
+                <RkText rkType='header6'> Sign up now</RkText>
+              </RkButton>
+            </View>
           </View>
         </View>
-      </View>
-    </RkAvoidKeyboard>
-  );
+      </RkAvoidKeyboard>
+    );
+  }
 }
 
 const styles = RkStyleSheet.create(theme => ({
