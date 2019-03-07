@@ -44,9 +44,12 @@ class LoginScreen extends Component {
     try {
       const credentials = await Keychain.getGenericPassword();
       if (credentials) {
-        this.setState({ ...credentials, status: 'Credentials loaded!' });
+        // this.setState({ ...credentials, status: 'Credentials loaded!' });
+        // this.props.navigation.navigate('App');
+        this.onLoginButtonPressed()
       } else {
-        this.setState({ status: 'No credentials stored.' });
+        // this.setState({ status: 'No credentials stored.' });
+        alert('No credentials stored.')
       }
     } catch (err) {
       this.setState({ status: 'Could not load credentials. ' + err });
@@ -71,8 +74,8 @@ class LoginScreen extends Component {
   );
 
   render () {
-    const username = this.state.username ? this.state.username : 'Username'
-    const password = this.state.password ? this.state.password : 'Password'
+    // const username = this.state.username ? this.state.username : 'Username'
+    // const password = this.state.password ? this.state.password : 'Password'
     return (
       <RkAvoidKeyboard
         style={styles.screen}
@@ -96,23 +99,23 @@ class LoginScreen extends Component {
 
             <View style={{flex: 1}} />
 
-            <RkTextInput rkType='rounded' placeholder={username} />
-            <RkTextInput rkType='rounded' placeholder={password} secureTextEntry />
+            {/*<RkTextInput rkType='rounded' placeholder={username} />
+            <RkTextInput rkType='rounded' placeholder={password} secureTextEntry />*/}
             <GradientButton
               style={[styles.save, {marginTop: 5, height:40}]}
               rkType='large'
-              text='Sign In'
-              onPress={this.onLoginButtonPressed}
+              text='Sign Up'
+              onPress={this.onSignUpButtonPressed}
             />
 
             <View id='footer-spacer' style={{height: 10}} />
 
-            <View style={styles.textRow}>
+            {/*<View style={styles.textRow}>
               <RkText rkType='primary3'>Don’t have an account?</RkText>
               <RkButton rkType='clear' onPress={this.onSignUpButtonPressed}>
                 <RkText rkType='header6'> Sign up now</RkText>
               </RkButton>
-            </View>
+            </View>*/}
 
           </View>
 
