@@ -79,7 +79,15 @@ class KeychainScreen extends Component {
     this.props.navigation.navigate('Telephone');
   };
 
-  render = () => (
+  render = () => {
+    // tintColor below throws an error saying it's an invalid property, however
+    // oddly the component renders with the correct coloring and the property is
+    // documented:
+    // - https://facebook.github.io/react-native/docs/segmentedcontrolios#tintcolor
+    // the issue might be related to this:
+    // - https://github.com/ptomasroos/react-native-tab-navigator/issues/68
+    //
+    return (
     <RkAvoidKeyboard
       style={styles.screen}
       onStartShouldSetResponder={() => true}
@@ -98,7 +106,7 @@ class KeychainScreen extends Component {
 
         <View style={{alignItems: 'flex-start', flex: 1}}>
           <View class='text-spacer' style={{height: 10}} />
-          <RkText rkType='h6' style={{color: 'white'}}>Your data is owned by you, encrypted with your encrpyption keys and then stored on cloud storage. You own the encryption keys--that means nobody, not even us at referenda can access your data.</RkText>
+          <RkText rkType='h6' style={{color: 'white'}}>Your data is owned by you, encrypted with your encryption keys and then stored on cloud storage. You own the encryption keys--that means nobody, not even us at referenda can access your data.</RkText>
           <View class='text-spacer' style={{height: 10}} />
           <RkText rkType='h6' style={{color: 'white'}}>Secure your encryption keys on this device by using a passcode or Face ID.</RkText>
         </View>

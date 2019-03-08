@@ -123,7 +123,7 @@ class AgeScreen extends Component {
 
           <View style={{alignItems: 'flex-start', flex: 1}}>
             <View class='text-spacer' style={{height: 10}} />
-            <RkText rkType='h6' style={{color: 'white'}}>Referenda is a platform for adults of voting age (18). Please confirm your eligibilty to use Referenda by providing your date of birth below.</RkText>
+            <RkText rkType='h6' style={{color: 'white'}}>You must be at least 13 years of age to use Referenda. Confirm this below by specifying your date of birth.</RkText>
           </View>
 
           <View style={{height: '25%'}}>
