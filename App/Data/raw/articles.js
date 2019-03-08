@@ -1,7 +1,7 @@
 const articles = [
   {
     id: 0,
-    video: require('./../../Assets/videos/agathaTwitter.mp4'),
+    video: require('./../../Assets/videos/candidateVid.mp4'),
     type: 'article',
     time: -100,
     header: 'In-car Footage',
