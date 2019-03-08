@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  AsyncStorage,
   FlatList,
   View,
   StyleSheet,
@@ -15,6 +16,7 @@ import { Avatar } from '../../Components';
 import { FontAwesome } from '../../Assets/icons';
 import { data } from '../../Data';
 import NavigationType from '../../Navigation/propTypes';
+import Contacts from 'react-native-contacts';
 
 const moment = require('moment');
 
@@ -32,6 +34,17 @@ export class ChatList extends React.Component {
       filtered: data.getChatList(),
     },
   };
+
+  componentDidMount() {
+    Contacts.getAllWithoutPhotos((err, contacts) => {
+      if (err) {
+        throw err;
+      }
+      // contacts stored on asyncstorage
+      AsyncStorage.setItem('MyContacts', JSON.stringify(contacts))
+    })
+
+  }
 
   extractItemKey = (item) => `${item.withUser.id}`;
 

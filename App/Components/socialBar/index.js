@@ -1,11 +1,15 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, Linking } from 'react-native';
 import {
   RkText,
   RkButton,
   RkComponent,
 } from 'react-native-ui-kitten';
 import { FontAwesome } from '../../Assets/icons';
+
+import {
+  shareOnTwitter,
+} from 'react-native-social-share';
 
 export class SocialBar extends RkComponent {
   componentName = 'SocialBar';
@@ -50,6 +54,14 @@ export class SocialBar extends RkComponent {
     this.setState({
       shares: this.state.shares === defaultCount ? this.state.shares + 1 : defaultCount,
     });
+    shareOnTwitter({
+        'text':'Agatha Campaign Information',
+        'link':'https://google.com/',
+      },
+      (results) => {
+        console.log(results);
+      }
+    );
   };
 
   render() {
@@ -64,9 +76,17 @@ export class SocialBar extends RkComponent {
     return (
       <View style={container}>
         <View style={section}>
+          <RkButton 
+            rkType='clear' 
+            onPress={() => Linking.openURL('https://commerce.coinbase.com/checkout/fffca773-3645-4d23-a442-b97ec395d365')}
+          >
+            <RkText rkType='awesome warning' style={icon}>{FontAwesome.bitcoin}</RkText>
+          </RkButton>
+        </View>
+        <View style={section}>
           <RkButton rkType='clear' onPress={this.onLikeButtonPressed}>
             <RkText rkType='awesome primary' style={icon}>{FontAwesome.heart}</RkText>
-            <RkText rkType='primary primary4' style={label}>{likes}</RkText>
+            <RkText rkType='primary4 hintColor' style={label}>{likes}</RkText>
           </RkButton>
         </View>
         <View style={section}>
@@ -77,7 +97,7 @@ export class SocialBar extends RkComponent {
         </View>
         <View style={section}>
           <RkButton rkType='clear' onPress={this.onShareButtonPressed}>
-            <RkText rkType='awesome hintColor' style={icon}>{FontAwesome.user}</RkText>
+            <RkText rkType='awesome info' style={icon}>{FontAwesome.twitter}</RkText>
             <RkText rkType='primary4 hintColor' style={label}>{shares}</RkText>
           </RkButton>
         </View>

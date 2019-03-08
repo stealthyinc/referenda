@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   View,
+  Linking,
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
@@ -54,6 +55,14 @@ export class ProfileV1 extends React.Component {
         </View>
       </View>
       <View style={styles.buttons}>
+        <RkButton 
+          style={styles.button} 
+          rkType='clear link' 
+          onPress={() => Linking.openURL('https://commerce.coinbase.com/checkout/fffca773-3645-4d23-a442-b97ec395d365')}
+        >
+          DONATE
+        </RkButton>
+        <View style={styles.separator} />
         <RkButton style={styles.button} rkType='clear link'>FOLLOW</RkButton>
         <View style={styles.separator} />
         <RkButton style={styles.button} rkType='clear link'>MESSAGE</RkButton>

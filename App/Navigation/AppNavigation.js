@@ -1,6 +1,7 @@
 import React from 'react'
 import { createBottomTabNavigator, TabBarBottom, createSwitchNavigator } from 'react-navigation'
 import { createStackNavigator, createAppContainer } from 'react-navigation'
+import ChatScreen from '../Containers/ChatScreen'
 import AgeScreen from '../Containers/AgeScreen'
 import TelephoneScreen from '../Containers/TelephoneScreen'
 import LoginScreen from '../Containers/LoginScreen'

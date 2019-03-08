@@ -27,4 +27,5 @@ export const FontAwesome = {
   bars: String.fromCharCode(61641),
   slashEye: String.fromCharCode(61552),
   github: String.fromCharCode(61595),
+  bitcoin: String.fromCharCode(61786)
 };

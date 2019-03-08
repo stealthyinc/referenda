@@ -137,6 +137,8 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-social-share')
+    compile project(':react-native-contacts')
     compile project(':react-native-udp')
     compile project(':react-native-tcp')
     compile project(':react-native-os')

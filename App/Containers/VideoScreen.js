@@ -10,9 +10,10 @@ import styles from './Styles/VideoScreenStyle'
 
 class VideoScreen extends Component {
   render () {
-    return (
-      <Video style={styles.backgroundVideo} source={require('../Assets/inlineResponse.mp4')} />
-    )
+    return null
+    // return (
+    //   <Video style={styles.backgroundVideo} source={require('../Assets/inlineResponse.mp4')} />
+    // )
   }
 }
 
