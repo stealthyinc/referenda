@@ -16,6 +16,8 @@ import NavigationType from '../Navigation/propTypes';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import SettingsActions from '../Redux/SettingsRedux'
 
+import Video from 'react-native-video'
+
 const moment = require('moment');
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
@@ -71,31 +73,60 @@ class FeedScreen extends Component {
     this.props.navigation.navigate('Article', { id: item.id });
   };
 
-  renderItem = ({ item }) => (
-    <TouchableOpacity
-      delayPressIn={70}
-      activeOpacity={0.8}
-      onPress={() => this.onItemPressed(item)}>
-      <RkCard rkType='blog' style={styles.card}>
-        <Image rkCardImg source={item.photo} />
-        <View rkCardHeader style={styles.content}>
-          <RkText style={styles.section} rkType='header4'>{item.title}</RkText>
-        </View>
-        <View rkCardContent>
-          <View>
-            <RkText rkType='primary3 mediumLine' numberOfLines={2}>{item.text}</RkText>
+  renderItem = ({ item }) => {
+    if (item.hasOwnProperty('video')) {
+      return (
+        <RkCard rkType='blog' style={styles.card}>
+          <Video rkCardImg
+                 controls='true'
+                 muted='true'
+                 resizeMode='cover'
+                 source={item.video} />
+          <View rkCardHeader style={styles.content}>
+            <RkText style={styles.section} rkType='header4'>{item.title}</RkText>
           </View>
-        </View>
-        <View rkCardFooter>
-          <View style={styles.userInfo}>
-            <Avatar style={styles.avatar} rkType='circle small' img={item.user.photo} />
-            <RkText rkType='header6'>{`${item.user.firstName} ${item.user.lastName}`}</RkText>
+          <View rkCardContent>
+            <View>
+              <RkText rkType='primary3 mediumLine' numberOfLines={2}>{item.text}</RkText>
+            </View>
           </View>
-          <RkText rkType='secondary2 hintColor'>{moment().add(item.time, 'seconds').fromNow()}</RkText>
-        </View>
-      </RkCard>
-    </TouchableOpacity>
-  );
+          <View rkCardFooter>
+            <View style={styles.userInfo}>
+              <Avatar style={styles.avatar} rkType='circle small' img={item.user.photo} />
+              <RkText rkType='header6'>{`${item.user.firstName} ${item.user.lastName}`}</RkText>
+            </View>
+            <RkText rkType='secondary2 hintColor'>{moment().add(item.time, 'seconds').fromNow()}</RkText>
+          </View>
+        </RkCard>
+      );
+    } else {
+      return (
+        <TouchableOpacity
+          delayPressIn={70}
+          activeOpacity={0.8}
+          onPress={() => this.onItemPressed(item)}>
+          <RkCard rkType='blog' style={styles.card}>
+            <Image rkCardImg source={item.photo} />
+            <View rkCardHeader style={styles.content}>
+              <RkText style={styles.section} rkType='header4'>{item.title}</RkText>
+            </View>
+            <View rkCardContent>
+              <View>
+                <RkText rkType='primary3 mediumLine' numberOfLines={2}>{item.text}</RkText>
+              </View>
+            </View>
+            <View rkCardFooter>
+              <View style={styles.userInfo}>
+                <Avatar style={styles.avatar} rkType='circle small' img={item.user.photo} />
+                <RkText rkType='header6'>{`${item.user.firstName} ${item.user.lastName}`}</RkText>
+              </View>
+              <RkText rkType='secondary2 hintColor'>{moment().add(item.time, 'seconds').fromNow()}</RkText>
+            </View>
+          </RkCard>
+        </TouchableOpacity>
+      );
+    }
+  }
 
   render = () => (
     <FlatList

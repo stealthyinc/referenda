@@ -1,11 +1,20 @@
-const articles = [{
-  id: 1,
+const articles = [
+  {
+    id: 0,
+    video: require('./../../Assets/videos/agathaTwitter.mp4'),
+    type: 'article',
+    time: -100,
+    header: 'In-car Footage',
+    text: `Bilingual Hamilton Mixtape rap in support of Immigrants: We Get the Job Done Coalition http://bit.ly/2s6mWAt  #Ham4All #BrazilianAmerican 🎤`,
+    comments: [],
+  },
+  {id: 1,
   photo: require('../img/democracy1.png'),
   type: 'article',
   time: -300,
   header: 'Universal Child Care',
   text: `CA 12th district congressional candidate Agatha Bacelar proposed a universal child care plan that would limit American families’ expenses to 7 percent of ` +
-  `income regardless of how many children they have in care -- paid for by a tax on the ultra-wealthy. \n\nIt's the latest in a flurry ` + 
+  `income regardless of how many children they have in care -- paid for by a tax on the ultra-wealthy. \n\nIt's the latest in a flurry ` +
   `of ambitious legislation being floated by lawmakers with their eyes on the 2020 elections.`,
   comments: [{
     id: 1,
@@ -55,8 +64,8 @@ const articles = [{
   type: 'article1',
   time: -2446,
   header: 'Parlamento Andino',
-  text: `Este jueves, el Parlamento Andino acordó reconocer a Juan Guaidó como Presidente encargado de Venezuela. `+ 
-  `\nLa decisión fue tomada en la sesión plenaria realizada este 21 de febrero en Bogotá, Colombia, en la que participaron ` + 
+  text: `Este jueves, el Parlamento Andino acordó reconocer a Juan Guaidó como Presidente encargado de Venezuela. `+
+  `\nLa decisión fue tomada en la sesión plenaria realizada este 21 de febrero en Bogotá, Colombia, en la que participaron ` +
   `parlamentarios de Perú, Ecuador, Bolivia, Colombia y Chile, país que estuvo representado por el senador de la UDI Alejandro ` +
   `García Huidobro tras decisión de la Cámara Alta.`,
   comments: [],
@@ -72,7 +81,7 @@ const articles = [{
   `Wrap, and walked two doors down to our neighbor, Mrs. Shelton, who was drinking tea and laughing with her sister and my mother. I proudly showed off my creation, ` +
   `and Mrs. Shelton took a big bite.`,
   comments: [],
-}, 
+},
 {
   id: 5,
   photo: require('../img/photo5.png'),
