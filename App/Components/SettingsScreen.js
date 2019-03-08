@@ -136,7 +136,7 @@ export default class SettingsScreen extends Component {
           </TouchableOpacity>
         </View>
         <View style={styles.row}>
-          <TouchableOpacity style={styles.rowButton}>
+          <TouchableOpacity style={styles.rowButton} onPress={() => this.props.logout()}>
             <RkText rkType='header6'>Logout</RkText>
           </TouchableOpacity>
         </View>

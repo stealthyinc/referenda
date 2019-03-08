@@ -42,10 +42,15 @@ class ReduxNavigation extends Component {
     BackHandler.removeEventListener('hardwareBackPress', undefined)
   }
 
+  logout () {
+    this.props.dispatch(SettingsActions.settingsMenuToggle())
+    this.props.dispatch({ type: 'Navigation/NAVIGATE', routeName: 'Auth' })
+  }
+
   render () {
     return (
       <SideMenu
-        menu={<Settings />}
+        menu={<Settings logout={() => this.logout()} />}
         isOpen={this.props.open}
         openMenuOffset={300}
         disableGestures={true}
