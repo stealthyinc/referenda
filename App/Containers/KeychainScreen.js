@@ -88,70 +88,71 @@ class KeychainScreen extends Component {
     // - https://github.com/ptomasroos/react-native-tab-navigator/issues/68
     //
     return (
-    <RkAvoidKeyboard
-      style={styles.screen}
-      onStartShouldSetResponder={() => true}
-      onResponderRelease={() => Keyboard.dismiss()}>
+      <RkAvoidKeyboard
+        style={styles.screen}
+        onStartShouldSetResponder={() => true}
+        onResponderRelease={() => Keyboard.dismiss()}>
 
-      <View id="width-limiter" style={{flexDirection: 'column', flex: 1, width: '95%'}}>
+        <View id="width-limiter" style={{flexDirection: 'column', flex: 1, width: '95%'}}>
 
-        <View id="top-spacer" style={{height: '10%'}}/>
+          <View id="top-spacer" style={{height: '10%'}}/>
 
-        <View style={{ alignItems: 'center', height: '20%' }}>
-          {this.renderImage()}
-          <RkText rkType='h1' style={{color: 'white'}}>Security</RkText>
-        </View>
-
-        <View id="top-content-spacer" style={{height: '5%'}}/>
-
-        <View style={{alignItems: 'flex-start', flex: 1}}>
-          <View class='text-spacer' style={{height: 10}} />
-          <RkText rkType='h6' style={{color: 'white'}}>Your data is owned by you, encrypted with your encryption keys and then stored on cloud storage. You own the encryption keys--that means nobody, not even us at referenda can access your data.</RkText>
-          <View class='text-spacer' style={{height: 10}} />
-          <RkText rkType='h6' style={{color: 'white'}}>Secure your encryption keys on this device by using a passcode or Face ID.</RkText>
-        </View>
-
-        <View style={{height: '25%'}}>
-          <View style={{flex: 1}} />
-
-          <SegmentedControlIOS
-            selectedIndex={0}
-            style={{marginBottom:10,
-                    height: 40,
-                    tintColor: '#a2a2a2',
-                    backgroundColor: 'white',
-                    borderStyle:'solid',
-                    borderWidth:1,
-                    borderColor:'white',
-                    borderRadius:15}}
-            values={this.state.biometryType ? [...ACCESS_CONTROL_OPTIONS, this.state.biometryType] : ACCESS_CONTROL_OPTIONS}
-            onChange={({ nativeEvent }) => {
-              this.setState({
-                accessControl: ACCESS_CONTROL_MAP[nativeEvent.selectedSegmentIndex],
-              });
-            }}
-          />
-          <GradientButton
-            style={[styles.save, {marginTop: 5, height: 40}]}
-            rkType='large'
-            text='Next'
-            onPress={this.onSignUpButtonPressed}
-          />
-
-          <View id='footer-spacer' style={{height: 10}} />
-
-          <View style={styles.textRow}>
-            <RkText rkType='primary3'>Already have an account?</RkText>
-            <RkButton rkType='clear' onPress={this.onSignInButtonPressed}>
-              <RkText rkType='header6'> Sign in now</RkText>
-            </RkButton>
+          <View style={{ alignItems: 'center', height: '20%' }}>
+            {this.renderImage()}
+            <RkText rkType='h1' style={{color: 'white'}}>Security</RkText>
           </View>
-        </View>
 
-         <View id="bottom-spacer" style={{height: '5%'}}/>
-      </View>
-    </RkAvoidKeyboard>
-  )
+          <View id="top-content-spacer" style={{height: '5%'}}/>
+
+          <View style={{alignItems: 'flex-start', flex: 1}}>
+            <View class='text-spacer' style={{height: 10}} />
+            <RkText rkType='h6' style={{color: 'white'}}>Your data is owned by you, encrypted with your encryption keys and then stored on cloud storage. You own the encryption keys--that means nobody, not even us at referenda can access your data.</RkText>
+            <View class='text-spacer' style={{height: 10}} />
+            <RkText rkType='h6' style={{color: 'white'}}>Secure your encryption keys on this device by using a passcode or Face ID.</RkText>
+          </View>
+
+          <View style={{height: '25%'}}>
+            <View style={{flex: 1}} />
+
+            <SegmentedControlIOS
+              selectedIndex={0}
+              style={{marginBottom:10,
+                      height: 40,
+                      tintColor: '#a2a2a2',
+                      backgroundColor: 'white',
+                      borderStyle:'solid',
+                      borderWidth:1,
+                      borderColor:'white',
+                      borderRadius:15}}
+              values={this.state.biometryType ? [...ACCESS_CONTROL_OPTIONS, this.state.biometryType] : ACCESS_CONTROL_OPTIONS}
+              onChange={({ nativeEvent }) => {
+                this.setState({
+                  accessControl: ACCESS_CONTROL_MAP[nativeEvent.selectedSegmentIndex],
+                });
+              }}
+            />
+            <GradientButton
+              style={[styles.save, {marginTop: 5, height: 40}]}
+              rkType='large'
+              text='Next'
+              onPress={this.onSignUpButtonPressed}
+            />
+
+            <View id='footer-spacer' style={{height: 10}} />
+
+            <View style={styles.textRow}>
+              <RkText rkType='primary3'>Already have an account?</RkText>
+              <RkButton rkType='clear' onPress={this.onSignInButtonPressed}>
+                <RkText rkType='header6'> Sign in now</RkText>
+              </RkButton>
+            </View>
+          </View>
+
+           <View id="bottom-spacer" style={{height: '5%'}}/>
+        </View>
+      </RkAvoidKeyboard>
+    )
+  }
 }
 
 const styles = RkStyleSheet.create(theme => ({
