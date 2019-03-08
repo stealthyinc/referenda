@@ -8,6 +8,7 @@ import LoginScreen from '../Containers/LoginScreen'
 import FeedScreen from '../Containers/FeedScreen'
 import KeychainScreen from '../Containers/KeychainScreen'
 import CameraScreen from '../Containers/CameraScreen'
+import CalendarScreen from '../Containers/CalendarScreen'
 import AuthLoadingScreen from '../Containers/AuthLoadingScreen'
 import VideoScreen from '../Containers/VideoScreen'
 import IntroductionScreen from '../Components/IntroductionScreen'
@@ -55,6 +56,26 @@ const AuthNav = createStackNavigator({
   navigationOptions: {
     headerStyle: styles.header
   }
+})
+
+const CalendarNav = createStackNavigator({
+  Home: {
+    screen: CalendarScreen
+  }
+}, {
+  initialRouteName: '',
+  headerMode: 'screen',
+  cardStyle: { backgroundColor: 'transparent' },
+  transitionConfig: Transition,
+  navigationOptions: ({ navigation }) => ({
+    gesturesEnabled: false,
+    tabBarIcon: ({ focused, tintColor }) => {
+      const { routeName } = navigation.state
+      let iconName = `ios-calendar`
+      return <Ionicons name={iconName} size={34} color={tintColor} />
+    },
+    headerStyle: styles.header
+  }),
 })
 
 const FeedNav = createStackNavigator({
@@ -158,6 +179,7 @@ const CameraNav = createStackNavigator({
 const TabNav = createBottomTabNavigator({
   Feed: FeedNav,
   Camera: CameraNav,
+  Events: CalendarNav,
   // Events: EventsNav,
   Notifications: NotificationNav,
   Messages: MessageNav
