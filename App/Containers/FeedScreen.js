@@ -78,8 +78,8 @@ class FeedScreen extends Component {
       return (
         <RkCard rkType='blog' style={styles.card}>
           <Video rkCardImg
-                 controls='true'
-                 muted='true'
+                 controls={true}
+                 muted={true}
                  resizeMode='cover'
                  source={item.video} />
           <View rkCardHeader style={styles.content}>
