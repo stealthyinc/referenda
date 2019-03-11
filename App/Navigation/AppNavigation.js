@@ -178,7 +178,7 @@ const CameraNav = createStackNavigator({
 
 const TabNav = createBottomTabNavigator({
   Feed: FeedNav,
-  Camera: CameraNav,
+  // Camera: CameraNav,
   Events: CalendarNav,
   // Events: EventsNav,
   Notifications: NotificationNav,
@@ -204,7 +204,7 @@ export default createAppContainer(
     }, 
     {
       headerMode: 'none',
-      initialRouteName: 'Load',
+      initialRouteName: 'App',
       navigationOptions: {
         headerStyle: styles.header
       }
