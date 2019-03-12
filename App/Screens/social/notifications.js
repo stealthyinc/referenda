@@ -3,16 +3,28 @@ import {
   FlatList,
   View,
   Image,
+  TouchableOpacity
 } from 'react-native';
 import { RkStyleSheet, RkText } from 'react-native-ui-kitten';
 import { Avatar } from '../../Components';
 import { data } from '../../Data';
+import Ionicons from 'react-native-vector-icons/Ionicons'
 
 const moment = require('moment');
 
 export class Notifications extends React.Component {
   static navigationOptions = {
     title: 'Notifications'.toUpperCase(),
+    headerLeft: (
+      <TouchableOpacity onPress={() => alert('More Info')} style={{marginLeft: 10}}>
+        <Ionicons name='ios-information-circle-outline' size={30} color='gray' />
+      </TouchableOpacity>
+    ),
+    headerRight: (
+      <TouchableOpacity onPress={() => alert('Settings')} style={{marginRight: 10}}>
+        <Ionicons name='ios-cog' size={30} color='gray' />
+      </TouchableOpacity>
+    ),
   };
 
   state = {

@@ -50,7 +50,14 @@ class FeedScreen extends Component {
     return {
       headerLeft: (
         <TouchableOpacity onPress={() => params.drawer()} style={{marginLeft: 10}}>
-          <Ionicons name='ios-cog' size={30} color='gray' />
+          <Image 
+            source={require('../Data/img/avatars/agatha.png')} 
+            style={{height: 30, width: 30, borderRadius: 15, borderWidth: 1, borderColor: 'gray'}}/>
+        </TouchableOpacity>
+      ),
+      headerRight: (
+        <TouchableOpacity onPress={() => alert('New Proposal')} style={{marginRight: 10}}>
+          <Ionicons name='ios-paper-plane' size={30} color='gray' />
         </TouchableOpacity>
       ),
       headerTitle: 'Proposals'.toUpperCase(),

@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import {Agenda} from 'react-native-calendars';
 import NavigationType from '../Navigation/propTypes';
+import Ionicons from 'react-native-vector-icons/Ionicons'
 
 class CalendarScreen extends Component {
   static propTypes = {
@@ -18,6 +19,16 @@ class CalendarScreen extends Component {
     const params = navigation.state.params || {}
     return {
       headerTitle: 'Events'.toUpperCase(),
+      headerLeft: (
+        <TouchableOpacity onPress={() => alert('More Info')} style={{marginLeft: 10}}>
+          <Ionicons name='ios-information-circle-outline' size={30} color='gray' />
+        </TouchableOpacity>
+      ),
+      headerRight: (
+        <TouchableOpacity onPress={() => alert('New Event')} style={{marginRight: 10}}>
+          <Ionicons name='ios-add-circle-outline' size={30} color='gray' />
+        </TouchableOpacity>
+      ),
       headerBackTitle: 'Back',
       headerTintColor: 'black',
     }

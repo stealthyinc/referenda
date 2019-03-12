@@ -72,7 +72,7 @@ const CalendarNav = createStackNavigator({
     tabBarIcon: ({ focused, tintColor }) => {
       const { routeName } = navigation.state
       let iconName = `ios-calendar`
-      return <Ionicons name={iconName} size={34} color={tintColor} />
+      return <Ionicons name={iconName} size={30} color={tintColor} />
     },
     headerStyle: styles.header
   }),
@@ -104,7 +104,7 @@ const FeedNav = createStackNavigator({
     tabBarIcon: ({ focused, tintColor }) => {
       const { routeName } = navigation.state
       let iconName = `ios-globe`
-      return <Ionicons name={iconName} size={34} color={tintColor} />
+      return <Ionicons name={iconName} size={30} color={tintColor} />
     },
     headerStyle: styles.header
   }),
@@ -130,7 +130,7 @@ const MessageNav = createStackNavigator({
     tabBarIcon: ({ focused, tintColor }) => {
       const { routeName } = navigation.state
       let iconName = `ios-chatbubbles`
-      return <Ionicons name={iconName} size={34} color={tintColor} />
+      return <Ionicons name={iconName} size={30} color={tintColor} />
     },
     headerStyle: styles.header
   }),
@@ -150,7 +150,7 @@ const NotificationNav = createStackNavigator({
     tabBarIcon: ({ focused, tintColor }) => {
       const { routeName } = navigation.state
       let iconName = `ios-notifications`
-      return <Ionicons name={iconName} size={34} color={tintColor} />
+      return <Ionicons name={iconName} size={30} color={tintColor} />
     },
     headerStyle: styles.header
   }),
@@ -170,7 +170,7 @@ const CameraNav = createStackNavigator({
     tabBarIcon: ({ focused, tintColor }) => {
       const { routeName } = navigation.state
       let iconName = `ios-play-circle`
-      return <Ionicons name={iconName} size={34} color={tintColor} />
+      return <Ionicons name={iconName} size={30} color={tintColor} />
     },
     headerStyle: styles.header
   }),
@@ -190,7 +190,7 @@ const TokenNav = createStackNavigator({
     tabBarIcon: ({ focused, tintColor }) => {
       const { routeName } = navigation.state
       let iconName = `ios-wallet`
-      return <Ionicons name={iconName} size={34} color={tintColor} />
+      return <Ionicons name={iconName} size={30} color={tintColor} />
     },
     headerStyle: styles.header
   }),

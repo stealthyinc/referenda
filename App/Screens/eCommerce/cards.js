@@ -19,10 +19,21 @@ import { data } from '../../Data';
 import { PasswordTextInput } from '../../Components/passwordTextInput';
 import { UIConstants } from '../../Config/AppConstants';
 import { scaleVertical } from '../../Utils/scale';
+import Ionicons from 'react-native-vector-icons/Ionicons'
 
 export class Cards extends React.Component {
   static navigationOptions = {
     title: 'Tokens'.toUpperCase(),
+    headerLeft: (
+      <TouchableOpacity onPress={() => alert('More Info')} style={{marginLeft: 10}}>
+        <Ionicons name='ios-information-circle-outline' size={30} color='gray' />
+      </TouchableOpacity>
+    ),
+    headerRight: (
+      <TouchableOpacity onPress={() => alert('Add Tokens')} style={{marginRight: 10}}>
+        <Ionicons name='logo-buffer' size={30} color='gray' />
+      </TouchableOpacity>
+    ),
   };
 
   state = {
@@ -134,7 +145,7 @@ export class Cards extends React.Component {
       <FlatList
         style={styles.list}
         showsVerticalScrollIndicator={false}
-        ListFooterComponent={this.renderFooter}
+        // ListFooterComponent={this.renderFooter}
         keyExtractor={this.extractItemKey}
         data={this.state.data}
         renderItem={this.renderItem}

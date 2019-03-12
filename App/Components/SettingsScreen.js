@@ -60,11 +60,11 @@ export default class SettingsScreen extends Component {
             <RkText rkType='header6'>Edit Profile</RkText>
           </TouchableOpacity>
         </View>
-        <View style={styles.row}>
+        {/*<View style={styles.row}>
           <TouchableOpacity style={styles.rowButton}>
             <RkText rkType='header6'>Change Password</RkText>
           </TouchableOpacity>
-        </View>
+        </View>*/}
         <View style={styles.row}>
           <RkText rkType='header6'>Send Push Notifications</RkText>
           <RkSwitch

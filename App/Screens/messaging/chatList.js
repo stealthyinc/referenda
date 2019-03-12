@@ -17,6 +17,7 @@ import { FontAwesome } from '../../Assets/icons';
 import { data } from '../../Data';
 import NavigationType from '../../Navigation/propTypes';
 import Contacts from 'react-native-contacts';
+import Ionicons from 'react-native-vector-icons/Ionicons'
 
 const moment = require('moment');
 
@@ -26,6 +27,16 @@ export class ChatList extends React.Component {
   };
   static navigationOptions = {
     title: 'Messages'.toUpperCase(),
+    headerLeft: (
+      <TouchableOpacity onPress={() => alert('More Info')} style={{marginLeft: 10}}>
+        <Ionicons name='ios-information-circle-outline' size={30} color='gray' />
+      </TouchableOpacity>
+    ),
+    headerRight: (
+      <TouchableOpacity onPress={() => alert('New Message')} style={{marginRight: 10}}>
+        <Ionicons name='ios-mail' size={30} color='gray' />
+      </TouchableOpacity>
+    )
   };
 
   state = {

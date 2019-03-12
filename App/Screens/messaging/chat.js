@@ -35,6 +35,7 @@ export class Chat extends React.Component {
     return ({
       headerTitle: Chat.renderNavigationTitle(navigation, user),
       headerRight: Chat.renderNavigationAvatar(navigation, user),
+      headerBackTitle: 'Back',
     });
   };
 
