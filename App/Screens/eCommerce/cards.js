@@ -22,7 +22,7 @@ import { scaleVertical } from '../../Utils/scale';
 
 export class Cards extends React.Component {
   static navigationOptions = {
-    title: 'Cards'.toUpperCase(),
+    title: 'Tokens'.toUpperCase(),
   };
 
   state = {
@@ -35,17 +35,17 @@ export class Cards extends React.Component {
       case 'visa':
         return {
           gradient: RkTheme.current.colors.gradients.visa,
-          icon: require('../../Assets/icons/visaIcon.png'),
+          icon: require('../../Assets/icons/bitcoin.png'),
         };
       case 'mastercard':
         return {
           gradient: RkTheme.current.colors.gradients.mastercard,
-          icon: require('../../Assets/icons/masterCardIcon.png'),
+          icon: require('../../Assets/icons/ethereum.png'),
         };
       case 'axp':
         return {
           gradient: RkTheme.current.colors.gradients.axp,
-          icon: require('../../Assets/icons/americanExpressIcon.png'),
+          icon: require('../../Assets/icons/lightning.png'),
         };
       default: return {};
     }
@@ -114,16 +114,14 @@ export class Cards extends React.Component {
                 <RkText style={[styles.cardNo, styles.cardPlaceholder]} rkType='header2 inverseColor'>* * * *</RkText>
                 <RkText style={styles.cardNo} rkType='header2 inverseColor'>{lastPart}</RkText>
               </View>
-              <RkText style={styles.date} rkType='header6 inverseColor'>{item.date}</RkText>
+              {/*<RkText style={styles.date} rkType='header6 inverseColor'>{item.date}</RkText>*/}
             </View>
             <View rkCardFooter>
               <View>
-                <RkText rkType='header4 inverseColor'>{item.currency.toUpperCase()}</RkText>
+                {/*<RkText rkType='header4 inverseColor'>{item.currency.toUpperCase()}</RkText>*/}
                 <RkText rkType='header6 inverseColor'>{item.name.toUpperCase()}</RkText>
               </View>
-              <RkText
-                rkType='header2 inverseColor'>{this.formatCurrency(item.amount, item.currency)}
-              </RkText>
+              <RkText style={styles.date} rkType='header6 inverseColor'>{item.date}</RkText>
             </View>
           </LinearGradient>
         </TouchableOpacity>

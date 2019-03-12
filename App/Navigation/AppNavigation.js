@@ -176,11 +176,31 @@ const CameraNav = createStackNavigator({
   }),
 })
 
+const TokenNav = createStackNavigator({
+  Home: {
+    screen: Screens.Cards
+  }
+}, {
+  initialRouteName: '',
+  headerMode: 'screen',
+  cardStyle: { backgroundColor: 'transparent' },
+  transitionConfig: Transition,
+  navigationOptions: ({ navigation }) => ({
+    gesturesEnabled: false,
+    tabBarIcon: ({ focused, tintColor }) => {
+      const { routeName } = navigation.state
+      let iconName = `ios-wallet`
+      return <Ionicons name={iconName} size={34} color={tintColor} />
+    },
+    headerStyle: styles.header
+  }),
+})
+
 const TabNav = createBottomTabNavigator({
   Feed: FeedNav,
   // Camera: CameraNav,
   Events: CalendarNav,
-  // Events: EventsNav,
+  Tokens: TokenNav,
   Notifications: NotificationNav,
   Messages: MessageNav
 }, {
