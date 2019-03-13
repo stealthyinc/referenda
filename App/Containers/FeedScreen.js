@@ -14,7 +14,7 @@ import { Avatar } from '../Components';
 import { data } from '../Data';
 import NavigationType from '../Navigation/propTypes';
 import Ionicons from 'react-native-vector-icons/Ionicons'
-import SettingsActions from '../Redux/SettingsRedux'
+import SettingsActions, { SettingsSelectors } from '../Redux/SettingsRedux'
 
 import Video from 'react-native-video'
 
@@ -41,18 +41,34 @@ const styles = RkStyleSheet.create(theme => ({
   },
 }));
 
+const avatarArr = {
+  0: require('../Data/img/avatars/Image0.png'),
+  1: require('../Data/img/avatars/Image1.png'),
+  2: require('../Data/img/avatars/Image2.png'),
+  3: require('../Data/img/avatars/Image3.png'),
+  4: require('../Data/img/avatars/Image4.png'),
+  5: require('../Data/img/avatars/Image5.png'),
+  6: require('../Data/img/avatars/Image6.png'),
+  7: require('../Data/img/avatars/Image7.png'),
+  8: require('../Data/img/avatars/Image8.png'),
+  9: require('../Data/img/avatars/Image9.png'),
+ 10: require('../Data/img/avatars/Image10.png'),
+ 11: require('../Data/img/avatars/Image11.png'),
+}
+
 class FeedScreen extends Component {
   static propTypes = {
     navigation: NavigationType.isRequired,
   };
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
+    const randomAvatar = (params.phoneNumber) ? avatarArr[Math.floor(Math.random() * Math.floor(12))] : require('../Data/img/avatars/agatha.png')
     return {
       headerLeft: (
         <TouchableOpacity onPress={() => params.drawer()} style={{marginLeft: 10}}>
           <Image 
-            source={require('../Data/img/avatars/agatha.png')} 
-            style={{height: 30, width: 30, borderRadius: 15, borderWidth: 1, borderColor: 'gray'}}/>
+            source={randomAvatar}
+            style={{height: 30, width: 30, borderRadius: 15}}/>
         </TouchableOpacity>
       ),
       headerRight: (
@@ -71,7 +87,7 @@ class FeedScreen extends Component {
   };
 
   async componentDidMount () {
-    this.props.navigation.setParams({ navigation: this.props.navigation, drawer: this.props.settingsMenuToggle })
+    this.props.navigation.setParams({ navigation: this.props.navigation, drawer: this.props.settingsMenuToggle, phoneNumber: this.props.phoneNumber })
   }
 
   extractItemKey = (item) => `${item.id}`;
@@ -147,6 +163,7 @@ class FeedScreen extends Component {
 
 const mapStateToProps = (state) => {
   return {
+    phoneNumber: SettingsSelectors.getPhoneNumber(state),
   }
 }
 

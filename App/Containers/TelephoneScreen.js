@@ -17,6 +17,7 @@ import { scaleVertical } from '../Utils/scale';
 import NavigationType from '../Navigation/propTypes';
 import { connect } from 'react-redux'
 import * as Keychain from 'react-native-keychain';
+import SettingsActions from '../Redux/SettingsRedux'
 
 class TelephoneScreen extends Component {
   static navigationOptions = {
@@ -36,6 +37,7 @@ class TelephoneScreen extends Component {
   );
 
   onTelephoneButtonPressed = () => {
+    this.props.storePhoneNumber(this.state.phoneNumber)
     this.props.navigation.navigate('Age');
   };
 
@@ -46,7 +48,8 @@ class TelephoneScreen extends Component {
   state = {
     username: '',
     password: '',
-    status: ''
+    status: '',
+    phoneNumber: ''
   }
 
   async reset() {
@@ -88,14 +91,13 @@ class TelephoneScreen extends Component {
 
         <View style={{height: '25%'}}>
           <View style={{flex: 1}} />
-          <RkTextInput rkType='rounded' placeholder='Phone Number' />
+          <RkTextInput rkType='rounded' placeholder='Phone Number' onChangeText={(phoneNumber) => this.setState({ phoneNumber })}/>
           <GradientButton
             style={[styles.save, {marginTop: 5, height: 40}]}
             rkType='large'
             text='Next'
             onPress={this.onTelephoneButtonPressed}
           />
-
           <View id='footer-spacer' style={{height: 10}} />
           <View style={styles.textRow}>
             <RkText rkType='primary3'>Already have an account?</RkText>
@@ -156,6 +158,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    storePhoneNumber: (phoneNumber) => dispatch(SettingsActions.storePhoneNumber(phoneNumber))
   }
 }
 

@@ -268,7 +268,7 @@ const users = [{
   followingCount: 165,
   followersCount: 5433,
   images,
-  photo: require('../img/avatars/Image12.png'),
+  photo: require('../img/avatars/Image0.png'),
 }];
 
 export default users;

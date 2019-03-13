@@ -11,6 +11,7 @@ import { Bootstrap } from '../Config/Bootstrap'
 import { data } from '../Data'
 import SideMenu from 'react-native-side-menu'
 import Settings from '../Components/SettingsScreen'
+import { SettingsSelectors } from '../Redux/SettingsRedux'
 
 createReactNavigationReduxMiddleware(
   'root',
@@ -65,7 +66,7 @@ class ReduxNavigation extends Component {
 const mapStateToProps = (state) => {
   return {
     nav: state.nav,
-    open: state.settings.open
+    open: SettingsSelectors.getOpen(state),
   }
 }
 
