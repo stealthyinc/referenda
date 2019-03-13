@@ -18,6 +18,7 @@ import NavigationType from '../Navigation/propTypes';
 import { connect } from 'react-redux'
 import * as Keychain from 'react-native-keychain';
 import SettingsActions from '../Redux/SettingsRedux'
+const { userTypeInstance } = require('../Utils/UserType.js')
 
 class TelephoneScreen extends Component {
   static navigationOptions = {
@@ -38,6 +39,10 @@ class TelephoneScreen extends Component {
 
   onTelephoneButtonPressed = () => {
     this.props.storePhoneNumber(this.state.phoneNumber)
+    if (this.state.phoneNumber)
+      userTypeInstance.setUserType(false)
+    else
+      userTypeInstance.setUserType(true)
     this.props.navigation.navigate('Age');
   };
 

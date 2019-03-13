@@ -9,6 +9,7 @@ import {
 import {Agenda} from 'react-native-calendars';
 import NavigationType from '../Navigation/propTypes';
 import Ionicons from 'react-native-vector-icons/Ionicons'
+const { userTypeInstance } = require('../Utils/UserType.js')
 
 class CalendarScreen extends Component {
   static propTypes = {
@@ -24,11 +25,11 @@ class CalendarScreen extends Component {
           <Ionicons name='ios-information-circle-outline' size={30} color='gray' />
         </TouchableOpacity>
       ),
-      headerRight: (
+      headerRight: (userTypeInstance.getUserType()) ? (
         <TouchableOpacity onPress={() => alert('New Event')} style={{marginRight: 10}}>
           <Ionicons name='ios-add-circle-outline' size={30} color='gray' />
         </TouchableOpacity>
-      ),
+      ) : null,
       headerBackTitle: 'Back',
       headerTintColor: 'black',
     }

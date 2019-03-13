@@ -17,6 +17,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import SettingsActions, { SettingsSelectors } from '../Redux/SettingsRedux'
 
 import Video from 'react-native-video'
+const { userTypeInstance } = require('../Utils/UserType.js')
 
 const moment = require('moment');
 // Add Actions - replace 'Your' with whatever your reducer is called :)
@@ -71,11 +72,11 @@ class FeedScreen extends Component {
             style={{height: 30, width: 30, borderRadius: 15}}/>
         </TouchableOpacity>
       ),
-      headerRight: (
+      headerRight: (userTypeInstance.getUserType()) ? (
         <TouchableOpacity onPress={() => alert('New Proposal')} style={{marginRight: 10}}>
           <Ionicons name='ios-paper-plane' size={30} color='gray' />
         </TouchableOpacity>
-      ),
+      ) : null,
       headerTitle: 'Proposals'.toUpperCase(),
       headerBackTitle: 'Back',
       headerTintColor: 'black',

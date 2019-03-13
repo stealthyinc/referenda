@@ -19,9 +19,6 @@ const wbOrder = {
 };
 
 export default class CameraScreen extends React.Component {
-  static navigationOptions = {
-    title: 'Camera'.toUpperCase(),
-  };
   state = {
     flash: 'off',
     zoom: 0,

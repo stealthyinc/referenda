@@ -9,6 +9,7 @@ import FeedScreen from '../Containers/FeedScreen'
 import KeychainScreen from '../Containers/KeychainScreen'
 import CameraScreen from '../Containers/CameraScreen'
 import CalendarScreen from '../Containers/CalendarScreen'
+import CombinedScreen from '../Containers/CombinedScreen'
 import AuthLoadingScreen from '../Containers/AuthLoadingScreen'
 import VideoScreen from '../Containers/VideoScreen'
 import IntroductionScreen from '../Components/IntroductionScreen'
@@ -196,11 +197,31 @@ const TokenNav = createStackNavigator({
   }),
 })
 
+const CombinedNav = createStackNavigator({
+  Home: {
+    screen: CombinedScreen
+  }
+}, {
+  initialRouteName: '',
+  headerMode: 'screen',
+  cardStyle: { backgroundColor: 'transparent' },
+  transitionConfig: Transition,
+  navigationOptions: ({ navigation }) => ({
+    gesturesEnabled: false,
+    tabBarIcon: ({ focused, tintColor }) => {
+      const { routeName } = navigation.state
+      let iconName = `ios-aperture`
+      return <Ionicons name={iconName} size={30} color={tintColor} />
+    },
+  }),
+})
+
 const TabNav = createBottomTabNavigator({
   Feed: FeedNav,
-  // Camera: CameraNav,
   Events: CalendarNav,
-  Tokens: TokenNav,
+  // Camera: CameraNav,
+  // Tokens: TokenNav,
+  Combined: CombinedNav,
   Notifications: NotificationNav,
   Messages: MessageNav
 }, {
