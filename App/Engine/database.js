@@ -1,5 +1,7 @@
 import Config from 'react-native-config'
 import Gun from 'gun/gun.js' // or use the minified version 'gun/gun.min.js'
+
+// TODO:  what is this? (Google it)
 Gun.on('opt', function (ctx) {
   if (ctx.once) {
     return
@@ -13,21 +15,27 @@ Gun.on('opt', function (ctx) {
     to.next(msg) // pass to next middleware
   })
 })
-const gunServer = Config.GUN_SERVER || 'http://localhost:4040/gun'
-const gun = new Gun(gunServer)
 
+// TODO: abstraction methods that isolate us from gun and allow switch to other DBs
 class GunWrapper {
-  constructor () {}
-
-  getGunRef (path) {
-    return gun.get(path)
+  constructor () {
+    const gunServer = Config.GUN_SERVER || 'http://localhost:4040/gun'
+    this.gun = new Gun(gunServer)
   }
 
-  setGunData (path, data) {
-    gun.get(path).put(data);
+  instance() {
+    return this.gun
   }
+
+  // getGunRef (path) {
+  //   return gun.get(path)
+  // }
+  //
+  // setGunData (path, data) {
+  //   gun.get(path).put(data);
+  // }
 }
 
 // Singleton global of our gun wrapper. Must appear after the class definition above.
 //
-export var gunInstance = new GunWrapper()
+export var db = new GunWrapper()

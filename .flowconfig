@@ -1,0 +1,15 @@
+[ignore]
+<PROJECT_ROOT>/App/I18n/.*
+<PROJECT_ROOT>/Tests/.*
+<PROJECT_ROOT>/android/.*
+<PROJECT_ROOT>/ignite/.*
+<PROJECT_ROOT>/ios/.*
+<PROJECT_ROOT>/node_modules/.*
+<PROJECT_ROOT>/storybook/.*
+
+[include]
+<PROJECT_ROOT>/App/.*
+
+[libs]
+
+[options]
