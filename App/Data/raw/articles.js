@@ -1,21 +1,24 @@
 const articles = [
   {
     id: 0,
-    video: require('./../../Assets/videos/candidateVid.mp4'),
+    video: require('./../../Assets/videos/candidateVid1.mp4'),
     type: 'article',
     time: -100,
     header: 'In-car Footage',
-    text: `Bilingual Hamilton Mixtape rap in support of Immigrants: We Get the Job Done Coalition http://bit.ly/2s6mWAt  #Ham4All #BrazilianAmerican 🎤`,
+    text: `As a Brazilian immigrant who is lucky enough to have American citizenship, I've always felt 
+    the importance of using my voice to stand hand in hand with, and advocate for, those 11 million who are being kept 
+    voiceless by our government’s inability to pass legislation despite overwhelming support by the American public.`,
     comments: [],
   },
   {id: 1,
-  photo: require('../img/democracy1.png'),
+  photo: require('./../../Assets/avatars/agatha1.png'),
   type: 'article',
   time: -300,
-  header: 'Universal Child Care',
-  text: `CA 12th district congressional candidate Agatha Bacelar proposed a universal child care plan that would limit American families’ expenses to 7 percent of ` +
-  `income regardless of how many children they have in care -- paid for by a tax on the ultra-wealthy. \n\nIt's the latest in a flurry ` +
-  `of ambitious legislation being floated by lawmakers with their eyes on the 2020 elections.`,
+  header: 'The wisdom of immigrants',
+  text: `From talking with farm workers in the Central Valley of California, to canvassing in Nevada with undocumented and asylum-seeking organizers, \
+  to visiting the classrooms of DACAmented teachers, to marching and demonstrating with Dreamers, to doing intake meetings with detained immigrants in \
+  five different detention centers, I know that each immigrant has an incredible story, contributes to and represents American values, and I have found \
+  typically knows way more about policy and how our government works than most American citizens do!`,
   comments: [{
     id: 1,
     text: 'Aliquam sit amet diam in magna bibendum imperdiet. Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis. Fusce posuere felis sed lacus. Morbi sem mauris, laoreet ut, rhoncus aliquet, pulvinar sed, nisl. Nunc rhoncus dui vel sem.',
@@ -51,15 +54,66 @@ const articles = [
   }],
 }, {
   id: 2,
-  photo: require('../img/democracy2.jpg'),
+  photo: require('./../../Assets/avatars/agatha3.png'),
   type: 'article',
   time: -1373,
-  header: 'Save Social Security ',
-  text: `Congressional hopeful Agatha Bacelar has a plan to add more than 50 years of sustainability to Social Security, the New Deal-era program that's facing a looming cash crunch.` +
-  `\n\nThe proposal would shore up Social Security with payroll taxes on income above $250,000, the Vermont independent announced Wednesday.`,
+  header: 'My immigrant journey',
+  text: `I was born in Brasil, and immigrated to the US as an infant with my mother, who is one of the glass-ceiling shattering professional women of her \
+  generation - and she did it in not one but two countries! America is a nation of immigrants, so being an immigrant and an American citizen makes me, \
+  in many ways, a very typical American.  \n\nGrowing up, I did all the things American girls love to do like ballet and jump rope, and dreaming of attending \
+  college at Stanford University.   \n\nMy immigrant heritage even brought me some advantages other girls didn't get, for example, I grew up speaking Portuguese \
+  o my Brasilian side of the family and English on my American side of the family, and Spanish to all my immigrant classmates at my international high school. \
+  \n\nI've called the Bay Area my home since I arrived on the Stanford campus as an engineering student.`,
   comments: [],
 }, {
   id: 3,
+  video: require('./../../Assets/videos/candidateVid.mp4'),
+  type: 'article',
+  time: -100,
+  header: 'In-car Footage',
+  text: `Bilingual Hamilton Mixtape rap in support of Immigrants: We Get the Job Done Coalition http://bit.ly/2s6mWAt  #Ham4All #BrazilianAmerican 🎤`,
+  comments: [],
+}, {
+//   id: 3,
+//   photo: require('../img/democracy2.jpg'),
+//   type: 'article',
+//   time: -2446,
+//   header: 'The power of a word',
+//   text: `As a Brazilian immigrant who is lucky enough to have American citizenship, I've always felt the importance of using my voice to stand hand in hand 
+//   with, and advocate for, those 11 million who are being kept voiceless by our government’s inability to pass legislation despite overwhelming support by 
+//   the American public.`,
+//   comments: [],
+// }, {
+  id: 4,
+  photo: require('./../../Assets/avatars/agatha4.png'),
+  type: 'article',
+  time: -4592,
+  header: 'Meet a Dreamer: Paola',
+  text: `Paola and her family were the first undocumented people I ever met. She was my childhood neighbor and Brazilian like me. We both came to the U.S. \
+  as kids, played the same games together, and both attended local public schools in Miami.  didn’t know Paola was undocumented until she told me after we \
+  graduated from college. It was difficult to begin thinking of her as an undocumented person, because she was my neighbor, my classmate, and walked \
+  alongside me in everything I did. \n\nPaola did nothing wrong nor did I do anything special to merit our differences in citizenship status. But those \
+  differences have shaped who we are and created real hardships for Paola. With the privilege of an American passport, I was able visit the Brasilian \
+  side of my family as a child.  \n\nBut Paola has not left the US since the age of six - not even when her dad was deported to Brazil and unable to re-enter \
+  the U.S. Not being able to visit  with your own father is a painful separation I could not imagine bearing. Today, Paola works for a women’s health \
+  clinic in Colorado, assisting women in need - exactly the kind of friend and neighbor we all want to claim as fellow citizen.`,
+  comments: [],
+}, {
+//   id: 5,
+//   photo: require('./../../Assets/avatars/agatha3.png'),
+//   type: 'article',
+//   time: -5665,
+//   header: 'My immigrant journey',
+//   text: `I was born in Brasil, and immigrated to the US as an infant with my mother, who is one of the glass-ceiling shattering professional women of her \
+//   generation - and she did it in not one but two countries! America is a nation of immigrants, so being an immigrant and an American citizen makes me, \
+//   in many ways, a very typical American.  Growing up, I did all the things American girls love to do like ballet and jump rope, and dreaming of attending \
+//   college at Stanford University.   \n\nMy immigrant heritage even brought me some advantages other girls didn't get, for example, I grew up speaking Portuguese \
+//   o my Brasilian side of the family and English on my American side of the family, and Spanish to all my immigrant classmates at my international high school. \
+//   \n\nI've called the Bay Area my home since I arrived on the Stanford campus as an engineering student.`,
+//   comments: [],
+// }, 
+// {
+  id: 23,
   photo: require('../img/guadido1.jpg'),
   type: 'article1',
   time: -2446,
@@ -71,7 +125,7 @@ const articles = [
   comments: [],
 },
 {
-  id: 4,
+  id: 24,
   photo: require('../img/kamala1.jpg'),
   type: 'article1',
   time: -2446,
@@ -83,7 +137,7 @@ const articles = [
   comments: [],
 },
 {
-  id: 5,
+  id: 25,
   photo: require('../img/photo5.png'),
   type: 'article1',
   time: -4592,
@@ -94,7 +148,7 @@ const articles = [
   'Some bird species are intelligent enough to create and use tools.',
   comments: [],
 }, {
-  id: 6,
+  id: 26,
   photo: require('../img/photo6.png'),
   type: 'article1',
   time: -5665,

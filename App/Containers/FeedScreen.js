@@ -98,7 +98,7 @@ class FeedScreen extends Component {
   };
 
   renderItem = ({ item }) => {
-    if (item.hasOwnProperty('video')) {
+    if (item && item.hasOwnProperty('video')) {
       return (
         <RkCard rkType='blog' style={styles.card}>
           <Video rkCardImg
@@ -116,8 +116,8 @@ class FeedScreen extends Component {
           </View>
           <View rkCardFooter>
             <View style={styles.userInfo}>
-              <Avatar style={styles.avatar} rkType='circle small' img={item.user.photo} />
-              <RkText rkType='header6'>{`${item.user.firstName} ${item.user.lastName}`}</RkText>
+              <Avatar style={styles.avatar} rkType='circle small' img={require('../Data/img/avatars/agatha.png')} />
+              <RkText rkType='header6'>{`Agatha Bacelar`}</RkText>
             </View>
             <RkText rkType='secondary2 hintColor'>{moment().add(item.time, 'seconds').fromNow()}</RkText>
           </View>
@@ -141,8 +141,8 @@ class FeedScreen extends Component {
             </View>
             <View rkCardFooter>
               <View style={styles.userInfo}>
-                <Avatar style={styles.avatar} rkType='circle small' img={item.user.photo} />
-                <RkText rkType='header6'>{`${item.user.firstName} ${item.user.lastName}`}</RkText>
+                <Avatar style={styles.avatar} rkType='circle small' img={require('../Data/img/avatars/agatha.png')} />
+                <RkText rkType='header6'>{`Agatha Bacelar`}</RkText>
               </View>
               <RkText rkType='secondary2 hintColor'>{moment().add(item.time, 'seconds').fromNow()}</RkText>
             </View>
