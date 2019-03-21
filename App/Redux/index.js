@@ -6,10 +6,11 @@ import ReduxPersist from '../Config/ReduxPersist'
 
 /* ------------- Assemble The Reducers ------------- */
 export const reducers = combineReducers({
+  gui: require('./GuiRedux').reducer,
+  pinata: require('./PinataRedux').reducer,
   engine: require('./EngineRedux').reducer,
   nav: require('./NavigationRedux').reducer,
   settings: require('./SettingsRedux').reducer,
-  pinata: require('./PinataRedux').reducer
 })
 
 export default () => {

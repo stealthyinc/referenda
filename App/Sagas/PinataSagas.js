@@ -13,10 +13,11 @@ const postAxios = (url, data, headers) => {
     {
       headers
     }
-  ).then(function (response) {
+  ).then(response => {
     console.log('IPFS response', response)
+    return response
   })
-  .catch(function (error) {
+  .catch(error => {
     console.log('IPFS error', error)
   })
 }
@@ -29,39 +30,46 @@ function* pinJSONToIPFS (action) {
     'pinata_secret_api_key': Config.PINATA_API_SECRET
   }
   try {
-    yield call(postAxios, url, json, headers)
-    yield put(PinataActions.pinataSuccess({success: true}))
+    const response = yield call(postAxios, url, json, headers)
+    if (response)
+      yield put(PinataActions.pinataSuccess(response))
   }
   catch (error) {
     yield put(PinataActions.pinataFailure())
   }
 }
 
-// function* pinFileToIPFS (action) {
-//   const { file } = action
-//   const url = `https://api.pinata.cloud/pinning/pinFileToIPFS`
-//   //we gather a local file from the API for this example, but you can gather the file from anywhere
-//   let data = new FormData()
-//   data.append('file', fs.createReadStream(file))
-//   //You'll need to make sure that the metadata is in the form of a JSON object that's been convered to a string
-//   const metadata = JSON.stringify({
-//     name: 'testname',
-//     keyvalues: {
-//       exampleKey: 'exampleValue'
-//     }
-//   })
-//   data.append('pinataMetadata', metadata)
-//   const headers = {
-//     'Content-Type': `multipart/form-data; boundary= ${data._boundary}`,
-//     'pinata_api_key': Config.PINATA_API_KEY,
-//     'pinata_secret_api_key': Config.PINATA_API_SECRET
-//   }
-//   const { response } = yield call(postAxios, url, data, headers)
-//   if (response)
-//     yield put(PinataActions.pinataSuccess(response))
-//   else
-//     yield put(PinataActions.pinataFailure())
-// };
+function* pinFileToIPFS (action) {
+  const { file } = action
+  const url = `https://api.pinata.cloud/pinning/pinFileToIPFS`
+  //You'll need to make sure that the metadata is in the form of a JSON object that's been convered to a string
+  const metadata = JSON.stringify({
+    name: 'testname',
+    keyvalues: {
+      exampleKey: 'exampleValue'
+    }
+  })
+  const data = new FormData();
+  data.append('photo', {
+    uri: file,
+    type: 'image/png', // or photo.type
+  });
+  data.append('pinataMetadata', metadata)
+  const headers = {
+    'Content-Type': `multipart/form-data; boundary= ${data._boundary}`,
+    'pinata_api_key': Config.PINATA_API_KEY,
+    'pinata_secret_api_key': Config.PINATA_API_SECRET
+  }
+  try {
+    const response = yield call(postAxios, url, data, headers)
+    console.log('IPFS response', response)
+    if (response)
+      yield put(PinataActions.pinataSuccess(response))
+  }
+  catch (error) {
+    yield put(PinataActions.pinataFailure())
+  }
+};
 
 function* removePinFromIPFS (action) {
   const { pin } = action
@@ -73,15 +81,18 @@ function* removePinFromIPFS (action) {
     'pinata_api_key': Config.PINATA_API_KEY,
     'pinata_secret_api_key': Config.PINATA_API_SECRET
   }
-  const { response } = yield call(postAxios, url, body, headers)
-  if (response)
-    yield put(PinataActions.pinataSuccess(response))
-  else
+  try {
+    const response = yield call(postAxios, url, body, headers)
+    if (response)
+      yield put(PinataActions.pinataSuccess(response))
+  }
+  catch (error) {
     yield put(PinataActions.pinataFailure())
+  }
 }
 
 export function* startPinata (action) {
   yield takeLatest(PinataTypes.PINATA_ADD_JSON, pinJSONToIPFS)
-  // yield takeLatest(PinataTypes.PINATA_ADD_FILE, pinFileToIPFS)
+  yield takeLatest(PinataTypes.PINATA_ADD_FILE, pinFileToIPFS)
   yield takeLatest(PinataTypes.PINATA_REMOVE_PIN, removePinFromIPFS)
 }

@@ -73,7 +73,7 @@ class FeedScreen extends Component {
         </TouchableOpacity>
       ),
       headerRight: (userTypeInstance.getUserType()) ? (
-        <TouchableOpacity onPress={() => alert('New Proposal')} style={{marginRight: 10}}>
+        <TouchableOpacity onPress={() => navigation.navigate('Create')} style={{marginRight: 10}}>
           <Ionicons name='ios-paper-plane' size={30} color='gray' />
         </TouchableOpacity>
       ) : null,

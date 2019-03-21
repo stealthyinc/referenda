@@ -1,6 +1,8 @@
 import React from 'react'
 import { createBottomTabNavigator, TabBarBottom, createSwitchNavigator } from 'react-navigation'
 import { createStackNavigator, createAppContainer } from 'react-navigation'
+import CameraRollScreen from '../Containers/CameraRollScreen'
+import ArticleInputScreen from '../Containers/ArticleInputScreen'
 import ChatScreen from '../Containers/ChatScreen'
 import AgeScreen from '../Containers/AgeScreen'
 import TelephoneScreen from '../Containers/TelephoneScreen'
@@ -94,6 +96,12 @@ const FeedNav = createStackNavigator({
   },
   UserInfo: {
     screen: Screens.ProfileSettings
+  },
+  Create: {
+    screen: ArticleInputScreen
+  },
+  CameraRoll: {
+    screen: CameraRollScreen
   }
 }, {
   initialRouteName: '',
@@ -157,46 +165,6 @@ const NotificationNav = createStackNavigator({
   }),
 })
 
-const CameraNav = createStackNavigator({
-  Home: {
-    screen: CameraScreen
-  }
-}, {
-  initialRouteName: '',
-  headerMode: 'screen',
-  cardStyle: { backgroundColor: 'transparent' },
-  transitionConfig: Transition,
-  navigationOptions: ({ navigation }) => ({
-    gesturesEnabled: false,
-    tabBarIcon: ({ focused, tintColor }) => {
-      const { routeName } = navigation.state
-      let iconName = `ios-play-circle`
-      return <Ionicons name={iconName} size={30} color={tintColor} />
-    },
-    headerStyle: styles.header
-  }),
-})
-
-const TokenNav = createStackNavigator({
-  Home: {
-    screen: Screens.Cards
-  }
-}, {
-  initialRouteName: '',
-  headerMode: 'screen',
-  cardStyle: { backgroundColor: 'transparent' },
-  transitionConfig: Transition,
-  navigationOptions: ({ navigation }) => ({
-    gesturesEnabled: false,
-    tabBarIcon: ({ focused, tintColor }) => {
-      const { routeName } = navigation.state
-      let iconName = `ios-wallet`
-      return <Ionicons name={iconName} size={30} color={tintColor} />
-    },
-    headerStyle: styles.header
-  }),
-})
-
 const CombinedNav = createStackNavigator({
   Home: {
     screen: CombinedScreen
@@ -219,8 +187,6 @@ const CombinedNav = createStackNavigator({
 const TabNav = createBottomTabNavigator({
   Feed: FeedNav,
   Events: CalendarNav,
-  // Camera: CameraNav,
-  // Tokens: TokenNav,
   Combined: CombinedNav,
   Notifications: NotificationNav,
   Messages: MessageNav
@@ -245,7 +211,7 @@ export default createAppContainer(
     }, 
     {
       headerMode: 'none',
-      initialRouteName: 'Load',
+      initialRouteName: 'App',
       navigationOptions: {
         headerStyle: styles.header
       }

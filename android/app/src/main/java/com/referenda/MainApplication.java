@@ -3,6 +3,7 @@ package com.referenda;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.wix.autogrowtextinput.AutoGrowTextInputPackage;
 import com.barefootcoders.android.react.KDSocialShare.KDSocialShare;
 import com.rt2zz.reactnativecontacts.ReactNativeContacts;
 import com.tradle.react.UdpSocketsModule;
@@ -40,6 +41,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new AutoGrowTextInputPackage(),
             new KDSocialShare(),
             new ReactNativeContacts(),
             new UdpSocketsModule(),

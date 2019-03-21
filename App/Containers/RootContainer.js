@@ -25,6 +25,7 @@ class RootContainer extends Component {
     if (!ReduxPersist.active) {
       this.props.startup()
     }
+    // this.props.pinataAddFile('../Assets/images/verified.png')
   }
 
   render() {
@@ -40,7 +41,8 @@ class RootContainer extends Component {
 // wraps dispatch to create nicer functions to call within our component
 const mapDispatchToProps = (dispatch) => ({
   init: () => dispatch(EngineActions.init()),
-  startup: () => dispatch(StartupActions.startup())
+  startup: () => dispatch(StartupActions.startup()),
+  pinataAddFile: (file) => dispatch(PinataActions.pinataAddFile(file))
 })
 
 export default connect(null, mapDispatchToProps)(RootContainer)
