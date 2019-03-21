@@ -4,6 +4,7 @@ import ReduxNavigation from '../Navigation/ReduxNavigation'
 import { connect } from 'react-redux'
 import EngineActions from '../Redux/EngineRedux'
 import StartupActions from '../Redux/StartupRedux'
+import PinataActions from '../Redux/PinataRedux'
 import ReduxPersist from '../Config/ReduxPersist'
 
 // Styles
@@ -25,6 +26,8 @@ class RootContainer extends Component {
     if (!ReduxPersist.active) {
       this.props.startup()
     }
+
+    // this.props.pinataAddJson({test: 'hello pbj'})
   }
 
   render() {
@@ -40,7 +43,8 @@ class RootContainer extends Component {
 // wraps dispatch to create nicer functions to call within our component
 const mapDispatchToProps = (dispatch) => ({
   startup: () => dispatch(StartupActions.startup()),
-  init: () => dispatch(EngineActions.init())
+  init: () => dispatch(EngineActions.init()),
+  // pinataAddJson: (json) => dispatch(PinataActions.pinataSuccess(json))
 })
 
 export default connect(null, mapDispatchToProps)(RootContainer)
