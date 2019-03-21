@@ -22,6 +22,9 @@ export class ReferendaEngine extends EventEmitterAdapter {
       throw 'param anIdentityKeyPair is undefined. Unable to create ReferendaEngine.'
     }
 
+    this.commandQueue = []
+    this.executingCommand = false
+
     this.localStore = new LocalStore()
 
     this.initEngine(anIdentityKeyPair)
@@ -92,7 +95,23 @@ export class ReferendaEngine extends EventEmitterAdapter {
    * @param commandObj  An object defining a command to execute and it's
    *                    arguments.
    */
-  executeCommand(commandObj) {
-    console.log("executeCommand called")
+  execEngineCommand(aCommand) {
+    console.info(this.execEngineCommand.name)
+
+    // Add the command to the queue of commands to run
+    aCommand.setTimeReceived()
+    this.commandQueue.push(aCommand)
+
+    // If we're already executing commands, exit (i.e. running commands is
+    // only done in the first call to this function when commands stack up).
+    if (!this.executingCommands) {
+      while (this.commandQueue.length > 0) {
+        const commandToRun = this.commandQueue.shift()
+        commandToRun.setTimeProcessed()
+        // TODO: programmatic call to command code, await ...
+        commandToRun.setTimeCompleted()
+        console.info(`Executed ${commandToRun.getCommandType()} (exec time: ${commandToRun.getTimeProcessedToCompleted()} ms, total time: ${commandToRun.getTimeIssuedToCompleted()} ms)`)
+      }
+    }
   }
 }

@@ -21,6 +21,7 @@ import * as Keychain from 'react-native-keychain';
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
 
+import EngineActions from '../Redux/EngineRedux'
 import {EngineCommand} from '../Engine/commands/engineCommand'
 
 class LoginScreen extends Component {
@@ -46,11 +47,11 @@ class LoginScreen extends Component {
     try {
       const credentials = await Keychain.getGenericPassword();
       if (credentials) {
-        // this.setState({ ...credentials, status: 'Credentials loaded!' });
-        // this.props.navigation.navigate('App');
-        debugger
-        const engCmd = EngineCommand.loginCommand('', '')
-        this.props.executeCommand(engCmd)
+        const engCmd =
+          EngineCommand.loginCommand(credentials.username, credentials.password)
+        engCmd.setTimeIssued()
+        this.props.execEngineCommand(engCmd)
+
         this.onLoginButtonPressed()
       } else {
         // this.setState({ status: 'No credentials stored.' });
@@ -185,6 +186,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    execEngineCommand: (aCommand) => dispatch(EngineActions.execEngineCommand(aCommand))
   }
 }
 

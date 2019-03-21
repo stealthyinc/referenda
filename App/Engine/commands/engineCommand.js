@@ -34,6 +34,17 @@ class EngineCommand {
 
   }
 
+  /*
+   * Command timing / profiling methods
+   *
+   * When a command is created and sent by the UI, the recored time is
+   * timeUTC.issued. When that command is received and queued in the engine, the
+   * recorded time is timeUTC.received. When the command is actually first
+   * executed, the recorded time is timeUTC.processed. Finally when the command
+   * is finshed execution, timeUTC.completed is recorded.
+   *****************************************************************************
+   */
+
   setTimeIssued() {
     this.timeUTC.issued = Date.now()
   }
@@ -48,6 +59,18 @@ class EngineCommand {
 
   setTimeCompleted() {
     this.timeUTC.completed = Date.now()
+  }
+
+  getTimeIssuedToProcessed() {
+    return this.timeUTC.processed - this.timeUTC.issued
+  }
+
+  getTimeIssuedToCompleted() {
+    return this.timeUTC.completed - this.timeUTC.issued
+  }
+
+  getTimeProcessedToCompleted() {
+    return this.timeUTC.completed - this.timeUTC.processed
   }
 
   /*
@@ -70,6 +93,7 @@ class EngineCommand {
       publicEncKey: aPublicEncryptionKey,
       privateEncKey: aPrivateEncryptionKey
     }
+    return command
   }
 
   /*
