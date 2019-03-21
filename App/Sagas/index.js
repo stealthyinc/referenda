@@ -1,4 +1,4 @@
-import { takeLatest, all } from 'redux-saga/effects'
+import { takeLatest, all, fork } from 'redux-saga/effects'
 import API from '../Services/Api'
 import FixtureAPI from '../Services/FixtureApi'
 import DebugConfig from '../Config/DebugConfig'
@@ -12,6 +12,7 @@ import { EngineTypes } from '../Redux/EngineRedux'
 
 import { startup } from './StartupSagas'
 import { startEngine } from './EngineSagas'
+import { startPinata } from './PinataSagas'
 
 /* ------------- API ------------- */
 
@@ -25,6 +26,7 @@ export default function * root () {
   yield all([
     // some sagas only receive an action
     takeLatest(StartupTypes.STARTUP, startup),
+    fork(startPinata),
     takeLatest(EngineTypes.INIT, startEngine),
   ])
 }

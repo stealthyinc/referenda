@@ -4,6 +4,7 @@ import ReduxNavigation from '../Navigation/ReduxNavigation'
 import { connect } from 'react-redux'
 import EngineActions from '../Redux/EngineRedux'
 import StartupActions from '../Redux/StartupRedux'
+import PinataActions from '../Redux/PinataRedux'
 import ReduxPersist from '../Config/ReduxPersist'
 
 // Styles
@@ -20,7 +21,6 @@ class RootContainer extends Component {
       this.engineStarted = true
       this.props.init()
     }
-
     // if redux persist is not active fire startup action
     if (!ReduxPersist.active) {
       this.props.startup()
@@ -39,8 +39,8 @@ class RootContainer extends Component {
 
 // wraps dispatch to create nicer functions to call within our component
 const mapDispatchToProps = (dispatch) => ({
-  startup: () => dispatch(StartupActions.startup()),
-  init: () => dispatch(EngineActions.init())
+  init: () => dispatch(EngineActions.init()),
+  startup: () => dispatch(StartupActions.startup())
 })
 
 export default connect(null, mapDispatchToProps)(RootContainer)

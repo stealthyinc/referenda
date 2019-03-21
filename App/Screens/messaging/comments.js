@@ -35,7 +35,7 @@ export class Comments extends React.Component {
 
   onItemPressed = (item) => {
     const navigationParams = { id: item.user.id };
-    this.props.navigation.navigate('ProfileV1', navigationParams);
+    this.props.navigation.navigate('Profile', navigationParams);
   };
 
   renderSeparator = () => (

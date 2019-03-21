@@ -35,7 +35,7 @@ export class Article extends React.Component {
   }
 
   onAvatarPressed = () => {
-    this.props.navigation.navigate('Profile', { id: this.data.user.id });
+    this.props.navigation.navigate('Profile', { id: 0 });
   };
 
   render = () => (
@@ -55,16 +55,16 @@ export class Article extends React.Component {
             </RkText>
           </View>
           <TouchableOpacity onPress={this.onAvatarPressed}>
-            <Avatar rkType='circle' img={this.data.user.photo} />
+            <Avatar rkType='circle' img={require('../../Data/img/avatars/agatha.png')} />
           </TouchableOpacity>
+        </View>
+        <View rkCardFooter>
+          <SocialBar navigation={this.props.navigation}/>
         </View>
         <View rkCardContent>
           <View>
             <RkText rkType='primary3 bigLine'>{this.data.text}</RkText>
           </View>
-        </View>
-        <View rkCardFooter>
-          <SocialBar navigation={this.props.navigation}/>
         </View>
       </RkCard>
     </ScrollView>
