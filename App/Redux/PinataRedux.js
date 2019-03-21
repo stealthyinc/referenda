@@ -20,10 +20,7 @@ export const INITIAL_STATE = Immutable({
   data: null,
   fetching: null,
   payload: null,
-  error: null,
-  json: null,
-  file: null,
-  pin: null
+  error: null
 })
 
 /* ------------- Selectors ------------- */

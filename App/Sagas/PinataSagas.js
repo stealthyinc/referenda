@@ -4,7 +4,7 @@ import PinataActions, { PinataSelectors, PinataTypes } from '../Redux/PinataRedu
 import Config from 'react-native-config'
 const axios = require('axios')
 // const fs = require('fs')
-const FormData = require('form-data')
+// const FormData = require('form-data')
 
 const postAxios = (url, data, headers) => {
   return axios.post(
@@ -22,19 +22,19 @@ const postAxios = (url, data, headers) => {
 }
 
 function* pinJSONToIPFS (action) {
-  console.log("PINATA")
   const { json } = action
-  console.log("JSON", json)
   const url = `https://api.pinata.cloud/pinning/pinJSONToIPFS`
   const headers = {
     'pinata_api_key': Config.PINATA_API_KEY,
     'pinata_secret_api_key': Config.PINATA_API_SECRET
   }
-  const { response } = yield call(postAxios, url, json, headers)
-  if (response)
-    yield put(PinataActions.pinataSuccess(response))
-  else
+  try {
+    yield call(postAxios, url, json, headers)
+    yield put(PinataActions.pinataSuccess({success: true}))
+  }
+  catch (error) {
     yield put(PinataActions.pinataFailure())
+  }
 }
 
 // function* pinFileToIPFS (action) {
@@ -81,8 +81,7 @@ function* removePinFromIPFS (action) {
 }
 
 export function* startPinata (action) {
-  console.log('PINATAS!')
   yield takeLatest(PinataTypes.PINATA_ADD_JSON, pinJSONToIPFS)
   // yield takeLatest(PinataTypes.PINATA_ADD_FILE, pinFileToIPFS)
-  yield takeLatest(PinataTypes.PINATA_REMOVE, removePinFromIPFS)
+  yield takeLatest(PinataTypes.PINATA_REMOVE_PIN, removePinFromIPFS)
 }

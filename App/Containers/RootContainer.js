@@ -21,13 +21,10 @@ class RootContainer extends Component {
       this.engineStarted = true
       // this.props.init()
     }
-
     // if redux persist is not active fire startup action
     if (!ReduxPersist.active) {
       this.props.startup()
     }
-
-    // this.props.pinataAddJson({test: 'hello pbj'})
   }
 
   render() {
@@ -42,9 +39,8 @@ class RootContainer extends Component {
 
 // wraps dispatch to create nicer functions to call within our component
 const mapDispatchToProps = (dispatch) => ({
-  startup: () => dispatch(StartupActions.startup()),
   init: () => dispatch(EngineActions.init()),
-  // pinataAddJson: (json) => dispatch(PinataActions.pinataSuccess(json))
+  startup: () => dispatch(StartupActions.startup())
 })
 
 export default connect(null, mapDispatchToProps)(RootContainer)

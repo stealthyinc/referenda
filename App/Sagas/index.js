@@ -26,7 +26,7 @@ export default function * root () {
   yield all([
     // some sagas only receive an action
     takeLatest(StartupTypes.STARTUP, startup),
-    // takeLatest(StartupTypes.STARTUP, startPinata),
+    fork(startPinata),
     takeLatest(EngineTypes.INIT, startEngine),
   ])
 }
