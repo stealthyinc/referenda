@@ -33,41 +33,41 @@ export class ReferendaEngine extends EventEmitterAdapter {
   async initEngine(anIdentityKeyPair) {
     console.info("initEngine called")
 
-    const profile = new Profile()
-
-    // Check to see if we already have profile data:
-    if (!anIdentityKeyPair) {
-      debugger
-      let keys = await SEA.pair()
-
-      profile.setSigningKeyPair(keys.pub, keys.priv)
-      profile.setEncryptionKeyPair(keys.epub, keys.epriv)
-      profile.setImageUrl('')
-      profile.setAlias('AC')
-      profile.setDescription('End of funnel operations center chief.')
-
-      // TODO: encryption etc. (when integration with keychain)
-      this.localStore.write('profile.enc.json', JSON.stringify(profile), profile.getEncryptionPublicKey())
-
-      // TODO: make this generic and additive etc. when integrating with keychain
-      const users = {}
-      users[profile.getAlias()] = profile.getEncryptionPublicKey()
-      this.localStore.write('users.json', JSON.stringify(users))
-    } else {
-      debugger
-      const profileDataSer = await this.localStore.read('profile.enc.json', anIdentityKeyPair)
-      if (!profileDataSer) {
-        throw 'Unable to read profile data from aync storage.'
-      }
-
-      const profile = new Profile()
-      profile.restore(profileDataSer)
-    }
-
-
-    console.info('The profile object:\n----------------\n\n')
-    console.dir(profile)
-    debugger
+    // const profile = new Profile()
+    //
+    // // Check to see if we already have profile data:
+    // if (!anIdentityKeyPair) {
+    //   debugger
+    //   let keys = await SEA.pair()
+    //
+    //   profile.setSigningKeyPair(keys.pub, keys.priv)
+    //   profile.setEncryptionKeyPair(keys.epub, keys.epriv)
+    //   profile.setImageUrl('')
+    //   profile.setAlias('AC')
+    //   profile.setDescription('End of funnel operations center chief.')
+    //
+    //   // TODO: encryption etc. (when integration with keychain)
+    //   this.localStore.write('profile.enc.json', JSON.stringify(profile), profile.getEncryptionPublicKey())
+    //
+    //   // TODO: make this generic and additive etc. when integrating with keychain
+    //   const users = {}
+    //   users[profile.getAlias()] = profile.getEncryptionPublicKey()
+    //   this.localStore.write('users.json', JSON.stringify(users))
+    // } else {
+    //   debugger
+    //   const profileDataSer = await this.localStore.read('profile.enc.json', anIdentityKeyPair)
+    //   if (!profileDataSer) {
+    //     throw 'Unable to read profile data from aync storage.'
+    //   }
+    //
+    //   const profile = new Profile()
+    //   profile.restore(profileDataSer)
+    // }
+    //
+    //
+    // console.info('The profile object:\n----------------\n\n')
+    // console.dir(profile)
+    // debugger
 
     // Send / Get test with gun db:
     //
