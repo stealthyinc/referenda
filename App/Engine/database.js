@@ -26,16 +26,12 @@ class GunWrapper {
   instance() {
     return this.gun
   }
-
-  // getGunRef (path) {
-  //   return gun.get(path)
-  // }
-  //
-  // setGunData (path, data) {
-  //   gun.get(path).put(data);
-  // }
 }
 
 // Singleton global of our gun wrapper. Must appear after the class definition above.
 //
 export var db = new GunWrapper()
+
+// Strange import way to get SEA (TODO: clean this up--lifted/adapted from: https://gun.eco/docs/SEA#quickstart)
+require('gun/sea')
+export var SEA = Gun.SEA

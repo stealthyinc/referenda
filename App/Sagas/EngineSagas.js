@@ -10,7 +10,7 @@
 *    you'll need to define a constant in that file.
 *************************************************************/
 
-import { call, put, fork, take, takeLatest } from 'redux-saga/effects'
+import { call, put, fork, take, takeLatest, takeEvery } from 'redux-saga/effects'
 import { eventChannel } from 'redux-saga'
 import EngineActions, { EngineSelectors, EngineTypes } from '../Redux/EngineRedux'
 
@@ -34,9 +34,9 @@ function * getEngineData () {
   }
 }
 
-function * sendEngineData (action) {
-  const { data } = action
-  EngineInstance.sendEngineData(data)
+function * execEngineCommand (action) {
+  const {aCommand} = action
+  EngineInstance.execEngineCommand(aCommand)
 }
 
 export function * startEngine (action) {
@@ -44,5 +44,5 @@ export function * startEngine (action) {
   const { userData } = action
   EngineInstance = yield call(createEngine, userData)
   yield fork(getEngineData)
-  yield takeLatest(EngineTypes.ENGINE_REQUEST, sendEngineData)
+  yield takeEvery(EngineTypes.EXEC_ENGINE_COMMAND, execEngineCommand)
 }

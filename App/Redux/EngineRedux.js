@@ -5,6 +5,7 @@ import Immutable from 'seamless-immutable'
 
 const { Types, Creators } = createActions({
   init: ['userData'],
+  execEngineCommand: ['aCommand'],
   engineRequest: ['data'],
   engineSuccess: ['payload'],
   engineFailure: null

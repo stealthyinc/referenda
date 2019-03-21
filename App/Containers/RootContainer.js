@@ -19,7 +19,7 @@ class RootContainer extends Component {
   componentDidMount() {
     if (!this.engineStarted) {
       this.engineStarted = true
-      // this.props.init()
+      this.props.init()
     }
     // if redux persist is not active fire startup action
     if (!ReduxPersist.active) {
