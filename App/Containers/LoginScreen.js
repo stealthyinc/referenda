@@ -21,6 +21,8 @@ import * as Keychain from 'react-native-keychain';
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
 
+import {EngineCommand} from '../Engine/commands/engineCommand'
+
 class LoginScreen extends Component {
   static propTypes = {
     navigation: NavigationType.isRequired,
@@ -46,6 +48,9 @@ class LoginScreen extends Component {
       if (credentials) {
         // this.setState({ ...credentials, status: 'Credentials loaded!' });
         // this.props.navigation.navigate('App');
+        debugger
+        const engCmd = EngineCommand.loginCommand('', '')
+        this.props.executeCommand(engCmd)
         this.onLoginButtonPressed()
       } else {
         // this.setState({ status: 'No credentials stored.' });

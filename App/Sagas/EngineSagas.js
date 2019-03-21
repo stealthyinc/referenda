@@ -34,9 +34,10 @@ function * getEngineData () {
   }
 }
 
-function * sendEngineData (action) {
+function * executeCommand (action) {
   const { data } = action
-  EngineInstance.sendEngineData(data)
+  const commandObj = data
+  EngineInstance.executeCommand(commandObj)
 }
 
 export function * startEngine (action) {
@@ -44,5 +45,5 @@ export function * startEngine (action) {
   const { userData } = action
   EngineInstance = yield call(createEngine, userData)
   yield fork(getEngineData)
-  yield takeLatest(EngineTypes.ENGINE_REQUEST, sendEngineData)
+  yield takeLatest(EngineTypes.ENGINE_REQUEST, executeCommand)
 }
