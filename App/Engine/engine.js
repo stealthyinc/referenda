@@ -56,7 +56,7 @@ export class ReferendaEngine extends EventEmitterAdapter {
    */
   async login(theArguments) {
     console.log(this.login.name)
-    debugger
+    // debugger
 
     const {aPublicEncryptionKey, aPrivateEncryptionKey} = theArguments
 
@@ -74,8 +74,9 @@ export class ReferendaEngine extends EventEmitterAdapter {
     } else {
       // Create the profile and persist it to local storage
       console.info('before pair')
+      debugger
       let keySet = await SEA.pair()
-      console.info('after pair')
+      console.info('after pair', keySet)
 
       this.profile = new Profile()
       this.profile.setSigningKeyPair(keySet.pub, keySet.priv)
@@ -168,7 +169,7 @@ export class ReferendaEngine extends EventEmitterAdapter {
       while (this.commandQueue.length > 0) {
         const commandToRun = this.commandQueue.shift()
         commandToRun.setTimeProcessed()
-        debugger
+        // debugger
         await this[commandToRun.getCommandType()](commandToRun.getArguments())
         commandToRun.setTimeCompleted()
         console.info(`Executed ${commandToRun.getCommandType()} (exec time: ${commandToRun.getTimeProcessedToCompleted()} ms, total time: ${commandToRun.getTimeIssuedToCompleted()} ms)`)
