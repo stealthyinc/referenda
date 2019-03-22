@@ -90,8 +90,8 @@ class EngineCommand {
     const command = new EngineCommand()
     command.commandType = EngineCommand.COMMAND_TYPES.LOGIN
     command.arguments = {
-      publicEncKey: aPublicEncryptionKey,
-      privateEncKey: aPrivateEncryptionKey
+      aPublicEncryptionKey,
+      aPrivateEncryptionKey
     }
     return command
   }
