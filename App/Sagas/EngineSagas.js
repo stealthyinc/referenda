@@ -16,33 +16,34 @@ import EngineActions, { EngineSelectors, EngineTypes } from '../Redux/EngineRedu
 
 let EngineInstance
 
-const createEngine = (userData) => {
+const createEngine = () => {
   const { ReferendaEngine } = require('../Engine/engine.js')
-  return new ReferendaEngine(userData)
+  return new ReferendaEngine()
 }
 
-function * getEngineData () {
+function * engineCommandResult() {
   const channel = eventChannel(emitter => {
-    EngineInstance.on('me-engine-update', (data) => emitter(data))
+    EngineInstance.on('me-engine-command-result', (result) => emitter(result))
     return () => {
-      console.log(`Referend Engine has an update`)
+      console.log(`Referenda Engine has an update`)
     }
   })
   while (true) {
-    const data = yield take(channel)
-    yield put(EngineActions.engineSuccess(data))
+    const result = yield take(channel)
+    yield put(EngineActions.engineSuccess(result))
   }
 }
 
-function * execEngineCommand (action) {
+function * engineCommandExec (action) {
   const {aCommand} = action
-  EngineInstance.execEngineCommand(aCommand)
+  aCommand.setTimeIssued()
+  EngineInstance.engineCommandExec(aCommand)
 }
 
 export function * startEngine (action) {
   console.log('startEngine called')
   const { userData } = action
-  EngineInstance = yield call(createEngine, userData)
-  yield fork(getEngineData)
-  yield takeEvery(EngineTypes.EXEC_ENGINE_COMMAND, execEngineCommand)
+  EngineInstance = yield call(createEngine)
+  yield fork(engineCommandResult)
+  yield takeEvery(EngineTypes.ENGINE_COMMAND_EXEC, engineCommandExec)
 }

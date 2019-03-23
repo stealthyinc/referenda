@@ -49,8 +49,7 @@ class LoginScreen extends Component {
       if (credentials) {
         const engCmd =
           EngineCommand.loginCommand(credentials.username, credentials.password)
-        engCmd.setTimeIssued()
-        this.props.execEngineCommand(engCmd)
+        this.props.engineCommandExec(engCmd)
 
         this.onLoginButtonPressed()
       } else {
@@ -186,7 +185,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    execEngineCommand: (aCommand) => dispatch(EngineActions.execEngineCommand(aCommand))
+    engineCommandExec: (aCommand) => dispatch(EngineActions.engineCommandExec(aCommand))
   }
 }
 

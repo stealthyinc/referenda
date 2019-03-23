@@ -24,11 +24,11 @@ class LocalStore {
   /**
    * @param aFileName
    * @param theData
-   * @param aUserName
+   * @param aUserId
    */
-  async write(aFileName, theData, aUserName=undefined) {
+  async write(aFileName, theData, aUserId=undefined) {
     try {
-      const keyPath = LocalStore._getKeyPath(aFileName, aUserName)
+      const keyPath = LocalStore._getKeyPath(aFileName, aUserId)
       await AsyncStorage.setItem(keyPath, theData)
     } catch (error) {
       // TODO:
@@ -38,13 +38,13 @@ class LocalStore {
 
   /**
    * @param aFileName
-   * @param aUserName
+   * @param aUserId
    * @return
    */
-  async read(aFileName, aUserName=undefined) {
+  async read(aFileName, aUserId=undefined) {
     let theData = undefined
     try {
-      const keyPath = LocalStore._getKeyPath(aFileName, aUserName)
+      const keyPath = LocalStore._getKeyPath(aFileName, aUserId)
       // Returns 'null' on iOS (possibly Android too) if no file.
       theData = await AsyncStorage.getItem(keyPath)
     } catch (error) {
@@ -56,11 +56,11 @@ class LocalStore {
 
   /**
    * @param aFileName
-   * @param aUserName
+   * @param aUserId
    */
-  async deleteLocalFile(aFileName, aUserName=undefined) {
+  async deleteLocalFile(aFileName, aUserId=undefined) {
     try {
-      const keyPath = LocalStore._getKeyPath(aFileName, aUserName)
+      const keyPath = LocalStore._getKeyPath(aFileName, aUserId)
       await AsyncStorage.removeItem(keyPath)
     } catch (error) {
       // TODO:
@@ -68,9 +68,13 @@ class LocalStore {
     }
   }
 
-  _getKeyPath(aFileName, aUserName=undefined) {
-    return (aUserName) ?
-      `${asyncStorageRoot}:${aUserName}:${aFileName}` :
+  /**
+   * @param aFileName
+   * @param aUserId
+   */
+  static _getKeyPath(aFileName, aUserId=undefined) {
+    return (aUserId) ?
+      `${asyncStorageRoot}:${aUserId}:${aFileName}` :
       `${asyncStorageRoot}:${aFileName}`
   }
 }

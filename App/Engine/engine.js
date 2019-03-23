@@ -1,35 +1,22 @@
 import {AsyncStorage} from 'react-native'
 const { EventEmitterAdapter } = require('./platform/reactNative/eventEmitterAdapter.js')
 
-import {db, SEA} from './database'
+import crypto from 'crypto'
+import {db} from './database'
 
 import {Profile} from './data/profile'
 import {LocalStore} from './io/localStore'
 
 export class ReferendaEngine extends EventEmitterAdapter {
-  /**
-   * @param anIdentityKeyPair  A pair of SEA encryption keys uniquely identifying
-   *                           this user. Required in production. In development
-   *                           builds to facilitate work, a profile is created if
-   *                           this param is not specified.
-   *
-   * @throws  If param anIdentityKeyPair is undefined in production.
-   */
-  constructor (anIdentityKeyPair = undefined) {
+
+  constructor () {
     super()
 
-    if (!anIdentityKeyPair && (process.env.NODE_ENV === 'production')) {
-      throw 'param anIdentityKeyPair is undefined. Unable to create ReferendaEngine.'
-    }
-
     this.localStore = new LocalStore()
-
     this.commandQueue = []
     this.executingCommand = false
 
     this.profile = undefined
-
-    this.initEngine(anIdentityKeyPair)
   }
 
   /**
@@ -39,55 +26,145 @@ export class ReferendaEngine extends EventEmitterAdapter {
    * the desired parameter passing.
    *
    * Their name must match a value in engineCommand.js COMMAND_TYPES to be
-   * called. They are called below by execEngineCommand
+   * called. They are called below by engineCommandExec
    *****************************************************************************
    */
 
   /**
    * login - Reads and decrypts the user's profile from local storage with the
-   *         provided aPrivateEncryptionKey in the arguments. If the profile
+   *         provided aPrivateIdentityKey in the arguments. If the profile
    *         for this user cannot be found, a profile is created and written
    *         to local storage for the user.
    *
-   * @param theArguments  Expects strings aPublicEncryptionKey
-   *                      and aPrivateEncryptionKey.
-   * @throws  If a aPublicEncryptionKey is falsey. (It's required to read or
+   * @param theArguments  Expects strings aPublicIdentityKey
+   *                      and aPrivateIdentityKey.
+   * @throws  If a aPublicIdentityKey is falsey. (It's required to read or
    *          write a profile.)
+   *
+   * TODO: verify the profile contains aPrivateIdentityKey (otherwise an
+   *       error has occured).
    */
   async login(theArguments) {
     console.log(this.login.name)
-    debugger
 
-    const {aPublicEncryptionKey, aPrivateEncryptionKey} = theArguments
+    const {aPublicIdentityKey, aPrivateIdentityKey} = theArguments
 
     // TODO: should this exit gracefully and set the command result to the UX to error?
-    if (!aPublicEncryptionKey || !aPrivateEncryptionKey) {
-      throw `${this.login.name}: aPublicEncryptionKey and aPrivateEncryptionKey must be defined.`
+    if (!aPublicIdentityKey || !aPrivateIdentityKey) {
+      throw `${this.login.name}: aPublicIdentityKey and aPrivateIdentityKey must be defined.`
     }
 
-    const serEncProfileData = await this.localStore.read('profile.enc.json', aPublicEncryptionKey)
+    const serEncProfileData = await this.localStore.read('profile.enc.json', aPublicIdentityKey)
     if (serEncProfileData) {
       // Restore the profile data from local storage
-      const serProfileData = serEncProfileData  // TODO: decrypt with aPrivateEncryptionKey
+      const serProfileData = serEncProfileData  // TODO: decrypt with aPrivateIdentityKey
       this.profile = new Profile()
       this.profile.restore(serEncProfileData)
     } else {
-      // Create the profile and persist it to local storage
-      console.info('before pair')
-      let keySet = await SEA.pair()
-      console.info('after pair')
-
       this.profile = new Profile()
-      this.profile.setSigningKeyPair(keySet.pub, keySet.priv)
-      this.profile.setEncryptionKeyPair(keySet.epub, keySet.epriv)
+
+      this.profile.setIdentityKeyPair(aPublicIdentityKey, aPrivateIdentityKey)
+
+      const ecdh = crypto.createECDH('secp256k1')
+      // Generate and encryption key pair:
+      ecdh.generateKeys()
+      const encPrivateKey = ecdh.getPrivateKey()
+      const encPublicKey = ecdh.getPublicKey()
+      // Generate a signing key pair:
+      ecdh.generateKeys()
+      const signPrivateKey = ecdh.getPrivateKey()
+      const signPublicKey = ecdh.getPublicKey()
+
+      this.profile.setSigningKeyPair(signPublicKey, signPrivateKey)
+      this.profile.setEncryptionKeyPair(encPublicKey, encPrivateKey)
+
+      // // Create the profile and persist it to local storage
+      // let keySet = await SEA.pair()
+      // this.profile.setSigningKeyPair(keySet.pub, keySet.priv)
+      // this.profile.setEncryptionKeyPair(keySet.epub, keySet.epriv)
+
       this.profile.setImageUrl('')
       this.profile.setAlias('AC')
       this.profile.setDescription('End of funnel operations center chief.')
 
+      // Things that don't work that I tried:
+      //
+      // const signingAlgs = ['sha256', 'ecdsa-with-SHA1']
+      // for (const alg of signingAlgs) {
+      //   try {
+      //     console.info(`trying to sign with ${alg}`)
+      //     const sign = crypto.createSign(alg);
+      //     sign.update('some data to sign');
+      //     sign.end();
+      //     const signature = sign.sign(signPrivateKey);
+      //
+      //     console.info(`trying to verify with ${alg}`)
+      //     const verify = crypto.createVerify(alg);
+      //     verify.update('some data to sign');
+      //     verify.end();
+      //     console.log(verify.verify(signPrivateKey, signature));
+      //
+      //     console.info(`succeeded sign/verify with ${alg}`)
+      //     // Prints: true
+      //   } catch (error) {
+      //     console.error(`${alg} failed to sign/verify.\n${error}`)
+      //   }
+      // }
+      //
+      // const {ECDH} = require('crypto')
+      // const derEncPublicKey = ECDH.convertKey(encPublicKey, 'secp256k1', 'hex', 'der', 'uncompressed')
+      // const publicKeyObj = crypto.createPublicKey(encPublicKey)
+      // const encSerializedProfile = crypto.publicEncrypt(encPublicKey, serializedProfile)
+      // const decSerializedProfile = crypto.privateDecrypt(encPrivateKey, encSerializedProfile)
+
       // TODO: encryption etc. (when integration with keychain)
-      await this.localStore.write('profile.enc.json', JSON.stringify(profile), profile.getEncryptionPublicKey())
+      const serializedProfile = this.profile.serializeToString()
+      await this.localStore.write('profile.enc.json', serializedProfile, this.profile.getIdentityPublicKey())
       this.profile.clearModified()
     }
+
+    if (this.profile.getIdentityPrivateKey() !== aPrivateIdentityKey) {
+      throw `Mismatched profile while executing ${this.login.name}.`
+    }
+  }
+
+  /**
+   * logout -
+   *
+   * @param theArguments
+   */
+  async logout(theArguments) {
+    console.info(this.logout.name)
+    // TODO:
+  }
+
+
+  /**
+   * uploadPost - Receives an instance of the Post class, processes it to upload
+   *              images / movies to a CDN, modifies the instance to reflect the
+   *              CDN URLs, and then inserts it into this user's feed in the db.
+   *              Also inserts the images into the URL cache.
+   *
+   * @param theArguments  Expects aPostObj, an instance of the Post class.
+   */
+  async uploadPost(theArguments) {
+    console.info(this.uploadPost.name)
+
+    if (!this.profile) {
+      throw `${this.uploadPost.name} failed because user is not logged in.`
+    }
+    const identityPublicKey = this.profile.getIdentityPublicKey()
+
+    const {aPostObj} = theArguments
+    if (!aPostObj) {
+      throw `${this.uploadPost.name} failed because a post object was not provided.`
+    }
+
+    // TODO: check user level before posting & throw if insufficient
+
+    // Process the user's post up to the db (i.e. upload content to the CDNs,
+    // create links and put them in the post, then push that up to the db).
+    await aPostObj.uploadContentToCdn()
   }
 
   /**
@@ -155,8 +232,8 @@ export class ReferendaEngine extends EventEmitterAdapter {
    * @param commandObj  An object defining a command to execute and it's
    *                    arguments.
    */
-  async execEngineCommand(aCommand) {
-    console.info(this.execEngineCommand.name)
+  async engineCommandExec(aCommand) {
+    console.info(this.engineCommandExec.name)
 
     // Add the command to the queue of commands to run
     aCommand.setTimeReceived()
@@ -169,8 +246,16 @@ export class ReferendaEngine extends EventEmitterAdapter {
         const commandToRun = this.commandQueue.shift()
         commandToRun.setTimeProcessed()
         debugger
-        await this[commandToRun.getCommandType()](commandToRun.getArguments())
+        try {
+          const result = await this[commandToRun.getCommandType()](commandToRun.getArguments())
+          if (result) {
+            commandToRun.setResult(result)
+          }
+        } catch (error) {
+          commandToRun.setError(error)
+        }
         commandToRun.setTimeCompleted()
+        this.emit('me-engine-command-result', commandToRun)
         console.info(`Executed ${commandToRun.getCommandType()} (exec time: ${commandToRun.getTimeProcessedToCompleted()} ms, total time: ${commandToRun.getTimeIssuedToCompleted()} ms)`)
       }
     }

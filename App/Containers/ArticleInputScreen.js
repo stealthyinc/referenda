@@ -22,7 +22,15 @@ import NavigationType from '../Navigation/propTypes';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import GuiActions, { GuiSelectors } from '../Redux/GuiRedux'
 
+import {Post} from '../Engine/data/post'
+import EngineActions from '../Redux/EngineRedux'
+import {EngineCommand} from '../Engine/commands/engineCommand'
+
 class ArticleInputScreen extends Component {
+  constructor() {
+    super()
+    this.description = ''
+  }
   static propTypes = {
     navigation: NavigationType.isRequired,
   };
@@ -37,13 +45,23 @@ class ArticleInputScreen extends Component {
   componentWillMount () {
     this.props.guiSetPhoto(null)
     this.props.guiSetTitle(null)
-    this.props.guiSetDescr(null)
+    this.props.guiSetDescr(this.description)
   }
   onSubmitArticle = () => {
+    const postObj = new Post()
+    postObj.setDescription(this.description)
+    const engCmd = EngineCommand.uploadPostCommand(postObj)
+    this.props.engineCommandExec(engCmd)
+
     this.props.navigation.goBack();
     //tell the engine to do something with this
   }
-  render() { 
+  onChangeText = (aDescription) => {
+    // TODO: PBJ, why is this component using redux?
+    this.description = aDescription
+    this.props.guiSetDescr(aDescription)
+  }
+  render() {
     const image = (!this.props.photo) ? (
       <Image rkCardImg source={require('../Assets/images/placeholder.png')} />
     ) : (
@@ -62,7 +80,7 @@ class ArticleInputScreen extends Component {
               </RkCard>
             </TouchableOpacity>
             <RkTextInput placeholder='Add a title...' onChangeText={(title) => this.props.guiSetTitle(title)} />
-            <RkTextInput multiline style={{height: 200}} placeholder="Add a description..." onChangeText={(descr) => this.props.guiSetDescr(descr)} />
+            <RkTextInput multiline style={{height: 200}} placeholder="Add a description..." onChangeText={(descr) => this.onChangeText(descr)} />
             <GradientButton
               style={styles.save}
               rkType='medium'
@@ -132,6 +150,7 @@ const mapDispatchToProps = (dispatch) => {
     guiSetPhoto: (photo) => dispatch(GuiActions.guiSetPhoto(photo)),
     guiSetTitle: (title) => dispatch(GuiActions.guiSetTitle(title)),
     guiSetDescr: (descr) => dispatch(GuiActions.guiSetDescr(descr)),
+    engineCommandExec: (aCommand) => dispatch(EngineActions.engineCommandExec(aCommand))
   }
 }
 

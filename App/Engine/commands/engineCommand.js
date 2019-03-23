@@ -9,6 +9,7 @@ class EngineCommand {
     this.commandType = undefined
     this.arguments = {}
     this.result = undefined
+    this.error = undefined
     this.timeUTC = {
       created: Date.now(),
       issued: undefined,
@@ -26,13 +27,26 @@ class EngineCommand {
     return this.arguments
   }
 
-  setResult(aResult) {
-
+  setResult(theResult, deepCopy=false) {
+    this.result = (deepCopy) ? JSON.parse(JSON.stringify(theResult)) : theResult
   }
 
   getResult() {
-
+    return this.result
   }
+
+  setError(anErrorStr) {
+    this.error = anErrorStr
+  }
+
+  getError() {
+    return this.error
+  }
+
+  succeeded() {
+    return (this.error === undefined)
+  }
+
 
   /*
    * Command timing / profiling methods
@@ -79,19 +93,20 @@ class EngineCommand {
    */
 
   static COMMAND_TYPES = {
-    LOGIN: 'login'
+    LOGIN: 'login',
+    UPLOAD_POST: 'uploadPost'
   }
 
   /*
    * Infrastructure commands:
    **************************************
    */
-  static loginCommand(aPublicEncryptionKey, aPrivateEncryptionKey) {
+  static loginCommand(aPublicIdentityKey, aPrivateIdentityKey) {
     const command = new EngineCommand()
     command.commandType = EngineCommand.COMMAND_TYPES.LOGIN
     command.arguments = {
-      aPublicEncryptionKey,
-      aPrivateEncryptionKey
+      aPublicIdentityKey,
+      aPrivateIdentityKey
     }
     return command
   }
@@ -100,6 +115,15 @@ class EngineCommand {
    * Staff level commands:
    **************************************
    */
+  static uploadPostCommand(aPostObj) {
+    const command = new EngineCommand()
+    command.commandType = EngineCommand.COMMAND_TYPES.UPLOAD_POST
+    command.arguments = {
+      aPostObj
+    }
+    return command
+  }
+
   static createPost() {
   }
 

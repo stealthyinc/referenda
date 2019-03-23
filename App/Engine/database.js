@@ -32,6 +32,10 @@ class GunWrapper {
 //
 export var db = new GunWrapper()
 
-// Strange import way to get SEA (TODO: clean this up--lifted/adapted from: https://gun.eco/docs/SEA#quickstart)
-require('gun/sea')
-export var SEA = Gun.SEA
+
+// Disabling this for now. Webcrypto shim is problematic when run on device.
+// Using PBJs shim solution instead.
+//
+// // Strange import way to get SEA (TODO: clean this up--lifted/adapted from: https://gun.eco/docs/SEA#quickstart)
+// require('gun/sea')
+// export var SEA = Gun.SEA

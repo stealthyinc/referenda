@@ -5,7 +5,7 @@ import Immutable from 'seamless-immutable'
 
 const { Types, Creators } = createActions({
   init: ['userData'],
-  execEngineCommand: ['aCommand'],
+  engineCommandExec: ['aCommand'],
   engineRequest: ['data'],
   engineSuccess: ['payload'],
   engineFailure: null
@@ -39,6 +39,10 @@ export const request = (state, { data }) =>
 // successful api lookup
 export const success = (state, action) => {
   const { payload } = action
+  console.info('--------------------------------------------------------------')
+  console.info(`${success.name}: received payload from action:`)
+  console.dir(payload)
+  console.info('--------------------------------------------------------------')
   return state.merge({ fetching: false, error: null, payload })
 }
 

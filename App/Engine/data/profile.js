@@ -13,6 +13,10 @@ class Profile extends BaseData {
     super()
     this.data = {
       keys: {
+        identity: {
+          public: '',
+          private: ''
+        },
         signing: {
           public: '',
           private: ''
@@ -20,7 +24,7 @@ class Profile extends BaseData {
         encryption: {
           public: '',
           private: ''
-        }
+        },
       },
       imageUrl: '',
       alias: '',
@@ -37,6 +41,33 @@ class Profile extends BaseData {
       candidate: false,
       official: false,
     }
+  }
+
+  /**
+   * @param aPublicKey   A string containing a public key for signature
+   *                     verification.
+   * @param aPrivateKey  A string containing a private key for identity.
+   */
+  setIdentityKeyPair(aPublicKey, aPrivateKey) {
+    this.data.keys.identity.public = aPublicKey
+    this.data.keys.identity.private = aPrivateKey
+    super.setModified()
+  }
+
+  /**
+   * @return  A string containing the public key used for identity (i.e. keying
+   *          this user profile in local storage and encrypting the profile).
+   */
+  getIdentityPublicKey() {
+    return this.data.keys.identity.public
+  }
+
+  /**
+   * @return  A string containing the private key used for identity (i.e.
+   *          decrypting the profile).
+   */
+  getIdentityPrivateKey() {
+    return this.data.keys.identity.private
   }
 
   /**
