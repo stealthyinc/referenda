@@ -89,6 +89,13 @@ class Post extends BaseData {
 
     this.data.content.description = aDescription
   }
+
+  /**
+   * @return
+   */
+  getPostId() {
+    return this.data.id
+  }
 }
 
 module.exports = { Post }

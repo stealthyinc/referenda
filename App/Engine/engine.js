@@ -138,6 +138,45 @@ export class ReferendaEngine extends EventEmitterAdapter {
     // TODO:
   }
 
+  async _gunWrite(aZipCode, aPostId, aSerPost) {
+    return new Promise((resolve, reject) => {
+      const userId = this.profile.getIdentityPublicKey()
+      const tempDate = new Date()
+      const date = `${tempDate.getFullYear()}${tempDate.getMonth()+1}${tempDate.getDate()}`
+      const dbPostPath = `${aZipCode}/${userId}/posts/${date}/${aPostId}`
+      console.info(`${this._gunWrite.name} writing to db: /${dbPostPath}`)
+
+      // production not working - debug by simplifying:
+      db.instance().get(`${aZipCode}`).get(userId).get('posts').get(`${date}`).get(`${aPostId}`).put(aSerPost, (ack) => {
+      // db.instance().get('testKey').put({post: aSerPost}, (ack) => {
+        // debugger
+        if (ack && ack.ok) {
+          resolve(ack.ok)
+        } else {
+          reject(`Unable to write to ${dbPostPath}.\n${ack.err}`)
+        }
+      })
+    })
+  }
+
+  async _gunRead(aZipCode, aPostId, aSerPost) {
+    return new Promise((resolve, reject) => {
+      const userId = this.profile.getIdentityPublicKey()
+      const tempDate = new Date()
+      const date = `${tempDate.getFullYear()}${tempDate.getMonth()+1}${tempDate.getDate()}`
+      const dbPostPath = `${aZipCode}/${userId}/posts/${date}/${aPostId}`
+      console.info(`${this._gunWrite.name} reading from db: /${dbPostPath}`)
+
+      // production not working - debug by simplifying:
+      db.instance().get(`${aZipCode}`).get(userId).get('posts').get(`${date}`).get(`${aPostId}`).once((data, key) => {
+      // db.instance().get('testKey').once((data, key) => {
+        // debugger
+        console.info(`Fetched key: ${key}`)
+        console.dir(data)
+        resolve(data)
+      })
+    })
+  }
 
   /**
    * uploadPost - Receives an instance of the Post class, processes it to upload
@@ -165,6 +204,95 @@ export class ReferendaEngine extends EventEmitterAdapter {
     // Process the user's post up to the db (i.e. upload content to the CDNs,
     // create links and put them in the post, then push that up to the db).
     await aPostObj.uploadContentToCdn()
+    const serPost = aPostObj.serializeToString()
+
+    // We're going to try making a post a serialized string for now (eventually
+    // probably compressed too--though objects are possible). The initial
+    // structure for the posts in the db will be:
+    //
+    // <dbroot>/<location>/<userId>/content/
+    //                                     <profile>:<serZipData>
+    //                                     <date>/<postId>/
+    //                                                    post:<serZipData>
+    //                                                    comments:{
+    //                                                      id1:<serZipComment>,
+    //                                                      id2:<serZipComment>,
+    //                                                      ...
+    //                                                      idn/<serZipComment>,
+    //                                                    }
+    //                                                    responses:{
+    //                                                      id1:<serZipResponse>,
+    //                                                      id2:<serZipResponse>,
+    //                                                      ...
+    //                                                      idn:<serZipResponse>,
+    //                                                    }
+    //                                                    counts:{
+    //                                                      numComments:<#>
+    //                                                      numResponses: {
+    //                                                        likes:<#>,
+    //                                                        constructives:<#>,
+    //                                                      },
+    //                                                    }
+    // <dbroot>/<location>/<userId>/internal/
+    //                                      <date>/<postId>/
+    //                                                    clicks:{
+    //                                                      id1:<signClick>,
+    //                                                      id2:<signClick>,
+    //                                                      ...
+    //                                                      idn/<signClick>,
+    //                                                    }
+    //                                                    views:{
+    //                                                      id1:<signView>,
+    //                                                      id2:<signView>,
+    //                                                      ...
+    //                                                      idn/<signView>,
+    //                                                    }
+    //
+    //
+    // Notes:
+    //   - <location> will be short zip code
+    //   - different countries should have a different db
+    //   - <userId> is the identity public key
+    //   - <date> is the UTC time resolved down to the day (ignore h:m:s)
+    //   - <postId> is the id stored in the Post Class instance
+    //   - concerns:
+    //      - how to get the counts in this db system (no atomic ops).
+    //        One solution could be an aggregator server or alternately having
+    //        the customer phone do it.
+    //        Another way might be modifying conflict resolution alg. and having
+    //        each phone post an update on d/l.
+    //      - internal is separated to prevent to many events in 'on' listeners
+    //
+
+    const zipCode = 94501
+    const postId = aPostObj.getPostId()
+    try {
+      await this._gunWrite(zipCode, postId, serPost)
+    } catch(error) {
+      debugger
+    }
+    try {
+      await this._gunRead(zipCode, postId, serPost)
+    } catch(error) {
+      debugger
+    }
+    aPostObj.clearModified()
+
+    // console.info(`Attempting to write ${now} to db.`)
+    // const now = Date.now()
+    // db.instance().get('key').put({val: now}, (ack) => {
+    //   if (ack && ack.ok) {
+    //     console.info(`Wrote ${now} to gun.`)
+    //
+    //     console.info(`Attempting to read ${now}`)
+    //     db.instance().get('key').once((data, key) => {
+    //       console.info(`Fetched key: ${key}`)
+    //       console.info('data = ', data)
+    //     })
+    //   } else {
+    //     console.error(`Unable to write ${now} to gun.`)
+    //   }
+    // });
   }
 
   /**
@@ -245,7 +373,6 @@ export class ReferendaEngine extends EventEmitterAdapter {
       while (this.commandQueue.length > 0) {
         const commandToRun = this.commandQueue.shift()
         commandToRun.setTimeProcessed()
-        debugger
         try {
           const result = await this[commandToRun.getCommandType()](commandToRun.getArguments())
           if (result) {
