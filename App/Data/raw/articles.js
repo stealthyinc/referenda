@@ -42,6 +42,7 @@ const articles = [
 },
 {
   id: 2,
+  survey: true,
   photo: require('../img/maduro_vs_guaido.jpg'),
   type: 'article',
   time: -1173,

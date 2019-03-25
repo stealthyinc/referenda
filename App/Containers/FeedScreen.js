@@ -9,7 +9,9 @@ import {
 import {
   RkCard, RkStyleSheet,
   RkText,
+  RkButton,
 } from 'react-native-ui-kitten';
+import { GradientButton } from '../Components/gradientButton'
 import { Avatar } from '../Components';
 import { data } from '../Data';
 import NavigationType from '../Navigation/propTypes';
@@ -67,7 +69,7 @@ class FeedScreen extends Component {
     return {
       headerLeft: (
         <TouchableOpacity onPress={() => params.drawer()} style={{marginLeft: 10}}>
-          <Image 
+          <Image
             source={randomAvatar}
             style={{height: 30, width: 30, borderRadius: 15}}/>
         </TouchableOpacity>
@@ -123,6 +125,53 @@ class FeedScreen extends Component {
             <RkText rkType='secondary2 hintColor'>{moment().add(item.time, 'seconds').fromNow()}</RkText>
           </View>
         </RkCard>
+      );
+    } else if (item && item.hasOwnProperty('survey') && item.survey) {
+      let surveySummary = `${item.text}\n(Pulse para los resultados de la votación.)`
+      return (
+        <View>
+          <TouchableOpacity
+            delayPressIn={70}
+            activeOpacity={0.8}
+            onPress={() => this.onItemPressed(item)}>
+            <RkCard rkType='blog' style={styles.card}>
+              <Image rkCardImg source={item.photo} />
+              <View rkCardContent>
+                <View>
+                  <RkText rkType='primary3 mediumLine' numberOfLines={2}>{surveySummary}</RkText>
+                </View>
+              </View>
+              <View rkCardContent>
+                <View id='button-view' style={{height: 50,
+                                               padding: 5,
+                                               width: '100%',
+                                               flexDirection: 'row',
+                                               justifyContent: 'space-between',
+                                               borderStyle: 'solid', borderWidth: 1, borderColor:'#f0f0f0', borderRadius: 15}}>
+                  <GradientButton
+                    colors={['gold', '#828282']}
+                    style={[{height:'100%', width:'35%'}]}
+                    rkType='large'
+                    text='Maduro'
+                  />
+                  <GradientButton
+                    colors={['blue', '#828282']}
+                    style={[{height:'100%', width:'35%'}]}
+                    rkType='large'
+                    text='Guaido'
+                  />
+                </View>
+              </View>
+              <View rkCardFooter>
+                <View style={styles.userInfo}>
+                  <Avatar style={styles.avatar} rkType='circle small' img={require('../Data/img/avatars/guaido.jpg')} />
+                  <RkText rkType='header6'>{`Juan Guaidó`}</RkText>
+                </View>
+                <RkText rkType='secondary2 hintColor'>{moment().add(item.time, 'seconds').fromNow()}</RkText>
+              </View>
+            </RkCard>
+          </TouchableOpacity>
+        </View>
       );
     } else {
       return (

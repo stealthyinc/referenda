@@ -74,7 +74,6 @@ export class ReferendaEngine extends EventEmitterAdapter {
     } else {
       // Create the profile and persist it to local storage
       console.info('before pair')
-      debugger
       let keySet = await SEA.pair()
       console.info('after pair', keySet)
 
