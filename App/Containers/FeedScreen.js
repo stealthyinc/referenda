@@ -103,8 +103,9 @@ class FeedScreen extends Component {
         <RkCard rkType='blog' style={styles.card}>
           <Video rkCardImg
                  controls={true}
-                 muted={true}
+                 muted={false}
                  resizeMode='cover'
+                 ignoreSilentSwitch={"ignore"}
                  source={item.video} />
           <View rkCardHeader style={styles.content}>
             <RkText style={styles.section} rkType='header4'>{item.title}</RkText>
