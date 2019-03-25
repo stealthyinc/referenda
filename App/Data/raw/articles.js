@@ -3,7 +3,7 @@ const articles = [
   id: 1,
   video: require('./../../Assets/videos/guaido.mp4'),
   type: 'article',
-  time: -3373,
+  time: -982,
   header: 'Operación Libertad Venezuela',
   text: `Cuando la duda nos debilite, recordemos que la ESPERANZA nació en Venezuela para lograr la libertad, para no morir más nunca. En todos estos años no doblegamos nuestro espíritu y fortalecimos nuestro amor por la patria.`,
   comments: [{
@@ -42,6 +42,15 @@ const articles = [
 },
 {
   id: 2,
+  photo: require('../img/maduro_vs_guaido.jpg'),
+  type: 'article',
+  time: -1173,
+  header: 'Maduro o Guaidó - tu voto?',
+  text: `¿A quién eliges, Maduro o Guaidó?`,
+  comments: [],
+},
+{
+  id: 3,
   photo: require('../img/guaido1.jpg'),
   type: 'article',
   time: -1373,
@@ -172,8 +181,8 @@ const articles = [
 //     type: 'article',
 //     time: -100,
 //     header: 'In-car Footage',
-//     text: `As a Brazilian immigrant who is lucky enough to have American citizenship, I've always felt 
-//     the importance of using my voice to stand hand in hand with, and advocate for, those 11 million who are being kept 
+//     text: `As a Brazilian immigrant who is lucky enough to have American citizenship, I've always felt
+//     the importance of using my voice to stand hand in hand with, and advocate for, those 11 million who are being kept
 //     voiceless by our government’s inability to pass legislation despite overwhelming support by the American public.`,
 //     comments: [],
 //   },
@@ -246,8 +255,8 @@ const articles = [
 // //   type: 'article',
 // //   time: -2446,
 // //   header: 'The power of a word',
-// //   text: `As a Brazilian immigrant who is lucky enough to have American citizenship, I've always felt the importance of using my voice to stand hand in hand 
-// //   with, and advocate for, those 11 million who are being kept voiceless by our government’s inability to pass legislation despite overwhelming support by 
+// //   text: `As a Brazilian immigrant who is lucky enough to have American citizenship, I've always felt the importance of using my voice to stand hand in hand
+// //   with, and advocate for, those 11 million who are being kept voiceless by our government’s inability to pass legislation despite overwhelming support by
 // //   the American public.`,
 // //   comments: [],
 // // }, {
@@ -278,7 +287,7 @@ const articles = [
 //   o my Brasilian side of the family and English on my American side of the family, and Spanish to all my immigrant classmates at my international high school. \
 //   \n\nI've called the Bay Area my home since I arrived on the Stanford campus as an engineering student.`,
 //   comments: [],
-// }, 
+// },
 {
   id: 23,
   photo: require('../img/guadido1.jpg'),
