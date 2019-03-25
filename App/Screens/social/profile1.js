@@ -58,7 +58,7 @@ export class ProfileV1 extends React.Component {
         <RkButton 
           style={styles.button} 
           rkType='clear link' 
-          onPress={() => Linking.openURL('https://commerce.coinbase.com/checkout/fffca773-3645-4d23-a442-b97ec395d365')}
+          onPress={() => Linking.openURL('https://commerce.coinbase.com/charges/NFT9ENLX')}
         >
           DONATE
         </RkButton>

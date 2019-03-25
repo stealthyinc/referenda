@@ -63,7 +63,7 @@ class FeedScreen extends Component {
   };
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
-    const randomAvatar = (params.phoneNumber) ? avatarArr[Math.floor(Math.random() * Math.floor(12))] : require('../Data/img/avatars/agatha.png')
+    const randomAvatar = (params.phoneNumber) ? avatarArr[Math.floor(Math.random() * Math.floor(12))] : require('../Data/img/avatars/guaido.jpg')
     return {
       headerLeft: (
         <TouchableOpacity onPress={() => params.drawer()} style={{marginLeft: 10}}>
@@ -116,8 +116,8 @@ class FeedScreen extends Component {
           </View>
           <View rkCardFooter>
             <View style={styles.userInfo}>
-              <Avatar style={styles.avatar} rkType='circle small' img={require('../Data/img/avatars/agatha.png')} />
-              <RkText rkType='header6'>{`Agatha Bacelar`}</RkText>
+              <Avatar style={styles.avatar} rkType='circle small' img={require('../Data/img/avatars/guaido.jpg')} />
+              <RkText rkType='header6'>{`Juan Guaidó`}</RkText>
             </View>
             <RkText rkType='secondary2 hintColor'>{moment().add(item.time, 'seconds').fromNow()}</RkText>
           </View>
@@ -141,8 +141,8 @@ class FeedScreen extends Component {
             </View>
             <View rkCardFooter>
               <View style={styles.userInfo}>
-                <Avatar style={styles.avatar} rkType='circle small' img={require('../Data/img/avatars/agatha.png')} />
-                <RkText rkType='header6'>{`Agatha Bacelar`}</RkText>
+                <Avatar style={styles.avatar} rkType='circle small' img={require('../Data/img/avatars/guaido.jpg')} />
+                <RkText rkType='header6'>{`Juan Guaidó`}</RkText>
               </View>
               <RkText rkType='secondary2 hintColor'>{moment().add(item.time, 'seconds').fromNow()}</RkText>
             </View>

@@ -13,25 +13,9 @@ const images = [
   require('../img/Image7.png'),
 ];
 
-const users = [{
-  id: 0,
-  firstName: 'Agatha',
-  lastName: 'Bacelar',
-  phone: '+1 415 670 90 34',
-  country: 'USA',
-  email: 'agatha.bacelar@senate.org',
-  password: '123456',
-  newPassword: '12345678',
-  confirmPassword: '12345678',
-  photo: require('../img/avatars/agatha.png'),
-  postCount: 86,
-  followersCount: 22102,
-  followingCount: 536,
-  images,
-
-},
+const users = [
 {
-  id: 1,
+  id: 0,
   firstName: 'Juan',
   lastName: 'Guaidó',
   phone: '+1 415 670 90 34',
@@ -44,6 +28,22 @@ const users = [{
   postCount: 86,
   followersCount: 31322,
   followingCount: 635,
+  images,
+}, 
+{
+  id: 1,
+  firstName: 'Elizabeth',
+  lastName: 'Warren',
+  phone: '+1 415 670 90 34',
+  country: 'USA',
+  email: 'elizabeth.warren@senate.org',
+  password: '123456',
+  newPassword: '12345678',
+  confirmPassword: '12345678',
+  photo: require('../img/avatars/warren.jpg'),
+  postCount: 86,
+  followersCount: 22102,
+  followingCount: 536,
   images,
 },
 {

@@ -16,7 +16,7 @@ export default Creators
 
 export const INITIAL_STATE = Immutable({
   open: false,
-  phoneNumber: '',
+  phoneNumber: null,
 })
 
 /* ------------- Selectors ------------- */

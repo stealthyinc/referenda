@@ -55,7 +55,7 @@ export class Article extends React.Component {
             </RkText>
           </View>
           <TouchableOpacity onPress={this.onAvatarPressed}>
-            <Avatar rkType='circle' img={require('../../Data/img/avatars/agatha.png')} />
+            <Avatar rkType='circle' img={require('../../Data/img/avatars/guaido.jpg')} />
           </TouchableOpacity>
         </View>
         <View rkCardFooter>

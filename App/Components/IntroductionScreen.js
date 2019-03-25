@@ -21,7 +21,9 @@ import folder from '../Assets/images/folder.png'
 
 // import security from '../Assets/images/molecular.png'
 
-import candidate from '../Assets/images/launch0-candidate.jpg'
+// import candidate from '../Assets/images/launch0-candidate.jpg'
+// import candidate from '../Assets/images/launch1-candidate.png'
+import candidate from '../Assets/images/launch2-candidate.jpg'
 // import censor from '../Assets/images/censor.png'
 // From: https://www.pexels.com/photo/man-wearing-gray-coat-standing-in-the-middle-of-the-road-936142/
 import chat from '../Assets/images/launch1-your-voice.jpg'
@@ -68,8 +70,8 @@ const styles = StyleSheet.create({
 const slides = [
   {
     key: 'somethun0',
-    title: 'Agatha Bacelar for Congress 🇺🇸',
-    text: 'You\'ve been invited by Agatha\'s campaign to join the discussion on Referenda for California district 12s 117th congressional campaign.',
+    title: 'Juan Guaidó for President 🇻🇪',
+    text: 'You\'ve been invited by Juan\'s campaign to join the discussion on Referenda for Venezuela\'s Presidential Campaign.',
     image: candidate,
     imageStyle: styles.image,
     colors: ['#63E2FF', '#B066FE'],

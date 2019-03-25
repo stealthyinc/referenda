@@ -78,7 +78,7 @@ export class SocialBar extends RkComponent {
         <View style={section}>
           <RkButton 
             rkType='clear' 
-            onPress={() => Linking.openURL('https://commerce.coinbase.com/checkout/fffca773-3645-4d23-a442-b97ec395d365')}
+            onPress={() => Linking.openURL('https://commerce.coinbase.com/charges/NFT9ENLX')}
           >
             <RkText rkType='awesome warning' style={icon}>{FontAwesome.bitcoin}</RkText>
           </RkButton>

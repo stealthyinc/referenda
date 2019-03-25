@@ -1,8 +1,8 @@
 const cards = [
   {
     id: 1,
-    name: 'Agatha Bacelar',
-    bank: 'CA District 12',
+    name: 'Juan Guaidó',
+    bank: 'Venezuela President',
     // amount: 440,
     date: '07/19',
     cardNo: '3538********8699',
@@ -11,8 +11,8 @@ const cards = [
   }, 
   {
     id: 2,
-    name: 'Kamala Harris',
-    bank: 'CA Senator',
+    name: 'Bernie Sanders',
+    bank: 'USA President',
     // amount: 1740,
     date: '07/19',
     cardNo: '5602********1161',
