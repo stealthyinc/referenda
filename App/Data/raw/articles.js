@@ -1,12 +1,11 @@
 const articles = [
 {
   id: 1,
-  photo: require('../img/warren1.jpg'),
+  video: require('./../../Assets/videos/guaido.mp4'),
   type: 'article',
-  time: -1373,
-  header: '2020 Presidential Campaign',
-  text: `Elizabeth Warren, a senator from Massachusetts, is running for the Democratic nomination for president. She made her announcement in February 2019 in Lawrence, Massachusetts, a former mill town that ties into her longtime message about fighting for the working class.
-  \nWarren’s platform will focus on many of the same issues she’s worked on since she was a Harvard Law School professor who helped President Barack Obama create the Consumer Financial Protection Bureau after the 2008 recession: cracking down on big banks, making corporations more accountable to workers, and expanding health care and housing for the middle class and low-income Americans.`,
+  time: -3373,
+  header: 'Operación Libertad Venezuela',
+  text: `Cuando la duda nos debilite, recordemos que la ESPERANZA nació en Venezuela para lograr la libertad, para no morir más nunca. En todos estos años no doblegamos nuestro espíritu y fortalecimos nuestro amor por la patria.`,
   comments: [{
     id: 1,
     text: 'Aliquam sit amet diam in magna bibendum imperdiet. Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis. Fusce posuere felis sed lacus. Morbi sem mauris, laoreet ut, rhoncus aliquet, pulvinar sed, nisl. Nunc rhoncus dui vel sem.',
@@ -43,13 +42,11 @@ const articles = [
 },
 {
   id: 2,
-  photo: require('../img/warren2.jpg'),
+  photo: require('../img/guaido1.jpg'),
   type: 'article',
-  time: -3373,
-  header: 'New Plan for Debt-free College',
-  text: `Sen. Elizabeth Warren used to be known for arguing that the government shouldn’t make money on student loans. Now she’s arguing that students shouldn’t have to take out loans in the first place.
-  \n“While not every college needs to graduate every student debt-free, every kid needs a debt-free option—a strong public university where it’s possible to get a great education without taking on loads of debt,” she said today in a speech at the Shanker Institute. Debt-free college is more progressive than simply making tuition free, as Sen. Bernie Sanders has proposed.
-  \nThat’s because for the poorest students, tuition is often covered by grants, but they still have to pay living expenses. The debt-free idea is spreading: Hillary Clinton’s campaign has hinted a few times that it has a debt-free higher education plan of its own.`,
+  time: -1373,
+  header: 'Venezuelans Majority',
+  text: `Comenzamos hablando de un país posible porque sabíamos que estaba en la mayoría de los que habitamos esta tierra. \n\nY aunque hubo quien dudó que lo haríamos, miles de venezolanos se juramentaron con nosotros.`,
   comments: [{
     id: 1,
     text: 'Aliquam sit amet diam in magna bibendum imperdiet. Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis. Fusce posuere felis sed lacus. Morbi sem mauris, laoreet ut, rhoncus aliquet, pulvinar sed, nisl. Nunc rhoncus dui vel sem.',
@@ -84,6 +81,91 @@ const articles = [
     time: -2177,
   }],
 },
+// {
+//   id: 1,
+//   photo: require('../img/warren1.jpg'),
+//   type: 'article',
+//   time: -1373,
+//   header: '2020 Presidential Campaign',
+//   text: `Elizabeth Warren, a senator from Massachusetts, is running for the Democratic nomination for president. She made her announcement in February 2019 in Lawrence, Massachusetts, a former mill town that ties into her longtime message about fighting for the working class.
+//   \nWarren’s platform will focus on many of the same issues she’s worked on since she was a Harvard Law School professor who helped President Barack Obama create the Consumer Financial Protection Bureau after the 2008 recession: cracking down on big banks, making corporations more accountable to workers, and expanding health care and housing for the middle class and low-income Americans.`,
+//   comments: [{
+//     id: 1,
+//     text: 'Aliquam sit amet diam in magna bibendum imperdiet. Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis. Fusce posuere felis sed lacus. Morbi sem mauris, laoreet ut, rhoncus aliquet, pulvinar sed, nisl. Nunc rhoncus dui vel sem.',
+//     time: 0,
+//   }, {
+//     id: 2,
+//     text: 'Quisque ut erat. Curabitur gravida nisi at nibh.',
+//     time: -311,
+//   }, {
+//     id: 3,
+//     text: 'Etiam pretium iaculis justo. In hac habitasse platea dictumst. Etiam faucibus cursus urna. Ut tellus. Nulla ut erat id mauris vulputate elementum.',
+//     time: -622,
+//   }, {
+//     id: 4,
+//     text: 'In est risus, auctor sed, tristique in, tempus sit amet, sem.',
+//     time: -933,
+//   }, {
+//     id: 5,
+//     text: 'In hac habitasse platea dictumst.',
+//     time: -1244,
+//   }, {
+//     id: 6,
+//     text: 'In hac habitasse platea dictumst. Morbi vestibulum, velit id pretium iaculis, diam erat fermentum justo, nec condimentum neque sapien placerat ante. Nulla justo.',
+//     time: -1555,
+//   }, {
+//     id: 7,
+//     text: 'Vivamus vel nulla eget eros elementum pellentesque. Quisque porta volutpat erat.',
+//     time: -1866,
+//   }, {
+//     id: 8,
+//     text: 'Duis mattis egestas metus. Aenean fermentum. Donec ut mauris eget massa tempor convallis. Nulla neque libero, convallis eget, eleifend luctus, ultricies eu, nibh.',
+//     time: -2177,
+//   }],
+// },
+// {
+//   id: 2,
+//   photo: require('../img/warren2.jpg'),
+//   type: 'article',
+//   time: -3373,
+//   header: 'New Plan for Debt-free College',
+//   text: `Sen. Elizabeth Warren used to be known for arguing that the government shouldn’t make money on student loans. Now she’s arguing that students shouldn’t have to take out loans in the first place.
+//   \n“While not every college needs to graduate every student debt-free, every kid needs a debt-free option—a strong public university where it’s possible to get a great education without taking on loads of debt,” she said today in a speech at the Shanker Institute. Debt-free college is more progressive than simply making tuition free, as Sen. Bernie Sanders has proposed.
+//   \nThat’s because for the poorest students, tuition is often covered by grants, but they still have to pay living expenses. The debt-free idea is spreading: Hillary Clinton’s campaign has hinted a few times that it has a debt-free higher education plan of its own.`,
+//   comments: [{
+//     id: 1,
+//     text: 'Aliquam sit amet diam in magna bibendum imperdiet. Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis. Fusce posuere felis sed lacus. Morbi sem mauris, laoreet ut, rhoncus aliquet, pulvinar sed, nisl. Nunc rhoncus dui vel sem.',
+//     time: 0,
+//   }, {
+//     id: 2,
+//     text: 'Quisque ut erat. Curabitur gravida nisi at nibh.',
+//     time: -311,
+//   }, {
+//     id: 3,
+//     text: 'Etiam pretium iaculis justo. In hac habitasse platea dictumst. Etiam faucibus cursus urna. Ut tellus. Nulla ut erat id mauris vulputate elementum.',
+//     time: -622,
+//   }, {
+//     id: 4,
+//     text: 'In est risus, auctor sed, tristique in, tempus sit amet, sem.',
+//     time: -933,
+//   }, {
+//     id: 5,
+//     text: 'In hac habitasse platea dictumst.',
+//     time: -1244,
+//   }, {
+//     id: 6,
+//     text: 'In hac habitasse platea dictumst. Morbi vestibulum, velit id pretium iaculis, diam erat fermentum justo, nec condimentum neque sapien placerat ante. Nulla justo.',
+//     time: -1555,
+//   }, {
+//     id: 7,
+//     text: 'Vivamus vel nulla eget eros elementum pellentesque. Quisque porta volutpat erat.',
+//     time: -1866,
+//   }, {
+//     id: 8,
+//     text: 'Duis mattis egestas metus. Aenean fermentum. Donec ut mauris eget massa tempor convallis. Nulla neque libero, convallis eget, eleifend luctus, ultricies eu, nibh.',
+//     time: -2177,
+//   }],
+// },
 //   {
 //     id: 0,
 //     video: require('./../../Assets/videos/candidateVid1.mp4'),
