@@ -9,7 +9,11 @@ import {
 import {
   RkCard, RkStyleSheet,
   RkText,
+  RkButton,
+  RkTextInput
 } from 'react-native-ui-kitten';
+import { FontAwesome } from '../Assets/icons';
+import { GradientButton } from '../Components/gradientButton'
 import { Avatar } from '../Components';
 import { data } from '../Data';
 import NavigationType from '../Navigation/propTypes';
@@ -25,22 +29,28 @@ const moment = require('moment');
 
 // Styles
 const styles = RkStyleSheet.create(theme => ({
-  container: {
-    backgroundColor: theme.colors.screen.scroll,
-    paddingVertical: 8,
-    paddingHorizontal: 14,
-  },
-  card: {
-    marginVertical: 8,
-  },
-  userInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  avatar: {
-    marginRight: 17,
-  },
-}));
+    container: {
+      backgroundColor: theme.colors.screen.scroll,
+      paddingVertical: 8,
+      paddingHorizontal: 14,
+    },
+    card: {
+      marginVertical: 8,
+    },
+    userInfo: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    avatar: {
+      marginRight: 17,
+    },
+    icon: {
+      fontSize: 24,
+    },
+    button: {
+      right: 17
+    }
+  }));
 
 const avatarArr = {
   0: require('../Data/img/avatars/Image0.png'),
@@ -67,7 +77,7 @@ class FeedScreen extends Component {
     return {
       headerLeft: (
         <TouchableOpacity onPress={() => params.drawer()} style={{marginLeft: 10}}>
-          <Image 
+          <Image
             source={randomAvatar}
             style={{height: 30, width: 30, borderRadius: 15}}/>
         </TouchableOpacity>
@@ -122,6 +132,40 @@ class FeedScreen extends Component {
             <RkText rkType='secondary2 hintColor'>{moment().add(item.time, 'seconds').fromNow()}</RkText>
           </View>
         </RkCard>
+      );
+    } else if (item && item.hasOwnProperty('survey') && item.survey) {
+      let surveySummary = `${item.text}`
+      return (
+        <View>
+          <TouchableOpacity
+            delayPressIn={70}
+            activeOpacity={0.8}
+            onPress={() => this.onItemPressed(item)}>
+            <RkCard rkType='blog' style={styles.card}>
+              <Image rkCardImg source={item.photo} />
+              <View rkCardContent>
+                <View>
+                  <RkText rkType='primary3 mediumLine' numberOfLines={2}>{surveySummary}</RkText>
+                </View>
+              </View>
+              <View rkCardContent>
+                 <RkTextInput
+                   rkType='bordered rounded iconRight'
+                   placeholder='$29,800.00'
+                   keyboardType='numeric'
+                   maxLength={11}
+                 />
+              </View>
+              <View rkCardFooter>
+                <View style={styles.userInfo}>
+                <Avatar style={styles.avatar} rkType='circle small' img={require('../Data/img/avatars/agatha.png')} />
+                <RkText rkType='header6'>{`Agatha Bacelar`}</RkText>
+                </View>
+                <RkText rkType='secondary2 hintColor'>{moment().add(item.time, 'seconds').fromNow()}</RkText>
+              </View>
+            </RkCard>
+          </TouchableOpacity>
+        </View>
       );
     } else {
       return (
