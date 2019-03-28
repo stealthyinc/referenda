@@ -55,7 +55,7 @@ export class SocialBar extends RkComponent {
       shares: this.state.shares === defaultCount ? this.state.shares + 1 : defaultCount,
     });
     shareOnTwitter({
-        'text':'Agatha Campaign Information',
+        'text':'Political Campaign Information',
         'link':'https://google.com/',
       },
       (results) => {
