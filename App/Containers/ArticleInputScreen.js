@@ -40,8 +40,16 @@ class ArticleInputScreen extends Component {
       headerTitle: 'New Article'.toUpperCase(),
       headerBackTitle: 'Back',
       headerTintColor: 'black',
+      headerRight: (
+        <TouchableOpacity onPress={() => navigation.navigate('Camera')} style={{marginRight: 10}}>
+          <Ionicons name='ios-camera' size={30} color='gray' />
+        </TouchableOpacity>
+      )
     }
   };
+  componentDidMount () {
+    this.props.navigation.setParams({ navigation: this.props.navigation })
+  }
   componentWillMount () {
     this.props.guiSetPhoto(null)
     this.props.guiSetTitle(null)

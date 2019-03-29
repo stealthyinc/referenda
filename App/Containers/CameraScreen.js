@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Slider } from 'react-native';
+import NavigationType from '../Navigation/propTypes';
 import { RNCamera } from 'react-native-camera';
 
 const flashModeOrder = {
@@ -33,7 +34,20 @@ export default class CameraScreen extends React.Component {
       quality: RNCamera.Constants.VideoQuality['288p'],
     },
     isRecording: false,
-  };
+  }
+  
+  static propTypes = {
+    navigation: NavigationType.isRequired,
+  }
+
+  static navigationOptions = ({ navigation }) => {
+    const params = navigation.state.params || {}
+    return {
+      headerTitle: 'Camera'.toUpperCase(),
+      headerBackTitle: 'Back',
+      headerTintColor: 'black'
+    }
+  }
 
   toggleFacing() {
     this.setState({

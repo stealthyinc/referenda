@@ -3,6 +3,7 @@ import {
   FlatList,
   View,
   Image,
+  Text,
   TouchableOpacity,
   Modal,
 } from 'react-native';
@@ -21,12 +22,39 @@ import { PasswordTextInput } from '../Components/passwordTextInput';
 import { UIConstants } from '../Config/AppConstants';
 import { scaleVertical } from '../Utils/scale';
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import FlipCard from 'react-native-flip-card'
 
 class CardsScreen extends Component {
+  static navigationOptions = ({ navigation }) => {
+    const params = navigation.state.params || {}
+    return {
+      title: 'Tokens'.toUpperCase(),
+      headerLeft: (
+        <TouchableOpacity onPress={() => alert('More Info')} style={{marginLeft: 10}}>
+          <Ionicons name='ios-information-circle-outline' size={30} color='gray' />
+        </TouchableOpacity>
+      ),
+      headerRight: (
+        <TouchableOpacity onPress={() => params.flip()} style={{marginRight: 10}}>
+          <Ionicons name='logo-buffer' size={30} color='gray' />
+        </TouchableOpacity>
+      )
+    }
+  }
+
   state = {
     data: data.getCards(),
     modalVisible: false,
+    flip: true
   };
+
+  componentDidMount () {
+    this.props.navigation.setParams({ navigation: this.props.navigation, flip: this.flip })
+  }
+
+  flip = () => {
+    this.setState({ flip: !this.state.flip })
+  }
 
   getCardStyle = (type) => {
     switch (type) {
@@ -129,45 +157,63 @@ class CardsScreen extends Component {
 
   render () {
     return (
-      <View style={styles.root}>
-        <FlatList
-          style={styles.list}
-          showsVerticalScrollIndicator={false}
-          // ListFooterComponent={this.renderFooter}
-          keyExtractor={this.extractItemKey}
-          data={this.state.data}
-          renderItem={this.renderItem}
-        />
-        <Modal
-          animationType="fade"
-          transparent
-          onRequestClose={() => this.setModalVisible(false)}
-          visible={this.state.modalVisible}>
-          <View style={styles.popupOverlay}>
-            <View style={styles.popup}>
-              <View style={styles.popupContent}>
-                <RkText style={styles.popupHeader} rkType='header4'>Enter security code</RkText>
-                <PasswordTextInput />
-              </View>
-              <View style={styles.popupButtons}>
-                <RkButton
-                  onPress={() => this.setModalVisible(false)}
-                  style={styles.popupButton}
-                  rkType='clear'>
-                  <RkText rkType='light'>CANCEL</RkText>
-                </RkButton>
-                <View style={styles.separator} />
-                <RkButton
-                  onPress={() => this.setModalVisible(false)}
-                  style={styles.popupButton}
-                  rkType='clear'>
-                  <RkText>OK</RkText>
-                </RkButton>
+      <FlipCard
+        flip={this.state.flip}
+        friction={6}
+        perspective={1000}
+        flipHorizontal={true}
+        flipVertical={false}
+        clickable={false}
+        style={styles.root}
+        alignHeight={true}
+        // alignWidth={true}
+        onFlipEnd={(isFlipEnd)=>{console.log('isFlipEnd', isFlipEnd)}}
+      >
+        {/* Face Side */}
+        <View style={styles.root}>
+          <FlatList
+            style={styles.list}
+            showsVerticalScrollIndicator={false}
+            // ListFooterComponent={this.renderFooter}
+            keyExtractor={this.extractItemKey}
+            data={this.state.data}
+            renderItem={this.renderItem}
+          />
+          <Modal
+            animationType="fade"
+            transparent
+            onRequestClose={() => this.setModalVisible(false)}
+            visible={this.state.modalVisible}>
+            <View style={styles.popupOverlay}>
+              <View style={styles.popup}>
+                <View style={styles.popupContent}>
+                  <RkText style={styles.popupHeader} rkType='header4'>Enter security code</RkText>
+                  <PasswordTextInput />
+                </View>
+                <View style={styles.popupButtons}>
+                  <RkButton
+                    onPress={() => this.setModalVisible(false)}
+                    style={styles.popupButton}
+                    rkType='clear'>
+                    <RkText rkType='light'>CANCEL</RkText>
+                  </RkButton>
+                  <View style={styles.separator} />
+                  <RkButton
+                    onPress={() => this.setModalVisible(false)}
+                    style={styles.popupButton}
+                    rkType='clear'>
+                    <RkText>OK</RkText>
+                  </RkButton>
+                </View>
               </View>
             </View>
-          </View>
-        </Modal>
-      </View>
+          </Modal>
+        </View>
+        {/* Back Side */}
+        <View style={styles.root}>
+          <Text>The Back</Text>
+        </View>
+      </FlipCard>
     )
   }
 }

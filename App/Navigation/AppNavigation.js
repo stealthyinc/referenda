@@ -10,6 +10,7 @@ import LoginScreen from '../Containers/LoginScreen'
 import FeedScreen from '../Containers/FeedScreen'
 import KeychainScreen from '../Containers/KeychainScreen'
 import CameraScreen from '../Containers/CameraScreen'
+import CardsScreen from '../Containers/CardsScreen'
 import CalendarScreen from '../Containers/CalendarScreen'
 import CombinedScreen from '../Containers/CombinedScreen'
 import AuthLoadingScreen from '../Containers/AuthLoadingScreen'
@@ -102,6 +103,9 @@ const FeedNav = createStackNavigator({
   },
   CameraRoll: {
     screen: CameraRollScreen
+  },
+  Camera: {
+    screen: CameraScreen
   }
 }, {
   initialRouteName: '',
@@ -184,10 +188,30 @@ const CombinedNav = createStackNavigator({
   }),
 })
 
+const TokenNav = createStackNavigator({
+  Home: {
+    screen: CardsScreen
+  }
+}, {
+  initialRouteName: '',
+  headerMode: 'screen',
+  cardStyle: { backgroundColor: 'transparent' },
+  transitionConfig: Transition,
+  navigationOptions: ({ navigation }) => ({
+    gesturesEnabled: false,
+    tabBarIcon: ({ focused, tintColor }) => {
+      const { routeName } = navigation.state
+      let iconName = `ios-wallet`
+      return <Ionicons name={iconName} size={30} color={tintColor} />
+    },
+    headerStyle: styles.header
+  }),
+})
+
 const TabNav = createBottomTabNavigator({
   Feed: FeedNav,
   Events: CalendarNav,
-  Combined: CombinedNav,
+  Combined: TokenNav,
   Notifications: NotificationNav,
   Messages: MessageNav
 }, {
@@ -211,7 +235,7 @@ export default createAppContainer(
     }, 
     {
       headerMode: 'none',
-      initialRouteName: 'Load',
+      initialRouteName: 'App',
       navigationOptions: {
         headerStyle: styles.header
       }

@@ -41,7 +41,7 @@ export const success = (state, action) => {
   const { payload } = action
   console.info('--------------------------------------------------------------')
   console.info(`${success.name}: received payload from action: command ${payload.getCommandType()}`)
-  console.dir(payload)
+  // console.dir(payload)
   console.info('--------------------------------------------------------------')
   return state.merge({ fetching: false, error: null, payload })
 }

@@ -172,7 +172,7 @@ export class ReferendaEngine extends EventEmitterAdapter {
       // db.instance().get('testKey').once((data, key) => {
         // debugger
         console.info(`Fetched key: ${key}`)
-        console.dir(data)
+        // console.dir(data)
         resolve(data)
       })
     })

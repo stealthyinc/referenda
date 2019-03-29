@@ -9,9 +9,41 @@ const articles = [
     the importance of using my voice to stand hand in hand with, and advocate for, those 11 million who are being kept
     voiceless by our government’s inability to pass legislation despite overwhelming support by the American public.`,
     comments: [],
+  }, {
+    id: 1,
+    survey: true,
+    photo: require('../img/student-debt.jpg'),
+    type: 'article',
+    time: -593,
+    header: 'Student Debt Survey',
+    text: 'Survey: How much student debt do you have?\n\nAmong the \
+Class of 2018, 69% of college students took out student loans, and they graduated with an average debt of $29,800, including both private and federal debt.',
+    comments: []
   },
   {
-    id: 1,
+    id: 2,
+    photo: require('./../../Assets/avatars/agatha3.png'),
+    type: 'article',
+    time: -1373,
+    header: 'My immigrant journey',
+    text: `I was born in Brasil, and immigrated to the US as an infant with my mother, who is one of the glass-ceiling shattering professional women of her \
+    generation - and she did it in not one but two countries! America is a nation of immigrants, so being an immigrant and an American citizen makes me, \
+    in many ways, a very typical American.  \n\nGrowing up, I did all the things American girls love to do like ballet and jump rope, and dreaming of attending \
+    college at Stanford University.   \n\nMy immigrant heritage even brought me some advantages other girls didn't get, for example, I grew up speaking Portuguese \
+    o my Brasilian side of the family and English on my American side of the family, and Spanish to all my immigrant classmates at my international high school. \
+    \n\nI've called the Bay Area my home since I arrived on the Stanford campus as an engineering student.`,
+    comments: [],
+  }, {
+    id: 3,
+    video: require('./../../Assets/videos/candidateVid.mp4'),
+    type: 'article',
+    time: -100,
+    header: 'In-car Footage',
+    text: `Bilingual Hamilton Mixtape rap in support of Immigrants: We Get the Job Done Coalition http://bit.ly/2s6mWAt  #Ham4All #BrazilianAmerican 🎤`,
+    comments: [],
+  }, 
+  {
+    id: 4,
     photo: require('./../../Assets/avatars/agatha1.png'),
     type: 'article',
     time: -300,
@@ -53,38 +85,8 @@ const articles = [
       text: 'Duis mattis egestas metus. Aenean fermentum. Donec ut mauris eget massa tempor convallis. Nulla neque libero, convallis eget, eleifend luctus, ultricies eu, nibh.',
       time: -2177,
     }],
-  }, {
-    id: 2,
-    photo: require('./../../Assets/avatars/agatha3.png'),
-    type: 'article',
-    time: -1373,
-    header: 'My immigrant journey',
-    text: `I was born in Brasil, and immigrated to the US as an infant with my mother, who is one of the glass-ceiling shattering professional women of her \
-    generation - and she did it in not one but two countries! America is a nation of immigrants, so being an immigrant and an American citizen makes me, \
-    in many ways, a very typical American.  \n\nGrowing up, I did all the things American girls love to do like ballet and jump rope, and dreaming of attending \
-    college at Stanford University.   \n\nMy immigrant heritage even brought me some advantages other girls didn't get, for example, I grew up speaking Portuguese \
-    o my Brasilian side of the family and English on my American side of the family, and Spanish to all my immigrant classmates at my international high school. \
-    \n\nI've called the Bay Area my home since I arrived on the Stanford campus as an engineering student.`,
-    comments: [],
-  }, {
-    id: 3,
-    video: require('./../../Assets/videos/candidateVid.mp4'),
-    type: 'article',
-    time: -100,
-    header: 'In-car Footage',
-    text: `Bilingual Hamilton Mixtape rap in support of Immigrants: We Get the Job Done Coalition http://bit.ly/2s6mWAt  #Ham4All #BrazilianAmerican 🎤`,
-    comments: [],
-  }, {
-    id: 4,
-    survey: true,
-    photo: require('../img/student-debt.jpg'),
-    type: 'article',
-    time: -593,
-    header: 'Student Debt Survey',
-    text: 'Survey: How much student debt do you have?\n\nAmong the \
-Class of 2018, 69% of college students took out student loans, and they graduated with an average debt of $29,800, including both private and federal debt.',
-    comments: []
-  }, {
+  }, 
+  {
 //   id: 3,
 //   photo: require('../img/democracy2.jpg'),
 //   type: 'article',
