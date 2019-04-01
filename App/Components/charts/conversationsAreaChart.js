@@ -54,8 +54,8 @@ export class ConversationsAreaChart extends RkComponent {
   componentDidMount() {
     this.setStateInterval = setInterval(() => {
       const randNum = Math.random()
-      const increment = randNum > 0.50;
-      const tenPlus = randNum > 0.9;
+      const increment = randNum > 0.40;
+      const tenPlus = randNum > 0.7;
 
       let newValue = this.state.data[this.state.data.length - 1].y;
       if (increment) {
@@ -74,7 +74,7 @@ export class ConversationsAreaChart extends RkComponent {
       this.setState({
         data: newData,
       });
-    }, 2000);
+    }, 1000);
   }
 
   componentWillUnmount() {

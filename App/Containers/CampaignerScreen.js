@@ -66,6 +66,7 @@ class CampaignerScreen extends Component {
     this.phoneNumber = undefined
     this.lastName = undefined
     this.searchResults = []
+    this.selectedResult = undefined
     this.searchAnimation = false
     this.conversations = {
       highScore: 35,
@@ -125,6 +126,7 @@ class CampaignerScreen extends Component {
 
     setTimeout(() => {
       this.searchResults = []
+      this.selectedResult = undefined
       const normalizedPhoneNumber = undefined   // TODO:
       const lcLastName = (this.lastName) ? this.lastName.toLowerCase() : undefined
       // Search using the phone number or name and produce a list of results along
@@ -139,8 +141,8 @@ class CampaignerScreen extends Component {
       }
 
       this.searchAnimation = false
-      console.info(`${this.handleSearchTransition.name}: num last name matches ${this.searchResults.length}`)
-      console.info(`${this.handleSearchTransition.name}: transitioning to state:`)
+      // console.info(`${this.handleSearchTransition.name}: num last name matches ${this.searchResults.length}`)
+      // console.info(`${this.handleSearchTransition.name}: transitioning to state:`)
       console.dir(aNextState)
       // TODO: some type of random delay with a spinner
       this.setState({ gsPage:aNextState })
@@ -195,15 +197,18 @@ class CampaignerScreen extends Component {
 
   getSearchResultSelector() {
     let searchResultSelectors = this.searchResults.map(searchResultProps => (
-      <View style={styles.gsProgressBlob}>
-        <RkText rkType='medium' style={styles.gsProgressBlobText}>{searchResultProps.first_name} {searchResultProps.last_name}</RkText>
-        <RkText rkType='small' style={styles.gsProgressBlobText}>{searchResultProps.streetAddress}</RkText>
-        <RkText rkType='small' style={styles.gsProgressBlobText}>{searchResultProps.city}, {searchResultProps.state}</RkText>
-        <RkText rkType='small' style={styles.gsProgressBlobText}>{searchResultProps.zipCode}</RkText>
-        <RkText rkType='small' style={styles.gsProgressBlobText}>{searchResultProps.phone}</RkText>
+      <View
+        key={this.uniqueKey++}
+        style={styles.gsProgressBlob}>
+        <TouchableOpacity onPress={() => {this.selectedResult = searchResultProps}}>
+          <RkText rkType='medium' style={styles.gsProgressBlobText}>{searchResultProps.first_name} {searchResultProps.last_name}</RkText>
+          <RkText rkType='small' style={styles.gsProgressBlobText}>{searchResultProps.streetAddress}</RkText>
+          <RkText rkType='small' style={styles.gsProgressBlobText}>{searchResultProps.city}, {searchResultProps.state}</RkText>
+          <RkText rkType='small' style={styles.gsProgressBlobText}>{searchResultProps.zipCode}</RkText>
+          <RkText rkType='small' style={styles.gsProgressBlobText}>{searchResultProps.phone}</RkText>
+        </TouchableOpacity>
       </View>
     ))
-
     return searchResultSelectors
   }
 
@@ -285,11 +290,47 @@ class CampaignerScreen extends Component {
           {buttonName: 'Done', nextState: CampaignerScreen.GS_PAGES.mainPage},
           {buttonName: 'Back', nextState: CampaignerScreen.GS_PAGES.conversationRegisteredSearchResults}
         ])
+        const headerText = (this.selectedResult) ?
+          `${this.selectedResult.first_name} ${this.selectedResult.last_name} Survey` :
+          'Voter Survey'
         groundSwell = (
           <View style={styles.gsView}>
-            {this.getHeader('Voter Survey')}
-            <View style={{flex:.95}}/>
+            {this.getHeader(headerText)}
+            <ScrollView style={{flex:.9, width:'100%'}}>
             {/* TODO: Survey questions w/ selectable results */}
+              <View style={styles.gsProgressBlob}>
+                <RkText rkType='medium' style={styles.gsPastProgressBlobText}>How likely are you to vote this election?</RkText>
+                <RkText rkType='small' style={styles.gsPastProgressBlobText}>Very likely</RkText>
+                <RkText rkType='small' style={styles.gsPastProgressBlobText}>Not sure</RkText>
+                <RkText rkType='small' style={styles.gsPastProgressBlobText}>Not likely</RkText>
+              </View>
+              <View style={styles.gsProgressBlob}>
+                <RkText rkType='medium' style={styles.gsPastProgressBlobText}>How do you feel about proposition 428?</RkText>
+                <RkText rkType='small' style={styles.gsPastProgressBlobText}>I'm for proposition 428</RkText>
+                <RkText rkType='small' style={styles.gsPastProgressBlobText}>Not sure</RkText>
+                <RkText rkType='small' style={styles.gsPastProgressBlobText}>I'm against proposition 428</RkText>
+              </View>
+              <View style={styles.gsProgressBlob}>
+                <RkText rkType='medium' style={styles.gsPastProgressBlobText}>How much student debt do you have?</RkText>
+                <RkTextInput
+                  rkType='rounded'
+                  placeholder='$28,000.00'
+                  onChangeText={(studentDebt) => {console.log(`Student debt: ${studentDebt}`)}}/>
+              </View>
+              <View style={styles.gsProgressBlob}>
+                <RkText rkType='medium' style={styles.gsPastProgressBlobText}>Would you like to see funding dedicated to helping the unhomed population?</RkText>
+                <RkText rkType='small' style={styles.gsPastProgressBlobText}>Very likely</RkText>
+                <RkText rkType='small' style={styles.gsPastProgressBlobText}>Not sure</RkText>
+                <RkText rkType='small' style={styles.gsPastProgressBlobText}>Not likely</RkText>
+              </View>
+              <View style={styles.gsProgressBlob}>
+                <RkText rkType='medium' style={styles.gsPastProgressBlobText}>Would you like to see funding dedicated to upgrading our roads?</RkText>
+                <RkText rkType='small' style={styles.gsPastProgressBlobText}>Very likely</RkText>
+                <RkText rkType='small' style={styles.gsPastProgressBlobText}>Not sure</RkText>
+                <RkText rkType='small' style={styles.gsPastProgressBlobText}>Not likely</RkText>
+              </View>
+            </ScrollView>
+            <View style={[{flex: 0.05}, styles.gsButtonPanelHeader]}/>
             {buttonPanel}
             <View style={{flex:.05}}/>
           </View>
@@ -297,13 +338,19 @@ class CampaignerScreen extends Component {
         break;
       case CampaignerScreen.GS_PAGES.conversationNonRegisteredAdd:
         buttonPanel = this.getButtonPanel([
-          {buttonName: 'Next', nextState: CampaignerScreen.GS_PAGES.conversationNonRegisteredSurvey},
-          {buttonName: 'Back', nextState: CampaignerScreen.GS_PAGES.conversationRegisteredSearchResults}
+          // {buttonName: 'Next', nextState: CampaignerScreen.GS_PAGES.conversationNonRegisteredSurvey},
+          {buttonName: 'Back', nextState: CampaignerScreen.GS_PAGES.conversation}
         ])
         groundSwell = (
           <View style={styles.gsView}>
             {this.getHeader('Non-Registered Voter')}
-            <View style={{flex:.95}}/>
+            <View style={{width:'100%', flex:0.95, justifyContent:'center'}}>
+              <View style={[styles.gsProgressBlob, {flex:1, justifyContent:'center'}]}>
+                <RkText rkType='large' style={styles.gsText}>Under Construction</RkText>
+                <RkText rkType='medium' style={styles.gsText}></RkText>
+                <RkText rkType='medium' style={styles.gsText}>This page will allow campaigners to help non-registered voters figure out where they can register to vote. It also gets them in the campaign database for further help with registering and go to vote efforts.</RkText>
+              </View>
+            </View>
             {/* TODO: Blurb about sending reistration info. */}
             {/* TODO: Gather Phone & Name */}
             {buttonPanel}
@@ -332,13 +379,18 @@ class CampaignerScreen extends Component {
       case CampaignerScreen.GS_PAGES.addVoluneer:
         // TODO: set next state for back based on where we came from
         buttonPanel = this.getButtonPanel([
-          {buttonName: 'Done', nextState: CampaignerScreen.GS_PAGES.mainPage},
           {buttonName: 'Back', nextState: CampaignerScreen.GS_PAGES.mainPage}
         ])
         groundSwell = (
           <View style={styles.gsView}>
             {this.getHeader('Add Volunteer')}
-            <View style={{flex:.95}}/>
+            <View style={{width:'100%', flex:0.95, justifyContent:'center'}}>
+              <View style={[styles.gsProgressBlob, {flex:1, justifyContent:'center'}]}>
+                <RkText rkType='large' style={styles.gsText}>Under Construction</RkText>
+                <RkText rkType='medium' style={styles.gsText}></RkText>
+                <RkText rkType='medium' style={styles.gsText}>This page will allow campaigners to add another campaign volunteer who can also interact with voters, surveying sentiment, and competing with other campaigners.</RkText>
+              </View>
+            </View>
             {/* TODO: Blurb about sending deep link to app campaign info. */}
             {/* TODO: Gather Phone & Name */}
             {buttonPanel}
@@ -391,6 +443,7 @@ class CampaignerScreen extends Component {
       default:  // CampaignerScreen.GS_PAGES.mainPage
         // TODO: refactor to an init method for common use
         this.searchResults = []
+        this.selectedResult = undefined
         this.phoneNumber = undefined
         this.lastName = undefined
 
