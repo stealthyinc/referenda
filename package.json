@@ -67,6 +67,7 @@
     "react-native-level-fs": "^3.0.1",
     "react-native-linear-gradient": "^2.5.3",
     "react-native-os": "^1.2.2",
+    "react-native-payments": "^0.7.1",
     "react-native-photo-browser": "^0.4.0",
     "react-native-progress-bar": "^0.1.2",
     "react-native-randombytes": "^3.5.2",

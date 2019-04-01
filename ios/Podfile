@@ -7,6 +7,9 @@ target 'referenda' do
 
   # Pods for referenda
   pod 'Amplitude-iOS', '~> 4.3.1'
+  pod 'Stripe'
+
+  #pod 'ReactNativePayments', :path => '../node_modules/react-native-payments'
 
   post_install do |installer|
     installer.pods_project.targets.each do |target|
@@ -16,9 +19,9 @@ target 'referenda' do
     end
   end
 
-  target 'referendaTests' do
-    inherit! :search_paths
+  #target 'referendaTests' do
+    #inherit! :search_paths
     # Pods for testing
-  end
+  #end
 
 end

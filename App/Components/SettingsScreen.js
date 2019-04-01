@@ -74,7 +74,7 @@ export default class SettingsScreen extends Component {
             onValueChange={this.onPushNotificationsSettingChanged}
           />
         </View>
-        <View style={styles.row}>
+        {/*<View style={styles.row}>
           <RkText rkType='header6'>Refresh Automatically</RkText>
           <RkSwitch
             style={styles.switch}
@@ -82,7 +82,7 @@ export default class SettingsScreen extends Component {
             name="Refresh"
             onValueChange={this.onRefreshAutomaticallySettingChanged}
           />
-        </View>
+        </View>*/}
       </View>
       <View style={styles.section}>
         <View style={[styles.row, styles.heading]}>

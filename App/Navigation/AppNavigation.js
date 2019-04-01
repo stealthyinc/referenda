@@ -235,7 +235,7 @@ export default createAppContainer(
     }, 
     {
       headerMode: 'none',
-      initialRouteName: 'App',
+      initialRouteName: 'Load',
       navigationOptions: {
         headerStyle: styles.header
       }
