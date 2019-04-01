@@ -158,7 +158,8 @@ class CampaignerScreen extends Component {
   }
 
   getButton(aButtonName, aNextState) {
-    if (aNextState === CampaignerScreen.GS_PAGES.conversationRegisteredSearchResults) {
+    if (aButtonName === 'Search' &&
+        aNextState === CampaignerScreen.GS_PAGES.conversationRegisteredSearchResults) {
       return (
         <RkButton
           key={this.uniqueKey++}
