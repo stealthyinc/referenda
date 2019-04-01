@@ -11,6 +11,7 @@ import FeedScreen from '../Containers/FeedScreen'
 import KeychainScreen from '../Containers/KeychainScreen'
 import CameraScreen from '../Containers/CameraScreen'
 import CardsScreen from '../Containers/CardsScreen'
+import CampaignerScreen from '../Containers/CampaignerScreen'
 import CalendarScreen from '../Containers/CalendarScreen'
 import CombinedScreen from '../Containers/CombinedScreen'
 import AuthLoadingScreen from '../Containers/AuthLoadingScreen'
@@ -106,6 +107,9 @@ const FeedNav = createStackNavigator({
   },
   Camera: {
     screen: CameraScreen
+  },
+  CampaignerScreen: {
+    screen: CampaignerScreen
   }
 }, {
   initialRouteName: '',
@@ -151,7 +155,8 @@ const MessageNav = createStackNavigator({
 
 const NotificationNav = createStackNavigator({
   Home: {
-    screen: Screens.Notifications
+    // screen: Screens.Notifications
+    screen: CampaignerScreen
   }
 }, {
   initialRouteName: '',
@@ -162,7 +167,8 @@ const NotificationNav = createStackNavigator({
     gesturesEnabled: false,
     tabBarIcon: ({ focused, tintColor }) => {
       const { routeName } = navigation.state
-      let iconName = `ios-notifications`
+      // let iconName = `ios-notifications`
+      let iconName = 'ios-person-add'
       return <Ionicons name={iconName} size={30} color={tintColor} />
     },
     headerStyle: styles.header
@@ -232,7 +238,7 @@ export default createAppContainer(
       Load: LoadNav,
       Auth: AuthNav,
       App: TabNav
-    }, 
+    },
     {
       headerMode: 'none',
       initialRouteName: 'App',
