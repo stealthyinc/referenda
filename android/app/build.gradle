@@ -137,6 +137,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-payments')
     compile project(':react-native-autogrow-textinput')
     compile project(':react-native-social-share')
     compile project(':react-native-contacts')

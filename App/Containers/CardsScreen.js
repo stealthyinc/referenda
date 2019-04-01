@@ -23,6 +23,7 @@ import { UIConstants } from '../Config/AppConstants';
 import { scaleVertical } from '../Utils/scale';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import FlipCard from 'react-native-flip-card'
+const { userTypeInstance } = require('../Utils/UserType.js')
 
 class CardsScreen extends Component {
   static navigationOptions = ({ navigation }) => {
@@ -34,11 +35,11 @@ class CardsScreen extends Component {
           <Ionicons name='ios-information-circle-outline' size={30} color='gray' />
         </TouchableOpacity>
       ),
-      headerRight: (
+      headerRight: (userTypeInstance.getUserType()) ? (
         <TouchableOpacity onPress={() => params.flip()} style={{marginRight: 10}}>
           <Ionicons name='logo-buffer' size={30} color='gray' />
         </TouchableOpacity>
-      )
+      ) : null
     }
   }
 
@@ -123,7 +124,7 @@ class CardsScreen extends Component {
         <TouchableOpacity
           delayPressIn={70}
           activeOpacity={0.8}
-          onPress={this.onItemPressed}>
+        >
           <LinearGradient
             colors={gradient}
             start={{ x: 0.0, y: 0.5 }}
@@ -161,7 +162,7 @@ class CardsScreen extends Component {
         flip={this.state.flip}
         friction={6}
         perspective={1000}
-        flipHorizontal={true}
+        flipHorizontal={userTypeInstance.getUserType()}
         flipVertical={false}
         clickable={false}
         style={styles.root}
