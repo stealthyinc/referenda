@@ -76,7 +76,7 @@ class FeedScreen extends Component {
     const randomAvatar = (params.phoneNumber) ? avatarArr[Math.floor(Math.random() * Math.floor(12))] : require('../Data/img/avatars/agatha.png')
     return {
       headerLeft: (
-        <TouchableOpacity onPress={() => params.drawer()} style={{marginLeft: 10}}>
+        <TouchableOpacity onPress={() => navigation.toggleDrawer()} style={{marginLeft: 10}}>
           <Image
             source={randomAvatar}
             style={{height: 30, width: 30, borderRadius: 15}}/>
@@ -87,7 +87,7 @@ class FeedScreen extends Component {
           <Ionicons name='ios-paper-plane' size={30} color='gray' />
         </TouchableOpacity>
       ) : null,
-      headerTitle: 'Proposals'.toUpperCase(),
+      headerTitle: 'Home'.toUpperCase(),
       headerBackTitle: 'Back',
       headerTintColor: 'black',
     }

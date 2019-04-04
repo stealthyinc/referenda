@@ -50,15 +50,15 @@ class ReduxNavigation extends Component {
 
   render () {
     return (
-      <SideMenu
-        menu={<Settings logout={() => this.logout()} />}
-        isOpen={this.props.open}
-        openMenuOffset={300}
-        disableGestures={true}
-        onChange={isOpen => this.props.dispatch(SettingsActions.settingsMenuUpdate(isOpen))}
-      >
+      // <SideMenu
+      //   menu={<Settings logout={() => this.logout()} />}
+      //   isOpen={this.props.open}
+      //   openMenuOffset={300}
+      //   disableGestures={true}
+      //   onChange={isOpen => this.props.dispatch(SettingsActions.settingsMenuUpdate(isOpen))}
+      // >
         <ReduxAppNavigator dispatch={this.props.dispatch} state={this.props.nav} />
-      </SideMenu>
+      // </SideMenu>
     )
   }
 }

@@ -22,6 +22,7 @@ import folder from '../Assets/images/folder.png'
 // import security from '../Assets/images/molecular.png'
 
 import candidate from '../Assets/images/launch0-candidate.jpg'
+// import candidate from '../Assets/images/launch1-candidate.jpg'
 // import censor from '../Assets/images/censor.png'
 // From: https://www.pexels.com/photo/man-wearing-gray-coat-standing-in-the-middle-of-the-road-936142/
 import chat from '../Assets/images/launch1-your-voice.jpg'

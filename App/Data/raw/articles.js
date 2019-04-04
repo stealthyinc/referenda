@@ -111,7 +111,8 @@ Class of 2018, 69% of college students took out student loans, and they graduate
     the U.S. Not being able to visit  with your own father is a painful separation I could not imagine bearing. Today, Paola works for a women’s health \
     clinic in Colorado, assisting women in need - exactly the kind of friend and neighbor we all want to claim as fellow citizen.`,
     comments: [],
-  }, {
+  }, 
+// {
 //   id: 5,
 //   photo: require('./../../Assets/avatars/agatha3.png'),
 //   type: 'article',
@@ -126,6 +127,83 @@ Class of 2018, 69% of college students took out student loans, and they graduate
 //   comments: [],
 // },
 // {
+//   id: 0,
+//   photo: require('./../../Assets/avatars/rishi1.jpg'),
+//   type: 'article',
+//   time: -100,
+//   header: 'Silicon Valley Leadership Group',
+//   text: `Silicon Valley is a very special place, one of the best places in the world with our innovation economy, diversity and usually perfect weather. As your Congressman, I will fiercely protect and serve the interest of our families, our youth, and our seniors. I will be an involved, committed, dedicated and vigilant advocate of every resident of Silicon Valley. \n
+//   I promise, I will always fight the good fight, and fight hard, no matter how hard and uphill it may be, to address the aspirations of our community, and deliver results. \n
+//   I love this community dearly and I have found an inner fulfillment in directing my energy towards causes; towards the good of this fantastic community we live in. \n
+//   With your support, I look forward to serving our district, to continue doing important and satisfying work in your interest.`,
+//   comments: [],
+// }, {
+//   id: 1,
+//   survey: true,
+//   photo: require('./../../Assets/avatars/rishi2.jpg'),
+//   type: 'article',
+//   time: -593,
+//   header: 'My Silicon Valley Journey',
+//   text: `As a nineteen year resident of Silicon Valley, immigrant engineer, experienced hi-tech executive and former IBMer, I found my calling as an activist stepping up for complex community challenges that I just could not ignore.\n
+//   I paid heed to my inner voice, whether it was addressing reduced tuition time in our middle school, or fostering social vibrancy with neighbors communicating, connecting, collaborating to raise our community’s happiness index, or addressing a dearth of entrepreneurship education opportunities for our youth.\n
+//   I wasn’t sure I would succeed with the issues that I engaged with, but I knew that if worked hard and persevered, the answers would always come to me. I found the activism and resultant impact very energizing!`,
+//   comments: []
+// },
+// {
+//   id: 2,
+//   photo: require('./../../Assets/avatars/rishi3.jpg'),
+//   type: 'article',
+//   time: -1373,
+//   header: 'Solving Local Problems',
+//   text: `Solving problems and making it better is the reason why I am running for Congress to continue championing Silicon Valley’s quality of life with a passion to continue protecting, promoting the interest of our residents, for progressive beliefs and values that everyone deserves a decent, fulfilling, and economically secure future. \n
+//   Today, as a councilmember of Saratoga in my 2nd term, I have worked hard for our citizen’s top challenges such as crime water and more. I stepped up to reduce crime leading to a 47% drop in burglaries. I took on the challenge of rising water bills and rejected water rate increases that had never been attempted before. \n
+//   The result was historic in getting the most votes in any election in the 60 years election history of Saratoga.`,
+//   comments: [],
+// }, 
+// {
+//   id: 4,
+//   photo: require('./../../Assets/avatars/rishi4.jpg'),
+//   type: 'article',
+//   time: -300,
+//   header: 'The wisdom of immigrants',
+//   text: `Silicon Valley needs  leadership that is citizen-centric and will strive to address such quality of life issues with a mindset of “Getting things Done”, standing up for the people, addressing their challenges and providing services “cheaper, faster, better” \n
+//   Silicon Valley needs progressive leadership to solve our urgent quality of life needs such as housing and traffic, burgeoning healthcare and drug cost, residential break-ins, water shortage, ageism in our workforce, college admission for our brightest youth and climate change.\n
+//   Silicon Valley needs innovative leadership making choices based on a keen grasp of the valley’s innovation agenda to quadruple our tech economic output, making choices that work best for our people and the long term economic viability and success.`,
+//   comments: [{
+//     id: 1,
+//     text: 'Aliquam sit amet diam in magna bibendum imperdiet. Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis. Fusce posuere felis sed lacus. Morbi sem mauris, laoreet ut, rhoncus aliquet, pulvinar sed, nisl. Nunc rhoncus dui vel sem.',
+//     time: 0,
+//   }, {
+//     id: 2,
+//     text: 'Quisque ut erat. Curabitur gravida nisi at nibh.',
+//     time: -311,
+//   }, {
+//     id: 3,
+//     text: 'Etiam pretium iaculis justo. In hac habitasse platea dictumst. Etiam faucibus cursus urna. Ut tellus. Nulla ut erat id mauris vulputate elementum.',
+//     time: -622,
+//   }, {
+//     id: 4,
+//     text: 'In est risus, auctor sed, tristique in, tempus sit amet, sem.',
+//     time: -933,
+//   }, {
+//     id: 5,
+//     text: 'In hac habitasse platea dictumst.',
+//     time: -1244,
+//   }, {
+//     id: 6,
+//     text: 'In hac habitasse platea dictumst. Morbi vestibulum, velit id pretium iaculis, diam erat fermentum justo, nec condimentum neque sapien placerat ante. Nulla justo.',
+//     time: -1555,
+//   }, {
+//     id: 7,
+//     text: 'Vivamus vel nulla eget eros elementum pellentesque. Quisque porta volutpat erat.',
+//     time: -1866,
+//   }, {
+//     id: 8,
+//     text: 'Duis mattis egestas metus. Aenean fermentum. Donec ut mauris eget massa tempor convallis. Nulla neque libero, convallis eget, eleifend luctus, ultricies eu, nibh.',
+//     time: -2177,
+//   }],
+// }, 
+{
     id: 23,
     photo: require('../img/guadido1.jpg'),
     type: 'article1',

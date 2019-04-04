@@ -35,11 +35,11 @@ class CardsScreen extends Component {
           <Ionicons name='ios-information-circle-outline' size={30} color='gray' />
         </TouchableOpacity>
       ),
-      headerRight: (userTypeInstance.getUserType()) ? (
-        <TouchableOpacity onPress={() => params.flip()} style={{marginRight: 10}}>
+      headerRight: (userTypeInstance.getUserType()) ? null : (
+        <TouchableOpacity onPress={() => alert('More Tokens')} style={{marginRight: 10}}>
           <Ionicons name='logo-buffer' size={30} color='gray' />
         </TouchableOpacity>
-      ) : null
+      )
     }
   }
 
@@ -50,7 +50,7 @@ class CardsScreen extends Component {
   };
 
   componentDidMount () {
-    this.props.navigation.setParams({ navigation: this.props.navigation, flip: this.flip })
+    this.props.navigation.setParams({ navigation: this.props.navigation })
   }
 
   flip = () => {
@@ -158,19 +158,19 @@ class CardsScreen extends Component {
 
   render () {
     return (
-      <FlipCard
-        flip={this.state.flip}
-        friction={6}
-        perspective={1000}
-        flipHorizontal={userTypeInstance.getUserType()}
-        flipVertical={false}
-        clickable={false}
-        style={styles.root}
-        alignHeight={true}
-        // alignWidth={true}
-        onFlipEnd={(isFlipEnd)=>{console.log('isFlipEnd', isFlipEnd)}}
-      >
-        {/* Face Side */}
+      // <FlipCard
+      //   flip={this.state.flip}
+      //   friction={6}
+      //   perspective={1000}
+      //   flipHorizontal={userTypeInstance.getUserType()}
+      //   flipVertical={false}
+      //   clickable={false}
+      //   style={styles.root}
+      //   alignHeight={true}
+      //   // alignWidth={true}
+      //   onFlipEnd={(isFlipEnd)=>{console.log('isFlipEnd', isFlipEnd)}}
+      // >
+      //   {/* Face Side */}
         <View style={styles.root}>
           <FlatList
             style={styles.list}
@@ -210,11 +210,11 @@ class CardsScreen extends Component {
             </View>
           </Modal>
         </View>
-        {/* Back Side */}
-        <View style={styles.root}>
-          <Text>The Back</Text>
-        </View>
-      </FlipCard>
+      //   {/* Back Side */}
+      //   <View style={styles.root}>
+      //     <Text>The Back</Text>
+      //   </View>
+      // </FlipCard>
     )
   }
 }

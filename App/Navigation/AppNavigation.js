@@ -1,6 +1,12 @@
 import React from 'react'
-import { createBottomTabNavigator, TabBarBottom, createSwitchNavigator } from 'react-navigation'
-import { createStackNavigator, createAppContainer } from 'react-navigation'
+import {
+  createStackNavigator,
+  createAppContainer,
+  createBottomTabNavigator,
+  TabBarBottom,
+  createSwitchNavigator,
+  createDrawerNavigator,
+} from 'react-navigation'
 import CameraRollScreen from '../Containers/CameraRollScreen'
 import ArticleInputScreen from '../Containers/ArticleInputScreen'
 import ChatScreen from '../Containers/ChatScreen'
@@ -17,6 +23,7 @@ import CombinedScreen from '../Containers/CombinedScreen'
 import AuthLoadingScreen from '../Containers/AuthLoadingScreen'
 import VideoScreen from '../Containers/VideoScreen'
 import IntroductionScreen from '../Components/IntroductionScreen'
+import Settings from '../Components/SettingsScreen'
 
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { AppRoutes } from '../Navigation/RoutesBuilder'
@@ -155,8 +162,8 @@ const MessageNav = createStackNavigator({
 
 const NotificationNav = createStackNavigator({
   Home: {
-    // screen: Screens.Notifications
-    screen: CampaignerScreen
+    screen: Screens.Notifications
+    // screen: CampaignerScreen
   }
 }, {
   initialRouteName: '',
@@ -167,8 +174,8 @@ const NotificationNav = createStackNavigator({
     gesturesEnabled: false,
     tabBarIcon: ({ focused, tintColor }) => {
       const { routeName } = navigation.state
-      // let iconName = `ios-notifications`
-      let iconName = 'ios-person-add'
+      let iconName = `ios-notifications`
+      // let iconName = 'ios-stats'
       return <Ionicons name={iconName} size={30} color={tintColor} />
     },
     headerStyle: styles.header
@@ -207,7 +214,7 @@ const TokenNav = createStackNavigator({
     gesturesEnabled: false,
     tabBarIcon: ({ focused, tintColor }) => {
       const { routeName } = navigation.state
-      let iconName = `ios-wallet`
+      let iconName = `ios-ribbon`
       return <Ionicons name={iconName} size={30} color={tintColor} />
     },
     headerStyle: styles.header
@@ -217,8 +224,9 @@ const TokenNav = createStackNavigator({
 const TabNav = createBottomTabNavigator({
   Feed: FeedNav,
   Events: CalendarNav,
-  Combined: TokenNav,
+  Combined: CombinedNav,
   Notifications: NotificationNav,
+  // Token: TokenNav,
   Messages: MessageNav
 }, {
   tabBarOptions: {
@@ -232,15 +240,27 @@ const TabNav = createBottomTabNavigator({
   swipeEnabled: false
 })
 
+const DrawerNav = createDrawerNavigator(
+  {
+    screen: CombinedNav
+  },
+  {
+    contentComponent: (props) => {
+      const SideMenu = withRkTheme(Screens.SideMenu);
+      return <Settings {...props} />;
+    },
+  },
+);
+
 export default createAppContainer(
   createSwitchNavigator(
     {
       Load: LoadNav,
       Auth: AuthNav,
-      App: TabNav
+      App: DrawerNav
     },
     {
-      headerMode: 'none',
+      headerMode: 'screen',
       initialRouteName: 'Load',
       navigationOptions: {
         headerStyle: styles.header

@@ -454,7 +454,7 @@ class CampaignerScreen extends Component {
         ])
         groundSwell = (
           <View style={styles.gsView}>
-            {this.getHeader('Campaigning')}
+            {this.getHeader('Canvassing')}
             <View style={{flex:.95}}/>
             {buttonPanel}
             <View style={{flex:.05}}/>

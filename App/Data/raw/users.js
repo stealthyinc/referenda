@@ -14,6 +14,22 @@ const images = [
 ];
 
 const users = [{
+//   id: 0,
+//   firstName: 'Rishi',
+//   lastName: 'Kumar',
+//   phone: '+1 415 670 90 34',
+//   country: 'USA',
+//   email: 'rishi.kumar@congress.org',
+//   password: '123456',
+//   newPassword: '12345678',
+//   confirmPassword: '12345678',
+//   photo: require('../img/avatars/rishi.jpg'),
+//   postCount: 86,
+//   followersCount: 22102,
+//   followingCount: 536,
+//   images,
+// },
+// {
   id: 0,
   firstName: 'Agatha',
   lastName: 'Bacelar',
@@ -28,7 +44,6 @@ const users = [{
   followersCount: 22102,
   followingCount: 536,
   images,
-
 },
 {
   id: 1,
@@ -63,7 +78,7 @@ const users = [{
   images,
 },
 {
-  id: 3,
+  id: 13,
   firstName: 'Helen',
   lastName: 'Gilbert',
   phone: '+1 415 670 90 34',
