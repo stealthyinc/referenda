@@ -19,14 +19,8 @@ import {
   RkStyleSheet,
   RkTheme,
 } from 'react-native-ui-kitten';
-// import { LinearGradient } from 'expo';
-import LinearGradient from 'react-native-linear-gradient';
-import { data } from '../Data';
-import { PasswordTextInput } from '../Components/passwordTextInput';
-import { UIConstants } from '../Config/AppConstants';
-import { scaleVertical } from '../Utils/scale';
+import { GradientButton } from '../Components/gradientButton';
 import Ionicons from 'react-native-vector-icons/Ionicons'
-import FlipCard from 'react-native-flip-card'
 
 import {
   ConversationsAreaChart,
@@ -143,7 +137,7 @@ class CampaignerScreen extends Component {
       this.searchAnimation = false
       // console.info(`${this.handleSearchTransition.name}: num last name matches ${this.searchResults.length}`)
       // console.info(`${this.handleSearchTransition.name}: transitioning to state:`)
-      console.dir(aNextState)
+      // console.dir(aNextState)
       // TODO: some type of random delay with a spinner
       this.setState({ gsPage:aNextState })
     }, upToTwoSeconds)
@@ -151,10 +145,54 @@ class CampaignerScreen extends Component {
     this.setState({gsPage:currentState})
   }
 
-  getHeader(aTitle) {
+  headerButtonAction(transitionToState=undefined) {
+    if (transitionToState === undefined) {
+      alert('Header Button Action')
+    } else {
+      this.setState({ gsPage:transitionToState })
+    }
+  }
+
+  getHeader(aTitle, backNavigationState=undefined) {
+    const headerArr = []
+
+    const iconName = (backNavigationState === undefined) ? 'ios-menu' : 'ios-arrow-back'
+    headerArr.push((
+      <TouchableOpacity
+        key={this.uniqueKey++}
+        onPress={() => this.headerButtonAction(backNavigationState)}
+        style={styles.gsHeaderPanelLeft}>
+        <Ionicons name={iconName} size={30} color='gray' style={{textAlign: 'center'}}/>
+      </TouchableOpacity>
+    ))
+
+    headerArr.push((
+      <RkText
+        key={this.uniqueKey++}
+        rkType='large'
+        style={styles.gsHeaderPanelText}>{aTitle}</RkText>
+      ))
+
+    // if (rightAction) {
+    //   headerArr.push((
+    //     <TouchableOpacity
+    //       onPress={rightAction}
+    //       style={styles.gsHeaderPanelRight}>
+    //       <Ionicons name='ios-menu' size={30} color='gray' style={{textAlign: 'center'}} />
+    //     </TouchableOpacity>
+    //   ))
+    // } else {
+      headerArr.push(
+        <View
+          key={this.uniqueKey++}
+          style={styles.gsHeaderPanelRight}
+        />
+      )
+    // }
+
     return (
       <View style={styles.gsHeaderPanelView}>
-        <RkText rkType='large' style={styles.gsHeaderPanelText}>{aTitle}</RkText>
+        {headerArr}
       </View>
     )
   }
@@ -163,24 +201,40 @@ class CampaignerScreen extends Component {
     if (aButtonName === 'Search' &&
         aNextState === CampaignerScreen.GS_PAGES.conversationRegisteredSearchResults) {
       return (
-        <RkButton
+        <GradientButton
           key={this.uniqueKey++}
-          onPress={() => this.handleSearchTransition(aNextState)}
-          rkType='clear'
-          style={styles.gsButton}>
-          <RkText style={styles.gsButtonText}>{aButtonName}</RkText>
-        </RkButton>
+          style={styles.gsGradientButton}
+          rkType='large'
+          text={aButtonName}
+          onPress={() => this.handleSearchTransition(aNextState)} />
       )
+      //
+      //   <RkButton
+      //     key={this.uniqueKey++}
+      //     onPress={() => this.handleSearchTransition(aNextState)}
+      //     rkType='clear'
+      //     style={styles.gsButton}>
+      //     <RkText style={styles.gsButtonText}>{aButtonName}</RkText>
+      //   </RkButton>
+      // )
     }
     return (
-      <RkButton
+      <GradientButton
         key={this.uniqueKey++}
-        onPress={() => this.setState({ gsPage:aNextState })}
-        rkType='clear'
-        style={styles.gsButton}>
-        <RkText style={styles.gsButtonText}>{aButtonName}</RkText>
-      </RkButton>
+        style={styles.gsGradientButton}
+        rkType='large'
+        text={aButtonName}
+        onPress={() => this.setState({ gsPage:aNextState })} />
     )
+      //
+      // <RkButton
+      //   key={this.uniqueKey++}
+      //   onPress={() => this.setState({ gsPage:aNextState })}
+      //   rkType='clear'
+      //   style={styles.gsButton}>
+      //   <RkText style={styles.gsButtonText}>{aButtonName}</RkText>
+      // </RkButton>
+    // )
   }
 
   getButtonPanel(theButtonsArr) {
@@ -191,6 +245,7 @@ class CampaignerScreen extends Component {
     return (
       <View style={styles.gsButtonPanelView}>
         {buttons}
+        <View id='buttonFooter' style={{height:'2%'}} />
       </View>
     )
   }
@@ -220,29 +275,26 @@ class CampaignerScreen extends Component {
       case CampaignerScreen.GS_PAGES.conversation:
         buttonPanel = this.getButtonPanel([
           {buttonName: 'Registered Voter', nextState: CampaignerScreen.GS_PAGES.conversationRegisteredSearch},
-          {buttonName: 'Non-Registered Voter', nextState: CampaignerScreen.GS_PAGES.conversationNonRegisteredAdd},
-          {buttonName: 'Back', nextState: CampaignerScreen.GS_PAGES.mainPage}
+          {buttonName: 'Non-Registered Voter', nextState: CampaignerScreen.GS_PAGES.conversationNonRegisteredAdd}
         ])
         groundSwell = (
           <View style={styles.gsView}>
-            {this.getHeader('Voter Conversation')}
-            <View style={{flex:.95}}/>
+            {this.getHeader('Voter Conversation', CampaignerScreen.GS_PAGES.mainPage)}
+            <View style={{flex:1}}/>
             {buttonPanel}
-            <View style={{flex:.05}}/>
           </View>
         )
         break;
       case CampaignerScreen.GS_PAGES.conversationRegisteredSearch:
         buttonPanel = this.getButtonPanel([
           {buttonName: 'Search', nextState: CampaignerScreen.GS_PAGES.conversationRegisteredSearchResults},
-          {buttonName: 'Back', nextState: CampaignerScreen.GS_PAGES.conversation}
         ])
         // TODO: disable the buttons and inputs if searchAnimation is true
         const ai = (this.searchAnimation) ?
           (<ActivityIndicator size='large' color='#FF8C00'/>) : undefined
         groundSwell = (
           <View style={styles.gsView}>
-            {this.getHeader('Registered Voter Search')}
+            {this.getHeader('Registered Voter Search', CampaignerScreen.GS_PAGES.conversation)}
             <View style={{flex:.05}}/>
             {/* TODO: Search Inputs: Phone or Name */}
             <View style={{width:'90%'}}>
@@ -250,36 +302,33 @@ class CampaignerScreen extends Component {
                 rkType='rounded'
                 placeholder='Phone Number'
                 onChangeText={(phoneNumber) => {this.phoneNumber = phoneNumber}}/>
-              <RkText rkType='large' style={styles.gsText}>or</RkText>
+              <RkText rkType='large' style={styles.gsBlackText}>or</RkText>
               <RkTextInput
                 rkType='rounded'
                 placeholder='Last Name'
                 onChangeText={(lastName) => {this.lastName = lastName}}/>
             </View>
-            <View style={{width:'100%', flex:0.9, justifyContent:'center'}}>
+            <View style={{width:'100%', flex:0.95, justifyContent:'center'}}>
               {ai}
             </View>
             {buttonPanel}
-            <View style={{flex:.05}}/>
           </View>
         )
         break;
       case CampaignerScreen.GS_PAGES.conversationRegisteredSearchResults:
         buttonPanel = this.getButtonPanel([
           {buttonName: 'Next', nextState: CampaignerScreen.GS_PAGES.conversationRegisteredSurvey},
-          {buttonName: 'Back', nextState: CampaignerScreen.GS_PAGES.conversationRegisteredSearch}
         ])
         const searchResultSelector = this.getSearchResultSelector()
         groundSwell = (
           <View style={styles.gsView}>
-            {this.getHeader('Voter Search Results')}
-            <ScrollView style={{flex:.9, width:'100%'}}>
+            {this.getHeader('Voter Search Results', CampaignerScreen.GS_PAGES.conversationRegisteredSearch)}
+            <ScrollView style={{flex:.95, width:'100%'}}>
               {/* TODO: Selectable search results */}
               {searchResultSelector}
             </ScrollView>
             <View style={[{flex: 0.05}, styles.gsButtonPanelHeader]}/>
             {buttonPanel}
-            <View style={{flex:.05}}/>
           </View>
         )
         break;
@@ -288,15 +337,14 @@ class CampaignerScreen extends Component {
         buttonPanel = this.getButtonPanel([
           {buttonName: 'Add Volunteer', nextState: CampaignerScreen.GS_PAGES.addVoluneer},
           {buttonName: 'Done', nextState: CampaignerScreen.GS_PAGES.mainPage},
-          {buttonName: 'Back', nextState: CampaignerScreen.GS_PAGES.conversationRegisteredSearchResults}
         ])
         const headerText = (this.selectedResult) ?
           `${this.selectedResult.first_name} ${this.selectedResult.last_name} Survey` :
           'Voter Survey'
         groundSwell = (
           <View style={styles.gsView}>
-            {this.getHeader(headerText)}
-            <ScrollView style={{flex:.9, width:'100%'}}>
+            {this.getHeader(headerText, CampaignerScreen.GS_PAGES.conversationRegisteredSearchResults)}
+            <ScrollView style={{flex:.95, width:'100%'}}>
             {/* TODO: Survey questions w/ selectable results */}
               <View style={styles.gsProgressBlob}>
                 <RkText rkType='medium' style={styles.gsPastProgressBlobText}>How likely are you to vote this election?</RkText>
@@ -332,19 +380,17 @@ class CampaignerScreen extends Component {
             </ScrollView>
             <View style={[{flex: 0.05}, styles.gsButtonPanelHeader]}/>
             {buttonPanel}
-            <View style={{flex:.05}}/>
           </View>
         )
         break;
       case CampaignerScreen.GS_PAGES.conversationNonRegisteredAdd:
         buttonPanel = this.getButtonPanel([
           // {buttonName: 'Next', nextState: CampaignerScreen.GS_PAGES.conversationNonRegisteredSurvey},
-          {buttonName: 'Back', nextState: CampaignerScreen.GS_PAGES.conversation}
         ])
         groundSwell = (
           <View style={styles.gsView}>
-            {this.getHeader('Non-Registered Voter')}
-            <View style={{width:'100%', flex:0.95, justifyContent:'center'}}>
+            {this.getHeader('Non-Registered Voter', CampaignerScreen.GS_PAGES.conversation)}
+            <View style={{width:'100%', flex:1, justifyContent:'center'}}>
               <View style={[styles.gsProgressBlob, {flex:1, justifyContent:'center'}]}>
                 <RkText rkType='large' style={styles.gsText}>Under Construction</RkText>
                 <RkText rkType='medium' style={styles.gsText}></RkText>
@@ -354,7 +400,6 @@ class CampaignerScreen extends Component {
             {/* TODO: Blurb about sending reistration info. */}
             {/* TODO: Gather Phone & Name */}
             {buttonPanel}
-            <View style={{flex:.05}}/>
           </View>
         )
         break;
@@ -363,28 +408,23 @@ class CampaignerScreen extends Component {
         buttonPanel = this.getButtonPanel([
           {buttonName: 'Add Volunteer', nextState: CampaignerScreen.GS_PAGES.addVoluneer},
           {buttonName: 'Done', nextState: CampaignerScreen.GS_PAGES.mainPage},
-          {buttonName: 'Back', nextState: CampaignerScreen.GS_PAGES.conversationNonRegisteredAdd}
         ])
         groundSwell = (
           <View style={styles.gsView}>
-            {this.getHeader('Non-Registered Voter Survey')}
-            <View style={{flex:.95}}/>
+            {this.getHeader('Non-Registered Voter Survey', CampaignerScreen.GS_PAGES.conversationNonRegisteredAdd)}
+            <View style={{flex:1}}/>
             {/* TODO: Survey questions w/ selectable results */}
             {buttonPanel}
-            <View style={{flex:.05}}/>
           </View>
         )
         break;
         break;
       case CampaignerScreen.GS_PAGES.addVoluneer:
         // TODO: set next state for back based on where we came from
-        buttonPanel = this.getButtonPanel([
-          {buttonName: 'Back', nextState: CampaignerScreen.GS_PAGES.mainPage}
-        ])
         groundSwell = (
           <View style={styles.gsView}>
-            {this.getHeader('Add Volunteer')}
-            <View style={{width:'100%', flex:0.95, justifyContent:'center'}}>
+            {this.getHeader('Add Volunteer', CampaignerScreen.GS_PAGES.mainPage)}
+            <View style={{width:'100%', flex:1, justifyContent:'center'}}>
               <View style={[styles.gsProgressBlob, {flex:1, justifyContent:'center'}]}>
                 <RkText rkType='large' style={styles.gsText}>Under Construction</RkText>
                 <RkText rkType='medium' style={styles.gsText}></RkText>
@@ -393,19 +433,14 @@ class CampaignerScreen extends Component {
             </View>
             {/* TODO: Blurb about sending deep link to app campaign info. */}
             {/* TODO: Gather Phone & Name */}
-            {buttonPanel}
-            <View style={{flex:.05}}/>
           </View>
         )
         break;
       case CampaignerScreen.GS_PAGES.progress:
-        buttonPanel = this.getButtonPanel([
-          {buttonName: 'Back', nextState: CampaignerScreen.GS_PAGES.mainPage}
-        ])
         groundSwell = (
           <View style={styles.gsView}>
-            {this.getHeader('Progress')}
-            <ScrollView style={{flex:.9, width:'100%'}}>
+            {this.getHeader('Progress', CampaignerScreen.GS_PAGES.mainPage)}
+            <ScrollView style={{flex:1, width:'100%'}}>
               { /* TODO: Ignore this blob below for scrolling--right now it interferes with scrolling. */}
               { /*       (i.e. When you try to scroll by grabbing it, there's no scrolling.) */}
               <View style={styles.gsProgressBlob}>
@@ -434,9 +469,6 @@ class CampaignerScreen extends Component {
                 <RkText rkType='small' style={styles.gsPastProgressBlobText}>  - 1 unregistered voters</RkText>
               </View>
             </ScrollView>
-            <View style={[{flex: 0.05}, styles.gsButtonPanelHeader]}/>
-            {buttonPanel}
-            <View style={{flex:.05}}/>
           </View>
         )
         break;
@@ -455,16 +487,15 @@ class CampaignerScreen extends Component {
         groundSwell = (
           <View style={styles.gsView}>
             {this.getHeader('Canvassing')}
-            <View style={{flex:.95}}/>
+            <View style={{flex:1}}/>
             {buttonPanel}
-            <View style={{flex:.05}}/>
           </View>
         )
     }
 
     return (
-      <ImageBackground style={styles.gsTopView} source={campaignerImg} >
-        <View style={{backgroundColor:'rgba(0,0,0,0.75)', width:'100%', flex:1}}>
+      <ImageBackground style={styles.gsTopImageView} source={campaignerImg} >
+        <View style={styles.gsTopImageCoverView}>
           {groundSwell}
         </View>
       </ImageBackground>
@@ -472,11 +503,17 @@ class CampaignerScreen extends Component {
   }
 }
 
+
 const styles = RkStyleSheet.create(theme => ({
-  gsTopView: {
+  gsTopImageView: {
     flex: 1,
     alignItems: 'center',
     width: '100%'
+  },
+  gsTopImageCoverView: {
+    backgroundColor:'rgba(255,255,255,0.85)',
+    width:'100%',
+    flex: 1
   },
   gsView: {
     backgroundColor: 'transparent',
@@ -485,16 +522,11 @@ const styles = RkStyleSheet.create(theme => ({
     justifyContent: 'flex-end',
     alignItems: 'center',
     width:'100%',
-    borderColor: '#FF8C00',
-    borderStyle: 'solid',
-    borderTopWidth: 0,
-    borderLeftWidth: 0,
-    borderRightWidth: 0,
-    borderBottomWidth: 2,
   },
   gsHeaderPanelView: {
     width:'100%',
-    backgroundColor: 'rgba(0,0,0,0.6)',
+    height:'10%',
+    backgroundColor: 'rgba(255,255,255,0.6)',
     paddingTop: 30,
     borderColor: '#FF8C00',
     borderStyle: 'solid',
@@ -503,10 +535,25 @@ const styles = RkStyleSheet.create(theme => ({
     borderRightWidth: 0,
     borderBottomWidth: 2,
     marginBottom: 3,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center'
   },
   gsHeaderPanelText: {
-    color: '#FFFFFF',
-    padding:10,
+    color: '#000000',
+    padding:0,
+    margin: 0,
+    textAlign: 'center',
+    flex: 0.8
+  },
+  gsHeaderPanelLeft: {
+    flex: 0.1,
+    justifyContent: 'center',
+    textAlign: 'center'
+  },
+  gsHeaderPanelRight: {
+    flex: 0.1,
+    justifyContent: 'center',
     textAlign: 'center'
   },
   gsButtonPanelHeader: {
@@ -521,6 +568,11 @@ const styles = RkStyleSheet.create(theme => ({
   },
   gsButtonPanelView: {
     width:'90%'
+  },
+  gsGradientButton: {
+    height: 40,
+    marginTop: 15,
+    marginBottom: 15
   },
   gsButton: {
     backgroundColor: 'rgba(256,140,00,0.7)',
@@ -552,6 +604,10 @@ const styles = RkStyleSheet.create(theme => ({
   },
   gsText: {
     color: '#FFFFFF',
+    textAlign: 'center'
+  },
+  gsBlackText: {
+    color: 'black',
     textAlign: 'center'
   }
 }));

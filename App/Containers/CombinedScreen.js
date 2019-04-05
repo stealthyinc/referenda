@@ -28,6 +28,11 @@ const avatarArr = {
 
 class CombinedScreen extends Component {
   static navigationOptions = ({ navigation }) => {
+    // Make the header go away for now.
+    return {
+      header: null
+    }
+    
     const params = navigation.state.params || {}
     const randomAvatar = (!userTypeInstance.getUserType()) ? avatarArr[Math.floor(Math.random() * Math.floor(12))] : require('../Data/img/avatars/agatha.png')
     return {
