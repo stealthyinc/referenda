@@ -53,7 +53,7 @@ class CombinedScreen extends Component {
   //   }
   // }
   render () {
-    return (userTypeInstance.getUserType()) ? <CampaignerScreen /> : <FeedScreen navigation={this.props.navigation} />
+    return (userTypeInstance.getUserType()) ? <CampaignerScreen navigation={this.props.navigation} /> : <FeedScreen navigation={this.props.navigation} />
   }
 }
 

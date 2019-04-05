@@ -36,6 +36,24 @@ import voters from './../Data/raw/voters'
 // Campaigning:
 //   - from https://www.reshot.com/photos/business-family-businessman-converse-conversation-conversations-millennial-business-professional_rs_vKjYG3
 import campaignerImg from '../Assets/images/campaigner.jpg'
+const { userTypeInstance } = require('../Utils/UserType.js')
+
+const avatarArr = {
+  0: require('../Data/img/avatars/Image0.png'),
+  1: require('../Data/img/avatars/Image1.png'),
+  2: require('../Data/img/avatars/Image2.png'),
+  3: require('../Data/img/avatars/Image3.png'),
+  4: require('../Data/img/avatars/Image4.png'),
+  5: require('../Data/img/avatars/Image5.png'),
+  6: require('../Data/img/avatars/Image6.png'),
+  7: require('../Data/img/avatars/Image7.png'),
+  8: require('../Data/img/avatars/Image8.png'),
+  9: require('../Data/img/avatars/Image9.png'),
+ 10: require('../Data/img/avatars/Image10.png'),
+ 11: require('../Data/img/avatars/Image11.png'),
+}
+
+const randomAvatar = (userTypeInstance.getUserType()) ? avatarArr[Math.floor(Math.random() * Math.floor(12))] : require('../Data/img/avatars/agatha.png')
 
 class CampaignerScreen extends Component {
   /**
@@ -147,7 +165,7 @@ class CampaignerScreen extends Component {
 
   headerButtonAction(transitionToState=undefined) {
     if (transitionToState === undefined) {
-      alert('Header Button Action')
+      this.props.navigation.toggleDrawer()
     } else {
       this.setState({ gsPage:transitionToState })
     }
@@ -156,13 +174,17 @@ class CampaignerScreen extends Component {
   getHeader(aTitle, backNavigationState=undefined) {
     const headerArr = []
 
-    const iconName = (backNavigationState === undefined) ? 'ios-menu' : 'ios-arrow-back'
+    const icon = (backNavigationState === undefined) ? (
+      <Image
+        source={randomAvatar}
+        style={{height: 30, width: 30, borderRadius: 15}}/>
+    ) : <Ionicons name='ios-arrow-back' size={30} color='gray' style={{textAlign: 'center'}}/>
     headerArr.push((
       <TouchableOpacity
         key={this.uniqueKey++}
         onPress={() => this.headerButtonAction(backNavigationState)}
         style={styles.gsHeaderPanelLeft}>
-        <Ionicons name={iconName} size={30} color='gray' style={{textAlign: 'center'}}/>
+        {icon}
       </TouchableOpacity>
     ))
 
@@ -549,7 +571,8 @@ const styles = RkStyleSheet.create(theme => ({
   gsHeaderPanelLeft: {
     flex: 0.1,
     justifyContent: 'center',
-    textAlign: 'center'
+    textAlign: 'center',
+    marginLeft: 10
   },
   gsHeaderPanelRight: {
     flex: 0.1,

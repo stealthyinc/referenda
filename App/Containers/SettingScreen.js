@@ -61,7 +61,7 @@ class SettingScreen extends Component {
   render = () => (
     <ScrollView style={styles.container}>
       <View style={styles.section}>
-        {(userTypeInstance.getUserType()) ? (null) : (<View style={styles.section}>
+        {(!userTypeInstance.getUserType()) ? (null) : (<View style={styles.section}>
           <View style={[styles.row, styles.heading]}>
             <RkText rkType='primary header6'>CAMPAIGN FEATURES</RkText>
           </View>
@@ -125,7 +125,7 @@ class SettingScreen extends Component {
           />
         </View>*/}
       </View>
-      {(userTypeInstance.getUserType()) ? (<View style={styles.section}>
+      {(!userTypeInstance.getUserType()) ? (<View style={styles.section}>
         <View style={[styles.row, styles.heading]}>
           <RkText rkType='primary header6'>SOCIAL INTEGRATIONS</RkText>
         </View>
