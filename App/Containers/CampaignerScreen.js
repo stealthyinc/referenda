@@ -27,6 +27,8 @@ import {
   DebtProgressChart
 } from '../Components/';
 
+import { ifIphoneX } from 'react-native-iphone-x-helper'
+
 import voters from './../Data/raw/voters'
 
 // ground swell (geyser image):
@@ -551,9 +553,14 @@ const styles = RkStyleSheet.create(theme => ({
   },
   gsHeaderPanelView: {
     width:'100%',
-    height:64,
+    ...ifIphoneX({
+      height: 88,
+      paddingTop: 44,
+    }, {
+      height: 64,
+      paddingTop: 20,
+    }),
     backgroundColor: 'rgba(255,255,255,0.6)',
-    paddingTop: 20,
     borderColor: 'rgba(220,220,220,1)',
     borderStyle: 'solid',
     borderTopWidth: 0,

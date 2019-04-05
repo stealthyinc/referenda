@@ -29,6 +29,8 @@ const moment = require('moment');
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
 
+import { ifIphoneX } from 'react-native-iphone-x-helper'
+
 const avatarArr = {
   0: require('../Data/img/avatars/Image0.png'),
   1: require('../Data/img/avatars/Image1.png'),
@@ -51,8 +53,13 @@ const styles = RkStyleSheet.create(theme => ({
     headerPanelView: {
       backgroundColor: theme.colors.screen.scroll,
       width: '100%',
-      height: 64,
-      paddingTop: 20,
+      ...ifIphoneX({
+        height: 88,
+        paddingTop: 44,
+      }, {
+        height: 64,
+        paddingTop: 20,
+      }),
       paddingRight: 14,
       paddingLeft: 14,
       flexDirection: 'row',
