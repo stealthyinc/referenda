@@ -43,7 +43,7 @@ export default function OrderTitleView({ onCloseOrderScreen }) {
           source={closeButton}
         />
       </TouchableHighlight>
-      <Text style={styles.title}>Place your order</Text>
+      <Text style={styles.title}>Donate to Campaign</Text>
     </View>
   );
 }

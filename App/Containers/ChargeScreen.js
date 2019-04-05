@@ -42,6 +42,7 @@ import {
   showAlert,
 } from '../Utils/SquareUtils';
 import chargeCardNonce from '../Utils/Charge';
+import { GradientButton } from '../Components/gradientButton'
 
 require('../Images/iconCookie.png');
 
@@ -52,8 +53,12 @@ const applePayStatus = {
   succeeded: 1,
   nonceNotCharged: 2,
 };
+import candidate from '../Assets/avatars/agatha2.png'
 
 export default class HomeScreen extends Component {
+  static navigationOptions = {
+    title: 'Campaign Donation'.toUpperCase(),
+  };
   state = {
     showingBottomSheet: false,
     showingCardEntry: false,
@@ -313,14 +318,15 @@ export default class HomeScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Image source={cookieImage} />
-        <Text style={styles.title}>Super Cookie</Text>
+        <Image source={candidate} style={{height: 300, width: 300, borderRadius: 150}}/>
+        <Text style={styles.title}>Agatha for Congress 🇺🇸</Text>
         <Text style={styles.description}>
-          Instantly gain special powers when ordering a super cookie
+          Help us win CA District 12!
         </Text>
-        <GreenButton
+        <GradientButton
+          rkType='medium'
+          text='Donate'
           onPress={this.showOrderScreen}
-          text="Donate"
         />
         <Modal
           isVisible={this.state.showingBottomSheet}
@@ -357,6 +363,7 @@ const styles = StyleSheet.create({
   description: {
     color: '#FFFFFF',
     fontSize: 16,
+    marginTop: 20,
     marginBottom: 20,
     marginLeft: 50,
     marginRight: 50,
@@ -374,6 +381,7 @@ const styles = StyleSheet.create({
   },
   title: {
     color: '#FFFFFF',
+    marginTop: 20,
     fontSize: 28,
   },
 });

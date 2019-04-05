@@ -41,7 +41,7 @@ export default function OrderModal({ onCloseOrderScreen, onShowCardEntry, onShow
       <View style={styles.bodyContent}>
         <View style={styles.row}>
           <View style={styles.titleColumn}>
-            <OrderInformationTitleView title="Ship To" />
+            <OrderInformationTitleView title="Info:" />
           </View>
           <View style={styles.descriptionColumn}>
             <OrderInformationDescriptionView description="Lauren Nobel" />
@@ -51,7 +51,7 @@ export default function OrderModal({ onCloseOrderScreen, onShowCardEntry, onShow
         <View style={styles.horizontalLine} />
         <View style={styles.row}>
           <View style={styles.titleColumn}>
-            <OrderInformationTitleView title="Total" />
+            <OrderInformationTitleView title="Total:" />
           </View>
           <View style={styles.descriptionColumn}>
             <OrderInformationDescriptionView description="$1.00" />
@@ -66,11 +66,11 @@ export default function OrderModal({ onCloseOrderScreen, onShowCardEntry, onShow
       <View style={styles.buttonRow}>
         <GreenButton
           onPress={onShowCardEntry}
-          text="Place Order"
+          text="Credit Card"
         />
-        <DigitalWalletButton
+        {/*<DigitalWalletButton
           onPress={() => onShowDigitalWallet()}
-        />
+        />*/}
       </View>
     </View>
   );
