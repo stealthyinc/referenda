@@ -31,7 +31,7 @@ export class Article extends React.Component {
     navigation: NavigationType.isRequired,
   };
   static navigationOptions = {
-    title: 'Article View'.toUpperCase(),
+    title: 'Article'.toUpperCase(),
   };
 
   constructor(props) {

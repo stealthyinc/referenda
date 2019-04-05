@@ -174,11 +174,14 @@ class CampaignerScreen extends Component {
   getHeader(aTitle, backNavigationState=undefined) {
     const headerArr = []
 
-    const icon = (backNavigationState === undefined) ? (
-      <Image
-        source={randomAvatar}
-        style={{height: 30, width: 30, borderRadius: 15}}/>
-    ) : <Ionicons name='ios-arrow-back' size={30} color='gray' style={{textAlign: 'center'}}/>
+    const icon = (backNavigationState === undefined) ?
+      (
+        <Image
+          source={randomAvatar}
+          style={{height: 30, width: 30, borderRadius: 15}}/>
+      ) : (
+        <Ionicons name='ios-arrow-back' size={30} color='gray' style={{textAlign: 'center'}}/>
+      )
     headerArr.push((
       <TouchableOpacity
         key={this.uniqueKey++}
@@ -188,11 +191,12 @@ class CampaignerScreen extends Component {
       </TouchableOpacity>
     ))
 
+    const ucTitle = aTitle.toUpperCase()
     headerArr.push((
       <RkText
         key={this.uniqueKey++}
         rkType='large'
-        style={styles.gsHeaderPanelText}>{aTitle}</RkText>
+        style={styles.gsHeaderPanelText}>{ucTitle}</RkText>
       ))
 
     // if (rightAction) {
@@ -213,7 +217,7 @@ class CampaignerScreen extends Component {
     // }
 
     return (
-      <View style={styles.gsHeaderPanelView}>
+      <View id='headerPanelView' style={styles.gsHeaderPanelView}>
         {headerArr}
       </View>
     )
@@ -547,32 +551,36 @@ const styles = RkStyleSheet.create(theme => ({
   },
   gsHeaderPanelView: {
     width:'100%',
-    height:'10%',
+    height:64,
     backgroundColor: 'rgba(255,255,255,0.6)',
-    paddingTop: 30,
-    borderColor: '#FF8C00',
+    paddingTop: 20,
+    borderColor: 'rgba(220,220,220,1)',
     borderStyle: 'solid',
     borderTopWidth: 0,
     borderLeftWidth: 0,
     borderRightWidth: 0,
-    borderBottomWidth: 2,
+    borderBottomWidth: 1,
     marginBottom: 3,
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     alignItems: 'center'
   },
   gsHeaderPanelText: {
+    fontSize: 17,
+    fontWeight: '600',
+    color: 'rgba(0,0,0,0.9)',
+    marginHorizontal: 16,
     color: '#000000',
     padding:0,
-    margin: 0,
+    marginTop: 0,
+    marginBottom: 0,
     textAlign: 'center',
-    flex: 0.8
+    flex: 0.7
   },
   gsHeaderPanelLeft: {
     flex: 0.1,
     justifyContent: 'center',
     textAlign: 'center',
-    marginLeft: 10
   },
   gsHeaderPanelRight: {
     flex: 0.1,

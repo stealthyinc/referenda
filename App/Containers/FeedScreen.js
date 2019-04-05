@@ -29,12 +29,59 @@ const moment = require('moment');
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
 
+const avatarArr = {
+  0: require('../Data/img/avatars/Image0.png'),
+  1: require('../Data/img/avatars/Image1.png'),
+  2: require('../Data/img/avatars/Image2.png'),
+  3: require('../Data/img/avatars/Image3.png'),
+  4: require('../Data/img/avatars/Image4.png'),
+  5: require('../Data/img/avatars/Image5.png'),
+  6: require('../Data/img/avatars/Image6.png'),
+  7: require('../Data/img/avatars/Image7.png'),
+  8: require('../Data/img/avatars/Image8.png'),
+  9: require('../Data/img/avatars/Image9.png'),
+ 10: require('../Data/img/avatars/Image10.png'),
+ 11: require('../Data/img/avatars/Image11.png'),
+}
+
+const randomAvatar = (userTypeInstance.getUserType()) ? avatarArr[Math.floor(Math.random() * Math.floor(12))] : require('../Data/img/avatars/agatha.png')
+
 // Styles
 const styles = RkStyleSheet.create(theme => ({
-    headerSpacer: {
+    headerPanelView: {
       backgroundColor: theme.colors.screen.scroll,
       width: '100%',
-      height: '10%'
+      height: 64,
+      paddingTop: 20,
+      paddingRight: 14,
+      paddingLeft: 14,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      borderBottomColor: 'rgba(220,220,220,1)',
+      borderBottomStyle: 'solid',
+      borderBottomWidth: 1
+    },
+    headerPanelText: {
+      fontSize: 17,
+      fontWeight: '600',
+      color: 'rgba(0,0,0,0.9)',
+      marginHorizontal: 16,
+      padding:0,
+      marginTop: 0,
+      marginBottom: 0,
+      textAlign: 'center',
+      flex: 0.7
+    },
+    headerPanelLeft: {
+      flex: 0.1,
+      justifyContent: 'center',
+      textAlign: 'center',
+    },
+    headerPanelRight: {
+      flex: 0.1,
+      justifyContent: 'center',
+      textAlign: 'center'
     },
     container: {
       backgroundColor: theme.colors.screen.scroll,
@@ -60,21 +107,6 @@ const styles = RkStyleSheet.create(theme => ({
       right: 17
     }
   }));
-
-const avatarArr = {
-  0: require('../Data/img/avatars/Image0.png'),
-  1: require('../Data/img/avatars/Image1.png'),
-  2: require('../Data/img/avatars/Image2.png'),
-  3: require('../Data/img/avatars/Image3.png'),
-  4: require('../Data/img/avatars/Image4.png'),
-  5: require('../Data/img/avatars/Image5.png'),
-  6: require('../Data/img/avatars/Image6.png'),
-  7: require('../Data/img/avatars/Image7.png'),
-  8: require('../Data/img/avatars/Image8.png'),
-  9: require('../Data/img/avatars/Image9.png'),
- 10: require('../Data/img/avatars/Image10.png'),
- 11: require('../Data/img/avatars/Image11.png'),
-}
 
 class FeedScreen extends Component {
   static propTypes = {
@@ -208,17 +240,43 @@ class FeedScreen extends Component {
     }
   }
 
-  render = () => (
-    <View style={{width:'100%', flex:1}}>
-      <View style={styles.headerSpacer} />
-      <FlatList
-        data={this.state.data}
-        renderItem={this.renderItem}
-        keyExtractor={this.extractItemKey}
-        style={styles.container}
-      />
-    </View>
-  );
+  getHeader() {
+    return (
+      <View style={styles.headerPanelView}>
+
+        <View id='headerIcon' style={{flex:0.1, justifyContent: 'center', textAlign: 'center'}}>
+          <TouchableOpacity
+            onPress={() => this.props.navigation.toggleDrawer()}>
+            <Image
+              source={randomAvatar}
+              style={{height: 30, width: 30, borderRadius: 15}}/>
+          </TouchableOpacity>
+        </View>
+
+        <RkText
+          key={this.uniqueKey++}
+          style={styles.headerPanelText}>CAMPAIGN NEWS</RkText>
+
+        <View id='headerRight' style={styles.headerPanelRight} />
+
+      </View>
+    )
+  }
+
+  render() {
+    header = this.getHeader()
+    return (
+      <View style={{width:'100%', flex:1}}>
+        {header}
+        <FlatList
+          data={this.state.data}
+          renderItem={this.renderItem}
+          keyExtractor={this.extractItemKey}
+          style={styles.container}
+        />
+      </View>
+    )
+  }
 }
 
 const mapStateToProps = (state) => {
