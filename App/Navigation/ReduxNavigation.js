@@ -9,9 +9,6 @@ import SettingsActions from '../Redux/SettingsRedux'
 import AppNavigation from './AppNavigation'
 import { Bootstrap } from '../Config/Bootstrap'
 import { data } from '../Data'
-import SideMenu from 'react-native-side-menu'
-import Settings from '../Components/SettingsScreen'
-import { SettingsSelectors } from '../Redux/SettingsRedux'
 
 createReactNavigationReduxMiddleware(
   'root',
@@ -43,30 +40,14 @@ class ReduxNavigation extends Component {
     BackHandler.removeEventListener('hardwareBackPress', undefined)
   }
 
-  logout () {
-    this.props.dispatch(SettingsActions.settingsMenuToggle())
-    this.props.dispatch({ type: 'Navigation/NAVIGATE', routeName: 'Auth' })
-  }
-
   render () {
-    return (
-      // <SideMenu
-      //   menu={<Settings logout={() => this.logout()} />}
-      //   isOpen={this.props.open}
-      //   openMenuOffset={300}
-      //   disableGestures={true}
-      //   onChange={isOpen => this.props.dispatch(SettingsActions.settingsMenuUpdate(isOpen))}
-      // >
-        <ReduxAppNavigator dispatch={this.props.dispatch} state={this.props.nav} />
-      // </SideMenu>
-    )
+    return <ReduxAppNavigator dispatch={this.props.dispatch} state={this.props.nav} />
   }
 }
 
 const mapStateToProps = (state) => {
   return {
     nav: state.nav,
-    open: SettingsSelectors.getOpen(state),
   }
 }
 

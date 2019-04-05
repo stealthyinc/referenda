@@ -57,9 +57,11 @@
 		654753795C914CD184DBD527 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 567F5673723241EE9629A901 /* MaterialCommunityIcons.ttf */; };
 		6E61F2F2701D46DD991D1D06 /* FontAwesome5_Solid.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 27A4B22A763C421CA0176BD4 /* FontAwesome5_Solid.ttf */; };
 		753EB9222228FFC0006E2718 /* Images-2.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 753EB9212228FFC0006E2718 /* Images-2.xcassets */; };
+		758D190722569A35006840A8 /* libRNSquareInAppPayments.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 758F7F7C225684C50060C83D /* libRNSquareInAppPayments.a */; };
 		759142562231B5D900177C77 /* libRCTContacts.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 759142202231B5CD00177C77 /* libRCTContacts.a */; };
 		759142C42231E70600177C77 /* KDSocialShare.m in Sources */ = {isa = PBXBuildFile; fileRef = 759142C32231E70500177C77 /* KDSocialShare.m */; };
 		759142C62231E72100177C77 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 759142C52231E72100177C77 /* Social.framework */; };
+		75C26B7122569CE5000699C5 /* RNSquareInAppPayments-Resources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 758F7F7E225684C50060C83D /* RNSquareInAppPayments-Resources.bundle */; };
 		75D19B452244406A00A49192 /* libRCTCameraRoll.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 75D19B0B2244405E00A49192 /* libRCTCameraRoll.a */; };
 		75E59AEF22271EC1004B03B4 /* libRNKeychain.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 75E59AE622271EB3004B03B4 /* libRNKeychain.a */; };
 		75F24F20225294EB00F45EB7 /* libReactNativePayments.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 75F24F0B225294DE00F45EB7 /* libReactNativePayments.a */; };
@@ -443,6 +445,20 @@
 			remoteGlobalIDString = 4107012F1ACB723B00C6AA39;
 			remoteInfo = RNCamera;
 		};
+		758F7F7B225684C50060C83D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 758F7F3A225684C40060C83D /* RNSquareInAppPayments.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RNSquareInAppPayments;
+		};
+		758F7F7D225684C50060C83D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 758F7F3A225684C40060C83D /* RNSquareInAppPayments.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 11AC1995220373B100928799;
+			remoteInfo = "RNSquareInAppPayments-Resources";
+		};
 		7591421F2231B5CD00177C77 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 759142142231B5CD00177C77 /* RCTContacts.xcodeproj */;
@@ -618,8 +634,11 @@
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		5E9CAE342BA24445BCB2C3FD /* libRNGestureHandler.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNGestureHandler.a; sourceTree = "<group>"; };
 		6185F32C216C42E096B6898B /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
+		66DB44ED2B04B4DBCCFE186A7B68AD84 /* SquareInAppPaymentsSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SquareInAppPaymentsSDK.framework; sourceTree = "<group>"; };
 		731C3C4D7EB247CB8E4E8FFE /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
 		753EB9212228FFC0006E2718 /* Images-2.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = "Images-2.xcassets"; path = "referenda/Images-2.xcassets"; sourceTree = "<group>"; };
+		758F7F3A225684C40060C83D /* RNSquareInAppPayments.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNSquareInAppPayments.xcodeproj; path = "../node_modules/react-native-square-in-app-payments/ios/RNSquareInAppPayments.xcodeproj"; sourceTree = "<group>"; };
+		758F7F85225684D70060C83D /* RNSquareInAppPayments.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = RNSquareInAppPayments.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		759142142231B5CD00177C77 /* RCTContacts.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTContacts.xcodeproj; path = "../node_modules/react-native-contacts/ios/RCTContacts.xcodeproj"; sourceTree = "<group>"; };
 		759142C22231E70500177C77 /* KDSocialShare.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KDSocialShare.h; path = "../node_modules/react-native-social-share/iOS/KDSocialShare.h"; sourceTree = "<group>"; };
 		759142C32231E70500177C77 /* KDSocialShare.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = KDSocialShare.m; path = "../node_modules/react-native-social-share/iOS/KDSocialShare.m"; sourceTree = "<group>"; };
@@ -677,6 +696,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				758D190722569A35006840A8 /* libRNSquareInAppPayments.a in Frameworks */,
 				75F24F20225294EB00F45EB7 /* libReactNativePayments.a in Frameworks */,
 				75D19B452244406A00A49192 /* libRCTCameraRoll.a in Frameworks */,
 				759142C62231E72100177C77 /* Social.framework in Frameworks */,
@@ -861,6 +881,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				758F7F85225684D70060C83D /* RNSquareInAppPayments.framework */,
 				759142C52231E72100177C77 /* Social.framework */,
 				2D16E6891FA4F8E400B85C8A /* libReact.a */,
 				16AE0FA2D34CEE8F757C7688 /* Pods_referenda.framework */,
@@ -932,6 +953,7 @@
 				B92161D79EE54C23BA9FAE4A /* ReactNativeSocialShare.app */,
 				91B66A702B0742ABAD54EEDB /* ReactNativeSocialShareTests.xctest */,
 				7AAD4A0BCE6A40F18631875C /* libAutoGrowTextInput.a */,
+				66DB44ED2B04B4DBCCFE186A7B68AD84 /* SquareInAppPaymentsSDK.framework */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -1011,6 +1033,15 @@
 			isa = PBXGroup;
 			children = (
 				750DD925221F2F5700E24B3E /* libRNCamera.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		758F7F3B225684C40060C83D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				758F7F7C225684C50060C83D /* libRNSquareInAppPayments.a */,
+				758F7F7E225684C50060C83D /* RNSquareInAppPayments-Resources.bundle */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1112,6 +1143,7 @@
 			children = (
 				759142C22231E70500177C77 /* KDSocialShare.h */,
 				759142C32231E70500177C77 /* KDSocialShare.m */,
+				758F7F3A225684C40060C83D /* RNSquareInAppPayments.xcodeproj */,
 				75F24ED9225294DE00F45EB7 /* ReactNativePayments.xcodeproj */,
 				75D19AFF2244405E00A49192 /* RCTCameraRoll.xcodeproj */,
 				759142142231B5CD00177C77 /* RCTContacts.xcodeproj */,
@@ -1233,6 +1265,7 @@
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				E8451F5EE9324D2580B168CF /* [CP] Embed Pods Frameworks */,
+				75C26B7022569CB2000699C5 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -1439,6 +1472,10 @@
 				{
 					ProductGroup = 75EED1BB22270DE600B7B8FE /* Products */;
 					ProjectRef = 2A99E0AB6E5E4D7F83D3AEDD /* RNRandomBytes.xcodeproj */;
+				},
+				{
+					ProductGroup = 758F7F3B225684C40060C83D /* Products */;
+					ProjectRef = 758F7F3A225684C40060C83D /* RNSquareInAppPayments.xcodeproj */;
 				},
 				{
 					ProductGroup = 750DD83E221DD2C400E24B3E /* Products */;
@@ -1811,6 +1848,20 @@
 			remoteRef = 750DD924221F2F5700E24B3E /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		758F7F7C225684C50060C83D /* libRNSquareInAppPayments.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNSquareInAppPayments.a;
+			remoteRef = 758F7F7B225684C50060C83D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		758F7F7E225684C50060C83D /* RNSquareInAppPayments-Resources.bundle */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "RNSquareInAppPayments-Resources.bundle";
+			remoteRef = 758F7F7D225684C50060C83D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		759142202231B5CD00177C77 /* libRCTContacts.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1968,6 +2019,7 @@
 				FF83554BADA149FB9616ED45 /* Roboto-Light.ttf in Resources */,
 				61C0B007B3FD4D4CB06BBB2D /* Roboto-Medium.ttf in Resources */,
 				C143B2A0D08C4E698446492F /* Roboto-Regular.ttf in Resources */,
+				75C26B7122569CE5000699C5 /* RNSquareInAppPayments-Resources.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2000,7 +2052,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
+			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
 		2D02E4CB1E0B4B27006451C7 /* Bundle React Native Code And Images */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2015,6 +2067,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
+		};
+		75C26B7022569CB2000699C5 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nFRAMEWORKS=\"${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}\"\n\"${FRAMEWORKS}/SquareInAppPaymentsSDK.framework/setup\"\n";
 		};
 		A5DE4943ACA4BFDB3B3F4BA8 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2042,12 +2111,12 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-referenda/Pods-referenda-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Amplitude-iOS/Amplitude_iOS.framework",
-				"${BUILT_PRODUCTS_DIR}/Stripe/Stripe.framework",
+				"${PODS_ROOT}/SquareInAppPaymentsSDK/SquareInAppPaymentsSDK.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Amplitude_iOS.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Stripe.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SquareInAppPaymentsSDK.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -2261,6 +2330,10 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = CQ2BXUTMQT;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Pods/SquareInAppPaymentsSDK",
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
@@ -2306,6 +2379,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = CQ2BXUTMQT;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Pods/SquareInAppPaymentsSDK",
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",

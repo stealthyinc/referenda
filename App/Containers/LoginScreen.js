@@ -62,7 +62,7 @@ class LoginScreen extends Component {
   }
 
   onLoginButtonPressed = () => {
-    this.props.navigation.navigate('App');
+    this.props.navigation.navigate('SocialMenu');
   };
 
   onSignUpButtonPressed = () => {

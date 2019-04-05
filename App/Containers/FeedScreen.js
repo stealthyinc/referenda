@@ -12,9 +12,11 @@ import {
   RkButton,
   RkTextInput
 } from 'react-native-ui-kitten';
+import {
+  Avatar,
+  GradientButton,
+} from '../Components';
 import { FontAwesome } from '../Assets/icons';
-import { GradientButton } from '../Components/gradientButton'
-import { Avatar } from '../Components';
 import { data } from '../Data';
 import NavigationType from '../Navigation/propTypes';
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -29,10 +31,17 @@ const moment = require('moment');
 
 // Styles
 const styles = RkStyleSheet.create(theme => ({
+    headerSpacer: {
+      backgroundColor: theme.colors.screen.scroll,
+      width: '100%',
+      height: '10%'
+    },
     container: {
       backgroundColor: theme.colors.screen.scroll,
       paddingVertical: 8,
       paddingHorizontal: 14,
+      flex: 1,
+      width: '100%',
     },
     card: {
       marginVertical: 8,
@@ -71,27 +80,30 @@ class FeedScreen extends Component {
   static propTypes = {
     navigation: NavigationType.isRequired,
   };
-  static navigationOptions = ({ navigation }) => {
-    const params = navigation.state.params || {}
-    const randomAvatar = (params.phoneNumber) ? avatarArr[Math.floor(Math.random() * Math.floor(12))] : require('../Data/img/avatars/agatha.png')
-    return {
-      headerLeft: (
-        <TouchableOpacity onPress={() => navigation.toggleDrawer()} style={{marginLeft: 10}}>
-          <Image
-            source={randomAvatar}
-            style={{height: 30, width: 30, borderRadius: 15}}/>
-        </TouchableOpacity>
-      ),
-      headerRight: (userTypeInstance.getUserType()) ? (
-        <TouchableOpacity onPress={() => navigation.navigate('Create')} style={{marginRight: 10}}>
-          <Ionicons name='ios-paper-plane' size={30} color='gray' />
-        </TouchableOpacity>
-      ) : null,
-      headerTitle: 'Home'.toUpperCase(),
-      headerBackTitle: 'Back',
-      headerTintColor: 'black',
-    }
-  };
+  // static navigationOptions = ({ navigation }) => {
+  //   const params = navigation.state.params || {}
+  //   const randomAvatar = (params.phoneNumber) ? avatarArr[Math.floor(Math.random() * Math.floor(12))] : require('../Data/img/avatars/agatha.png')
+  //   return {
+  //     headerLeft: (
+  //       <TouchableOpacity onPress={() => navigation.toggleDrawer()} style={{marginLeft: 10}}>
+  //         <Image
+  //           source={randomAvatar}
+  //           style={{height: 30, width: 30, borderRadius: 15}}/>
+  //       </TouchableOpacity>
+  //     ),
+  //     headerRight: (userTypeInstance.getUserType()) ? (
+  //       <TouchableOpacity onPress={() => navigation.navigate('Create')} style={{marginRight: 10}}>
+  //         <Ionicons name='ios-paper-plane' size={30} color='gray' />
+  //       </TouchableOpacity>
+  //     ) : null,
+  //     headerTitle: 'Home'.toUpperCase(),
+  //     headerBackTitle: 'Back',
+  //     headerTintColor: 'black',
+  //   }
+  // };
+  static navigationOptions = {
+    header: null
+  }
 
   state = {
     data: data.getArticles('article')
@@ -197,12 +209,15 @@ class FeedScreen extends Component {
   }
 
   render = () => (
-    <FlatList
-      data={this.state.data}
-      renderItem={this.renderItem}
-      keyExtractor={this.extractItemKey}
-      style={styles.container}
-    />
+    <View style={{width:'100%', flex:1}}>
+      <View style={styles.headerSpacer} />
+      <FlatList
+        data={this.state.data}
+        renderItem={this.renderItem}
+        keyExtractor={this.extractItemKey}
+        style={styles.container}
+      />
+    </View>
   );
 }
 

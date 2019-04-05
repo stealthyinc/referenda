@@ -1,36 +1,55 @@
 import _ from 'lodash';
 import { FontIcons } from '../Assets/icons';
 import * as Screens from '../Screens/index';
+import CameraRollScreen from '../Containers/CameraRollScreen'
+import ArticleInputScreen from '../Containers/ArticleInputScreen'
+import ChatScreen from '../Containers/ChatScreen'
+import AgeScreen from '../Containers/AgeScreen'
+import TelephoneScreen from '../Containers/TelephoneScreen'
+import LoginScreen from '../Containers/LoginScreen'
+import FeedScreen from '../Containers/FeedScreen'
+import KeychainScreen from '../Containers/KeychainScreen'
+import CameraScreen from '../Containers/CameraScreen'
+import CardsScreen from '../Containers/CardsScreen'
+import CampaignerScreen from '../Containers/CampaignerScreen'
+import CalendarScreen from '../Containers/CalendarScreen'
+import CombinedScreen from '../Containers/CombinedScreen'
+import AuthLoadingScreen from '../Containers/AuthLoadingScreen'
+import VideoScreen from '../Containers/VideoScreen'
+import ChargeScreen from '../Containers/ChargeScreen'
+import IntroductionScreen from '../Components/IntroductionScreen'
+// import Settings from '../Components/SettingsScreen'
+import Settings from '../Containers/SettingScreen'
 
 export const MainRoutes = [
   {
     id: 'LoginMenu',
-    title: 'Auth',
+    title: 'Introduction',
     icon: FontIcons.login,
-    screen: Screens.LoginMenu,
+    screen: IntroductionScreen,
     children: [
       {
-        id: 'Login1',
-        title: 'Login V1',
-        screen: Screens.LoginV1,
+        id: 'Login',
+        title: 'Login',
+        screen: LoginScreen,
         children: [],
       },
       {
-        id: 'Login2',
-        title: 'Login V2',
-        screen: Screens.LoginV2,
+        id: 'Telephone',
+        title: 'Telephone',
+        screen: TelephoneScreen,
         children: [],
       },
       {
-        id: 'SignUp',
-        title: 'Sign Up',
-        screen: Screens.SignUp,
+        id: 'Age',
+        title: 'Age',
+        screen: AgeScreen,
         children: [],
       },
       {
-        id: 'password',
-        title: 'Password Recovery',
-        screen: Screens.PasswordRecovery,
+        id: 'Keychain',
+        title: 'Keychain',
+        screen: KeychainScreen,
         children: [],
       },
     ],
@@ -39,24 +58,24 @@ export const MainRoutes = [
     id: 'SocialMenu',
     title: 'Social',
     icon: FontIcons.profile,
-    screen: Screens.SocialMenu,
+    screen: FeedScreen,
     children: [
       {
-        id: 'ProfileV1',
-        title: 'User Profile V1',
+        id: 'Article',
+        title: 'Article',
+        screen: Screens.Article,
+        children: [],
+      },
+      {
+        id: 'Profile',
+        title: 'User Profile',
         screen: Screens.ProfileV1,
         children: [],
       },
       {
-        id: 'ProfileV2',
-        title: 'User Profile V2',
-        screen: Screens.ProfileV2,
-        children: [],
-      },
-      {
-        id: 'ProfileV3',
-        title: 'User Profile V3',
-        screen: Screens.ProfileV3,
+        id: 'Comments',
+        title: 'Comments',
+        screen: Screens.Comments,
         children: [],
       },
       {
@@ -78,64 +97,6 @@ export const MainRoutes = [
         children: [],
       },
       {
-        id: 'Feed',
-        title: 'Feed',
-        screen: Screens.Feed,
-        children: [],
-      },
-    ],
-  },
-  {
-    id: 'ArticlesMenu',
-    title: 'Articles',
-    icon: FontIcons.article,
-    screen: Screens.ArticleMenu,
-    children: [
-      {
-        id: 'Articles1',
-        title: 'Article List V1',
-        screen: Screens.Articles1,
-        children: [],
-      },
-      {
-        id: 'Articles2',
-        title: 'Article List V2',
-        screen: Screens.Articles2,
-        children: [],
-      },
-      {
-        id: 'Articles3',
-        title: 'Article List V3',
-        screen: Screens.Articles3,
-        children: [],
-      },
-      {
-        id: 'Articles4',
-        title: 'Article List V4',
-        screen: Screens.Articles4,
-        children: [],
-      },
-      {
-        id: 'Blogposts',
-        title: 'Blogposts',
-        screen: Screens.Blogposts,
-        children: [],
-      },
-      {
-        id: 'Article',
-        title: 'Article View',
-        screen: Screens.Article,
-        children: [],
-      },
-    ],
-  },
-  {
-    id: 'MessagingMenu',
-    title: 'Messaging',
-    icon: FontIcons.mail,
-    screen: Screens.MessagingMenu,
-    children: [
-      {
         id: 'Chat',
         title: 'Chat',
         screen: Screens.Chat,
@@ -143,126 +104,57 @@ export const MainRoutes = [
       },
       {
         id: 'ChatList',
-        title: 'Chat List',
+        title: 'ChatList',
         screen: Screens.ChatList,
         children: [],
       },
       {
-        id: 'Comments',
-        title: 'Comments',
-        screen: Screens.Comments,
+        id: 'CameraRoll',
+        title: 'CameraRoll',
+        screen: CameraRollScreen,
         children: [],
       },
-    ],
-  },
-  {
-    id: 'DashboardsMenu',
-    title: 'Dashboards',
-    icon: FontIcons.dashboard,
-    screen: Screens.DashboardMenu,
-    children: [{
-      id: 'Dashboard',
-      title: 'Dashboard',
-      screen: Screens.Dashboard,
-      children: [],
-    }],
-  },
-  {
-    id: 'WalkthroughMenu',
-    title: 'Walkthroughs',
-    icon: FontIcons.mobile,
-    screen: Screens.WalkthroughMenu,
-    children: [{
-      id: 'Walkthrough',
-      title: 'Walkthrough',
-      screen: Screens.WalkthroughScreen,
-      children: [],
-    }],
-  },
-  {
-    id: 'EcommerceMenu',
-    title: 'Ecommerce',
-    icon: FontIcons.card,
-    screen: Screens.EcommerceMenu,
-    children: [
+      {
+        id: 'Camera',
+        title: 'Camera',
+        screen: CameraScreen,
+        children: [],
+      },
+      {
+        id: 'Calendar',
+        title: 'Calendar',
+        screen: CalendarScreen,
+        children: [],
+      },
       {
         id: 'Cards',
         title: 'Cards',
-        icon: FontIcons.card,
-        screen: Screens.Cards,
-        children: [],
-      },
-      {
-        id: 'AddToCardForm',
-        title: 'Add Card Form',
-        icon: FontIcons.addToCardForm,
-        screen: Screens.AddToCardForm,
-        children: [],
-      },
-
-    ],
-  },
-  {
-    id: 'NavigationMenu',
-    icon: FontIcons.navigation,
-    title: 'Navigation',
-    screen: Screens.NavigationMenu,
-    children: [
-      {
-        id: 'GridV1',
-        title: 'Grid Menu V1',
-        screen: Screens.GridV1,
-        children: [],
-      },
-      {
-        id: 'GridV2',
-        title: 'Grid Menu V2',
-        screen: Screens.GridV2,
-        children: [],
-      },
-      {
-        id: 'List',
-        title: 'List Menu',
-        screen: Screens.ListMenu,
-        children: [],
-      },
-      {
-        id: 'Side',
-        title: 'Side Menu',
-        action: 'DrawerOpen',
-        screen: Screens.SideMenu,
+        screen: CardsScreen,
         children: [],
       },
     ],
   },
   {
-    id: 'OtherMenu',
-    title: 'Other',
+    id: 'CampaignerMenu',
+    title: 'Campaigner',
     icon: FontIcons.other,
-    screen: Screens.OtherMenu,
+    screen: CampaignerScreen,
     children: [
       {
-        id: 'Settings',
-        title: 'Settings',
-        screen: Screens.Settings,
+        id: 'Donation',
+        title: 'Donation',
+        screen: ChargeScreen,
         children: [],
       },
     ],
-  },
-  {
-    id: 'Themes',
-    title: 'Themes',
-    icon: FontIcons.theme,
-    screen: Screens.Themes,
-    children: [],
   },
 ];
 
 const menuRoutes = _.cloneDeep(MainRoutes);
 menuRoutes.unshift({
-  id: 'GridV2',
-  title: 'Start',
-  screen: Screens.GridV2,
+  id: 'Combined',
+  title: 'Combined',
+  screen: CombinedScreen,
   children: [],
 });
 

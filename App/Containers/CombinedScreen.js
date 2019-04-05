@@ -27,27 +27,31 @@ const avatarArr = {
 }
 
 class CombinedScreen extends Component {
-  static navigationOptions = ({ navigation }) => {
-    const params = navigation.state.params || {}
-    const randomAvatar = (!userTypeInstance.getUserType()) ? avatarArr[Math.floor(Math.random() * Math.floor(12))] : require('../Data/img/avatars/agatha.png')
-    return {
-      headerLeft: (
-        <TouchableOpacity onPress={() => navigation.toggleDrawer()} style={{marginLeft: 10}}>
-          <Image
-            source={randomAvatar}
-            style={{height: 30, width: 30, borderRadius: 15}}/>
-        </TouchableOpacity>
-      ),
-      headerRight: (userTypeInstance.getUserType()) ? (
-        <TouchableOpacity onPress={() => navigation.navigate('Create')} style={{marginRight: 10}}>
-          <Ionicons name='ios-paper-plane' size={30} color='gray' />
-        </TouchableOpacity>
-      ) : null,
-      headerTitle: 'Home'.toUpperCase(),
-      headerBackTitle: 'Back',
-      headerTintColor: 'black',
-    }
+  static navigationOptions = {
+    header: null
   }
+  // static navigationOptions = ({ navigation }) => {
+  //   const params = navigation.state.params || {}
+  //   const randomAvatar = (!userTypeInstance.getUserType()) ? avatarArr[Math.floor(Math.random() * Math.floor(12))] : require('../Data/img/avatars/agatha.png')
+  //   return {
+  //     header: null,
+      // headerLeft: (
+      //   <TouchableOpacity onPress={() => navigation.toggleDrawer()} style={{marginLeft: 10}}>
+      //     <Image
+      //       source={randomAvatar}
+      //       style={{height: 30, width: 30, borderRadius: 15}}/>
+      //   </TouchableOpacity>
+      // ),
+      // headerRight: (userTypeInstance.getUserType()) ? (
+      //   <TouchableOpacity onPress={() => navigation.navigate('Create')} style={{marginRight: 10}}>
+      //     <Ionicons name='ios-paper-plane' size={30} color='gray' />
+      //   </TouchableOpacity>
+      // ) : null,
+      // headerTitle: 'Home'.toUpperCase(),
+      // headerBackTitle: 'Back',
+      // headerTintColor: 'black',
+  //   }
+  // }
   render () {
     return (userTypeInstance.getUserType()) ? <CampaignerScreen /> : <FeedScreen navigation={this.props.navigation} />
   }

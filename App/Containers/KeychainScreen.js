@@ -72,7 +72,7 @@ class KeychainScreen extends Component {
 
   onSignUpButtonPressed = () => {
     this.save()
-    this.props.navigation.navigate('App');
+    this.props.navigation.navigate('SocialMenu');
   };
 
   onSignInButtonPressed = () => {

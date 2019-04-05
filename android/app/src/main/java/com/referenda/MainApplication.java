@@ -3,6 +3,7 @@ package com.referenda;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import sqip.react.SquareInAppPaymentsPackage;
 import com.reactnativepayments.ReactNativePaymentsPackage;
 import com.wix.autogrowtextinput.AutoGrowTextInputPackage;
 import com.barefootcoders.android.react.KDSocialShare.KDSocialShare;
@@ -42,6 +43,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new SquareInAppPaymentsPackage(),
             new ReactNativePaymentsPackage(),
             new AutoGrowTextInputPackage(),
             new KDSocialShare(),
