@@ -37,6 +37,7 @@ import verified from '../Assets/images/verified.png'
 
 import { GradientButton } from './gradientButton'
 
+import { ifIphoneX } from 'react-native-iphone-x-helper'
 
 const styles = StyleSheet.create({
   mainContent: {
@@ -49,10 +50,10 @@ const styles = StyleSheet.create({
     height: '70%',
   },
   text: {
+    fontSize: 16,
     color: 'rgba(0, 0, 0, 0.8)',
     backgroundColor: 'transparent',
     textAlign: 'center',
-    paddingHorizontal: 16,
   },
   title: {
     fontSize: 22,
@@ -60,9 +61,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     textAlign: 'center',
     marginBottom: 16,
-  },
-  save: {
-    marginVertical: 9,
   }
 });
 
@@ -110,53 +108,61 @@ export default class Introduction extends Component {
 
   // ImageBackground was Image sandwiched btwn views with style={styles.image}
   _renderItem = (props) => {
-    // let titleColor = (props.title === 'Your time is important.') ?
-    //   'black' : 'white'
     let titleColor = 'white'
 
     return (
-      <ImageBackground style={{flex: 1}} source={props.image} >
-        <View
-          style={[styles.mainContent, {
-            paddingTop: props.topSpacer,
-            paddingBottom: props.bottomSpacer,
-            width: props.width,
-            height: props.height,
-            backgroundColor: 'transparent'
-          }]}
-        >
-          <View style={{width:'100%', flexDirection:'row', justifyContent: 'flex-start'}}>
-            <Image
-              id='splash-screen-img'
-              style={{height:'100%', marginLeft:'4%', marginRight:'2%', width:'10%', resizeMode: 'contain'}}
-              source={verified}/>
-            <Text style={{fontSize:32, textAlign:'left', color:titleColor}}>Referenda</Text>
-          </View>
-          <View id='middle-spacer' style={{height: '70%'}} />
-          <View>
-            <Text style={[styles.title, {color:titleColor}]}>{props.title}</Text>
-            <Text style={[styles.text, {color:titleColor}]}>{props.text}</Text>
-          </View>
-          <View id='middle-bottom-spacer' style={{height: '8%'}} />
-          <View id='button-view' style={{height: 40,
-                                         width: '95%',
-                                         flexDirection: 'row',
-                                         justifyContent: 'space-between'}}>
-            <GradientButton
-              colors={['#d2d2d2', '#828282']}
-              style={[{height:'100%', width:'35%'}]}
-              rkType='large'
-              text='Sign In'
-              onPress={() => this.props.navigation.navigate('Login')}
-            />
-            <GradientButton
-              style={[{height:'100%', width:'35%'}]}
-              rkType='large'
-              text='Sign Up'
-              onPress={() => this.props.navigation.navigate('Telephone')}
-            />
-          </View>
+      <ImageBackground
+        style={{ flex: 1,
+                 alignItems: 'center',
+                 justifyContent: 'space-between',
+                 paddingTop: '7%',
+                 ...ifIphoneX({
+                   paddingTop: '12%',
+                 }, {
+                   paddingTop: '7%',
+                 }),
+                 paddingBottom: '3%',
+                 paddingHorizontal: '7%',
+                 width: props.width,
+                 height: props.height }}
+        source={props.image} >
+
+        <View style={{width:'100%', flexDirection:'row', justifyContent: 'flex-start'}}>
+          <Image
+            id='splash-screen-img'
+            style={{height:'100%', marginRight:5, width:'10%', resizeMode: 'contain'}}
+            source={verified}/>
+          <Text style={{fontSize:32, textAlign:'left', color:titleColor}}>Referenda</Text>
         </View>
+
+        <View style={{flex: 0.85}} />
+
+        <View>
+          <Text style={[styles.title, {color:titleColor}]}>{props.title}</Text>
+          <Text style={[styles.text, {color:titleColor}]}>{props.text}</Text>
+        </View>
+
+        <View style={{flex: 0.15}} />
+
+        <View id='button-view' style={{height: 40,
+                                       width: '100%',
+                                       flexDirection: 'row',
+                                       justifyContent: 'space-between'}}>
+          <GradientButton
+            colors={['#d2d2d2', '#828282']}
+            style={[{height:'100%', width:'33%'}]}
+            rkType='large'
+            text='Sign In'
+            onPress={() => this.props.navigation.navigate('Login')}
+          />
+          <GradientButton
+            style={[{height:'100%', width:'33%'}]}
+            rkType='large'
+            text='Sign Up'
+            onPress={() => this.props.navigation.navigate('Telephone')}
+          />
+        </View>
+
       </ImageBackground>
     );
   }
@@ -175,41 +181,4 @@ export default class Introduction extends Component {
       />
     );
   }
-
-  // _renderNextButton = () => {
-  //   return (
-  //     <View style={styles.buttonCircle}>
-  //       <Ionicons
-  //         name="md-arrow-round-forward"
-  //         color="rgba(255, 255, 255, .9)"
-  //         size={24}
-  //         style={{ backgroundColor: 'transparent' }}
-  //       />
-  //     </View>
-  //   );
-  // }
-  // _renderDoneButton = () => {
-  //   return (
-  //     <View style={styles.buttonCircle}>
-  //       <Ionicons
-  //         name="md-checkmark"
-  //         color="rgba(255, 255, 255, .9)"
-  //         size={24}
-  //         style={{ backgroundColor: 'transparent' }}
-  //       />
-  //     </View>
-  //   );
-  // }
-  // render () {
-  //   return (
-  //     <AppIntroSlider
-  //       slides={slides}
-  //       dotStyle={{backgroundColor: 'white'}}
-  //       activeDotStyle={{backgroundColor: 'green'}}
-  //       renderDoneButton={this._renderDoneButton}
-  //       renderNextButton={this._renderNextButton}
-  //       onDone={() => this.props.navigation.navigate('SignIn')}
-  //     />
-  //   )
-  // }
 }

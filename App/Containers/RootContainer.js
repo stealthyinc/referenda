@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, StatusBar } from 'react-native'
+import { View, StatusBar, Text } from 'react-native'
 import ReduxNavigation from '../Navigation/ReduxNavigation'
 import { connect } from 'react-redux'
 import EngineActions from '../Redux/EngineRedux'
@@ -14,6 +14,16 @@ class RootContainer extends Component {
   constructor() {
     super()
     this.engineStarted = false
+
+    // Globally disable consideration of iOS font
+    // accessibility settings:
+    //
+    // TODO: Change this to be a max scaling setting instead when time permits.
+    // (idea beign there is a default scaling and the accessibility settings
+    // would bump it up to a usable max).
+    //
+    Text.defaultProps = Text.defaultProps || {};
+    Text.defaultProps.allowFontScaling = false;
   }
 
   componentDidMount() {
