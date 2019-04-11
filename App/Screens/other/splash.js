@@ -58,7 +58,7 @@ export class SplashScreen extends React.Component {
     StatusBar.setHidden(false, 'slide');
     const toHome = StackActions.reset({
       index: 0,
-      actions: [NavigationActions.navigate({ routeName: 'Home' })],
+      actions: [NavigationActions.navigate({ routeName: 'LoginMenu' })],
     });
     this.props.navigation.dispatch(toHome);
   };

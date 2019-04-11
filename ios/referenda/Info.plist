@@ -23,7 +23,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>20</string>
+	<string>21</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>twitter</string>
@@ -49,6 +49,8 @@
 	<string>Referend needs access to your contacts to send invites.</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Referenda needs access to Face ID to save your password to the keychain.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Referenda needs access to your location only to verify your constituency.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Referenda needs access to your location to verify your constituency.</string>
 	<key>NSMicrophoneUsageDescription</key>

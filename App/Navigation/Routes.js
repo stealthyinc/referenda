@@ -4,11 +4,7 @@ import * as Screens from '../Screens/index';
 import CameraRollScreen from '../Containers/CameraRollScreen'
 import ArticleInputScreen from '../Containers/ArticleInputScreen'
 import ChatScreen from '../Containers/ChatScreen'
-import AgeScreen from '../Containers/AgeScreen'
-import TelephoneScreen from '../Containers/TelephoneScreen'
-import LoginScreen from '../Containers/LoginScreen'
 import FeedScreen from '../Containers/FeedScreen'
-import KeychainScreen from '../Containers/KeychainScreen'
 import CameraScreen from '../Containers/CameraScreen'
 import CardsScreen from '../Containers/CardsScreen'
 import CampaignerScreen from '../Containers/CampaignerScreen'
@@ -17,43 +13,41 @@ import CombinedScreen from '../Containers/CombinedScreen'
 import AuthLoadingScreen from '../Containers/AuthLoadingScreen'
 import VideoScreen from '../Containers/VideoScreen'
 import ChargeScreen from '../Containers/ChargeScreen'
-import IntroductionScreen from '../Components/IntroductionScreen'
-// import Settings from '../Components/SettingsScreen'
 import Settings from '../Containers/SettingScreen'
 
 export const MainRoutes = [
-  {
-    id: 'LoginMenu',
-    title: 'Introduction',
-    icon: FontIcons.login,
-    screen: IntroductionScreen,
-    children: [
-      {
-        id: 'Login',
-        title: 'Login',
-        screen: LoginScreen,
-        children: [],
-      },
-      {
-        id: 'Telephone',
-        title: 'Telephone',
-        screen: TelephoneScreen,
-        children: [],
-      },
-      {
-        id: 'Age',
-        title: 'Age',
-        screen: AgeScreen,
-        children: [],
-      },
-      {
-        id: 'Keychain',
-        title: 'Keychain',
-        screen: KeychainScreen,
-        children: [],
-      },
-    ],
-  },
+  // {
+  //   id: 'LoginMenu',
+  //   title: 'Introduction',
+  //   icon: FontIcons.login,
+  //   screen: IntroductionScreen,
+  //   children: [
+  //     {
+  //       id: 'Login',
+  //       title: 'Login',
+  //       screen: LoginScreen,
+  //       children: [],
+  //     },
+  //     {
+  //       id: 'Telephone',
+  //       title: 'Telephone',
+  //       screen: TelephoneScreen,
+  //       children: [],
+  //     },
+  //     {
+  //       id: 'Age',
+  //       title: 'Age',
+  //       screen: AgeScreen,
+  //       children: [],
+  //     },
+  //     {
+  //       id: 'Keychain',
+  //       title: 'Keychain',
+  //       screen: KeychainScreen,
+  //       children: [],
+  //     },
+  //   ],
+  // },
   {
     id: 'SocialMenu',
     title: 'Social',
@@ -152,8 +146,8 @@ export const MainRoutes = [
 
 const menuRoutes = _.cloneDeep(MainRoutes);
 menuRoutes.unshift({
-  id: 'Combined',
-  title: 'Combined',
+  id: 'Start',
+  title: 'Start',
   screen: CombinedScreen,
   children: [],
 });
