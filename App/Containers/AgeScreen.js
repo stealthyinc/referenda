@@ -19,6 +19,7 @@ import { GradientButton } from '../Components/';
 import { scaleVertical } from '../Utils/scale';
 import NavigationType from '../Navigation/propTypes';
 import { connect } from 'react-redux'
+import SettingsActions from '../Redux/SettingsRedux'
 
 const data = [
      [{key: 1, value: 'Jun'},
@@ -94,11 +95,15 @@ class AgeScreen extends Component {
   );
 
   onAgeButtonPressed = () => {
+    // TODO: convert this.state.dob to a UTC using the date methods
+    //
+    this.props.storeDob(Date.now())
+
     this.props.navigation.navigate('Keychain');
   };
 
   onSignInButtonPressed = () => {
-    this.props.navigation.navigate('Telephone');
+    this.props.navigation.navigate('Login');
   };
 
   render = () => {
@@ -217,6 +222,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    storeDob: (dob) => dispatch(SettingsActions.storeDob(dob))
   }
 }
 

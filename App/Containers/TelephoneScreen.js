@@ -39,7 +39,9 @@ class TelephoneScreen extends Component {
 
   onTelephoneButtonPressed = () => {
     this.props.storePhoneNumber(this.state.phoneNumber)
-    if (this.state.phoneNumber)
+    if (this.state.phoneNumber &&
+        (this.state.phoneNumber === '9715068659' ||
+        this.state.phoneNumber === '5044606946'))
       userTypeInstance.setUserType(false)
     else
       userTypeInstance.setUserType(true)
@@ -51,9 +53,6 @@ class TelephoneScreen extends Component {
   };
 
   state = {
-    username: '',
-    password: '',
-    status: '',
     phoneNumber: ''
   }
 
@@ -61,11 +60,6 @@ class TelephoneScreen extends Component {
   async reset() {
     try {
       await Keychain.resetGenericPassword({service: 'vote.referenda'});
-      this.setState({
-        status: 'Credentials Reset!',
-        username: '',
-        password: '',
-      });
     } catch (err) {
       this.setState({ status: 'Could not reset credentials, ' + err });
     }

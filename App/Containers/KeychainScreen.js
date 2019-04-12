@@ -5,6 +5,7 @@ import {
   Image,
   Keyboard,
   SegmentedControlIOS,
+  ActivityIndicator,
 } from 'react-native';
 import {
   RkButton,
@@ -20,11 +21,21 @@ import NavigationType from '../Navigation/propTypes';
 import * as Keychain from 'react-native-keychain';
 const { RefCrypto } = require('../Utils/RefCrypto')
 
+import {Profile} from '../Engine/data/profile'
+import EngineActions, { EngineSelectors } from '../Redux/EngineRedux'
+import SettingsActions, { SettingsSelectors } from '../Redux/SettingsRedux'
+import {EngineCommand} from '../Engine/commands/engineCommand'
+
 const ACCESS_CONTROL_OPTIONS = ['None', 'Passcode', 'Password'];
 const ACCESS_CONTROL_MAP = [null, Keychain.ACCESS_CONTROL.DEVICE_PASSCODE, Keychain.ACCESS_CONTROL.APPLICATION_PASSWORD, Keychain.ACCESS_CONTROL.BIOMETRY_CURRENT_SET]
 const { userTypeInstance } = require('../Utils/UserType.js')
 
 class KeychainScreen extends Component {
+  constructor() {
+    super()
+    this.userName = ''
+    this.password = ''
+  }
   static navigationOptions = {
     header: null,
   }
@@ -34,11 +45,10 @@ class KeychainScreen extends Component {
   };
 
   state = {
-    username: '',
-    password: '',
     status: '',
     biometryType: null,
     accessControl: null,
+    waitingOnCommand: undefined
   };
 
   getThemeImageSource = (theme) => (
@@ -50,6 +60,25 @@ class KeychainScreen extends Component {
     <Image style={styles.image} source={this.getThemeImageSource(RkTheme.current)} />
   );
 
+  componentWillReceiveProps(nextProps) {
+    console.log('componentWillReceiveProps:')
+    // TODo: rip this out
+    console.dir(nextProps)
+
+    if (this.state.waitingOnCommand &&
+        nextProps.hasOwnProperty('payLoad') &&
+        nextProps.payLoad.hasOwnProperty('commandType')) {
+      if (this.state.waitingOnCommand === nextProps.payLoad.commandType) {
+        console.log(`${this.state.waitingOnCommand} finished executing. Advancing navigation...`)
+
+        if (userTypeInstance.getUserType())
+          this.props.navigation.navigate('CampaignerMenu');
+        else
+          this.props.navigation.navigate('SocialMenu');
+      }
+    }
+  }
+
   componentDidMount() {
     Keychain.getSupportedBiometryType().then(biometryType => {
       this.setState({ biometryType });
@@ -58,35 +87,58 @@ class KeychainScreen extends Component {
 
   async save() {
     try {
-      const username = RefCrypto.getPublicKey()
-      const password = RefCrypto.getPrivateKey()
+      this.username = RefCrypto.getPublicKey()
+      this.password = RefCrypto.getPrivateKey()
       await Keychain.setGenericPassword(
-        username,
-        password,
+        this.username,
+        this.password,
         {
           accessControl: this.state.accessControl,
           service: 'vote.referenda'
         }
       );
-      this.setState({ username: '', password: '', status: 'Credentials saved!' });
+      // this.setState({ username: '', password: '', status: 'Credentials saved!' });
     } catch (err) {
-      this.setState({ status: 'Could not save credentials, ' + err });
+      console.error(`${this.save.name}: Could not save credentials. ${err}`)
+      // this.setState({ status: 'Could not save credentials, ' + err });
     }
   }
 
-  onSignUpButtonPressed = () => {
-    this.save()
-    if (userTypeInstance.getUserType())
-      this.props.navigation.navigate('CampaignerMenu');
-    else
-      this.props.navigation.navigate('SocialMenu');
+  onSignUpButtonPressed = async () => {
+    try {
+      await this.save()
+
+      const profile = new Profile()
+      profile.setIdentityKeyPair(this.username, this.password)
+      profile.setPhoneNumber(this.props.phoneNumber)
+      profile.setAlias(this.props.userName)
+      profile.setFirstName(this.props.firstName)
+      profile.setLastName(this.props.lastName)
+      profile.setBirthDate(this.props.dob)
+
+      const engCmd = EngineCommand.signUpCommand(profile)
+
+      // Tell render to fire up spinner and wait on result before advancing navigation
+      this.setState({ waitingOnCommand: engCmd.getCommandType() })
+      this.props.engineCommandExec(engCmd)
+    } catch (error) {
+
+    }
+
+    // if (userTypeInstance.getUserType())
+    //   this.props.navigation.navigate('CampaignerMenu');
+    // else
+    //   this.props.navigation.navigate('SocialMenu');
   };
 
   onSignInButtonPressed = () => {
-    this.props.navigation.navigate('Telephone');
+    this.props.navigation.navigate('Login');
   };
 
   render = () => {
+    const ai = (this.state.waitingOnCommand) ?
+      (<ActivityIndicator size='large' color='#FFFFFF'/>) : undefined
+
     // tintColor below throws an error saying it's an invalid property, however
     // oddly the component renders with the correct coloring and the property is
     // documented:
@@ -111,11 +163,16 @@ class KeychainScreen extends Component {
 
           <View id="top-content-spacer" style={{height: '5%'}}/>
 
-          <View style={{alignItems: 'flex-start', flex: 1}}>
-            <View class='text-spacer' style={{height: 10}} />
-            <RkText rkType='h6' style={{color: 'white'}}>Your data is owned by you, encrypted with your encryption keys and then stored on cloud storage. You own the encryption keys--that means nobody, not even us at referenda can access your data.</RkText>
-            <View class='text-spacer' style={{height: 10}} />
-            <RkText rkType='h6' style={{color: 'white'}}>Secure your encryption keys on this device by using a passcode or Face ID.</RkText>
+          <View style={{alignItems: 'center', flex: 1}}>
+            <View style={{alignItems: 'flex-start', flex: 1}}>
+              <View class='text-spacer' style={{height: 10}} />
+              <RkText rkType='h6' style={{color: 'white'}}>Your data is owned by you, encrypted with your encryption keys and then stored on cloud storage. You own the encryption keys--that means nobody, not even us at referenda can access your data.</RkText>
+              <View class='text-spacer' style={{height: 10}} />
+              <RkText rkType='h6' style={{color: 'white'}}>Secure your encryption keys on this device by using a passcode or Face ID.</RkText>
+            </View>
+
+            <View style={{flex: 1}} />
+            {ai}
           </View>
 
           <View style={{height: '25%'}}>
@@ -125,7 +182,7 @@ class KeychainScreen extends Component {
               selectedIndex={0}
               style={{marginBottom:10,
                       height: 40,
-                      tintColor: '#a2a2a2',
+//                      tintColor: '#a2a2a2',
                       backgroundColor: 'white',
                       borderStyle:'solid',
                       borderWidth:1,
@@ -203,11 +260,18 @@ const styles = RkStyleSheet.create(theme => ({
 
 const mapStateToProps = (state) => {
   return {
+    payLoad: EngineSelectors.getPayload(state),
+    phoneNumber: SettingsSelectors.getPhoneNumber(state),
+    firstName: SettingsSelectors.getFirstName(state),
+    lastName: SettingsSelectors.getLastName(state),
+    userName: SettingsSelectors.getUserName(state),
+    dob: SettingsSelectors.getDOB(state),
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    engineCommandExec: (aCommand) => dispatch(EngineActions.engineCommandExec(aCommand))
   }
 }
 

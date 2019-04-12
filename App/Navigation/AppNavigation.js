@@ -15,6 +15,7 @@ import { withRkTheme } from 'react-native-ui-kitten'
 import Transition from './Transitions'
 import AgeScreen from '../Containers/AgeScreen'
 import TelephoneScreen from '../Containers/TelephoneScreen'
+import NameScreen from '../Containers/NameScreen'
 import LoginScreen from '../Containers/LoginScreen'
 import KeychainScreen from '../Containers/KeychainScreen'
 import IntroductionScreen from '../Components/IntroductionScreen'
@@ -36,6 +37,9 @@ export default createAppContainer(
     },
     Telephone: {
       screen: TelephoneScreen
+    },
+    Name: {
+      screen: NameScreen
     },
     Age: {
       screen: AgeScreen

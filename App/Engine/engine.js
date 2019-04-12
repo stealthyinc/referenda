@@ -33,23 +33,23 @@ export class ReferendaEngine extends EventEmitterAdapter {
   /**
    * signUp -
    *
-   * @param theArguments  Expects a profile object instance in aProfile.
-   * @throws  If aProfile within the arguments is falsey or does not define the 
+   * @param theArguments  Expects profile object instance aProfileInstance.
+   * @throws  If aProfileInstance is falsey or does not define the
    *          identity public/private key pair. (Required to read/write a
    *          profile.)
    *
    */
   async signUp(theArguments) {
-    console.log(this.signIn.name)
+    console.log(this.signUp.name)
 
-    const {aProfile} = theArguments
+    const {aProfileInstance} = theArguments
 
     // TODO: should this exit gracefully and set the command result to the UX to error?
-    if (!aProfile || !aProfile.getIdentityPublicKey() || !aProfile.getIdentityPrivateKey()) {
-      throw `${this.signIn.name}: The profile and identity key pair must be defined.`
+    if (!aProfileInstance || !aProfileInstance.getIdentityPublicKey() || !aProfileInstance.getIdentityPrivateKey()) {
+      throw `${this.signUp.name}: The profile and identity key pair must be defined.`
     }
 
-    this.profile = aProfile
+    this.profile = aProfileInstance
 
     const ecdh = crypto.createECDH('secp256k1')
     // Generate and encryption key pair:

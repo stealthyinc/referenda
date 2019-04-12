@@ -38,13 +38,9 @@ class NameScreen extends Component {
   );
 
   onNextButtonPressed = () => {
-    // TODO:
+    this.props.storeNameInfo(
+      this.state.firstName, this.state.lastName, this.state.userName)
 
-    // this.props.storePhoneNumber(this.state.phoneNumber)
-    // if (this.state.phoneNumber)
-    //   userTypeInstance.setUserType(false)
-    // else
-    //   userTypeInstance.setUserType(true)
     console.log('NameScreen "next" button pressed.')
     this.props.navigation.navigate('Age');
   };
@@ -152,7 +148,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    // storePhoneNumber: (phoneNumber) => dispatch(SettingsActions.storePhoneNumber(phoneNumber))
+    storeNameInfo: (firstName, lastName, userName) =>
+      dispatch(SettingsActions.storeNameInfo(firstName, lastName, userName))
   }
 }
 
