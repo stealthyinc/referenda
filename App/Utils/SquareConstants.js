@@ -12,7 +12,7 @@
 */
 const SQUARE_APP_ID = 'sandbox-sq0idp-8soPTZE1Szo8O6vG_o0_3A';
 // Make sure to remove trailing `/` since the CHARGE_SERVER_URL puts it
-const CHARGE_SERVER_HOST = 'www.stealthy';
+const CHARGE_SERVER_HOST = 'www.stealthy.im';
 const CHARGE_SERVER_URL = `${CHARGE_SERVER_HOST}/chargeForCookie`;
 const GOOGLE_PAY_LOCATION_ID = 'REPLACE_ME';
 const APPLE_PAY_MERCHANT_ID = 'merchant.stealthy.inc';

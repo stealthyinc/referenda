@@ -3,6 +3,7 @@ package com.referenda;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import io.invertase.firebase.RNFirebasePackage;
 import sqip.react.SquareInAppPaymentsPackage;
 import com.reactnativepayments.ReactNativePaymentsPackage;
 import com.wix.autogrowtextinput.AutoGrowTextInputPackage;
@@ -43,6 +44,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNFirebasePackage(),
             new SquareInAppPaymentsPackage(),
             new ReactNativePaymentsPackage(),
             new AutoGrowTextInputPackage(),
