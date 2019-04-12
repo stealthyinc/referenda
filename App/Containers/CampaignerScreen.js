@@ -181,6 +181,10 @@ class CampaignerScreen extends Component {
     }
   }
 
+  donateButtonAction() {
+    this.props.navigation.navigate('Donation')
+  }
+
   getHeader(aTitle, backNavigationState=undefined) {
     const headerArr = []
 
@@ -253,7 +257,18 @@ class CampaignerScreen extends Component {
       //     <RkText style={styles.gsButtonText}>{aButtonName}</RkText>
       //   </RkButton>
       // )
+    } else if (aButtonName === 'New Donation' &&
+               aNextState === undefined) {
+      return (
+        <GradientButton
+          key={this.uniqueKey++}
+          style={styles.gsGradientButton}
+          rkType='large'
+          text={aButtonName}
+          onPress={() => this.donateButtonAction()} />
+      )
     }
+
     return (
       <GradientButton
         key={this.uniqueKey++}
@@ -513,8 +528,9 @@ class CampaignerScreen extends Component {
         this.lastName = undefined
 
         buttonPanel = this.getButtonPanel([
-          {buttonName: 'Voter Conversation', nextState: CampaignerScreen.GS_PAGES.conversation},
-          {buttonName: 'Add Volunteer', nextState: CampaignerScreen.GS_PAGES.addVoluneer},
+          {buttonName: 'New Donation', nextState: CampaignerScreen.GS_PAGES.donation},
+          // {buttonName: 'Voter Conversation', nextState: CampaignerScreen.GS_PAGES.conversation},
+          // {buttonName: 'Add Volunteer', nextState: CampaignerScreen.GS_PAGES.addVoluneer},
           {buttonName: 'View Progress', nextState: CampaignerScreen.GS_PAGES.progress}
         ])
         groundSwell = (

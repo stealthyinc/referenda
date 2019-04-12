@@ -20,7 +20,7 @@ import * as Keychain from 'react-native-keychain';
 import SettingsActions from '../Redux/SettingsRedux'
 const { userTypeInstance } = require('../Utils/UserType.js')
 
-class TelephoneScreen extends Component {
+class NameScreen extends Component {
   static navigationOptions = {
     header: null,
   };
@@ -37,13 +37,16 @@ class TelephoneScreen extends Component {
     <Image style={styles.image} source={this.getThemeImageSource(RkTheme.current)} />
   );
 
-  onTelephoneButtonPressed = () => {
-    this.props.storePhoneNumber(this.state.phoneNumber)
-    if (this.state.phoneNumber)
-      userTypeInstance.setUserType(false)
-    else
-      userTypeInstance.setUserType(true)
-    this.props.navigation.navigate('Name');
+  onNextButtonPressed = () => {
+    // TODO:
+
+    // this.props.storePhoneNumber(this.state.phoneNumber)
+    // if (this.state.phoneNumber)
+    //   userTypeInstance.setUserType(false)
+    // else
+    //   userTypeInstance.setUserType(true)
+    console.log('NameScreen "next" button pressed.')
+    this.props.navigation.navigate('Age');
   };
 
   onSignInButtonPressed = () => {
@@ -51,24 +54,9 @@ class TelephoneScreen extends Component {
   };
 
   state = {
-    username: '',
-    password: '',
-    status: '',
-    phoneNumber: ''
-  }
-
-  // TODO: actually call this?
-  async reset() {
-    try {
-      await Keychain.resetGenericPassword({service: 'vote.referenda'});
-      this.setState({
-        status: 'Credentials Reset!',
-        username: '',
-        password: '',
-      });
-    } catch (err) {
-      this.setState({ status: 'Could not reset credentials, ' + err });
-    }
+    firstName: '',
+    lastName: '',
+    userName: ''
   }
 
   render = () => (
@@ -83,26 +71,26 @@ class TelephoneScreen extends Component {
 
         <View style={{ alignItems: 'center', height: '20%' }}>
           {this.renderImage()}
-          <RkText rkType='h1' style={{color: 'white'}}>Phone Number</RkText>
+          <RkText rkType='h1' style={{color: 'white'}}>Name Information</RkText>
         </View>
 
         <View id="top-content-spacer" style={{height: '5%'}}/>
 
         <View style={{alignItems: 'flex-start', flex: 1}}>
           <View class='text-spacer' style={{height: 10}} />
-          <RkText rkType='h6' style={{color: 'white'}}>Referenda requires your phone number to provide you unique access to our service. This prevents bots and other false identities from participating on the platform.</RkText>
-          <View class='text-spacer' style={{height: 10}} />
-          <RkText rkType='h6' style={{color: 'white'}}>Importantly, we do not store your phone number. Instead we store a unique one-way hash of your number, protecting your identity.</RkText>
+          <RkText rkType='h6' style={{color: 'white'}}>Referenda uses your name information to track campaigning achievements (i.e. donations & conversations).</RkText>
         </View>
 
-        <View style={{height: '25%'}}>
+        <View style={{height: '45%'}}>
           <View style={{flex: 1}} />
-          <RkTextInput rkType='rounded' placeholder='Phone Number' onChangeText={(phoneNumber) => this.setState({ phoneNumber })}/>
+          <RkTextInput rkType='rounded' placeholder='First Name' onChangeText={(firstName) => this.setState({ firstName })}/>
+          <RkTextInput rkType='rounded' placeholder='Last Name' onChangeText={(lastName) => this.setState({ lastName })}/>
+          <RkTextInput rkType='rounded' placeholder='Username' onChangeText={(userName) => this.setState({ userName })}/>
           <GradientButton
             style={[styles.save, {marginTop: 5, height: 40}]}
             rkType='large'
             text='Next'
-            onPress={this.onTelephoneButtonPressed}
+            onPress={this.onNextButtonPressed}
           />
           <View id='footer-spacer' style={{height: 10}} />
           <View style={styles.textRow}>
@@ -164,8 +152,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    storePhoneNumber: (phoneNumber) => dispatch(SettingsActions.storePhoneNumber(phoneNumber))
+    // storePhoneNumber: (phoneNumber) => dispatch(SettingsActions.storePhoneNumber(phoneNumber))
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(TelephoneScreen)
+export default connect(mapStateToProps, mapDispatchToProps)(NameScreen)

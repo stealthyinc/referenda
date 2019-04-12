@@ -93,7 +93,8 @@ class EngineCommand {
    */
 
   static COMMAND_TYPES = {
-    LOGIN: 'login',
+    SIGN_UP: 'signUp',
+    SIGN_IN: 'signIn',
     UPLOAD_POST: 'uploadPost'
   }
 
@@ -101,9 +102,20 @@ class EngineCommand {
    * Infrastructure commands:
    **************************************
    */
-  static loginCommand(aPublicIdentityKey, aPrivateIdentityKey) {
+  static signUpCommand(aPublicIdentityKey, aPrivateIdentityKey, theProfileInfo) {
     const command = new EngineCommand()
-    command.commandType = EngineCommand.COMMAND_TYPES.LOGIN
+    command.commandType = EngineCommand.COMMAND_TYPES.SIGN_UP
+    command.arguments = {
+      aPublicIdentityKey,
+      aPrivateIdentityKey,
+      theProfile,
+    }
+    return command
+  }
+
+  static signInCommand(aPublicIdentityKey, aPrivateIdentityKey) {
+    const command = new EngineCommand()
+    command.commandType = EngineCommand.COMMAND_TYPES.SIGN_IN
     command.arguments = {
       aPublicIdentityKey,
       aPrivateIdentityKey

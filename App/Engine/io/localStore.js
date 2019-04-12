@@ -32,6 +32,7 @@ class LocalStore {
       await AsyncStorage.setItem(keyPath, theData)
     } catch (error) {
       // TODO:
+      console.error(`${this.write.name}: ${error}`)
     } finally {
     }
   }
@@ -49,6 +50,7 @@ class LocalStore {
       theData = await AsyncStorage.getItem(keyPath)
     } catch (error) {
       // TODO:
+      console.error(`${this.read.name}: ${error}`)
     } finally {
       return theData
     }

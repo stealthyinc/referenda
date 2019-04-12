@@ -31,7 +31,86 @@ export class ReferendaEngine extends EventEmitterAdapter {
    */
 
   /**
-   * login - Reads and decrypts the user's profile from local storage with the
+   * signUp -
+   *
+   * @param theArguments  Expects a profile object instance in aProfile.
+   * @throws  If aProfile within the arguments is falsey or does not define the 
+   *          identity public/private key pair. (Required to read/write a
+   *          profile.)
+   *
+   */
+  async signUp(theArguments) {
+    console.log(this.signIn.name)
+
+    const {aProfile} = theArguments
+
+    // TODO: should this exit gracefully and set the command result to the UX to error?
+    if (!aProfile || !aProfile.getIdentityPublicKey() || !aProfile.getIdentityPrivateKey()) {
+      throw `${this.signIn.name}: The profile and identity key pair must be defined.`
+    }
+
+    this.profile = aProfile
+
+    const ecdh = crypto.createECDH('secp256k1')
+    // Generate and encryption key pair:
+    ecdh.generateKeys()
+    const encPrivateKey = ecdh.getPrivateKey()
+    const encPublicKey = ecdh.getPublicKey()
+    // Generate a signing key pair:
+    ecdh.generateKeys()
+    const signPrivateKey = ecdh.getPrivateKey()
+    const signPublicKey = ecdh.getPublicKey()
+
+    this.profile.setSigningKeyPair(signPublicKey, signPrivateKey)
+    this.profile.setEncryptionKeyPair(encPublicKey, encPrivateKey)
+
+    // // Create the profile and persist it to local storage
+    // let keySet = await SEA.pair()
+    // this.profile.setSigningKeyPair(keySet.pub, keySet.priv)
+    // this.profile.setEncryptionKeyPair(keySet.epub, keySet.epriv)
+
+    // this.profile.setImageUrl('')
+    // this.profile.setAlias('AC')
+    // this.profile.setDescription('End of funnel operations center chief.')
+
+    // Things that don't work that I tried:
+    //
+    // const signingAlgs = ['sha256', 'ecdsa-with-SHA1']
+    // for (const alg of signingAlgs) {
+    //   try {
+    //     console.info(`trying to sign with ${alg}`)
+    //     const sign = crypto.createSign(alg);
+    //     sign.update('some data to sign');
+    //     sign.end();
+    //     const signature = sign.sign(signPrivateKey);
+    //
+    //     console.info(`trying to verify with ${alg}`)
+    //     const verify = crypto.createVerify(alg);
+    //     verify.update('some data to sign');
+    //     verify.end();
+    //     console.log(verify.verify(signPrivateKey, signature));
+    //
+    //     console.info(`succeeded sign/verify with ${alg}`)
+    //     // Prints: true
+    //   } catch (error) {
+    //     console.error(`${alg} failed to sign/verify.\n${error}`)
+    //   }
+    // }
+    //
+    // const {ECDH} = require('crypto')
+    // const derEncPublicKey = ECDH.convertKey(encPublicKey, 'secp256k1', 'hex', 'der', 'uncompressed')
+    // const publicKeyObj = crypto.createPublicKey(encPublicKey)
+    // const encSerializedProfile = crypto.publicEncrypt(encPublicKey, serializedProfile)
+    // const decSerializedProfile = crypto.privateDecrypt(encPrivateKey, encSerializedProfile)
+
+    // TODO: encryption etc. (when integration with keychain)
+    const serializedProfile = this.profile.serializeToString()
+    await this.localStore.write('profile.enc.json', serializedProfile, this.profile.getIdentityPublicKey())
+    this.profile.clearModified()
+  }
+
+  /**
+   * signIn - Reads and decrypts the user's profile from local storage with the
    *         provided aPrivateIdentityKey in the arguments. If the profile
    *         for this user cannot be found, a profile is created and written
    *         to local storage for the user.
@@ -43,15 +122,17 @@ export class ReferendaEngine extends EventEmitterAdapter {
    *
    * TODO: verify the profile contains aPrivateIdentityKey (otherwise an
    *       error has occured).
+   * TODO: can this be defined using the COMMAND_TYPES constant, i.e.:
+   *       EngineCommand.COMMAND_TYPES.SIGN_IN = (blah...) => {}
    */
-  async login(theArguments) {
-    console.log(this.login.name)
+  async signIn(theArguments) {
+    console.log(this.signIn.name)
 
     const {aPublicIdentityKey, aPrivateIdentityKey} = theArguments
 
     // TODO: should this exit gracefully and set the command result to the UX to error?
     if (!aPublicIdentityKey || !aPrivateIdentityKey) {
-      throw `${this.login.name}: aPublicIdentityKey and aPrivateIdentityKey must be defined.`
+      throw `${this.signIn.name}: aPublicIdentityKey and aPrivateIdentityKey must be defined.`
     }
 
     const serEncProfileData = await this.localStore.read('profile.enc.json', aPublicIdentityKey)
@@ -61,70 +142,11 @@ export class ReferendaEngine extends EventEmitterAdapter {
       this.profile = new Profile()
       this.profile.restore(serEncProfileData)
     } else {
-      this.profile = new Profile()
-
-      this.profile.setIdentityKeyPair(aPublicIdentityKey, aPrivateIdentityKey)
-
-      const ecdh = crypto.createECDH('secp256k1')
-      // Generate and encryption key pair:
-      ecdh.generateKeys()
-      const encPrivateKey = ecdh.getPrivateKey()
-      const encPublicKey = ecdh.getPublicKey()
-      // Generate a signing key pair:
-      ecdh.generateKeys()
-      const signPrivateKey = ecdh.getPrivateKey()
-      const signPublicKey = ecdh.getPublicKey()
-
-      this.profile.setSigningKeyPair(signPublicKey, signPrivateKey)
-      this.profile.setEncryptionKeyPair(encPublicKey, encPrivateKey)
-
-      // // Create the profile and persist it to local storage
-      // let keySet = await SEA.pair()
-      // this.profile.setSigningKeyPair(keySet.pub, keySet.priv)
-      // this.profile.setEncryptionKeyPair(keySet.epub, keySet.epriv)
-
-      this.profile.setImageUrl('')
-      this.profile.setAlias('AC')
-      this.profile.setDescription('End of funnel operations center chief.')
-
-      // Things that don't work that I tried:
-      //
-      // const signingAlgs = ['sha256', 'ecdsa-with-SHA1']
-      // for (const alg of signingAlgs) {
-      //   try {
-      //     console.info(`trying to sign with ${alg}`)
-      //     const sign = crypto.createSign(alg);
-      //     sign.update('some data to sign');
-      //     sign.end();
-      //     const signature = sign.sign(signPrivateKey);
-      //
-      //     console.info(`trying to verify with ${alg}`)
-      //     const verify = crypto.createVerify(alg);
-      //     verify.update('some data to sign');
-      //     verify.end();
-      //     console.log(verify.verify(signPrivateKey, signature));
-      //
-      //     console.info(`succeeded sign/verify with ${alg}`)
-      //     // Prints: true
-      //   } catch (error) {
-      //     console.error(`${alg} failed to sign/verify.\n${error}`)
-      //   }
-      // }
-      //
-      // const {ECDH} = require('crypto')
-      // const derEncPublicKey = ECDH.convertKey(encPublicKey, 'secp256k1', 'hex', 'der', 'uncompressed')
-      // const publicKeyObj = crypto.createPublicKey(encPublicKey)
-      // const encSerializedProfile = crypto.publicEncrypt(encPublicKey, serializedProfile)
-      // const decSerializedProfile = crypto.privateDecrypt(encPrivateKey, encSerializedProfile)
-
-      // TODO: encryption etc. (when integration with keychain)
-      const serializedProfile = this.profile.serializeToString()
-      await this.localStore.write('profile.enc.json', serializedProfile, this.profile.getIdentityPublicKey())
-      this.profile.clearModified()
+      // TODO: throw / error
     }
 
     if (this.profile.getIdentityPrivateKey() !== aPrivateIdentityKey) {
-      throw `Mismatched profile while executing ${this.login.name}.`
+      throw `Mismatched profile while executing ${this.signIn.name}.`
     }
   }
 
@@ -354,6 +376,22 @@ export class ReferendaEngine extends EventEmitterAdapter {
     //     console.error(`Unable to write ${now} to gun.`)
     //   }
     // });
+  }
+
+  async handleMobileForeground() {
+    // TODO:
+  }
+
+  async handleMobileBackground() {
+    // TODO:
+  }
+
+  async handleMobileBackgroundUpdate() {
+    // TODO:
+  }
+
+  async handleMobileNotifications() {
+    // TODO:
   }
 
   /**

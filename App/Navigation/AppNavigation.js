@@ -19,28 +19,29 @@ import Settings from '../Containers/SettingScreen'
 
 // Manifest of possible screens
 export default createAppContainer(
-  createStackNavigator({
-    First: {
-      screen: SplashScreen
-    },
-    Home: {
-      screen: createDrawerNavigator(
-        {
-          ...AppRoutes
-        },
-        {
-          contentComponent: (props) => {
-            const SideMenu = withRkTheme(Settings)
-            return <SideMenu {...props} />
+  createStackNavigator(
+    {
+      First: {
+        screen: SplashScreen
+      },
+      Home: {
+        screen: createDrawerNavigator(
+          {
+            ...AppRoutes
           },
-        }
-      )
-    }
-  }, {
-    // Default config for all screens
-    headerMode: 'none',
-    navigationOptions: {
-      headerStyle: styles.header
-    }
-  })
+          {
+            contentComponent: (props) => {
+              const SideMenu = withRkTheme(Settings)
+              return <SideMenu {...props} />
+            },
+          }
+        )
+      }
+    }, {
+      // Default config for all screens
+      headerMode: 'none',
+      navigationOptions: {
+        headerStyle: styles.header
+      }
+    })
 )

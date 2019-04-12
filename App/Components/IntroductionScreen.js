@@ -65,36 +65,48 @@ const styles = StyleSheet.create({
 });
 
 const slides = [
+  // TODO: make this appear the first time--after sign-in, have something else.
+  // TODO: make this a bundle that is fetched online (to support multiple
+  //       campaigns)--or alternately a pointer to a site specific to the
+  //       the campaign.
   {
-    key: 'somethun0',
+    key: 'donation0',
     title: 'Agatha Bacelar for Congress 🇺🇸',
-    text: 'You\'ve been invited by Agatha\'s campaign to join the discussion on Referenda for California district 12s 117th congressional campaign.',
+    text: 'You\'ve been invited to help Agatha\'s campaign for the 117th US congress seat representing California district 12!',
     image: candidate,
     imageStyle: styles.image,
     colors: ['#63E2FF', '#B066FE'],
   },
-  {
-    key: 'somethun',
-    title: 'Your voice matters.',
-    text: 'Referenda makes your voice heard by your political leaders for actionable change.',
-    image: chat,
-    imageStyle: styles.image,
-    colors: ['#63E2FF', '#B066FE'],
-  },
-  {
-    key: 'somethun1',
-    title: 'Your time is important.',
-    text: 'Interact with your representatives on Referenda, instead of sending form emails and making scripted calls that get ignored.',
-    image: security,
-    colors: ['#A3A1FF', '#3A3897'],
-  },
-  {
-    key: 'somethun2',
-    title: 'Make a difference.',
-    text: 'It\'s easy to participate and even lead initiatives in your community with Referenda. Regardless of your partisanship.',
-    image: blockchain,
-    colors: ['#29ABE2', '#4F00BC'],
-  },
+  // {
+  //   key: 'somethun0',
+  //   title: 'Agatha Bacelar for Congress 🇺🇸',
+  //   text: 'You\'ve been invited by Agatha\'s campaign to join the discussion on Referenda for California district 12s 117th congressional campaign.',
+  //   image: candidate,
+  //   imageStyle: styles.image,
+  //   colors: ['#63E2FF', '#B066FE'],
+  // },
+  // {
+  //   key: 'somethun',
+  //   title: 'Your voice matters.',
+  //   text: 'Referenda makes your voice heard by your political leaders for actionable change.',
+  //   image: chat,
+  //   imageStyle: styles.image,
+  //   colors: ['#63E2FF', '#B066FE'],
+  // },
+  // {
+  //   key: 'somethun1',
+  //   title: 'Your time is important.',
+  //   text: 'Interact with your representatives on Referenda, instead of sending form emails and making scripted calls that get ignored.',
+  //   image: security,
+  //   colors: ['#A3A1FF', '#3A3897'],
+  // },
+  // {
+  //   key: 'somethun2',
+  //   title: 'Make a difference.',
+  //   text: 'It\'s easy to participate and even lead initiatives in your community with Referenda. Regardless of your partisanship.',
+  //   image: blockchain,
+  //   colors: ['#29ABE2', '#4F00BC'],
+  // },
 ];
 
 export default class Introduction extends Component {

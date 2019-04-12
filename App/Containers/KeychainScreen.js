@@ -62,7 +62,10 @@ class KeychainScreen extends Component {
       await Keychain.setGenericPassword(
         username,
         password,
-        { accessControl: this.state.accessControl }
+        {
+          accessControl: this.state.accessControl,
+          service: 'vote.referenda'
+        }
       );
       this.setState({ username: '', password: '', status: 'Credentials saved!' });
     } catch (err) {

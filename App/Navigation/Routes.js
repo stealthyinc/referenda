@@ -6,6 +6,7 @@ import ArticleInputScreen from '../Containers/ArticleInputScreen'
 import ChatScreen from '../Containers/ChatScreen'
 import AgeScreen from '../Containers/AgeScreen'
 import TelephoneScreen from '../Containers/TelephoneScreen'
+import NameScreen from '../Containers/NameScreen'
 import LoginScreen from '../Containers/LoginScreen'
 import FeedScreen from '../Containers/FeedScreen'
 import KeychainScreen from '../Containers/KeychainScreen'
@@ -22,6 +23,12 @@ import IntroductionScreen from '../Components/IntroductionScreen'
 import Settings from '../Containers/SettingScreen'
 
 export const MainRoutes = [
+  // {
+  //   id: 'Combined',
+  //   title: 'Combined',
+  //   screen: CombinedScreen,
+  //   children: [],
+  // },
   {
     id: 'LoginMenu',
     title: 'Introduction',
@@ -38,6 +45,12 @@ export const MainRoutes = [
         id: 'Telephone',
         title: 'Telephone',
         screen: TelephoneScreen,
+        children: [],
+      },
+      {
+        id: 'Name',
+        title: 'Name',
+        screen: NameScreen,
         children: [],
       },
       {
@@ -150,12 +163,4 @@ export const MainRoutes = [
   },
 ];
 
-const menuRoutes = _.cloneDeep(MainRoutes);
-menuRoutes.unshift({
-  id: 'Combined',
-  title: 'Combined',
-  screen: CombinedScreen,
-  children: [],
-});
-
-export const MenuRoutes = menuRoutes;
+export const MenuRoutes = MainRoutes;

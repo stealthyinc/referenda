@@ -45,10 +45,10 @@ class LoginScreen extends Component {
 
   async load() {
     try {
-      const credentials = await Keychain.getGenericPassword();
+      const credentials = await Keychain.getGenericPassword({service: 'vote.referenda'});
       if (credentials) {
         const engCmd =
-          EngineCommand.loginCommand(credentials.username, credentials.password)
+          EngineCommand.signInCommand(credentials.username, credentials.password)
         this.props.engineCommandExec(engCmd)
 
         this.onLoginButtonPressed()
@@ -62,7 +62,7 @@ class LoginScreen extends Component {
   }
 
   onLoginButtonPressed = () => {
-    this.props.navigation.navigate('SocialMenu');
+    this.props.navigation.navigate('CampaignerMenu');
   };
 
   onSignUpButtonPressed = () => {

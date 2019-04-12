@@ -1,5 +1,8 @@
 import React, { Component } from 'react'
-import { View, StatusBar, Text } from 'react-native'
+import {  AppState,
+          StatusBar,
+          Text,
+          View } from 'react-native'
 import ReduxNavigation from '../Navigation/ReduxNavigation'
 import { connect } from 'react-redux'
 import EngineActions from '../Redux/EngineRedux'
@@ -13,6 +16,7 @@ import styles from './Styles/RootContainerStyles'
 class RootContainer extends Component {
   constructor() {
     super()
+    this.appState = AppState.currentState
     this.engineStarted = false
 
     // Globally disable consideration of iOS font
@@ -27,6 +31,8 @@ class RootContainer extends Component {
   }
 
   componentDidMount() {
+    AppState.addEventListener('change', this._handleAppStateChange)
+
     if (!this.engineStarted) {
       this.engineStarted = true
       this.props.init()
@@ -36,6 +42,25 @@ class RootContainer extends Component {
       this.props.startup()
     }
     // this.props.pinataAddFile('../Assets/images/verified.png')
+  }
+
+  componentWillUnmount() {
+    AppState.removeEventListener('change', this._handleAppStateChange)
+  }
+
+  _handleAppStateChange(nextAppState) {
+    if (this.appState && this.appState.match(/inactive|background/) && nextAppState === 'active') {
+      console.log('App has come to the foreground!')
+      if (this.engineStarted) {
+
+      }
+    } else if (this.appState && this.appState.match(/active/) && nextAppState === 'inactive') {
+      console.log('App has gone to the background!')
+      if (this.engineStarted) {
+
+      }
+    }
+    this.appState = nextAppState
   }
 
   render() {
