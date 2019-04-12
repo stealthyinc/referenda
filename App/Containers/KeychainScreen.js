@@ -22,6 +22,7 @@ const { RefCrypto } = require('../Utils/RefCrypto')
 
 const ACCESS_CONTROL_OPTIONS = ['None', 'Passcode', 'Password'];
 const ACCESS_CONTROL_MAP = [null, Keychain.ACCESS_CONTROL.DEVICE_PASSCODE, Keychain.ACCESS_CONTROL.APPLICATION_PASSWORD, Keychain.ACCESS_CONTROL.BIOMETRY_CURRENT_SET]
+const { userTypeInstance } = require('../Utils/UserType.js')
 
 class KeychainScreen extends Component {
   static navigationOptions = {
@@ -75,7 +76,10 @@ class KeychainScreen extends Component {
 
   onSignUpButtonPressed = () => {
     this.save()
-    this.props.navigation.navigate('SocialMenu');
+    if (userTypeInstance.getUserType())
+      this.props.navigation.navigate('CampaignerMenu');
+    else
+      this.props.navigation.navigate('SocialMenu');
   };
 
   onSignInButtonPressed = () => {

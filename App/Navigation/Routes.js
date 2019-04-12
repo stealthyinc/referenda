@@ -4,12 +4,11 @@ import * as Screens from '../Screens/index';
 import CameraRollScreen from '../Containers/CameraRollScreen'
 import ArticleInputScreen from '../Containers/ArticleInputScreen'
 import ChatScreen from '../Containers/ChatScreen'
-import AgeScreen from '../Containers/AgeScreen'
-import TelephoneScreen from '../Containers/TelephoneScreen'
-import NameScreen from '../Containers/NameScreen'
-import LoginScreen from '../Containers/LoginScreen'
+//import AgeScreen from '../Containers/AgeScreen'
+//import TelephoneScreen from '../Containers/TelephoneScreen'
+//import NameScreen from '../Containers/NameScreen'
+//import LoginScreen from '../Containers/LoginScreen'
 import FeedScreen from '../Containers/FeedScreen'
-import KeychainScreen from '../Containers/KeychainScreen'
 import CameraScreen from '../Containers/CameraScreen'
 import CardsScreen from '../Containers/CardsScreen'
 import CampaignerScreen from '../Containers/CampaignerScreen'
@@ -18,8 +17,6 @@ import CombinedScreen from '../Containers/CombinedScreen'
 import AuthLoadingScreen from '../Containers/AuthLoadingScreen'
 import VideoScreen from '../Containers/VideoScreen'
 import ChargeScreen from '../Containers/ChargeScreen'
-import IntroductionScreen from '../Components/IntroductionScreen'
-// import Settings from '../Components/SettingsScreen'
 import Settings from '../Containers/SettingScreen'
 
 export const MainRoutes = [
@@ -29,43 +26,43 @@ export const MainRoutes = [
   //   screen: CombinedScreen,
   //   children: [],
   // },
+//  {
+  //   id: 'LoginMenu',
+  //   title: 'Introduction',
+  //   icon: FontIcons.login,
+  //   screen: IntroductionScreen,
+  //   children: [
+  //     {
+  //       id: 'Login',
+  //       title: 'Login',
+  //       screen: LoginScreen,
+  //       children: [],
+  //     },
+  //     {
+  //       id: 'Telephone',
+  //       title: 'Telephone',
+  //       screen: TelephoneScreen,
+  //       children: [],
+  //     },
+  //     {
+  //       id: 'Age',
+  //       title: 'Age',
+  //       screen: AgeScreen,
+  //       children: [],
+  //     },
+  //     {
+  //       id: 'Keychain',
+  //       title: 'Keychain',
+  //       screen: KeychainScreen,
+  //       children: [],
+  //     },
+  //   ],
+  // },
   {
-    id: 'LoginMenu',
-    title: 'Introduction',
-    icon: FontIcons.login,
-    screen: IntroductionScreen,
-    children: [
-      {
-        id: 'Login',
-        title: 'Login',
-        screen: LoginScreen,
-        children: [],
-      },
-      {
-        id: 'Telephone',
-        title: 'Telephone',
-        screen: TelephoneScreen,
-        children: [],
-      },
-      {
-        id: 'Name',
-        title: 'Name',
-        screen: NameScreen,
-        children: [],
-      },
-      {
-        id: 'Age',
-        title: 'Age',
-        screen: AgeScreen,
-        children: [],
-      },
-      {
-        id: 'Keychain',
-        title: 'Keychain',
-        screen: KeychainScreen,
-        children: [],
-      },
-    ],
+    id: 'Start',
+    title: 'Start',
+    screen: CombinedScreen,
+    children: [],
   },
   {
     id: 'SocialMenu',

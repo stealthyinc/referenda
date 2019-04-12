@@ -94,8 +94,11 @@ class CampaignerScreen extends Component {
    * End Ground Swell mock-up
    */
 
-  static navigationOptions = {
-    header: null
+  static navigationOptions = ({ navigation }) => {
+    return {
+      header: null,
+      gesturesEnabled: false,
+    }
   }
   // static navigationOptions = ({ navigation }) => {
   //   const params = navigation.state.params || {}

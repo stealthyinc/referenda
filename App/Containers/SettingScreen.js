@@ -101,6 +101,15 @@ class SettingScreen extends Component {
             <RkText rkType='header6'>Edit Profile</RkText>
           </TouchableOpacity>
         </View>
+        {(!userTypeInstance.getUserType()) ? (<View style={styles.row}>
+          <FindFriends
+            color={RkTheme.current.colors.google}
+            text='Political Memberships'
+            icon={FontAwesome.token}
+            selected={this.state.googleEnabled}
+            onPress={() => this.props.navigation.navigate('Cards')}
+          />
+        </View>) : null}
         {/*<View style={styles.row}>
           <TouchableOpacity style={styles.rowButton}>
             <RkText rkType='header6'>Change Password</RkText>
@@ -138,7 +147,7 @@ class SettingScreen extends Component {
             onPress={this.onFindFriendsTwitterButtonPressed}
           />
         </View>
-        <View style={styles.row}>
+        {/*<View style={styles.row}>
           <FindFriends
             color={RkTheme.current.colors.google}
             text='Find friends on Google'
@@ -146,7 +155,7 @@ class SettingScreen extends Component {
             selected={this.state.googleEnabled}
             onPress={this.onFindFriendsGoogleButtonPressed}
           />
-        </View>
+        </View>*/}
         <View style={styles.row}>
           <FindFriends
             color={RkTheme.current.colors.facebook}

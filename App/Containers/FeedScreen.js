@@ -140,8 +140,11 @@ class FeedScreen extends Component {
   //     headerTintColor: 'black',
   //   }
   // };
-  static navigationOptions = {
-    header: null
+  static navigationOptions = ({ navigation }) => {
+    return {
+      header: null,
+      gesturesEnabled: false,
+    }
   }
 
   state = {

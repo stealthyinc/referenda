@@ -110,9 +110,12 @@ const slides = [
 ];
 
 export default class Introduction extends Component {
-  static navigationOptions = {
-    header: null
-  };
+  static navigationOptions = ({ navigation }) => {
+    return {
+      header: null,
+      gesturesEnabled: false
+    }
+  }
 
   constructor (props) {
     super(props)
@@ -147,14 +150,12 @@ export default class Introduction extends Component {
           <Text style={{fontSize:32, textAlign:'left', color:titleColor}}>Referenda</Text>
         </View>
 
-        <View style={{flex: 0.85}} />
+        <View style={{flex: 0.9}} />
 
         <View>
           <Text style={[styles.title, {color:titleColor}]}>{props.title}</Text>
           <Text style={[styles.text, {color:titleColor}]}>{props.text}</Text>
         </View>
-
-        <View style={{flex: 0.15}} />
 
         <View id='button-view' style={{height: 40,
                                        width: '100%',
@@ -175,6 +176,7 @@ export default class Introduction extends Component {
           />
         </View>
 
+        <View style={{flex: 0.1}} />
       </ImageBackground>
     );
   }

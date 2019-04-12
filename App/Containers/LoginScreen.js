@@ -23,6 +23,7 @@ import * as Keychain from 'react-native-keychain';
 
 import EngineActions from '../Redux/EngineRedux'
 import {EngineCommand} from '../Engine/commands/engineCommand'
+const { userTypeInstance } = require('../Utils/UserType.js')
 
 class LoginScreen extends Component {
   static propTypes = {
@@ -62,7 +63,10 @@ class LoginScreen extends Component {
   }
 
   onLoginButtonPressed = () => {
-    this.props.navigation.navigate('CampaignerMenu');
+    if (userTypeInstance.getUserType())
+      this.props.navigation.navigate('CampaignerMenu');
+    else
+      this.props.navigation.navigate('SocialMenu');
   };
 
   onSignUpButtonPressed = () => {
