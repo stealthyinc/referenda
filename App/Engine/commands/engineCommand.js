@@ -102,13 +102,11 @@ class EngineCommand {
    * Infrastructure commands:
    **************************************
    */
-  static signUpCommand(aPublicIdentityKey, aPrivateIdentityKey, theProfileInfo) {
+  static signUpCommand(aProfileInstance) {
     const command = new EngineCommand()
     command.commandType = EngineCommand.COMMAND_TYPES.SIGN_UP
     command.arguments = {
-      aPublicIdentityKey,
-      aPrivateIdentityKey,
-      theProfile,
+      aProfileInstance
     }
     return command
   }

@@ -26,8 +26,8 @@ export const INITIAL_STATE = Immutable({
 /* ------------- Selectors ------------- */
 
 export const EngineSelectors = {
-  getData: state => state.data,
-  getPayload: state => state.payload
+  getData: state => state.engine.data,
+  getPayload: state => state.engine.payload
 }
 
 /* ------------- Reducers ------------- */

@@ -26,10 +26,12 @@ class Profile extends BaseData {
           private: ''
         },
       },
-      imageUrl: '',
+      phoneNumber: '',
       alias: '',
       firstName: '',
       lastName: '',
+      birthDate: '',
+      imageUrl: '',
       description: '',
       address: {
         street1: '',
@@ -41,6 +43,22 @@ class Profile extends BaseData {
       candidate: false,
       official: false,
     }
+  }
+
+  /**
+   * @param aPhoneNumber A string representing a phone number.
+   *                     Formatless--i.e. 4037469712
+   */
+  setPhoneNumber(aPhoneNumber) {
+    this.data.phoneNumber = aPhoneNumber
+    super.setModified()
+  }
+
+  /**
+   * @return A string representing a phone number. Formatless--i.e. 8712312040
+   */
+  getPhoneNumber() {
+    return this.data.phoneNumber
   }
 
   /**
@@ -121,6 +139,21 @@ class Profile extends BaseData {
    */
   getEncryptionPrivateKey() {
     return this.data.keys.encryption.private
+  }
+
+  /**
+   * @param  aBirthDate  A string representing a birthdate in MM/DD/YYYY format.
+   */
+  setBirthDate(aBirthDate) {
+    this.data.birthDate = aBirthDate
+    super.setModified()
+  }
+
+  /**
+   * @return  A string representing a birth date in MM/DD/YYYY format.
+   */
+  getBirthDate() {
+    return this.data.birthDate
   }
 
   /**

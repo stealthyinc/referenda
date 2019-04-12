@@ -54,6 +54,7 @@ const styles = StyleSheet.create({
     color: 'rgba(0, 0, 0, 0.8)',
     backgroundColor: 'transparent',
     textAlign: 'center',
+    marginBottom: 16,
   },
   title: {
     fontSize: 22,
@@ -130,53 +131,49 @@ export default class Introduction extends Component {
         style={{ flex: 1,
                  alignItems: 'center',
                  justifyContent: 'space-between',
-                 paddingTop: '7%',
                  ...ifIphoneX({
-                   paddingTop: '12%',
+                   paddingTop: '15%',
                  }, {
-                   paddingTop: '7%',
+                   paddingTop: '10%',
                  }),
-                 paddingBottom: '3%',
-                 paddingHorizontal: '7%',
+                 paddingBottom: '5%',
+                 paddingHorizontal: '6%',
                  width: props.width,
                  height: props.height }}
         source={props.image} >
 
-        <View style={{width:'100%', flexDirection:'row', justifyContent: 'flex-start'}}>
-          <Image
-            id='splash-screen-img'
-            style={{height:'100%', marginRight:5, width:'10%', resizeMode: 'contain'}}
-            source={verified}/>
-          <Text style={{fontSize:32, textAlign:'left', color:titleColor}}>Referenda</Text>
+        <View style={{width: '100%', flex:0.3, flexDirection:'column', justifyContent:'flex-start'}}>
+          <View style={{width:'100%', flexDirection:'row', justifyContent: 'flex-start'}}>
+            <Image
+              id='splash-screen-img'
+              style={{height:'100%', marginRight:5, width:'10%', resizeMode: 'contain'}}
+              source={verified}/>
+            <Text style={{fontSize:32, textAlign:'left', color:titleColor}}>Referenda</Text>
+          </View>
         </View>
 
-        <View style={{flex: 0.9}} />
-
-        <View>
+        <View style={{width: '100%', flex:0.7, flexDirection:'column', justifyContent:'flex-end'}}>
           <Text style={[styles.title, {color:titleColor}]}>{props.title}</Text>
           <Text style={[styles.text, {color:titleColor}]}>{props.text}</Text>
+          <View id='button-view' style={{height: 40,
+                                         width: '100%',
+                                         flexDirection: 'row',
+                                         justifyContent: 'space-between'}}>
+            <GradientButton
+              colors={['#d2d2d2', '#828282']}
+              style={[{height:'100%', width:'33%'}]}
+              rkType='large'
+              text='Sign In'
+              onPress={() => this.props.navigation.navigate('Login')}
+            />
+            <GradientButton
+              style={[{height:'100%', width:'33%'}]}
+              rkType='large'
+              text='Sign Up'
+              onPress={() => this.props.navigation.navigate('Telephone')}
+            />
+          </View>
         </View>
-
-        <View id='button-view' style={{height: 40,
-                                       width: '100%',
-                                       flexDirection: 'row',
-                                       justifyContent: 'space-between'}}>
-          <GradientButton
-            colors={['#d2d2d2', '#828282']}
-            style={[{height:'100%', width:'33%'}]}
-            rkType='large'
-            text='Sign In'
-            onPress={() => this.props.navigation.navigate('Login')}
-          />
-          <GradientButton
-            style={[{height:'100%', width:'33%'}]}
-            rkType='large'
-            text='Sign Up'
-            onPress={() => this.props.navigation.navigate('Telephone')}
-          />
-        </View>
-
-        <View style={{flex: 0.1}} />
       </ImageBackground>
     );
   }
