@@ -102,7 +102,11 @@ class DonatorInfoScreen extends Component {
         </View>
 
           <Text style={styles.title}>Donor Information</Text>
-          <RkTextInput rkType='rounded' placeholder='Mobile Phone Number' onChangeText={(phoneNumber) => { this.onPhoneNumber(phoneNumber) }}/>
+          <RkTextInput
+            rkType='rounded'
+            placeholder='Mobile Phone Number'
+            keyboardType='phone-pad' 
+            onChangeText={(phoneNumber) => { this.onPhoneNumber(phoneNumber) }}/>
           <RkTextInput rkType='rounded' placeholder='Occupation*' onChangeText={(occupation) => { this.onOccupation(occupation) }}/>
           <RkTextInput rkType='rounded' placeholder='Employer*' onChangeText={(employer) => { this.onEmployer(employer) }}/>
           {/* Make this asterisk a link to the relevant law for people to see / inspect. */}
