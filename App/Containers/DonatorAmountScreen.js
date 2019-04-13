@@ -14,6 +14,7 @@
  limitations under the License.
 */
 import React, { Component } from 'react';
+import { connect } from 'react-redux'
 import {
   StyleSheet,
   Text,
@@ -31,10 +32,11 @@ import {
   RkAvoidKeyboard,
 } from 'react-native-ui-kitten';
 import { GradientButton } from '../Components/gradientButton'
+import SettingsActions, { SettingsSelectors } from '../Redux/SettingsRedux'
 
 import candidate from '../Assets/avatars/agatha2.png'
 
-export default class DonatorAmountScreen extends Component {
+class DonatorAmountScreen extends Component {
   static navigationOptions = {
     title: 'Campaign Donation'.toUpperCase(),
   };
@@ -44,19 +46,39 @@ export default class DonatorAmountScreen extends Component {
 
   constructor() {
     super();
+    this.donationRecord = {}
+  }
+
+  componentDidMount() {
+    // redux is immutable, setting that obj will not allow changes
+    this.donationRecord = JSON.parse(JSON.stringify(this.props.donationRecord))
+    // TODO: might need to force re-render if values are non-default (i.e. user
+    //       pressed back button.)
   }
 
   getDonationButton(anAmount) {
+    // TODO: special case if other
+    //
     const buttonText = `\$${anAmount}`
-    const buttonPressText = `\$${anAmount} pressed ...`
     return (
       <GradientButton
-        colors={['#b2b2b2', '#626262']}
         rkType='medium'
         text={buttonText}
         style={styles.buttonStyle}
-        onPress={() => {console.log(buttonPressText)}}/>
+        onPress={() => {this.onDonationButtonPressed(anAmount)}}/>
     )
+  }
+
+  onDonationButtonPressed = (anAmount) => {
+    const amountStr = `\$${anAmount}`
+    this.donationRecord.amount = amountStr
+    this.props.storeDonationRecord(this.donationRecord)
+    this.props.navigation.navigate('Donator Info')
+  }
+
+  onNextButtonPressed = () => {
+    this.props.storeDonationRecord(this.donationRecord)
+    this.props.navigation.navigate('Donator Info')
   }
 
   render() {
@@ -107,12 +129,13 @@ export default class DonatorAmountScreen extends Component {
               {this.getDonationButton('Other')}
             </View>
           </View>
-
+{/*
           <GradientButton
             rkType='medium'
             text='Next'
             style={styles.buttonStyle}
-            onPress={() => {this.props.navigation.navigate('Donation')}}/>
+            onPress={() => {this.props.navigation.navigate('Donator Info')}}/>
+            */}
         </View>
       </View>
     );
@@ -156,3 +179,18 @@ const styles = StyleSheet.create({
     marginVertical:9
   },
 });
+
+const mapStateToProps = (state) => {
+  return {
+    donationRecord: SettingsSelectors.getDonationRecord(state)
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    storeDonationRecord: (donationRecord) =>
+      dispatch(SettingsActions.storeDonationRecord(donationRecord))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(DonatorAmountScreen)

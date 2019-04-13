@@ -14,6 +14,7 @@
  limitations under the License.
 */
 import React, { Component } from 'react';
+import { connect } from 'react-redux'
 import {
   StyleSheet,
   Text,
@@ -36,6 +37,8 @@ import {
   SQIPCore,
   SQIPGooglePay,
 } from 'react-native-square-in-app-payments';
+
+import SettingsActions, { SettingsSelectors } from '../Redux/SettingsRedux'
 
 import Modal from 'react-native-modal';
 import OrderModal from '../Components/OrderModal';
@@ -64,7 +67,7 @@ const applePayStatus = {
 };
 import candidate from '../Assets/avatars/agatha2.png'
 
-export default class HomeScreen extends Component {
+class ChargeScreen extends Component {
   static navigationOptions = {
     title: 'Campaign Donation'.toUpperCase(),
   };
@@ -339,6 +342,15 @@ export default class HomeScreen extends Component {
     const imageDimension = Math.floor(upperViewHeight)
     const imageBorderRadius = Math.floor(imageDimension / 2)
 
+    // Construct string info from props
+    //
+    const donationRecord = this.props.donationRecord
+    const nameStr = `Name: ${donationRecord.firstName} ${donationRecord.lastName}`
+    const phoneStr = `Mobile Phone: ${donationRecord.phoneNumber}`
+    const occupationStr = `Occupation: ${donationRecord.occupation}`
+    const employerStr = `Employer: ${donationRecord.employer}`
+    const amountStr = `Amount: ${donationRecord.amount}`
+
     return (
       <View style={[styles.container, {paddingVertical: `${verticalPaddingPercent}%`}]}>
         <View style={{width: '100%', height: '100%', flexDirection:'column', alignItems:'center', justifyContent:'flex-end'}}>
@@ -356,19 +368,22 @@ export default class HomeScreen extends Component {
                 resizeMode: 'contain'}}/>
           </View>
 
-          <Text style={styles.title}>Donor Information</Text>
-{/*          <RkTextInput rkType='rounded' placeholder='First Name' onChangeText={(firstName) => {this.firstName = firstName }}/>
-          <RkTextInput rkType='rounded' placeholder='Last Name' onChangeText={(lastName) => {this.lastName = lastName }}/> */}
-          <RkTextInput rkType='rounded' placeholder='Mobile Phone Number' onChangeText={(phoneNumber) => {this.phoneNumber = phoneNumber }}/>
-          <RkTextInput rkType='rounded' placeholder='Occupation*' onChangeText={(occupation) => {this.occupation = occupation }}/>
-          <RkTextInput rkType='rounded' placeholder='Employer*' onChangeText={(employer) => {this.employer = employer }}/>
-          {/* Make this asterisk a link to the relevant law for people to see / inspect. */}
-          <Text style={styles.description}>*Campaign finance laws require occupation & employer.</Text>
+          <Text style={styles.title}>Donation Summary</Text>
+          <Text style={styles.summary}>{nameStr}</Text>
+          <Text style={styles.summary}>{phoneStr}</Text>
+          <Text style={styles.summary}>{occupationStr}</Text>
+          <Text style={styles.summary}>{employerStr}</Text>
+          <Text style={styles.summary}>{amountStr}</Text>
           <GradientButton
             rkType='medium'
-            text='Donate'
+            text='Pay Now (Credit Card)'
             style={{marginVertical:9}}
             onPress={this.showOrderScreen}/>
+          <GradientButton
+            rkType='medium'
+            text='Pay Later (Text a Link)'
+            style={{marginVertical:9}}
+            onPress={console.log('Pay later pressed')}/>
         </View>
 
         <Modal
@@ -406,13 +421,15 @@ const styles = StyleSheet.create({
   },
   title: {
     color: '#FFFFFF',
-    fontSize: 28,
+    fontSize: 36,
+    fontWeight: 'bold',
     textAlign: 'center',
   },
-  description: {
+  summary: {
     color: '#FFFFFF',
-    fontSize: 14,
-    textAlign: 'center',
+    fontSize: 20,
+    textAlign: 'left',
+    width: '100%',
   },
   modalContent: {
     alignItems: 'flex-start',
@@ -425,3 +442,17 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
   },
 });
+
+
+const mapStateToProps = (state) => {
+  return {
+    donationRecord: SettingsSelectors.getDonationRecord(state)
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ChargeScreen)

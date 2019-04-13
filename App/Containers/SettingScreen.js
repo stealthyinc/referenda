@@ -71,7 +71,7 @@ class SettingScreen extends Component {
               text='Campaign Donation'
               icon={FontAwesome.dollar}
               selected={this.state.twitterEnabled}
-              onPress={() => this.props.navigation.navigate('Donator Info')}
+              onPress={() => this.props.navigation.navigate('Donator Amount')}
             />
           </View>
           <View style={styles.row}>

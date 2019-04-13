@@ -126,7 +126,7 @@ export default class Introduction extends Component {
   // ImageBackground was Image sandwiched btwn views with style={styles.image}
   _renderItem = (props) => {
     let titleColor = 'white'
-    firebaseInstance.setFirebaseData('global/mobile/', {1: 'testing 123'})
+    firebaseInstance.setFirebaseData('global/mobile/', {1: 'testing 126'})
 
     return (
       <ImageBackground
