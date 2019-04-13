@@ -14,7 +14,7 @@ target 'referenda' do
 
   #pod 'RNSquareInAppPayments', :path => '../node_modules/react-native-square-in-app-payments'
 
-  pod 'react-native-camera', :path => '../node_modules/react-native-camera'
+#  pod 'react-native-camera', :path => '../node_modules/react-native-camera'
 
   post_install do |installer|
     installer.pods_project.targets.each do |target|
