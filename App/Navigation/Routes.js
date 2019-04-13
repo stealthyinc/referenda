@@ -16,6 +16,8 @@ import CalendarScreen from '../Containers/CalendarScreen'
 import CombinedScreen from '../Containers/CombinedScreen'
 import AuthLoadingScreen from '../Containers/AuthLoadingScreen'
 import VideoScreen from '../Containers/VideoScreen'
+import DonatorInfoScreen from '../Containers/DonatorInfoScreen'
+import DonatorAmountScreen from '../Containers/DonatorAmountScreen'
 import ChargeScreen from '../Containers/ChargeScreen'
 import Settings from '../Containers/SettingScreen'
 
@@ -150,6 +152,18 @@ export const MainRoutes = [
     icon: FontIcons.other,
     screen: CampaignerScreen,
     children: [
+      {
+        id: 'Donator Info',
+        title: 'Donator Info',
+        screen: DonatorInfoScreen,
+        children: [],
+      },
+      {
+        id: 'Donator Amount',
+        title: 'Donator Amount',
+        screen: DonatorAmountScreen,
+        children: [],
+      },
       {
         id: 'Donation',
         title: 'Donation',
