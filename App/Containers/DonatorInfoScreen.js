@@ -46,13 +46,6 @@ class DonatorInfoScreen extends Component {
     this.donationRecord = {}
   }
 
-  componentDidMount() {
-    // redux is immutable, setting that obj will not allow changes
-    this.donationRecord = JSON.parse(JSON.stringify(this.props.donationRecord))
-    // TODO: might need to force re-render if values are non-default (i.e. user
-    //       pressed back button.)
-  }
-
   onPhoneNumber = (aPhoneNumber) => {
     this.donationRecord.phoneNumber = aPhoneNumber
   }
@@ -66,7 +59,9 @@ class DonatorInfoScreen extends Component {
   }
 
   onNextButtonPressed = () => {
-    this.props.storeDonationRecord(this.donationRecord)
+    const reduxDonationRecord = JSON.parse(JSON.stringify(this.props.donationRecord))
+    const merge = Object.assign(reduxDonationRecord, this.donationRecord)
+    this.props.storeDonationRecord(merge)
     this.props.navigation.navigate('Donator Name')
   }
 
@@ -105,7 +100,7 @@ class DonatorInfoScreen extends Component {
           <RkTextInput
             rkType='rounded'
             placeholder='Mobile Phone Number'
-            keyboardType='phone-pad' 
+            keyboardType='phone-pad'
             onChangeText={(phoneNumber) => { this.onPhoneNumber(phoneNumber) }}/>
           <RkTextInput rkType='rounded' placeholder='Occupation*' onChangeText={(occupation) => { this.onOccupation(occupation) }}/>
           <RkTextInput rkType='rounded' placeholder='Employer*' onChangeText={(employer) => { this.onEmployer(employer) }}/>

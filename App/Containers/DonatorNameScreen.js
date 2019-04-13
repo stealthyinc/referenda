@@ -46,13 +46,6 @@ class DonatorNameScreen extends Component {
     this.donationRecord = {}
   }
 
-  componentDidMount() {
-    // redux is immutable, setting that obj will not allow changes
-    this.donationRecord = JSON.parse(JSON.stringify(this.props.donationRecord))
-    // TODO: might need to force re-render if values are non-default (i.e. user
-    //       pressed back button.)
-  }
-
   onFirstName = (aFirstName) => {
     this.donationRecord.firstName = aFirstName
   }
@@ -62,7 +55,9 @@ class DonatorNameScreen extends Component {
   }
 
   onNextButtonPressed = () => {
-    this.props.storeDonationRecord(this.donationRecord)
+    const reduxDonationRecord = JSON.parse(JSON.stringify(this.props.donationRecord))
+    const merge = Object.assign(reduxDonationRecord, this.donationRecord)
+    this.props.storeDonationRecord(merge)
     this.props.navigation.navigate('Donation')
   }
 
@@ -105,7 +100,7 @@ class DonatorNameScreen extends Component {
     const imageDimension = Math.floor(upperViewHeight)
     const imageBorderRadius = Math.floor(imageDimension / 2)
 
-    const donationRecord = this.props.donationRecord
+    const donationRecord = JSON.parse(JSON.stringify(this.props.donationRecord))
 
     return (
       <RkAvoidKeyboard style={[styles.container, {paddingVertical: `${verticalPaddingPercent}%`}]}>

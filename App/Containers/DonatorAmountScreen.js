@@ -49,13 +49,6 @@ class DonatorAmountScreen extends Component {
     this.donationRecord = {}
   }
 
-  componentDidMount() {
-    // redux is immutable, setting that obj will not allow changes
-    this.donationRecord = JSON.parse(JSON.stringify(this.props.donationRecord))
-    // TODO: might need to force re-render if values are non-default (i.e. user
-    //       pressed back button.)
-  }
-
   getDonationButton(anAmount) {
     // TODO: special case if other
     //
@@ -77,7 +70,9 @@ class DonatorAmountScreen extends Component {
   }
 
   onNextButtonPressed = () => {
-    this.props.storeDonationRecord(this.donationRecord)
+    const reduxDonationRecord = JSON.parse(JSON.stringify(this.props.donationRecord))
+    const merge = Object.assign(reduxDonationRecord, this.donationRecord)
+    this.props.storeDonationRecord(merge)
     this.props.navigation.navigate('Donator Info')
   }
 
