@@ -137,6 +137,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-background-fetch')
     compile project(':react-native-firebase')
     compile project(':react-native-square-in-app-payments')
     compile project(':react-native-payments')
