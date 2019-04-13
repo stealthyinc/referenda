@@ -36,7 +36,7 @@ import SettingsActions, { SettingsSelectors } from '../Redux/SettingsRedux'
 
 import candidate from '../Assets/avatars/agatha2.png'
 
-class DonatorInfoScreen extends Component {
+class DonatorNameScreen extends Component {
   static navigationOptions = {
     title: 'Campaign Donation'.toUpperCase(),
   };
@@ -53,21 +53,17 @@ class DonatorInfoScreen extends Component {
     //       pressed back button.)
   }
 
-  onPhoneNumber = (aPhoneNumber) => {
-    this.donationRecord.phoneNumber = aPhoneNumber
+  onFirstName = (aFirstName) => {
+    this.donationRecord.firstName = aFirstName
   }
 
-  onOccupation = (anOccupation) => {
-    this.donationRecord.occupation = anOccupation
-  }
-
-  onEmployer = (anEmployer) => {
-    this.donationRecord.employer = anEmployer
+  onLastname = (aLastName) => {
+    this.donationRecord.lastName = aLastName
   }
 
   onNextButtonPressed = () => {
     this.props.storeDonationRecord(this.donationRecord)
-    this.props.navigation.navigate('Donator Name')
+    this.props.navigation.navigate('Donation')
   }
 
   render() {
@@ -102,11 +98,8 @@ class DonatorInfoScreen extends Component {
         </View>
 
           <Text style={styles.title}>Donor Information</Text>
-          <RkTextInput rkType='rounded' placeholder='Mobile Phone Number' onChangeText={(phoneNumber) => { this.onPhoneNumber(phoneNumber) }}/>
-          <RkTextInput rkType='rounded' placeholder='Occupation*' onChangeText={(occupation) => { this.onOccupation(occupation) }}/>
-          <RkTextInput rkType='rounded' placeholder='Employer*' onChangeText={(employer) => { this.onEmployer(employer) }}/>
-          {/* Make this asterisk a link to the relevant law for people to see / inspect. */}
-          <Text style={styles.description}>*Campaign finance laws require occupation & employer.</Text>
+          <RkTextInput rkType='rounded' placeholder='First Name' onChangeText={(firstName) => {this.onFirstName(firstName) }}/>
+          <RkTextInput rkType='rounded' placeholder='Last Name' onChangeText={(lastName) => {this.onLastname(lastName) }}/>
           <GradientButton
             rkType='medium'
             text='Next'
@@ -155,4 +148,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(DonatorInfoScreen)
+export default connect(mapStateToProps, mapDispatchToProps)(DonatorNameScreen)

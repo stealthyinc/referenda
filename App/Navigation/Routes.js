@@ -17,50 +17,12 @@ import CombinedScreen from '../Containers/CombinedScreen'
 import AuthLoadingScreen from '../Containers/AuthLoadingScreen'
 import VideoScreen from '../Containers/VideoScreen'
 import DonatorInfoScreen from '../Containers/DonatorInfoScreen'
-// import DonatorNameScreen from '../Containers/DonatorNameScreen'
+import DonatorNameScreen from '../Containers/DonatorNameScreen'
 import DonatorAmountScreen from '../Containers/DonatorAmountScreen'
 import ChargeScreen from '../Containers/ChargeScreen'
 import Settings from '../Containers/SettingScreen'
 
 export const MainRoutes = [
-  // {
-  //   id: 'Combined',
-  //   title: 'Combined',
-  //   screen: CombinedScreen,
-  //   children: [],
-  // },
-//  {
-  //   id: 'LoginMenu',
-  //   title: 'Introduction',
-  //   icon: FontIcons.login,
-  //   screen: IntroductionScreen,
-  //   children: [
-  //     {
-  //       id: 'Login',
-  //       title: 'Login',
-  //       screen: LoginScreen,
-  //       children: [],
-  //     },
-  //     {
-  //       id: 'Telephone',
-  //       title: 'Telephone',
-  //       screen: TelephoneScreen,
-  //       children: [],
-  //     },
-  //     {
-  //       id: 'Age',
-  //       title: 'Age',
-  //       screen: AgeScreen,
-  //       children: [],
-  //     },
-  //     {
-  //       id: 'Keychain',
-  //       title: 'Keychain',
-  //       screen: KeychainScreen,
-  //       children: [],
-  //     },
-  //   ],
-  // },
   {
     id: 'Start',
     title: 'Start',
@@ -165,12 +127,12 @@ export const MainRoutes = [
         screen: DonatorInfoScreen,
         children: [],
       },
-      // {
-      //   id: 'Donator Name',
-      //   title: 'Donator Name',
-      //   screen: DonatorNameScreen,
-      //   children: [],
-      // }
+      {
+        id: 'Donator Name',
+        title: 'Donator Name',
+        screen: DonatorNameScreen,
+        children: [],
+      },
       {
         id: 'Donation',
         title: 'Donation',
