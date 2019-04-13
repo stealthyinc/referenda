@@ -66,6 +66,30 @@ class DonatorNameScreen extends Component {
     this.props.navigation.navigate('Donation')
   }
 
+  getInputElement = (aPlaceHolder, aCallback, aValue=undefined, isPhoneNumber=false) => {
+    const keyboardType = (isPhoneNumber) ? 'phone-pad' : 'default'
+    if (aValue) {
+      return (
+        <RkTextInput
+          rkType='rounded'
+          keyboardType={keyboardType}
+          placeholder={aPlaceHolder}
+          value={aValue}
+          onChangeText={aCallback}
+          />
+      )
+    }
+
+    return (
+      <RkTextInput
+        rkType='rounded'
+        keyboardType={keyboardType}
+        placeholder={aPlaceHolder}
+        onChangeText={aCallback}
+        />
+    )
+  }
+
   render() {
     // Calculate dimensions for the Agatha image:
     //
@@ -80,6 +104,8 @@ class DonatorNameScreen extends Component {
     const upperViewHeight = mainViewHeight * imageHeightViewPortPercent / 100
     const imageDimension = Math.floor(upperViewHeight)
     const imageBorderRadius = Math.floor(imageDimension / 2)
+
+    const donationRecord = this.props.donationRecord
 
     return (
       <RkAvoidKeyboard style={[styles.container, {paddingVertical: `${verticalPaddingPercent}%`}]}>
@@ -98,8 +124,10 @@ class DonatorNameScreen extends Component {
         </View>
 
           <Text style={styles.title}>Donor Information</Text>
-          <RkTextInput rkType='rounded' placeholder='First Name' onChangeText={(firstName) => {this.onFirstName(firstName) }}/>
-          <RkTextInput rkType='rounded' placeholder='Last Name' onChangeText={(lastName) => {this.onLastname(lastName) }}/>
+          {this.getInputElement('First Name', this.onFirstName, donationRecord.firstName)}
+          {this.getInputElement('Last Name', this.onLastname, donationRecord.lastName)}
+          {/* <RkTextInput rkType='rounded' placeholder='First Name' onChangeText={(firstName) => {this.onFirstName(firstName) }}/>
+          <RkTextInput rkType='rounded' placeholder='Last Name' onChangeText={(lastName) => {this.onLastname(lastName) }}/> */}
           <GradientButton
             rkType='medium'
             text='Next'
