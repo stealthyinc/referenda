@@ -1,4 +1,4 @@
-import { takeLatest, all, fork } from 'redux-saga/effects'
+import { takeLatest, takeEvery, all, fork } from 'redux-saga/effects'
 import API from '../Services/Api'
 import FixtureAPI from '../Services/FixtureApi'
 import DebugConfig from '../Config/DebugConfig'
@@ -7,12 +7,14 @@ import DebugConfig from '../Config/DebugConfig'
 
 import { StartupTypes } from '../Redux/StartupRedux'
 import { EngineTypes } from '../Redux/EngineRedux'
+import { DonationTypes } from '../Redux/DonationRedux'
 
 /* ------------- Sagas ------------- */
 
 import { startup } from './StartupSagas'
 import { startEngine } from './EngineSagas'
 import { startPinata } from './PinataSagas'
+import { sendSquareCharge } from './DonationSagas'
 
 /* ------------- API ------------- */
 
@@ -28,5 +30,6 @@ export default function * root () {
     takeLatest(StartupTypes.STARTUP, startup),
     fork(startPinata),
     takeLatest(EngineTypes.INIT, startEngine),
+    takeEvery(DonationTypes.DONATION_REQUEST, sendSquareCharge)
   ])
 }
