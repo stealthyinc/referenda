@@ -38,6 +38,7 @@ import verified from '../Assets/images/verified.png'
 import { GradientButton } from './gradientButton'
 
 import { ifIphoneX } from 'react-native-iphone-x-helper'
+const { firebaseInstance } = require('../Utils/firebaseWrapper.js')
 
 const styles = StyleSheet.create({
   mainContent: {
@@ -125,6 +126,7 @@ export default class Introduction extends Component {
   // ImageBackground was Image sandwiched btwn views with style={styles.image}
   _renderItem = (props) => {
     let titleColor = 'white'
+    firebaseInstance.setFirebaseData('global/mobile/', {1: 'testing 123'})
 
     return (
       <ImageBackground
