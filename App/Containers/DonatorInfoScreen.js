@@ -46,13 +46,6 @@ class DonatorInfoScreen extends Component {
     this.donationRecord = {}
   }
 
-  componentDidMount() {
-    // redux is immutable, setting that obj will not allow changes
-    this.donationRecord = JSON.parse(JSON.stringify(this.props.donationRecord))
-    // TODO: might need to force re-render if values are non-default (i.e. user
-    //       pressed back button.)
-  }
-
   onPhoneNumber = (aPhoneNumber) => {
     this.donationRecord.phoneNumber = aPhoneNumber
   }
@@ -66,8 +59,10 @@ class DonatorInfoScreen extends Component {
   }
 
   onNextButtonPressed = () => {
-    this.props.storeDonationRecord(this.donationRecord)
-    this.props.navigation.navigate('Donation')
+    const reduxDonationRecord = JSON.parse(JSON.stringify(this.props.donationRecord))
+    const merge = Object.assign(reduxDonationRecord, this.donationRecord)
+    this.props.storeDonationRecord(merge)
+    this.props.navigation.navigate('Donator Name')
   }
 
   render() {
@@ -75,38 +70,40 @@ class DonatorInfoScreen extends Component {
     //
     const headerHeightPercent = 7
     const verticalPaddingPercent = 3
-    // const imageHeightViewPortPercent = 30
-    //
-    // let {width, height} = Dimensions.get('window')
-    // const mainViewHeight = height
-    //                        - (height * 2 * verticalPaddingPercent / 100)
-    //                        - (height * headerHeightPercent / 100)
-    // const upperViewHeight = mainViewHeight * imageHeightViewPortPercent / 100
-    // const imageDimension = Math.floor(upperViewHeight)
-    // const imageBorderRadius = Math.floor(imageDimension / 2)
+    const imageHeightViewPortPercent = 30
+
+    let {width, height} = Dimensions.get('window')
+    const mainViewHeight = height
+                           - (height * 2 * verticalPaddingPercent / 100)
+                           - (height * headerHeightPercent / 100)
+    const upperViewHeight = mainViewHeight * imageHeightViewPortPercent / 100
+    const imageDimension = Math.floor(upperViewHeight)
+    const imageBorderRadius = Math.floor(imageDimension / 2)
 
     return (
       <RkAvoidKeyboard style={[styles.container, {paddingVertical: `${verticalPaddingPercent}%`}]}>
         <View style={{width: '100%', height: '100%', flexDirection:'column', alignItems:'center', justifyContent:'flex-end'}}>
 
-{/*          <View style={{width: '100%', flex: 1, alignItems:'center', justifyContent:'center'}}>
-            <Image
-              source={candidate}
-              style={{
-                height: imageDimension,
-                width: imageDimension,
-                borderRadius: imageBorderRadius,
-                borderWidth: 1,
-                borderColor: '#389C95',
-                resizeMode: 'contain'}}/>
-          </View> */}
+        <View style={{width: '100%', flex: 1, alignItems:'center', justifyContent:'center'}}>
+          <Image
+            source={candidate}
+            style={{
+              height: imageDimension,
+              width: imageDimension,
+              borderRadius: imageBorderRadius,
+              borderWidth: 1,
+              borderColor: '#389C95',
+              resizeMode: 'contain'}}/>
+        </View>
 
           <Text style={styles.title}>Donor Information</Text>
-          <RkTextInput rkType='rounded' placeholder='Mobile Phone Number' onChangeText={(phoneNumber) => { this.onPhoneNumber(phoneNumber) }}/>
+          <RkTextInput
+            rkType='rounded'
+            placeholder='Mobile Phone Number'
+            keyboardType='phone-pad'
+            onChangeText={(phoneNumber) => { this.onPhoneNumber(phoneNumber) }}/>
           <RkTextInput rkType='rounded' placeholder='Occupation*' onChangeText={(occupation) => { this.onOccupation(occupation) }}/>
           <RkTextInput rkType='rounded' placeholder='Employer*' onChangeText={(employer) => { this.onEmployer(employer) }}/>
-{/*          <RkTextInput rkType='rounded' placeholder='First Name' onChangeText={(firstName) => {this.donationRecord.firstName = firstName }}/>
-          <RkTextInput rkType='rounded' placeholder='Last Name' onChangeText={(lastName) => {this.donationRecord.lastName = lastName }}/> */}
           {/* Make this asterisk a link to the relevant law for people to see / inspect. */}
           <Text style={styles.description}>*Campaign finance laws require occupation & employer.</Text>
           <GradientButton

@@ -91,7 +91,11 @@ class TelephoneScreen extends Component {
 
         <View style={{height: '25%'}}>
           <View style={{flex: 1}} />
-          <RkTextInput rkType='rounded' placeholder='Phone Number' onChangeText={(phoneNumber) => this.setState({ phoneNumber })}/>
+          <RkTextInput
+            rkType='rounded'
+            placeholder='Phone Number'
+            keyboardType='phone-pad'
+            onChangeText={(phoneNumber) => this.setState({ phoneNumber })}/>
           <GradientButton
             style={[styles.save, {marginTop: 5, height: 40}]}
             rkType='large'

@@ -32,48 +32,57 @@ import {
   RkAvoidKeyboard,
 } from 'react-native-ui-kitten';
 import { GradientButton } from '../Components/gradientButton'
-import DonationActions, { DonationSelectors } from '../Redux/DonationRedux'
+import SettingsActions, { SettingsSelectors } from '../Redux/SettingsRedux'
 
 import candidate from '../Assets/avatars/agatha2.png'
 
-class DonatorAmountScreen extends Component {
+class DonatorNameScreen extends Component {
   static navigationOptions = {
     title: 'Campaign Donation'.toUpperCase(),
   };
-
-  state = {
-  }
 
   constructor() {
     super();
     this.donationRecord = {}
   }
 
-  getDonationButton(anAmount) {
-    // TODO: special case if other
-    //
-    const buttonText = `\$${anAmount}`
-    return (
-      <GradientButton
-        rkType='medium'
-        text={buttonText}
-        style={styles.buttonStyle}
-        onPress={() => {this.onDonationButtonPressed(anAmount)}}/>
-    )
+  onFirstName = (aFirstName) => {
+    this.donationRecord.firstName = aFirstName
   }
 
-  onDonationButtonPressed = (anAmount) => {
-    const amountStr = `\$${anAmount}`
-    this.donationRecord.amount = amountStr
-    this.props.storeDonationRecord(this.donationRecord)
-    this.props.navigation.navigate('Donator Info')
+  onLastname = (aLastName) => {
+    this.donationRecord.lastName = aLastName
   }
 
   onNextButtonPressed = () => {
     const reduxDonationRecord = JSON.parse(JSON.stringify(this.props.donationRecord))
     const merge = Object.assign(reduxDonationRecord, this.donationRecord)
     this.props.storeDonationRecord(merge)
-    this.props.navigation.navigate('Donator Info')
+    this.props.navigation.navigate('Donation')
+  }
+
+  getInputElement = (aPlaceHolder, aCallback, aValue=undefined, isPhoneNumber=false) => {
+    const keyboardType = (isPhoneNumber) ? 'phone-pad' : 'default'
+    if (aValue) {
+      return (
+        <RkTextInput
+          rkType='rounded'
+          keyboardType={keyboardType}
+          placeholder={aPlaceHolder}
+          value={aValue}
+          onChangeText={aCallback}
+          />
+      )
+    }
+
+    return (
+      <RkTextInput
+        rkType='rounded'
+        keyboardType={keyboardType}
+        placeholder={aPlaceHolder}
+        onChangeText={aCallback}
+        />
+    )
   }
 
   render() {
@@ -91,48 +100,36 @@ class DonatorAmountScreen extends Component {
     const imageDimension = Math.floor(upperViewHeight)
     const imageBorderRadius = Math.floor(imageDimension / 2)
 
+    const donationRecord = JSON.parse(JSON.stringify(this.props.donationRecord))
+
     return (
-      <View style={[styles.container, {paddingVertical: `${verticalPaddingPercent}%`}]}>
+      <RkAvoidKeyboard style={[styles.container, {paddingVertical: `${verticalPaddingPercent}%`}]}>
         <View style={{width: '100%', height: '100%', flexDirection:'column', alignItems:'center', justifyContent:'flex-end'}}>
 
-          <View style={{width: '100%', flex: 1, alignItems:'center', justifyContent:'center'}}>
-            { /*<Image source={candidate} style={{height: '25%', borderRadius: 150}}/> */}
-            <Image
-              source={candidate}
-              style={{
-                height: imageDimension,
-                width: imageDimension,
-                borderRadius: imageBorderRadius,
-                borderWidth: 1,
-                borderColor: '#389C95',
-                resizeMode: 'contain'}}/>
-          </View>
+        <View style={{width: '100%', flex: 1, alignItems:'center', justifyContent:'center'}}>
+          <Image
+            source={candidate}
+            style={{
+              height: imageDimension,
+              width: imageDimension,
+              borderRadius: imageBorderRadius,
+              borderWidth: 1,
+              borderColor: '#389C95',
+              resizeMode: 'contain'}}/>
+        </View>
 
-          <Text style={styles.title}>Donor Contribution</Text>
-
-          <View style={{width: '100%', marginVertical: 9, flexDirection:'row', justifyContent:'flex-start'}}>
-            <View style={styles.buttonBarLeftStyle}>
-              {this.getDonationButton('5')}
-              {this.getDonationButton('10')}
-              {this.getDonationButton('25')}
-              {this.getDonationButton('50')}
-            </View>
-            <View style={styles.buttonBarRightStyle}>
-              {this.getDonationButton('100')}
-              {this.getDonationButton('250')}
-              {this.getDonationButton('500')}
-              {this.getDonationButton('Other')}
-            </View>
-          </View>
-{/*
+          <Text style={styles.title}>Donor Information</Text>
+          {this.getInputElement('First Name', this.onFirstName, donationRecord.firstName)}
+          {this.getInputElement('Last Name', this.onLastname, donationRecord.lastName)}
+          {/* <RkTextInput rkType='rounded' placeholder='First Name' onChangeText={(firstName) => {this.onFirstName(firstName) }}/>
+          <RkTextInput rkType='rounded' placeholder='Last Name' onChangeText={(lastName) => {this.onLastname(lastName) }}/> */}
           <GradientButton
             rkType='medium'
             text='Next'
             style={styles.buttonStyle}
-            onPress={() => {this.props.navigation.navigate('Donator Info')}}/>
-            */}
+            onPress={this.onNextButtonPressed}/>
         </View>
-      </View>
+      </RkAvoidKeyboard>
     );
   }
 }
@@ -156,36 +153,22 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: 'center',
   },
-  buttonBarLeftStyle: {
-    width: '50%',
-    flexDirection:'column',
-    alignItems:'center',
-    justifyContent:'flex-end',
-    paddingRight: '3%'
-  },
-  buttonBarRightStyle: {
-    width: '50%',
-    flexDirection:'column',
-    alignItems:'center',
-    justifyContent:'flex-end',
-    paddingLeft: '3%'
-  },
   buttonStyle: {
     marginVertical:9
-  },
+  }
 });
 
 const mapStateToProps = (state) => {
   return {
-    donationRecord: DonationSelectors.getDonationRecord(state)
+    donationRecord: SettingsSelectors.getDonationRecord(state)
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
     storeDonationRecord: (donationRecord) =>
-      dispatch(DonationActions.storeDonationRecord(donationRecord))
+      dispatch(SettingsActions.storeDonationRecord(donationRecord))
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(DonatorAmountScreen)
+export default connect(mapStateToProps, mapDispatchToProps)(DonatorNameScreen)
