@@ -20,7 +20,16 @@ import {
   View,
   Image,
   Platform,
+  Dimensions,
 } from 'react-native';
+import {
+  RkButton,
+  RkText,
+  RkTextInput,
+  RkStyleSheet,
+  RkTheme,
+  RkAvoidKeyboard,
+} from 'react-native-ui-kitten';
 import {
   SQIPCardEntry,
   SQIPApplePay,
@@ -44,9 +53,9 @@ import {
 import chargeCardNonce from '../Utils/Charge';
 import { GradientButton } from '../Components/gradientButton'
 
-require('../Images/iconCookie.png');
+import { ifIphoneX } from 'react-native-iphone-x-helper'
 
-const cookieImage = require('../Images/iconCookie.png');
+require('../Images/iconCookie.png');
 
 const applePayStatus = {
   none: 0,
@@ -316,18 +325,52 @@ export default class HomeScreen extends Component {
   }
 
   render() {
+    // Calculate dimensions for the Agatha image:
+    //
+    const headerHeightPercent = 7
+    const verticalPaddingPercent = 3
+    const imageHeightViewPortPercent = 30
+
+    let {width, height} = Dimensions.get('window')
+    const mainViewHeight = height
+                           - (height * 2 * verticalPaddingPercent / 100)
+                           - (height * headerHeightPercent / 100)
+    const upperViewHeight = mainViewHeight * imageHeightViewPortPercent / 100
+    const imageDimension = Math.floor(upperViewHeight)
+    const imageBorderRadius = Math.floor(imageDimension / 2)
+
     return (
-      <View style={styles.container}>
-        <Image source={candidate} style={{height: 300, width: 300, borderRadius: 150}}/>
-        <Text style={styles.title}>Agatha for Congress 🇺🇸</Text>
-        <Text style={styles.description}>
-          Help us win CA District 12!
-        </Text>
-        <GradientButton
-          rkType='medium'
-          text='Donate'
-          onPress={this.showOrderScreen}
-        />
+      <View style={[styles.container, {paddingVertical: `${verticalPaddingPercent}%`}]}>
+        <View style={{width: '100%', height: '100%', flexDirection:'column', alignItems:'center', justifyContent:'flex-end'}}>
+
+          <View style={{width: '100%', flex: 1, alignItems:'center', justifyContent:'center'}}>
+            { /*<Image source={candidate} style={{height: '25%', borderRadius: 150}}/> */}
+            <Image
+              source={candidate}
+              style={{
+                height: imageDimension,
+                width: imageDimension,
+                borderRadius: imageBorderRadius,
+                borderWidth: 1,
+                borderColor: '#389C95',
+                resizeMode: 'contain'}}/>
+          </View>
+
+          <Text style={styles.title}>Donor Information</Text>
+{/*          <RkTextInput rkType='rounded' placeholder='First Name' onChangeText={(firstName) => {this.firstName = firstName }}/>
+          <RkTextInput rkType='rounded' placeholder='Last Name' onChangeText={(lastName) => {this.lastName = lastName }}/> */}
+          <RkTextInput rkType='rounded' placeholder='Mobile Phone Number' onChangeText={(phoneNumber) => {this.phoneNumber = phoneNumber }}/>
+          <RkTextInput rkType='rounded' placeholder='Occupation*' onChangeText={(occupation) => {this.occupation = occupation }}/>
+          <RkTextInput rkType='rounded' placeholder='Employer*' onChangeText={(employer) => {this.employer = employer }}/>
+          {/* Make this asterisk a link to the relevant law for people to see / inspect. */}
+          <Text style={styles.description}>*Campaign finance laws require occupation & employer.</Text>
+          <GradientButton
+            rkType='medium'
+            text='Donate'
+            style={{marginVertical:9}}
+            onPress={this.showOrderScreen}/>
+        </View>
+
         <Modal
           isVisible={this.state.showingBottomSheet}
           style={styles.bottomModal}
@@ -355,18 +398,20 @@ const styles = StyleSheet.create({
     margin: 0,
   },
   container: {
-    alignItems: 'center',
     backgroundColor: '#78CCC5',
     flex: 1,
-    justifyContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: '6%',
+  },
+  title: {
+    color: '#FFFFFF',
+    fontSize: 28,
+    textAlign: 'center',
   },
   description: {
     color: '#FFFFFF',
-    fontSize: 16,
-    marginTop: 20,
-    marginBottom: 20,
-    marginLeft: 50,
-    marginRight: 50,
+    fontSize: 14,
     textAlign: 'center',
   },
   modalContent: {
@@ -378,10 +423,5 @@ const styles = StyleSheet.create({
     flex: 0,
     flexShrink: 1,
     justifyContent: 'flex-start',
-  },
-  title: {
-    color: '#FFFFFF',
-    marginTop: 20,
-    fontSize: 28,
   },
 });

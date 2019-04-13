@@ -185,7 +185,7 @@ class CampaignerScreen extends Component {
   }
 
   donateButtonAction() {
-    this.props.navigation.navigate('Donation')
+    this.props.navigation.navigate('Donator Info')
   }
 
   getHeader(aTitle, backNavigationState=undefined) {
