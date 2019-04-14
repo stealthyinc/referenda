@@ -341,7 +341,39 @@ export class ReferendaEngine extends EventEmitterAdapter {
   async creditCardDonation(theArguments) {
     console.log('engine - creditCardDonation')
     console.log(theArguments)
-    // TODO: firebase
+
+    if (!this.profile) {
+      throw `${this.uploadPost.name} failed because user is not logged in.`
+    }
+
+    const identityPublicKey = this.profile.getIdentityPublicKey()
+    if (theArguments &&
+        theArguments.hasOwnProperty('donationRecord')) {
+      const campaignPath = `global/mobile/${agathaCampaignId}`
+      const campaignAggregateDonationPath = `${campaignPath}/donate/all`
+      const campaignUserDonationPath = `${campaignPath}/donate/${identityPublicKey}`
+
+      const now = Date.now()
+      const donationPath = `${campaignUserDonationPath}/${now}`
+      const donationRecord = JSON.parse(JSON.stringify(theArguments.donationRecord))
+      donationRecord['cc'] = true
+
+      // TODO: should probably stringify these before setting them in firebase
+
+      // const data = {}
+      // const now = Date.now()
+      // data[now] = donationRecord
+      // console.log('Writing to firebase:')
+      // console.log(`  ${campaignUserDonationPath}`)
+      // console.log(`  ${now}`)
+      // console.log('    ', donationRecord)
+      //
+      firebaseInstance.setFirebaseData(donationPath, donationRecord)
+
+      // Need something more unique to set an aggregate value (collision possible
+     //  for UTC.)
+     // TODO:
+    }
   }
 
   /**
