@@ -1,5 +1,5 @@
 import { takeLatest, takeEvery, all, fork } from 'redux-saga/effects'
-import API from '../Services/Api'
+// import API from '../Services/Api'
 import FixtureAPI from '../Services/FixtureApi'
 import DebugConfig from '../Config/DebugConfig'
 
@@ -20,7 +20,6 @@ import { sendSquareCharge } from './DonationSagas'
 
 // The API we use is only used from Sagas, so we create it here and pass along
 // to the sagas which need it.
-const api = DebugConfig.useFixtures ? FixtureAPI : API.create()
 
 /* ------------- Connect Types To Sagas ------------- */
 

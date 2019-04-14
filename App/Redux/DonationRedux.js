@@ -44,8 +44,10 @@ export const DonationSelectors = {
 export const storeDonationRecord = (state, {donationRecord}) => state.merge({ donationRecord })
 
 // request the data from an api
-export const request = (state, { data }) =>
-  state.merge({ fetching: true, data, payload: null })
+export const request = (state, action) => {
+  const { data } = action
+  return state.merge({ fetching: true, data, payload: null })
+}
 
 // successful api lookup
 export const success = (state, action) => {

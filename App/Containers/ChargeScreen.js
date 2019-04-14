@@ -456,7 +456,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    chargeSquareRequest: (data) => dispatch(DonationActions.request(data))
+    chargeSquareRequest: (data) => dispatch(DonationActions.donationRequest(data))
   }
 }
 

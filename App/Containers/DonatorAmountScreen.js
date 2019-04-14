@@ -63,8 +63,8 @@ class DonatorAmountScreen extends Component {
   }
 
   onDonationButtonPressed = (anAmount) => {
-    const amountStr = `\$${anAmount}`
-    this.donationRecord.amount = amountStr
+    // const amountStr = `\$${anAmount}`
+    this.donationRecord.amount = anAmount
     this.props.storeDonationRecord(this.donationRecord)
     this.props.navigation.navigate('Donator Info')
   }
