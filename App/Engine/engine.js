@@ -160,46 +160,6 @@ export class ReferendaEngine extends EventEmitterAdapter {
     // TODO:
   }
 
-  async _gunWrite(aZipCode, aPostId, aSerPost) {
-    return new Promise((resolve, reject) => {
-      const userId = this.profile.getIdentityPublicKey()
-      const tempDate = new Date()
-      const date = `${tempDate.getFullYear()}${tempDate.getMonth()+1}${tempDate.getDate()}`
-      const dbPostPath = `${aZipCode}/${userId}/posts/${date}/${aPostId}`
-      console.info(`${this._gunWrite.name} writing to db: /${dbPostPath}`)
-
-      // production not working - debug by simplifying:
-      db.instance().get(`${aZipCode}`).get(userId).get('posts').get(`${date}`).get(`${aPostId}`).put(aSerPost, (ack) => {
-      // db.instance().get('testKey').put({post: aSerPost}, (ack) => {
-        // debugger
-        if (ack && ack.ok) {
-          resolve(ack.ok)
-        } else {
-          reject(`Unable to write to ${dbPostPath}.\n${ack.err}`)
-        }
-      })
-    })
-  }
-
-  async _gunRead(aZipCode, aPostId, aSerPost) {
-    return new Promise((resolve, reject) => {
-      const userId = this.profile.getIdentityPublicKey()
-      const tempDate = new Date()
-      const date = `${tempDate.getFullYear()}${tempDate.getMonth()+1}${tempDate.getDate()}`
-      const dbPostPath = `${aZipCode}/${userId}/posts/${date}/${aPostId}`
-      console.info(`${this._gunWrite.name} reading from db: /${dbPostPath}`)
-
-      // production not working - debug by simplifying:
-      db.instance().get(`${aZipCode}`).get(userId).get('posts').get(`${date}`).get(`${aPostId}`).once((data, key) => {
-      // db.instance().get('testKey').once((data, key) => {
-        // debugger
-        console.info(`Fetched key: ${key}`)
-        // console.dir(data)
-        resolve(data)
-      })
-    })
-  }
-
   /**
    * uploadPost - Receives an instance of the Post class, processes it to upload
    *              images / movies to a CDN, modifies the instance to reflect the
@@ -318,6 +278,48 @@ export class ReferendaEngine extends EventEmitterAdapter {
   }
 
   /**
+   * textDonation - Sends a constituent a text message with a link for them to
+   *                donate to the campaign.
+   *                Records the donation in this campaign's user's pending
+   *                donation bucket for confirmation with Square Database at
+   *                a later date.
+   *
+   * @param theArguments donationRecord, a JS object documented below.
+   * @throws If ...
+   *
+   * donationRecord is an object containing the following properties:
+   *   - amount:
+   *   - phoneNumber:
+   *   - firstName:
+   *   - lastName:
+   *   - occupation:
+   *   - employer:
+   *
+   */
+  async textDonation(theArguments) {
+    // TODO: PBJ Send a link via Twilio
+  }
+
+  /**
+   * creditCardDonation - Records teh donation in this campaign's user's
+   *                      completed donation bucket.
+   *                    - Sends the constituent a text message reciept, thanking
+   *                      them and indicating that a future App link will be
+   *                      sent, wherein they have special priviledges.
+   */
+  async creditCardDonation(theArguments) {
+
+  }
+
+  /**
+   *
+   */
+  async getDonationStatus(theArguments) {
+
+  }
+
+
+  /**
    *
    */
   async initEngine(anIdentityKeyPair) {
@@ -426,5 +428,45 @@ export class ReferendaEngine extends EventEmitterAdapter {
     }
 
     this.executingCommands = false
+  }
+
+  async _gunWrite(aZipCode, aPostId, aSerPost) {
+    return new Promise((resolve, reject) => {
+      const userId = this.profile.getIdentityPublicKey()
+      const tempDate = new Date()
+      const date = `${tempDate.getFullYear()}${tempDate.getMonth()+1}${tempDate.getDate()}`
+      const dbPostPath = `${aZipCode}/${userId}/posts/${date}/${aPostId}`
+      console.info(`${this._gunWrite.name} writing to db: /${dbPostPath}`)
+
+      // production not working - debug by simplifying:
+      db.instance().get(`${aZipCode}`).get(userId).get('posts').get(`${date}`).get(`${aPostId}`).put(aSerPost, (ack) => {
+      // db.instance().get('testKey').put({post: aSerPost}, (ack) => {
+        // debugger
+        if (ack && ack.ok) {
+          resolve(ack.ok)
+        } else {
+          reject(`Unable to write to ${dbPostPath}.\n${ack.err}`)
+        }
+      })
+    })
+  }
+
+  async _gunRead(aZipCode, aPostId, aSerPost) {
+    return new Promise((resolve, reject) => {
+      const userId = this.profile.getIdentityPublicKey()
+      const tempDate = new Date()
+      const date = `${tempDate.getFullYear()}${tempDate.getMonth()+1}${tempDate.getDate()}`
+      const dbPostPath = `${aZipCode}/${userId}/posts/${date}/${aPostId}`
+      console.info(`${this._gunWrite.name} reading from db: /${dbPostPath}`)
+
+      // production not working - debug by simplifying:
+      db.instance().get(`${aZipCode}`).get(userId).get('posts').get(`${date}`).get(`${aPostId}`).once((data, key) => {
+      // db.instance().get('testKey').once((data, key) => {
+        // debugger
+        console.info(`Fetched key: ${key}`)
+        // console.dir(data)
+        resolve(data)
+      })
+    })
   }
 }

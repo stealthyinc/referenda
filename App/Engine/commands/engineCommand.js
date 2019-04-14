@@ -95,7 +95,10 @@ class EngineCommand {
   static COMMAND_TYPES = {
     SIGN_UP: 'signUp',
     SIGN_IN: 'signIn',
-    UPLOAD_POST: 'uploadPost'
+    UPLOAD_POST: 'uploadPost',
+    TEXT_DONATION: 'textDonation',
+    CREDIT_CARD_DONATION: 'creditCardDonation',
+    GET_DONATION_STATUS: 'getDonationStatus'
   }
 
   /*
@@ -117,6 +120,37 @@ class EngineCommand {
     command.arguments = {
       aPublicIdentityKey,
       aPrivateIdentityKey
+    }
+    return command
+  }
+
+  /*
+   * Campaign commands:
+   **************************************
+   */
+  static textDonationCommand() {
+    const command = new EngineCommand()
+    command.commandType = EngineCommand.COMMAND_TYPES.TEXT_DONATION
+    command.arguments = {
+      // TODO
+    }
+    return command
+  }
+
+  static creditCardDonationCommand() {
+    const command = new EngineCommand()
+    command.commandType = EngineCommand.COMMAND_TYPES.CREDIT_CARD_DONATION
+    command.arguments = {
+      // TODO
+    }
+    return command
+  }
+
+  static getDonationStatus() {
+    const command = new EngineCommand()
+    command.commandType = EngineCommand.COMMAND_TYPES.CREDIT_CARD_DONATION
+    command.arguments = {
+      // TODO
     }
     return command
   }
