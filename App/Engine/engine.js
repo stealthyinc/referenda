@@ -7,6 +7,10 @@ import {db} from './database'
 import {Profile} from './data/profile'
 import {LocalStore} from './io/localStore'
 
+const { firebaseInstance } = require('../Utils/firebaseWrapper.js')
+
+const agathaCampaignId = 'zxY123np31Pnoqfng2123'
+
 export class ReferendaEngine extends EventEmitterAdapter {
 
   constructor () {
@@ -297,9 +301,34 @@ export class ReferendaEngine extends EventEmitterAdapter {
    *
    */
   async textDonation(theArguments) {
-    console.log('engine - textDonation')
-    console.log(theArguments)
-    // TODO: firebase
+    if (!this.profile) {
+      throw `${this.uploadPost.name} failed because user is not logged in.`
+    }
+
+    const identityPublicKey = this.profile.getIdentityPublicKey()
+    if (theArguments &&
+        theArguments.hasOwnProperty('donationRecord')) {
+      const campaignPath = `global/mobile/${agathaCampaignId}`
+      const campaignAggregateDonationPath = `${campaignPath}/donate/all`
+      const campaignUserDonationPath = `${campaignPath}/donate/${identityPublicKey}`
+
+      const now = Date.now()
+      const donationPath = `${campaignUserDonationPath}/${now}`
+      const donationRecord = theArguments.donationRecord
+      // const data = {}
+      // const now = Date.now()
+      // data[now] = donationRecord
+      // console.log('Writing to firebase:')
+      // console.log(`  ${campaignUserDonationPath}`)
+      // console.log(`  ${now}`)
+      // console.log('    ', donationRecord)
+      //
+      firebaseInstance.setFirebaseData(donationPath, donationRecord)
+
+      // Need something more unique to set an aggregate value (collision possible
+     //  for UTC.)
+     // TODO:
+    }
   }
 
   /**

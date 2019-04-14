@@ -36,7 +36,7 @@ import EngineActions from '../Redux/EngineRedux'
 import {EngineCommand} from '../Engine/commands/engineCommand'
 
 const { userTypeInstance } = require('../Utils/UserType.js')
-const { firebaseInstance } = require('../Utils/firebaseWrapper.js')
+// const { firebaseInstance } = require('../Utils/firebaseWrapper.js')
 const { Analytics } = require('../Utils/Analytics.js')
 
 const styles = StyleSheet.create({
@@ -171,7 +171,7 @@ class IntroductionScreen extends Component {
   // ImageBackground was Image sandwiched btwn views with style={styles.image}
   _renderItem = (props) => {
     let titleColor = 'white'
-    firebaseInstance.setFirebaseData('global/mobile/', {1: 'testing 126'})
+    // firebaseInstance.setFirebaseData('global/mobile/', {1: 'testing 126'})
 
     return (
       <ImageBackground
