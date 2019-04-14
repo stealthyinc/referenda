@@ -251,12 +251,12 @@ export class ReferendaEngine extends EventEmitterAdapter {
     try {
       await this._gunWrite(zipCode, postId, serPost)
     } catch(error) {
-      debugger
+      // debugger
     }
     try {
       await this._gunRead(zipCode, postId, serPost)
     } catch(error) {
-      debugger
+      // debugger
     }
     aPostObj.clearModified()
 

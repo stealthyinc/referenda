@@ -22,6 +22,7 @@ import {
   Image,
   Platform,
   Dimensions,
+  ActivityIndicator,
 } from 'react-native';
 import {
   RkButton,
@@ -71,18 +72,9 @@ class ChargeScreen extends Component {
   static navigationOptions = {
     title: 'Campaign Donation'.toUpperCase(),
   };
-  state = {
-    showingBottomSheet: false,
-    showingCardEntry: false,
-    showingDigitalWallet: false,
-    canUseDigitalWallet: false,
-    applePayState: applePayStatus.none,
-    applePayError: null,
-  }
 
   constructor() {
     super();
-    this.onStartCardEntry = this.startCardEntry.bind(this);
     this.onShowCardEntry = this.onShowCardEntry.bind(this);
     this.onCardNonceRequestSuccess = this.onCardNonceRequestSuccess.bind(this);
     this.onCardEntryCancel = this.onCardEntryCancel.bind(this);
@@ -96,6 +88,31 @@ class ChargeScreen extends Component {
     this.showOrderScreen = this.showOrderScreen.bind(this);
     this.startCardEntry = this.startCardEntry.bind(this);
     this.closeOrderScreen = this.closeOrderScreen.bind(this);
+
+    this.state = {
+      showingBottomSheet: false,
+      showingCardEntry: false,
+      showingDigitalWallet: false,
+      canUseDigitalWallet: false,
+      applePayState: applePayStatus.none,
+      applePayError: null,
+      waitOnPayNowOperation: false,
+      waitOnPayLaterState: false,
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.state.waitOnPayLaterState) {
+      if (nextProps.hasOwnProperty('invoiceSuccess') &&
+          nextProps.invoiceSuccess !== null) {
+        // TODO: Execute firebase command to record transaction
+
+        // For now:
+        // Reset the process & navigate to the done screen.
+        this.setState({waitOnPayLaterState: false})
+        this.props.navigation.navigate('Donation Complete')
+      }
+    }
   }
 
   async componentDidMount() {
@@ -328,6 +345,16 @@ class ChargeScreen extends Component {
     }
   }
 
+  onPayNowPressed = () => {
+    this.setState({waitOnPayNowOperation: true})
+    // TODO: PBJ call whatever starts the CC transaction here ...
+  }
+
+  onPayLaterPressed = () => {
+    this.setState({waitOnPayLaterState: true})
+    this.props.invoiceSquareRequest()
+  }
+
   render() {
     // Calculate dimensions for the Agatha image:
     //
@@ -361,6 +388,13 @@ class ChargeScreen extends Component {
     const employerStr = `Employer: ${donationRecord.employer}`
     const amountStr = `Amount: ${donationRecord.amount}`
 
+    const ai = (this.waitOnPayLaterState || this.waitOnPayNowOperation) ?
+      ( <View>
+          <ActivityIndicator size='large' color='#FF8C00'/>
+          <Text style={styles.summary}>Sending invoice ...</Text>
+        </View> ) :
+      undefined
+
     return (
       <View style={[styles.container, {paddingVertical: `${verticalPaddingPercent}%`}]}>
         <View style={{width: '100%', height: '100%', flexDirection:'column', alignItems:'center', justifyContent:'flex-end'}}>
@@ -376,6 +410,7 @@ class ChargeScreen extends Component {
                 borderWidth: 1,
                 borderColor: '#389C95',
                 resizeMode: 'contain'}}/>
+            {ai}
           </View>
 
           <Text style={styles.title}>Donation Summary</Text>
@@ -393,7 +428,7 @@ class ChargeScreen extends Component {
             rkType='medium'
             text='Pay Later (Text a Link)'
             style={{marginVertical:9}}
-            onPress={() => this.props.invoiceSquareRequest()}/>
+            onPress={this.onPayLaterPressed}/>
         </View>
 
         <Modal

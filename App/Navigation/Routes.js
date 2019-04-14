@@ -19,6 +19,7 @@ import DonatorNameScreen from '../Containers/DonatorNameScreen'
 import DonatorAmountScreen from '../Containers/DonatorAmountScreen'
 import DonatorOtherAmountScreen from '../Containers/DonatorOtherAmountScreen'
 import ChargeScreen from '../Containers/ChargeScreen'
+import DonationCompleteScreen from '../Containers/DonationCompleteScreen'
 import Settings from '../Containers/SettingScreen'
 
 export const MainRoutes = [
@@ -142,6 +143,12 @@ export const MainRoutes = [
         id: 'Donation',
         title: 'Donation',
         screen: ChargeScreen,
+        children: [],
+      },
+      {
+        id: 'Donation Complete',
+        title: 'Donation Complete',
+        screen: DonationCompleteScreen,
         children: [],
       },
       {
