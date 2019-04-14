@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import {
   Animated,
   Image,
@@ -7,20 +8,15 @@ import {
   Text,
   View
 } from 'react-native'
-
 import {
   RkButton,
   RkText,
   RkStyleSheet,
 } from 'react-native-ui-kitten'
-
 import AppIntroSlider from 'react-native-app-intro-slider';
 import Ionicons from 'react-native-vector-icons/Ionicons'
-
 import folder from '../Assets/images/folder.png'
-
 // import security from '../Assets/images/molecular.png'
-
 import candidate from '../Assets/images/launch0-candidate.jpg'
 // import candidate from '../Assets/images/launch1-candidate.jpg'
 // import censor from '../Assets/images/censor.png'
@@ -32,12 +28,14 @@ import chat from '../Assets/images/launch1-your-voice.jpg'
 import security from '../Assets/images/launch2c-your-time.jpg'
 // From: https://www.pexels.com/photo/boy-holding-sparkler-1565521/
 import blockchain from '../Assets/images/launch3b-your-community.jpg'
-
 import verified from '../Assets/images/verified.png'
-
 import { GradientButton } from './gradientButton'
-
 import { ifIphoneX } from 'react-native-iphone-x-helper'
+import * as Keychain from 'react-native-keychain';
+import EngineActions from '../Redux/EngineRedux'
+import {EngineCommand} from '../Engine/commands/engineCommand'
+
+const { userTypeInstance } = require('../Utils/UserType.js')
 const { firebaseInstance } = require('../Utils/firebaseWrapper.js')
 
 const styles = StyleSheet.create({
@@ -111,7 +109,7 @@ const slides = [
   // },
 ];
 
-export default class Introduction extends Component {
+class IntroductionScreen extends Component {
   static navigationOptions = ({ navigation }) => {
     return {
       header: null,
@@ -122,6 +120,51 @@ export default class Introduction extends Component {
   constructor (props) {
     super(props)
   }
+
+  state = {
+    username: '',
+    password: '',
+    status: ''
+  }
+
+  // componentDidMount() {
+  //   this.reset()
+  // }
+
+  // // TODO: actually call this?
+  // async reset() {
+  //   try {
+  //     await Keychain.resetGenericPassword({service: 'vote.referenda'});
+  //   } catch (err) {
+  //     this.setState({ status: 'Could not reset credentials, ' + err });
+  //   }
+  // }
+
+  async load() {
+    try {
+      const credentials = await Keychain.getGenericPassword({service: 'vote.referenda'});
+      if (credentials) {
+        const engCmd =
+          EngineCommand.signInCommand(credentials.username, credentials.password)
+        this.props.engineCommandExec(engCmd)
+
+        this.onLoginButtonPressed()
+      } else {
+        // this.setState({ status: 'No credentials stored.' });
+        alert('No credentials stored.')
+      }
+    } catch (err) {
+      this.setState({ status: 'Could not load credentials. ' + err });
+    }
+  }
+
+  onLoginButtonPressed = () => {
+    if (userTypeInstance.getUserType())
+      this.props.navigation.navigate('CampaignerMenu');
+    else
+      this.props.navigation.navigate('SocialMenu');
+  };
+
 
   // ImageBackground was Image sandwiched btwn views with style={styles.image}
   _renderItem = (props) => {
@@ -166,13 +209,13 @@ export default class Introduction extends Component {
               style={[{height:'100%', width:'33%'}]}
               rkType='large'
               text='Sign In'
-              onPress={() => this.props.navigation.navigate('Login')}
+              onPress={() => this.load()}
             />
             <GradientButton
               style={[{height:'100%', width:'33%'}]}
               rkType='large'
               text='Sign Up'
-              onPress={() => this.props.navigation.navigate('Telephone')}
+              onPress={() => this.props.navigation.navigate('Keychain')}
             />
           </View>
         </View>
@@ -195,3 +238,16 @@ export default class Introduction extends Component {
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    engineCommandExec: (aCommand) => dispatch(EngineActions.engineCommandExec(aCommand))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(IntroductionScreen)

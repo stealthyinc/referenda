@@ -86,7 +86,7 @@ class TelephoneScreen extends Component {
           <View class='text-spacer' style={{height: 10}} />
           <RkText rkType='h6' style={{color: 'white'}}>Referenda requires your phone number to provide you unique access to our service. This prevents bots and other false identities from participating on the platform.</RkText>
           <View class='text-spacer' style={{height: 10}} />
-          <RkText rkType='h6' style={{color: 'white'}}>Importantly, we do not store your phone number. Instead we store a unique one-way hash of your number, protecting your identity.</RkText>
+          {/*<RkText rkType='h6' style={{color: 'white'}}>Importantly, we do not store your phone number. Instead we store a unique one-way hash of your number, protecting your identity.</RkText>*/}
         </View>
 
         <View style={{height: '25%'}}>

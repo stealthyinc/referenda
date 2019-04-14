@@ -21,6 +21,7 @@ import {
   View,
   Image,
   Platform,
+  Linking,
   Dimensions,
 } from 'react-native';
 import {
@@ -105,7 +106,9 @@ class DonatorInfoScreen extends Component {
           <RkTextInput rkType='rounded' placeholder='Occupation*' onChangeText={(occupation) => { this.onOccupation(occupation) }}/>
           <RkTextInput rkType='rounded' placeholder='Employer*' onChangeText={(employer) => { this.onEmployer(employer) }}/>
           {/* Make this asterisk a link to the relevant law for people to see / inspect. */}
-          <Text style={styles.description}>*Campaign finance laws require occupation & employer.</Text>
+          <Text style={{color: 'blue'}} onPress={() => Linking.openURL('https://transition.fec.gov/pages/brochures/fecfeca.shtml#Disclosure')}>
+            *Campaign finance laws require occupation & employer.
+          </Text>
           <GradientButton
             rkType='medium'
             text='Next'
