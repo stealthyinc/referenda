@@ -81,7 +81,7 @@ class KeychainScreen extends Component {
 
   componentDidMount() {
     Keychain.getSupportedBiometryType().then(biometryType => {
-      this.setState({ biometryType });
+      this.setState({ biometryType, accessControl: biometryType });
     });
   }
 

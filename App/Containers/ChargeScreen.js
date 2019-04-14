@@ -393,7 +393,7 @@ class ChargeScreen extends Component {
             rkType='medium'
             text='Pay Later (Text a Link)'
             style={{marginVertical:9}}
-            onPress={console.log('Pay later pressed')}/>
+            onPress={() => this.props.invoiceSquareRequest()}/>
         </View>
 
         <Modal
@@ -465,6 +465,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    invoiceSquareRequest: () => dispatch(DonationActions.invoiceRequest()),
     chargeSquareRequest: (data) => dispatch(DonationActions.donationRequest(data))
   }
 }
