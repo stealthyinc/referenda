@@ -59,7 +59,8 @@ import { GradientButton } from '../Components/gradientButton'
 
 import { ifIphoneX } from 'react-native-iphone-x-helper'
 
-require('../Images/iconCookie.png');
+import EngineActions, { EngineSelectors } from '../Redux/EngineRedux'
+import {EngineCommand} from '../Engine/commands/engineCommand'
 
 const applePayStatus = {
   none: 0,
@@ -98,6 +99,7 @@ class ChargeScreen extends Component {
       applePayError: null,
       waitOnPayNowOperation: false,
       waitOnPayLaterState: false,
+      waitingOnCommand: '',
     }
   }
 
@@ -105,13 +107,28 @@ class ChargeScreen extends Component {
     if (this.state.waitOnPayLaterState) {
       if (nextProps.hasOwnProperty('invoiceSuccess') &&
           nextProps.invoiceSuccess !== null) {
-        // TODO: Execute firebase command to record transaction
 
-        // For now:
-        // Reset the process & navigate to the done screen.
-        this.setState({waitOnPayLaterState: false})
-        this.props.navigation.navigate('Donation Complete')
+        const engCmd =
+          EngineCommand.textDonationCommand(this.props.donationRecord)
+        this.props.engineCommandExec(engCmd)
+
+        // Reset the state for invoicing and begin waiting for the command we
+        // just launched to complete ...
+        this.setState({
+          waitOnPayLaterState: false,
+          waitingOnCommand: engCmd.getCommandType()
+        })
       }
+
+      // Needs to check for invoiceFetching false and invoiceSuccess null, but
+      // that will may be problematic. Move the underlying code to engine so we
+      // can handle errors and deal with process & state more accurately. TODO
+    } else if (this.state.waitingOnCommand &&
+               nextProps.hasOwnProperty('payLoad') &&
+               nextProps.payLoad.hasOwnProperty('commandType') &&
+               (nextProps.payLoad.commandType === this.state.waitingOnCommand)) {
+      console.log(`ChargeScreen - ${nextProps.payLoad.commandType} completed.`)
+      this.props.navigation.navigate('Donation Complete')
     }
   }
 
@@ -388,10 +405,12 @@ class ChargeScreen extends Component {
     const employerStr = `Employer: ${donationRecord.employer}`
     const amountStr = `Amount: ${donationRecord.amount}`
 
-    const ai = (this.waitOnPayLaterState || this.waitOnPayNowOperation) ?
+    const ai = (this.waitOnPayLaterState ||
+                this.waitOnPayNowOperation ||
+                this.waitingOnCommand) ?
       ( <View>
           <ActivityIndicator size='large' color='#FF8C00'/>
-          <Text style={styles.summary}>Sending invoice ...</Text>
+          <Text style={styles.summary}>Processing donation ...</Text>
         </View> ) :
       undefined
 
@@ -504,13 +523,15 @@ const mapStateToProps = (state) => {
     twilioError: DonationSelectors.getTwilioError(state),
     twilioSuccess: DonationSelectors.getTwilioSuccess(state),
     twilioFetching: DonationSelectors.getTwilioFetching(state),
+    payLoad: EngineSelectors.getPayload(state),
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
     invoiceSquareRequest: () => dispatch(DonationActions.invoiceRequest()),
-    chargeSquareRequest: (data) => dispatch(DonationActions.donationRequest(data))
+    chargeSquareRequest: (data) => dispatch(DonationActions.donationRequest(data)),
+    engineCommandExec: (aCommand) => dispatch(EngineActions.engineCommandExec(aCommand))
   }
 }
 

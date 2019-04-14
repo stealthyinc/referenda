@@ -128,11 +128,11 @@ class EngineCommand {
    * Campaign commands:
    **************************************
    */
-  static textDonationCommand() {
+  static textDonationCommand(donationRecord) {
     const command = new EngineCommand()
     command.commandType = EngineCommand.COMMAND_TYPES.TEXT_DONATION
     command.arguments = {
-      // TODO
+      donationRecord
     }
     return command
   }

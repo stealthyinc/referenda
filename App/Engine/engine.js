@@ -298,6 +298,9 @@ export class ReferendaEngine extends EventEmitterAdapter {
    */
   async textDonation(theArguments) {
     // TODO: PBJ Send a link via Twilio
+    console.log('engine - textDonation')
+    console.dir(theArguments)
+    // TODO: firebase
   }
 
   /**

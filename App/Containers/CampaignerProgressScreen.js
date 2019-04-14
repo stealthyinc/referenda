@@ -73,7 +73,8 @@ class CampaignerProgressScreen extends Component {
                 borderRadius: imageBorderRadius,
                 borderWidth: 1,
                 borderColor: '#389C95',
-                resizeMode: 'contain'}}/>
+                resizeMode: 'contain'}} />
+            <Text style={styles.title}>Coming soon ...</Text>
           </View>
 
         </View>
