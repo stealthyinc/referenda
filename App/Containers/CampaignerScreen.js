@@ -39,6 +39,7 @@ import voters from './../Data/raw/voters'
 //   - from https://www.reshot.com/photos/business-family-businessman-converse-conversation-conversations-millennial-business-professional_rs_vKjYG3
 import campaignerImg from '../Assets/images/campaigner.jpg'
 const { userTypeInstance } = require('../Utils/UserType.js')
+const { Analytics } = require('../Utils/Analytics.js')
 
 const avatarArr = {
   0: require('../Data/img/avatars/Image0.png'),

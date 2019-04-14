@@ -37,6 +37,7 @@ import {EngineCommand} from '../Engine/commands/engineCommand'
 
 const { userTypeInstance } = require('../Utils/UserType.js')
 const { firebaseInstance } = require('../Utils/firebaseWrapper.js')
+const { Analytics } = require('../Utils/Analytics.js')
 
 const styles = StyleSheet.create({
   mainContent: {
@@ -147,6 +148,7 @@ class IntroductionScreen extends Component {
         const engCmd =
           EngineCommand.signInCommand(credentials.username, credentials.password)
         this.props.engineCommandExec(engCmd)
+        Analytics.setCredentials(credentials.username)
 
         this.onLoginButtonPressed()
       } else {
