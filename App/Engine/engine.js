@@ -348,7 +348,43 @@ export class ReferendaEngine extends EventEmitterAdapter {
    *
    */
   async getDonationStatus(theArguments) {
+    if (!this.profile) {
+      throw `${this.uploadPost.name} failed because user is not logged in.`
+    }
 
+    const identityPublicKey = this.profile.getIdentityPublicKey()
+
+    const campaignPath = `global/mobile/${agathaCampaignId}`
+    const campaignAggregateDonationPath = `${campaignPath}/donate/all`
+    const campaignUserDonationPath = `${campaignPath}/donate/${identityPublicKey}`
+
+    // Get all the firebase donation records for this user and Calculate the
+    // total donations collected:
+    //
+    let total = 0
+    const ref = firebaseInstance.getFirebaseRef(campaignUserDonationPath)
+
+    let snapshot = undefined
+    try {
+      snapshot = await ref.once('value')
+    } catch (err) {
+      throw `Unable to access campaign donations for user.`
+    }
+
+    if (!snapshot || !snapshot.exists()) {
+      return total
+    }
+
+    const campaignRecordDict = snapshot.val()
+    for (const campaignRecordKey in campaignRecordDict) {
+      const campaignRecord = campaignRecordDict[campaignRecordKey]
+      if (campaignRecord && campaignRecord.hasOwnProperty('amount')) {
+        const amount = parseFloat(campaignRecord.amount)
+        total += amount
+      }
+    }
+
+    return total
   }
 
 

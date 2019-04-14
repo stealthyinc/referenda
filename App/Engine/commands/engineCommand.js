@@ -146,9 +146,9 @@ class EngineCommand {
     return command
   }
 
-  static getDonationStatus() {
+  static getDonationStatusCommand() {
     const command = new EngineCommand()
-    command.commandType = EngineCommand.COMMAND_TYPES.CREDIT_CARD_DONATION
+    command.commandType = EngineCommand.COMMAND_TYPES.GET_DONATION_STATUS
     command.arguments = {
       // TODO
     }

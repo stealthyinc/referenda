@@ -22,6 +22,7 @@ import {
   Image,
   Platform,
   Dimensions,
+  ActivityIndicator,
 } from 'react-native';
 import {
   RkButton,
@@ -33,6 +34,8 @@ import {
 } from 'react-native-ui-kitten';
 import { GradientButton } from '../Components/gradientButton'
 import DonationActions, { DonationSelectors } from '../Redux/DonationRedux'
+import EngineActions, { EngineSelectors } from '../Redux/EngineRedux'
+import {EngineCommand} from '../Engine/commands/engineCommand'
 
 import candidate from '../Assets/avatars/agatha2.png'
 
@@ -43,6 +46,35 @@ class CampaignerProgressScreen extends Component {
 
   constructor() {
     super();
+    this.state = {
+      waitingOnCommand: ''
+    }
+
+    this.total = ''
+  }
+
+  componentDidMount() {
+    const engCmd =
+      EngineCommand.getDonationStatusCommand()
+    this.props.engineCommandExec(engCmd)
+
+    this.setState({waitingOnCommand: engCmd.getCommandType()})
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.state.waitingOnCommand &&
+        nextProps.hasOwnProperty('payLoad') &&
+        nextProps.payLoad.hasOwnProperty('commandType') &&
+        (nextProps.payLoad.commandType === this.state.waitingOnCommand)) {
+      console.log('Loaded data from firebase...')
+      console.log(nextProps.payLoad)
+
+      if (nextProps.payLoad.hasOwnProperty('result')) {
+        this.total = nextProps.payLoad.result
+      }
+      // Stop the loading
+      this.setState({waitingOnCommand: ''})
+    }
   }
 
   render() {
@@ -60,6 +92,13 @@ class CampaignerProgressScreen extends Component {
     const imageDimension = Math.floor(upperViewHeight)
     const imageBorderRadius = Math.floor(imageDimension / 2)
 
+    const ai = (this.waitingOnCommand) ?
+      ( <View>
+          <ActivityIndicator size='large' color='#FF8C00'/>
+          <Text style={styles.summary}>Fetching data ...</Text>
+        </View> ) :
+      undefined
+
     return (
       <View style={[styles.container, {paddingVertical: `${verticalPaddingPercent}%`}]}>
         <View style={{width: '100%', height: '100%', flexDirection:'column', alignItems:'center', justifyContent:'flex-end'}}>
@@ -74,9 +113,9 @@ class CampaignerProgressScreen extends Component {
                 borderWidth: 1,
                 borderColor: '#389C95',
                 resizeMode: 'contain'}} />
-            <Text style={styles.title}>Coming soon ...</Text>
+            {ai}
           </View>
-
+          <Text style={styles.title}>You've Collected ${this.total}</Text>
         </View>
       </View>
     );
@@ -123,11 +162,13 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state) => {
   return {
+    payLoad: EngineSelectors.getPayload(state),
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    engineCommandExec: (aCommand) => dispatch(EngineActions.engineCommandExec(aCommand))
   }
 }
 
