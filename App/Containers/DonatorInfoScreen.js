@@ -205,11 +205,11 @@ class DonatorInfoScreen extends Component {
      )
 
     const phoneNumberInputStyle =
-      {borderColor: (this.state.validPhoneNumber ? 'green' : 'red')}
+      {backgroundColor: (this.state.validPhoneNumber ? 'white' : '#FFE4E1')}
     const occupationInputStyle =
-      {borderColor: (this.state.validOccupation ? 'green' : 'red')}
+      {backgroundColor: (this.state.validOccupation ? 'white' : '#FFE4E1')}
     const employerInputStyle =
-      {borderColor: (this.state.validEmployer ? 'green' : 'red')}
+      {backgroundColor: (this.state.validEmployer ? 'white' : '#FFE4E1')}
 
     return (
       <RkAvoidKeyboard style={[styles.container, {paddingVertical: `${verticalPaddingPercent}%`}]}>

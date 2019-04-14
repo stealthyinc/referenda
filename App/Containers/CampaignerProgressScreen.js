@@ -82,7 +82,7 @@ class CampaignerProgressScreen extends Component {
     //
     const headerHeightPercent = 7
     const verticalPaddingPercent = 3
-    const imageHeightViewPortPercent = 30
+    const imageHeightViewPortPercent = 50
 
     let {width, height} = Dimensions.get('window')
     const mainViewHeight = height
@@ -114,8 +114,8 @@ class CampaignerProgressScreen extends Component {
                 borderColor: '#389C95',
                 resizeMode: 'contain'}} />
             {ai}
+            <Text style={[styles.title, {marginTop: 9}]}>You've Collected ${this.total}</Text>
           </View>
-          <Text style={styles.title}>You've Collected ${this.total}</Text>
         </View>
       </View>
     );

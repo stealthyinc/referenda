@@ -58,7 +58,7 @@ class DonatorNameScreen extends Component {
     //
     const headerHeightPercent = 7
     const verticalPaddingPercent = 3
-    const imageHeightViewPortPercent = 30
+    const imageHeightViewPortPercent = 50
 
     let {width, height} = Dimensions.get('window')
     const mainViewHeight = height
@@ -69,22 +69,22 @@ class DonatorNameScreen extends Component {
     const imageBorderRadius = Math.floor(imageDimension / 2)
 
     return (
-      <View style={[styles.container, {paddingVertical: `${verticalPaddingPercent}%`}]}>
+      <RkAvoidKeyboard style={[styles.container, {paddingVertical: `${verticalPaddingPercent}%`}]}>
         <View style={{width: '100%', height: '100%', flexDirection:'column', alignItems:'center', justifyContent:'flex-end'}}>
 
-        <View style={{width: '100%', flex: 1, alignItems:'center', justifyContent:'center'}}>
-          <Image
-            source={candidate}
-            style={{
-              height: imageDimension,
-              width: imageDimension,
-              borderRadius: imageBorderRadius,
-              borderWidth: 1,
-              borderColor: '#389C95',
-              resizeMode: 'contain'}}/>
-          <Text style={styles.title}>Donation Complete</Text>
-          <Text style={styles.title}>Thank you!</Text>
-        </View>
+          <View style={{width: '100%', flex: 1, alignItems:'center', justifyContent:'center'}}>
+            <Image
+              source={candidate}
+              style={{
+                height: imageDimension,
+                width: imageDimension,
+                borderRadius: imageBorderRadius,
+                borderWidth: 1,
+                borderColor: '#389C95',
+                resizeMode: 'contain'}}/>
+            <Text style={styles.title}>Donation Complete</Text>
+            <Text style={styles.title}>Thank you!</Text>
+          </View>
 
           <GradientButton
           style={styles.buttonStyle}
@@ -92,7 +92,7 @@ class DonatorNameScreen extends Component {
           text='Done'
           onPress={this.onDoneButtonPressed} />
         </View>
-      </View>
+      </RkAvoidKeyboard>
     );
   }
 }

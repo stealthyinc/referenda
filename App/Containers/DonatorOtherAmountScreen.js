@@ -149,7 +149,7 @@ class DonatorOtherAmountScreen extends Component {
          text='Next' />
       )
 
-    const inputStyle = {borderColor: (this.state.validAmount ? 'green': 'red')}
+    const inputStyle = {backgroundColor: (this.state.validAmount ? 'white' : '#FFE4E1')}
 
     const donationRecord = JSON.parse(JSON.stringify(this.props.donationRecord))
 

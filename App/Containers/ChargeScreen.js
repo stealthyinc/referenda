@@ -432,13 +432,13 @@ class ChargeScreen extends Component {
       waitOnPayNowOperation,
       waitingOnCommand
     } = this.state
-    
+
     const ai = (waitOnPayLaterOperation ||
                 waitOnPayNowOperation ||
                 waitingOnCommand) ?
       ( <View>
-          <ActivityIndicator size='large' color='#FF8C00'/>
-          <Text style={styles.summary}>Processing donation ...</Text>
+          <ActivityIndicator size='large' color='#FFFFFF'/>
+          <Text style={[styles.summary, {marginBottom: 9}]}>Processing donation ...</Text>
         </View> ) :
       undefined
 
@@ -457,9 +457,9 @@ class ChargeScreen extends Component {
                 borderWidth: 1,
                 borderColor: '#389C95',
                 resizeMode: 'contain'}}/>
-            {ai}
           </View>
-
+          
+          {ai}
           <Text style={styles.title}>Donation Summary</Text>
           <Text style={styles.summary}>{nameStr}</Text>
           <Text style={styles.summary}>{phoneStr}</Text>

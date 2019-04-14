@@ -314,7 +314,8 @@ export class ReferendaEngine extends EventEmitterAdapter {
 
       const now = Date.now()
       const donationPath = `${campaignUserDonationPath}/${now}`
-      const donationRecord = theArguments.donationRecord
+      const donationRecord = JSON.parse(JSON.stringify(theArguments.donationRecord))
+      donationRecord['type'] = 'invoice'
       // const data = {}
       // const now = Date.now()
       // data[now] = donationRecord
@@ -356,7 +357,7 @@ export class ReferendaEngine extends EventEmitterAdapter {
       const now = Date.now()
       const donationPath = `${campaignUserDonationPath}/${now}`
       const donationRecord = JSON.parse(JSON.stringify(theArguments.donationRecord))
-      donationRecord['cc'] = true
+      donationRecord['type'] = 'cc'
 
       // TODO: should probably stringify these before setting them in firebase
 

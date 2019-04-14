@@ -96,7 +96,7 @@ class TelephoneScreen extends Component {
         />
       )
 
-    const inputStyle = {borderColor: (this.state.validNumber ? 'green' : 'red')}
+    const inputStyle = {backgroundColor: (this.state.validNumber ? 'white' : '#FFE4E1')}
 
     return (
       <RkAvoidKeyboard

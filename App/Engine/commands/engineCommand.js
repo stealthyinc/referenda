@@ -137,11 +137,11 @@ class EngineCommand {
     return command
   }
 
-  static creditCardDonationCommand() {
+  static creditCardDonationCommand(donationRecord) {
     const command = new EngineCommand()
     command.commandType = EngineCommand.COMMAND_TYPES.CREDIT_CARD_DONATION
     command.arguments = {
-      // TODO
+      donationRecord
     }
     return command
   }

@@ -179,9 +179,9 @@ class DonatorNameScreen extends Component {
      )
 
     const firstNameInputStyle =
-      {borderColor: (this.state.validFirstName ? 'green' : 'red')}
+      {backgroundColor: (this.state.validFirstName ? 'white' : '#FFE4E1')}
     const lastNameInputStyle =
-      {borderColor: (this.state.validLastName ? 'green' : 'red')}
+      {backgroundColor: (this.state.validLastName ? 'white' : '#FFE4E1')}
 
     return (
       <RkAvoidKeyboard style={[styles.container, {paddingVertical: `${verticalPaddingPercent}%`}]}>
