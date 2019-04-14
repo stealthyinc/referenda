@@ -26,8 +26,8 @@ import EngineActions, { EngineSelectors } from '../Redux/EngineRedux'
 import SettingsActions, { SettingsSelectors } from '../Redux/SettingsRedux'
 import {EngineCommand} from '../Engine/commands/engineCommand'
 
-const ACCESS_CONTROL_OPTIONS = ['None', 'Passcode', 'Password'];
-const ACCESS_CONTROL_MAP = [null, Keychain.ACCESS_CONTROL.DEVICE_PASSCODE, Keychain.ACCESS_CONTROL.APPLICATION_PASSWORD, Keychain.ACCESS_CONTROL.BIOMETRY_CURRENT_SET]
+const ACCESS_CONTROL_OPTIONS = ['Passcode'];
+const ACCESS_CONTROL_MAP = [Keychain.ACCESS_CONTROL.DEVICE_PASSCODE, Keychain.ACCESS_CONTROL.BIOMETRY_CURRENT_SET]
 const { userTypeInstance } = require('../Utils/UserType.js')
 
 class KeychainScreen extends Component {
@@ -63,7 +63,7 @@ class KeychainScreen extends Component {
   componentWillReceiveProps(nextProps) {
     console.log('componentWillReceiveProps:')
     // TODo: rip this out
-    console.dir(nextProps)
+    // console.dir(nextProps)
 
     if (this.state.waitingOnCommand &&
         nextProps.hasOwnProperty('payLoad') &&
@@ -182,7 +182,7 @@ class KeychainScreen extends Component {
               selectedIndex={0}
               style={{marginBottom:10,
                       height: 40,
-//                      tintColor: '#a2a2a2',
+                      tintColor: '#a2a2a2',
                       backgroundColor: 'white',
                       borderStyle:'solid',
                       borderWidth:1,

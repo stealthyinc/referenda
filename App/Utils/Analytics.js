@@ -4,8 +4,8 @@ import Config from 'react-native-config'
 class Anonalytics {
   constructor (publicKey = undefined) {
     this.publicKey = publicKey
-    // const amplitudeKey = (process.env.NODE_ENV === 'production') ? Config.AMPLITUDE_API : '3287e4a9bf04c57db45c1d93e555e125'
-    const amplitudeKey = '3287e4a9bf04c57db45c1d93e555e125'
+    const amplitudeKey = (process.env.NODE_ENV === 'production') ? Config.AMPLITUDE_API : '3287e4a9bf04c57db45c1d93e555e125'
+    // const amplitudeKey = '3287e4a9bf04c57db45c1d93e555e125'
     this.amplitude = new RNAmplitude(amplitudeKey);
     this._storeEvent('loginOccured')
   }
