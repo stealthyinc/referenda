@@ -217,7 +217,7 @@ class IntroductionScreen extends Component {
               style={[{height:'100%', width:'33%'}]}
               rkType='large'
               text='Sign Up'
-              onPress={() => this.props.navigation.navigate('Keychain')}
+              onPress={() => this.props.navigation.navigate('Telephone')}
             />
           </View>
         </View>

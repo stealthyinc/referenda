@@ -7,7 +7,9 @@ import ChatScreen from '../Containers/ChatScreen'
 import FeedScreen from '../Containers/FeedScreen'
 import CameraScreen from '../Containers/CameraScreen'
 import CardsScreen from '../Containers/CardsScreen'
-import CampaignerScreen from '../Containers/CampaignerScreen'
+// import CampaignerScreen from '../Containers/CampaignerScreen'
+import CampaignerMenuScreen from '../Containers/CampaignerMenuScreen'
+import CampaignerProgressScreen from '../Containers/CampaignerProgressScreen'
 import CalendarScreen from '../Containers/CalendarScreen'
 import CombinedScreen from '../Containers/CombinedScreen'
 import AuthLoadingScreen from '../Containers/AuthLoadingScreen'
@@ -15,6 +17,7 @@ import VideoScreen from '../Containers/VideoScreen'
 import DonatorInfoScreen from '../Containers/DonatorInfoScreen'
 import DonatorNameScreen from '../Containers/DonatorNameScreen'
 import DonatorAmountScreen from '../Containers/DonatorAmountScreen'
+import DonatorOtherAmountScreen from '../Containers/DonatorOtherAmountScreen'
 import ChargeScreen from '../Containers/ChargeScreen'
 import Settings from '../Containers/SettingScreen'
 
@@ -109,12 +112,18 @@ export const MainRoutes = [
     id: 'CampaignerMenu',
     title: 'Campaigner',
     icon: FontIcons.other,
-    screen: CampaignerScreen,
+    screen: CampaignerMenuScreen,
     children: [
       {
         id: 'Donator Amount',
         title: 'Donator Amount',
         screen: DonatorAmountScreen,
+        children: [],
+      },
+      {
+        id: 'Donator Other Amount',
+        title: 'Donator Other Amount',
+        screen: DonatorOtherAmountScreen,
         children: [],
       },
       {
@@ -133,6 +142,12 @@ export const MainRoutes = [
         id: 'Donation',
         title: 'Donation',
         screen: ChargeScreen,
+        children: [],
+      },
+      {
+        id: 'Campaign Progress',
+        title: 'Campaign Progress',
+        screen: CampaignerProgressScreen,
         children: [],
       },
     ],

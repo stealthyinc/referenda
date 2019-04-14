@@ -4,7 +4,8 @@ import { connect } from 'react-redux'
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
 import FeedScreen from '../Containers/FeedScreen'
-import CampaignerScreen from '../Containers/CampaignerScreen'
+// import CampaignerScreen from '../Containers/CampaignerScreen'
+import CampaignerMenuScreen from '../Containers/CampaignerMenuScreen'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
 // Styles
@@ -53,7 +54,7 @@ class CombinedScreen extends Component {
   //   }
   // }
   render () {
-    return (userTypeInstance.getUserType()) ? <CampaignerScreen navigation={this.props.navigation} /> : <FeedScreen navigation={this.props.navigation} />
+    return (userTypeInstance.getUserType()) ? <CampaignerMenuScreen navigation={this.props.navigation} /> : <FeedScreen navigation={this.props.navigation} />
   }
 }
 

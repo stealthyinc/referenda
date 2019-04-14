@@ -31,65 +31,25 @@ import {
   RkTheme,
   RkAvoidKeyboard,
 } from 'react-native-ui-kitten';
+import NavigationType from '../Navigation/propTypes';
 import { GradientButton } from '../Components/gradientButton'
 import DonationActions, { DonationSelectors } from '../Redux/DonationRedux'
 
 import candidate from '../Assets/avatars/agatha2.png'
 
-class DonatorAmountScreen extends Component {
-  static navigationOptions = {
-    title: 'Campaign Donation'.toUpperCase(),
+class CampaignerMenuScreen extends Component {
+  static propTypes = {
+    navigation: NavigationType.isRequired,
   };
 
-  state = {
-  }
+  static navigationOptions = {
+    title: 'Campaign Donation'.toUpperCase(),
+    header: null,
+    gesturesEnabled: false,
+  };
 
   constructor() {
     super();
-    this.donationRecord = {}
-    this.initialReset = false
-  }
-
-  componentDidMount() {
-    if (!this.initialReset) {
-      this.initialReset = true
-      // Clear the redux store the first time we load the component (not
-      // subsequent ones in case person wants to change their donation).
-      this.props.storeDonationRecord(this.donationRecord)
-    }
-  }
-
-  getDonationButton(anAmount) {
-    const buttonText = `\$${anAmount}`
-    if (anAmount === 'Other') {
-      return (
-        <GradientButton
-          rkType='medium'
-          text={buttonText}
-          style={styles.buttonStyle}
-          onPress={() => { this.props.navigation.navigate('Donator Other Amount') }}/>
-      )
-    } else {
-      return (
-        <GradientButton
-          rkType='medium'
-          text={buttonText}
-          style={styles.buttonStyle}
-          onPress={() => {this.onDonationButtonPressed(anAmount)}}/>
-      )
-    }
-  }
-
-  storeInRedux = () => {
-    const reduxDonationRecord = JSON.parse(JSON.stringify(this.props.donationRecord))
-    const merge = Object.assign(reduxDonationRecord, this.donationRecord)
-    this.props.storeDonationRecord(merge)
-  }
-
-  onDonationButtonPressed = (anAmount) => {
-    this.donationRecord.amount = anAmount
-    this.storeInRedux()
-    this.props.navigation.navigate('Donator Info')
   }
 
   render() {
@@ -97,7 +57,7 @@ class DonatorAmountScreen extends Component {
     //
     const headerHeightPercent = 7
     const verticalPaddingPercent = 3
-    const imageHeightViewPortPercent = 30
+    const imageHeightViewPortPercent = 50
 
     let {width, height} = Dimensions.get('window')
     const mainViewHeight = height
@@ -112,7 +72,6 @@ class DonatorAmountScreen extends Component {
         <View style={{width: '100%', height: '100%', flexDirection:'column', alignItems:'center', justifyContent:'flex-end'}}>
 
           <View style={{width: '100%', flex: 1, alignItems:'center', justifyContent:'center'}}>
-            { /*<Image source={candidate} style={{height: '25%', borderRadius: 150}}/> */}
             <Image
               source={candidate}
               style={{
@@ -122,31 +81,22 @@ class DonatorAmountScreen extends Component {
                 borderWidth: 1,
                 borderColor: '#389C95',
                 resizeMode: 'contain'}}/>
+            <RkText
+              rkType='large'
+              style={{color:'#ffffff', marginTop:9}}>Agatha Bacelar for Congress 🇺🇸</RkText>
           </View>
 
-          <Text style={styles.title}>Donor Contribution</Text>
-
-          <View style={{width: '100%', marginVertical: 9, flexDirection:'row', justifyContent:'flex-start'}}>
-            <View style={styles.buttonBarLeftStyle}>
-              {this.getDonationButton('5')}
-              {this.getDonationButton('10')}
-              {this.getDonationButton('25')}
-              {this.getDonationButton('50')}
-            </View>
-            <View style={styles.buttonBarRightStyle}>
-              {this.getDonationButton('100')}
-              {this.getDonationButton('250')}
-              {this.getDonationButton('500')}
-              {this.getDonationButton('Other')}
-            </View>
-          </View>
-{/*
           <GradientButton
             rkType='medium'
-            text='Next'
+            text='New Donation'
             style={styles.buttonStyle}
-            onPress={() => {this.props.navigation.navigate('Donator Info')}}/>
-            */}
+            onPress={() => { this.props.navigation.navigate('Donator Amount') }}/>
+
+          <GradientButton
+            rkType='medium'
+            text='Progress'
+            style={styles.buttonStyle}
+            onPress={() => {this.props.navigation.navigate('Campaign Progress')}}/>
         </View>
       </View>
     );
@@ -193,15 +143,12 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state) => {
   return {
-    donationRecord: DonationSelectors.getDonationRecord(state)
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    storeDonationRecord: (donationRecord) =>
-      dispatch(DonationActions.storeDonationRecord(donationRecord))
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(DonatorAmountScreen)
+export default connect(mapStateToProps, mapDispatchToProps)(CampaignerMenuScreen)

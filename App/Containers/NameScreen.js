@@ -121,8 +121,8 @@ class NameScreen extends Component {
                                this.state.validUserName
 
     const nextButton = (activateNextButton) ?
-           (
-             <GradientButton
+       (
+         <GradientButton
          style={{marginTop: 5, height: 40}}
          rkType='large'
          text='Next'

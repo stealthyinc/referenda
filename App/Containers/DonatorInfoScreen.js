@@ -45,25 +45,125 @@ class DonatorInfoScreen extends Component {
   constructor() {
     super();
     this.donationRecord = {}
+    this.state = {
+      validPhoneNumber: false,
+      validOccupation: false,
+      validEmployer: false
+    }
+  }
+
+  componentDidMount() {
+    const donationRecord = JSON.parse(JSON.stringify(this.props.donationRecord))
+    if (donationRecord.hasOwnProperty('phoneNumber')) {
+      this.validatePhoneNumber(donationRecord.phoneNumber)
+    }
+    if (donationRecord.hasOwnProperty('occupation')) {
+      this.validateOccupation((donationRecord.occupation))
+    }
+    if (donationRecord.hasOwnProperty('employer')) {
+      this.validateEmployer(donationRecord.employer)
+    }
   }
 
   onPhoneNumber = (aPhoneNumber) => {
     this.donationRecord.phoneNumber = aPhoneNumber
+    this.storeInRedux()
+    this.validatePhoneNumber(aPhoneNumber)
+  }
+
+  validatePhoneNumber = (aPhoneNumber) => {
+    // TODO: Eventually use this (possibly after a basic sanity check as it's
+    //       expensive in time according to the doc, but it catches all the
+    //       peculiarities of NANP phone numbers):
+    //         - https://github.com/googlei18n/libphonenumber
+    //
+    const phoneValidator = /^\d{10}$/;
+    if (aPhoneNumber.match(phoneValidator) && !this.state.validPhoneNumber) {
+      this.setState({validPhoneNumber: true})
+    } else if (this.state.validPhoneNumber) {
+      this.setState({validPhoneNumber: false})
+    }
   }
 
   onOccupation = (anOccupation) => {
     this.donationRecord.occupation = anOccupation
+    this.storeInRedux()
+    this.validateOccupation(anOccupation)
+  }
+
+  validateOccupation = (anOccupation) => {
+    try {
+      if (anOccupation && (anOccupation.length >= 3)) {
+        if (!this.state.validOccupation) {
+          this.setState({validOccupation: true})
+        }
+      } else if (this.state.validOccupation) {
+        this.setState({validOccupation: false})
+      }
+    } catch (error) {
+      if (this.state.validOccupation) {
+        this.setState({validOccupation: false})
+      }
+    }
   }
 
   onEmployer = (anEmployer) => {
     this.donationRecord.employer = anEmployer
+    this.storeInRedux()
+    this.validateEmployer(anEmployer)
   }
 
-  onNextButtonPressed = () => {
+  validateEmployer = (anEmployer) => {
+    try {
+      if (anEmployer && (anEmployer.length >= 1)) {
+        if (!this.state.validEmployer) {
+          this.setState({validEmployer: true})
+        }
+      } else if (this.state.validEmployer) {
+        this.setState({validEmployer: false})
+      }
+    } catch (error) {
+      if (this.state.validEmployer) {
+        this.setState({validEmployer: false})
+      }
+    }
+  }
+
+  storeInRedux = () => {
     const reduxDonationRecord = JSON.parse(JSON.stringify(this.props.donationRecord))
     const merge = Object.assign(reduxDonationRecord, this.donationRecord)
     this.props.storeDonationRecord(merge)
+  }
+
+  onNextButtonPressed = () => {
+    this.storeInRedux()
     this.props.navigation.navigate('Donator Name')
+  }
+
+  getInputElement = (aPlaceHolder, aCallback, aStyle, aValue=undefined, isPhoneNumber=false) => {
+    const keyboardType = (isPhoneNumber) ? 'phone-pad' : 'default'
+    if (aValue) {
+      return (
+        <RkTextInput
+          rkType='rounded'
+          keyboardType={keyboardType}
+          placeholder={aPlaceHolder}
+          style={aStyle}
+          value={aValue}
+          onChangeText={aCallback}
+          />
+      )
+    }
+
+    return (
+      <RkTextInput
+        rkType='rounded'
+        keyboardType={keyboardType}
+        placeholder={aPlaceHolder}
+        style={aStyle}
+        onChangeText={aCallback}
+        />
+    )
   }
 
   render() {
@@ -80,6 +180,36 @@ class DonatorInfoScreen extends Component {
     const upperViewHeight = mainViewHeight * imageHeightViewPortPercent / 100
     const imageDimension = Math.floor(upperViewHeight)
     const imageBorderRadius = Math.floor(imageDimension / 2)
+
+    const donationRecord = JSON.parse(JSON.stringify(this.props.donationRecord))
+
+    // Determine if next button is active and indicate incorrect fields
+    //
+    const activateNextButton = this.state.validPhoneNumber &&
+                               this.state.validOccupation &&
+                               this.state.validEmployer
+    const nextButton = (activateNextButton) ?
+      (
+        <GradientButton
+        style={styles.buttonStyle}
+        rkType='medium'
+        text='Next'
+        onPress={this.onNextButtonPressed} />
+     ) :
+     (
+      <GradientButton
+        colors={['#d2d2d2', '#d2d2d2']}
+        style={styles.buttonStyle}
+        rkType='medium'
+        text='Next' />
+     )
+
+    const phoneNumberInputStyle =
+      {borderColor: (this.state.validPhoneNumber ? 'green' : 'red')}
+    const occupationInputStyle =
+      {borderColor: (this.state.validOccupation ? 'green' : 'red')}
+    const employerInputStyle =
+      {borderColor: (this.state.validEmployer ? 'green' : 'red')}
 
     return (
       <RkAvoidKeyboard style={[styles.container, {paddingVertical: `${verticalPaddingPercent}%`}]}>
@@ -98,22 +228,28 @@ class DonatorInfoScreen extends Component {
         </View>
 
           <Text style={styles.title}>Donor Information</Text>
-          <RkTextInput
+          {this.getInputElement('Mobile Phone Number', this.onPhoneNumber, phoneNumberInputStyle, donationRecord.phoneNumber, true)}
+          {this.getInputElement('Occupation*', this.onOccupation, occupationInputStyle, donationRecord.occupation)}
+          {this.getInputElement('Employer*', this.onEmployer, employerInputStyle, donationRecord.employer)}
+
+          {/*<RkTextInput
             rkType='rounded'
             placeholder='Mobile Phone Number'
             keyboardType='phone-pad'
             onChangeText={(phoneNumber) => { this.onPhoneNumber(phoneNumber) }}/>
           <RkTextInput rkType='rounded' placeholder='Occupation*' onChangeText={(occupation) => { this.onOccupation(occupation) }}/>
-          <RkTextInput rkType='rounded' placeholder='Employer*' onChangeText={(employer) => { this.onEmployer(employer) }}/>
+          <RkTextInput rkType='rounded' placeholder='Employer*' onChangeText={(employer) => { this.onEmployer(employer) }}/>*/}
           {/* Make this asterisk a link to the relevant law for people to see / inspect. */}
           <Text style={{color: 'blue'}} onPress={() => Linking.openURL('https://transition.fec.gov/pages/brochures/fecfeca.shtml#Disclosure')}>
             *Campaign finance laws require occupation & employer.
           </Text>
-          <GradientButton
+
+          {nextButton}
+          {/* <GradientButton
             rkType='medium'
             text='Next'
             style={styles.buttonStyle}
-            onPress={this.onNextButtonPressed}/>
+            onPress={this.onNextButtonPressed}/> */}
         </View>
       </RkAvoidKeyboard>
     );

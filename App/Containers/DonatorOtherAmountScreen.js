@@ -36,7 +36,7 @@ import DonationActions, { DonationSelectors } from '../Redux/DonationRedux'
 
 import candidate from '../Assets/avatars/agatha2.png'
 
-class DonatorNameScreen extends Component {
+class DonatorOtherAmountScreen extends Component {
   static navigationOptions = {
     title: 'Campaign Donation'.toUpperCase(),
   };
@@ -45,62 +45,37 @@ class DonatorNameScreen extends Component {
     super();
     this.donationRecord = {}
     this.state = {
-      validFirstName: false,
-      validLastName: false,
+      validAmount: false
     }
   }
 
   componentDidMount() {
     const donationRecord = JSON.parse(JSON.stringify(this.props.donationRecord))
-    if (donationRecord.hasOwnProperty('firstName')) {
-      this.validateFirstName(donationRecord.firstName)
-    }
-    if (donationRecord.hasOwnProperty('lastName')) {
-      this.validateLastName(donationRecord.lastName)
+    if (donationRecord.hasOwnProperty('amount')) {
+      this.validateAmount(donationRecord.amount)
     }
   }
 
-  onFirstName = (aFirstName) => {
-    this.donationRecord.firstName = aFirstName
+  onOtherAmount = (anAmount) => {
+    this.donationRecord.amount = anAmount
     this.storeInRedux()
-    this.validateFirstName(aFirstName)
+    this.validateAmount(anAmount)
   }
 
-  validateFirstName = (aFirstName) => {
+  validateAmount = (anAmount) => {
     try {
-      if (aFirstName && (aFirstName.length >= 1)) {
-        if (!this.state.validFirstName) {
-          this.setState({validFirstName: true})
+      // TODO: much better (i.e. digit count, precise compare at 2800, round to
+      //                    nearest penny).
+      const amountNumber = parseFloat(anAmount)
+      if ((1.00 <= amountNumber) && (amountNumber <= 2800.00)) {
+        if (!this.state.validAmount) {
+          this.setState({validAmount: true})
         }
-      } else if (this.state.validFirstName) {
-        this.setState({validFirstName: false})
+      } else if (this.state.validAmount) {
+        this.setState({validAmount: false})
       }
     } catch (error) {
-      if (this.state.validFirstName) {
-        this.setState({validFirstName: false})
-      }
-    }
-  }
-
-  onLastname = (aLastName) => {
-    this.donationRecord.lastName = aLastName
-    this.storeInRedux()
-    this.validateLastName(aLastName)
-  }
-
-  validateLastName = (aLastName) => {
-    try {
-      if (aLastName && (aLastName.length >= 1)) {
-        if (!this.state.validLastName) {
-          this.setState({validLastName: true})
-        }
-      } else if (this.state.validLastName) {
-        this.setState({validLastName: false})
-      }
-    } catch (error) {
-      if (this.state.validLastName) {
-        this.setState({validLastName: false})
-      }
+      this.setState({validAmount: false})
     }
   }
 
@@ -112,11 +87,11 @@ class DonatorNameScreen extends Component {
 
   onNextButtonPressed = () => {
     this.storeInRedux()
-    this.props.navigation.navigate('Donation')
+    this.props.navigation.navigate('Donator Info')
   }
 
-  getInputElement = (aPlaceHolder, aCallback, aStyle, aValue=undefined, isPhoneNumber=false) => {
-    const keyboardType = (isPhoneNumber) ? 'phone-pad' : 'default'
+  getInputElement = (aPlaceHolder, aCallback, aStyle, aValue=undefined, isNumber=false) => {
+    const keyboardType = (isNumber) ? 'numeric' : 'default'
     if (aValue) {
       return (
         <RkTextInput
@@ -156,60 +131,50 @@ class DonatorNameScreen extends Component {
     const imageDimension = Math.floor(upperViewHeight)
     const imageBorderRadius = Math.floor(imageDimension / 2)
 
-    const donationRecord = JSON.parse(JSON.stringify(this.props.donationRecord))
-
-    // Determine if next button is active and indicate incorrect fields
+    // Determine if next button appears valid:
     //
-    const activateNextButton = this.state.validFirstName &&
-                               this.state.validLastName
-    const nextButton = (activateNextButton) ?
+    const nextButton = (this.state.validAmount) ?
       (
         <GradientButton
-        style={styles.buttonStyle}
-        rkType='medium'
-        text='Next'
-        onPress={this.onNextButtonPressed} />
-     ) :
-     (
-      <GradientButton
-        colors={['#d2d2d2', '#d2d2d2']}
-        style={styles.buttonStyle}
-        rkType='medium'
-        text='Next' />
-     )
+          rkType='medium'
+          text='Next'
+          style={styles.buttonStyle}
+          onPress={this.onNextButtonPressed}/>
+      ) :
+      (
+       <GradientButton
+         colors={['#d2d2d2', '#d2d2d2']}
+         style={styles.buttonStyle}
+         rkType='medium'
+         text='Next' />
+      )
 
-    const firstNameInputStyle =
-      {borderColor: (this.state.validFirstName ? 'green' : 'red')}
-    const lastNameInputStyle =
-      {borderColor: (this.state.validLastName ? 'green' : 'red')}
+    const inputStyle = {borderColor: (this.state.validAmount ? 'green': 'red')}
+
+    const donationRecord = JSON.parse(JSON.stringify(this.props.donationRecord))
 
     return (
       <RkAvoidKeyboard style={[styles.container, {paddingVertical: `${verticalPaddingPercent}%`}]}>
         <View style={{width: '100%', height: '100%', flexDirection:'column', alignItems:'center', justifyContent:'flex-end'}}>
 
-        <View style={{width: '100%', flex: 1, alignItems:'center', justifyContent:'center'}}>
-          <Image
-            source={candidate}
-            style={{
-              height: imageDimension,
-              width: imageDimension,
-              borderRadius: imageBorderRadius,
-              borderWidth: 1,
-              borderColor: '#389C95',
-              resizeMode: 'contain'}}/>
-        </View>
+          <View style={{width: '100%', flex: 1, alignItems:'center', justifyContent:'center'}}>
+            { /*<Image source={candidate} style={{height: '25%', borderRadius: 150}}/> */}
+            <Image
+              source={candidate}
+              style={{
+                height: imageDimension,
+                width: imageDimension,
+                borderRadius: imageBorderRadius,
+                borderWidth: 1,
+                borderColor: '#389C95',
+                resizeMode: 'contain'}}/>
+          </View>
 
-          <Text style={styles.title}>Donor Information</Text>
-          {this.getInputElement('First Name', this.onFirstName, firstNameInputStyle, donationRecord.firstName)}
-          {this.getInputElement('Last Name', this.onLastname, lastNameInputStyle, donationRecord.lastName)}
-          {/* <RkTextInput rkType='rounded' placeholder='First Name' onChangeText={(firstName) => {this.onFirstName(firstName) }}/>
-          <RkTextInput rkType='rounded' placeholder='Last Name' onChangeText={(lastName) => {this.onLastname(lastName) }}/> */}
+          <Text style={styles.title}>Donor Contribution</Text>
+
+          {this.getInputElement('$1 to $2800', this.onOtherAmount, inputStyle, donationRecord.amount, true)}
+
           {nextButton}
-          {/* <GradientButton
-            rkType='medium'
-            text='Next'
-            style={styles.buttonStyle}
-            onPress={this.onNextButtonPressed}/> */}
         </View>
       </RkAvoidKeyboard>
     );
@@ -235,9 +200,23 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: 'center',
   },
+  buttonBarLeftStyle: {
+    width: '50%',
+    flexDirection:'column',
+    alignItems:'center',
+    justifyContent:'flex-end',
+    paddingRight: '3%'
+  },
+  buttonBarRightStyle: {
+    width: '50%',
+    flexDirection:'column',
+    alignItems:'center',
+    justifyContent:'flex-end',
+    paddingLeft: '3%'
+  },
   buttonStyle: {
     marginVertical:9
-  }
+  },
 });
 
 const mapStateToProps = (state) => {
@@ -253,4 +232,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(DonatorNameScreen)
+export default connect(mapStateToProps, mapDispatchToProps)(DonatorOtherAmountScreen)
