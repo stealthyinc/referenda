@@ -33,11 +33,11 @@ export function * sendSquareCharge (action) {
   }
   const SQUARE_LOCATION_ID = (process.env.NODE_ENV === 'production') ? Config.SQUARE_PRODUCTION_AGATHA_LOCATION_ID : Config.SQUARE_SANDBOX_LOCATION_ID
   const url = `https://connect.squareup.com/v2/locations/${SQUARE_LOCATION_ID}/transactions`
-  console.log("SQUARE SAGA1", url, sqData)
+  // console.log("SQUARE SAGA1", url, sqData)
   const api = API.square(url, sqData)
   try {
     const response = yield call(api.charge)
-    console.log("RESPONSE", response.data)
+    // console.log("RESPONSE", response.data)
     yield put(DonationActions.donationSuccess(response.data))
   } catch (error) {
       yield put(DonationActions.donationFailure())

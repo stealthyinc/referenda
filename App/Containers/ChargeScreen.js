@@ -345,7 +345,16 @@ class ChargeScreen extends Component {
 
     // Construct string info from props
     //
-    const { donationRecord } = this.props
+    const {
+      donationError,
+      donationRecord,
+      donationSuccess,
+      donationFetching,
+    } = this.props
+    //ACTODO: here's the info to send to firebase and throw up a spinner
+    console.log("donationError", donationError)
+    console.log("donationSuccess", donationSuccess)
+    console.log("donationFetching", donationFetching)
     const nameStr = `Name: ${donationRecord.firstName} ${donationRecord.lastName}`
     const phoneStr = `Mobile Phone: ${donationRecord.phoneNumber}`
     const occupationStr = `Occupation: ${donationRecord.occupation}`
