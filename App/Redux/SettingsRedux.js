@@ -9,7 +9,6 @@ const { Types, Creators } = createActions({
   storePhoneNumber: ['phoneNumber'],
   storeNameInfo: ['firstName', 'lastName', 'userName'],
   storeDob: ['dob'],
-  storeDonationRecord: ['donationRecord']
 })
 
 export const SettingsTypes = Types
@@ -24,14 +23,6 @@ export const INITIAL_STATE = Immutable({
   lastName: '',
   userName: '',
   dob: undefined,
-  donationRecord: {
-    amount: '',
-    phoneNumber: '',
-    firstName: '',
-    lastName: '',
-    occupation: '',
-    employer: ''
-  }
 })
 
 /* ------------- Selectors ------------- */
@@ -43,7 +34,6 @@ export const SettingsSelectors = {
   getLastName: state => state.settings.lastName,
   getUserName: state => state.settings.userName,
   getDOB: state => state.settings.dob,
-  getDonationRecord: state => state.settings.donationRecord
 }
 
 /* ------------- Reducers ------------- */
@@ -71,8 +61,6 @@ export const storeNameInfo = (state, {firstName, lastName, userName}) =>
 // Set the user's date of birth
 export const storeDob = (state, {dob}) => state.merge({ dob })
 
-export const storeDonationRecord = (state, {donationRecord}) => state.merge({ donationRecord })
-
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
@@ -81,5 +69,4 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.STORE_PHONE_NUMBER]: storePhoneNumber,
   [Types.STORE_NAME_INFO]: storeNameInfo,
   [Types.STORE_DOB]: storeDob,
-  [Types.STORE_DONATION_RECORD]: storeDonationRecord,
 })

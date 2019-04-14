@@ -32,7 +32,7 @@ import {
   RkAvoidKeyboard,
 } from 'react-native-ui-kitten';
 import { GradientButton } from '../Components/gradientButton'
-import SettingsActions, { SettingsSelectors } from '../Redux/SettingsRedux'
+import DonationActions, { DonationSelectors } from '../Redux/DonationRedux'
 
 import candidate from '../Assets/avatars/agatha2.png'
 
@@ -143,14 +143,14 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state) => {
   return {
-    donationRecord: SettingsSelectors.getDonationRecord(state)
+    donationRecord: DonationSelectors.getDonationRecord(state)
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
     storeDonationRecord: (donationRecord) =>
-      dispatch(SettingsActions.storeDonationRecord(donationRecord))
+      dispatch(DonationActions.storeDonationRecord(donationRecord))
   }
 }
 

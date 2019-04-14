@@ -11,6 +11,7 @@ export const reducers = combineReducers({
   engine: require('./EngineRedux').reducer,
   nav: require('./NavigationRedux').reducer,
   settings: require('./SettingsRedux').reducer,
+  donation: require('./DonationRedux').reducer,
 })
 
 export default () => {

@@ -38,7 +38,7 @@ import {
   SQIPGooglePay,
 } from 'react-native-square-in-app-payments';
 
-import SettingsActions, { SettingsSelectors } from '../Redux/SettingsRedux'
+import DonationActions, { DonationSelectors } from '../Redux/DonationRedux'
 
 import Modal from 'react-native-modal';
 import OrderModal from '../Components/OrderModal';
@@ -221,16 +221,17 @@ class ChargeScreen extends Component {
     } else {
       SQIPCardEntry.completeCardEntry(() => {
         printCurlCommand(cardDetails.nonce);
-        showAlert(
-          'Nonce generated but not charged',
-          'Check your console for a CURL command to charge the nonce, or replace CHARGE_SERVER_HOST with your server host.',
-        );
+        this.props.chargeSquareRequest(cardDetails.nonce)
+        // showAlert(
+        //   'Nonce generated but not charged',
+        //   'Check your console for a CURL command to charge the nonce, or replace CHARGE_SERVER_HOST with your server host.',
+        // );
       });
     }
   }
 
   onCardEntryCancel() {
-    this.showOrderScreen();
+    // this.showOrderScreen();
   }
 
   onShowDigitalWallet() {
@@ -239,7 +240,7 @@ class ChargeScreen extends Component {
   }
 
   onShowCardEntry() {
-    this.closeOrderScreen();
+    // this.closeOrderScreen();
     this.setState({ showingCardEntry: true });
   }
 
@@ -344,7 +345,16 @@ class ChargeScreen extends Component {
 
     // Construct string info from props
     //
-    const donationRecord = this.props.donationRecord
+    const {
+      donationError,
+      donationRecord,
+      donationSuccess,
+      donationFetching,
+    } = this.props
+    //ACTODO: here's the info to send to firebase and throw up a spinner
+    console.log("donationError", donationError)
+    console.log("donationSuccess", donationSuccess)
+    console.log("donationFetching", donationFetching)
     const nameStr = `Name: ${donationRecord.firstName} ${donationRecord.lastName}`
     const phoneStr = `Mobile Phone: ${donationRecord.phoneNumber}`
     const occupationStr = `Occupation: ${donationRecord.occupation}`
@@ -378,7 +388,7 @@ class ChargeScreen extends Component {
             rkType='medium'
             text='Pay Now (Credit Card)'
             style={{marginVertical:9}}
-            onPress={this.showOrderScreen}/>
+            onPress={this.startCardEntry}/>
           <GradientButton
             rkType='medium'
             text='Pay Later (Text a Link)'
@@ -446,12 +456,16 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state) => {
   return {
-    donationRecord: SettingsSelectors.getDonationRecord(state)
+    donationError: DonationSelectors.getDonationError(state),
+    donationSuccess: DonationSelectors.getDonationSuccess(state),
+    donationFetching: DonationSelectors.getDonationFetching(state),
+    donationRecord: DonationSelectors.getDonationRecord(state),
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    chargeSquareRequest: (data) => dispatch(DonationActions.donationRequest(data))
   }
 }
 
