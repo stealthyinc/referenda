@@ -273,7 +273,8 @@ class ChargeScreen extends Component {
     } else {
       SQIPCardEntry.completeCardEntry(() => {
         printCurlCommand(cardDetails.nonce);
-        this.props.chargeSquareRequest(cardDetails.nonce)
+        this.onPayNowPressed(cardDetails.nonce)
+        // this.props.chargeSquareRequest()
         // showAlert(
         //   'Nonce generated but not charged',
         //   'Check your console for a CURL command to charge the nonce, or replace CHARGE_SERVER_HOST with your server host.',
@@ -382,9 +383,10 @@ class ChargeScreen extends Component {
 
   // TODO: PBJ call this from whereever the CC transaction starts to wait for a
   // response
-  onPayNowPressed = () => {
+  onPayNowPressed = (nonce) => {
     this.setState({waitOnPayNowOperation: true})
     // TODO: PBJ call whatever starts the CC transaction here ...
+    this.props.chargeSquareRequest(nonce)
   }
 
   onPayLaterPressed = () => {
@@ -425,9 +427,15 @@ class ChargeScreen extends Component {
     const employerStr = `Employer: ${donationRecord.employer}`
     const amountStr = `Amount: ${donationRecord.amount}`
 
-    const ai = (this.waitOnPayLaterOperation ||
-                this.waitOnPayNowOperation ||
-                this.waitingOnCommand) ?
+    const {
+      waitOnPayLaterOperation,
+      waitOnPayNowOperation,
+      waitingOnCommand
+    } = this.state
+    
+    const ai = (waitOnPayLaterOperation ||
+                waitOnPayNowOperation ||
+                waitingOnCommand) ?
       ( <View>
           <ActivityIndicator size='large' color='#FF8C00'/>
           <Text style={styles.summary}>Processing donation ...</Text>

@@ -37,8 +37,12 @@ import DonationActions, { DonationSelectors } from '../Redux/DonationRedux'
 import candidate from '../Assets/avatars/agatha2.png'
 
 class DonatorNameScreen extends Component {
-  static navigationOptions = {
-    title: 'Campaign Donation'.toUpperCase(),
+  static navigationOptions = ({ navigation }) => {
+    return {
+      headerLeft: null,
+      headerRight: null,
+      headerTitle: 'Campaign Donation'.toUpperCase(),
+    }
   };
 
   constructor() {
