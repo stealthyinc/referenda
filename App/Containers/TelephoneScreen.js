@@ -28,6 +28,15 @@ class TelephoneScreen extends Component {
     navigation: NavigationType.isRequired,
   };
 
+  constructor() {
+    super()
+    this.phoneNumber = ''
+
+    this.state = {
+      validNumber: false
+    }
+  }
+
   getThemeImageSource = (theme) => (
     theme.name === 'light' ?
       require('../Assets/images/verified.png') : require('../Assets/images/logoDark.png')
@@ -38,83 +47,103 @@ class TelephoneScreen extends Component {
   );
 
   onTelephoneButtonPressed = () => {
-    this.props.storePhoneNumber(this.state.phoneNumber)
-    if (this.state.phoneNumber &&
-        (this.state.phoneNumber === '9715068659' ||
-        this.state.phoneNumber === '5044606946'))
+    this.props.storePhoneNumber(this.phoneNumber)
+    if (this.phoneNumber &&
+        (this.phoneNumber === '9715068659' ||
+        this.phoneNumber === '5044606946'))
       userTypeInstance.setUserType(false)
     else
       userTypeInstance.setUserType(true)
     this.props.navigation.navigate('Name');
   };
 
+  onNumberChange = (aNumber) => {
+    this.phoneNumber = aNumber
+
+    // TODO: Eventually use this (possibly after a basic sanity check as it's
+    //       expensive in time according to the doc, but it catches all the
+    //       peculiarities of NANP phone numbers):
+    //         - https://github.com/googlei18n/libphonenumber
+    //
+    const phoneValidator = /^\d{10}$/;
+    if (aNumber.match(phoneValidator) && !this.state.validNumber) {
+      this.setState({validNumber: true})
+    } else if (this.state.validNumber) {
+      this.setState({validNumber: false})
+    }
+  }
+
   onSignInButtonPressed = () => {
     this.props.navigation.navigate('Login');
   };
 
-  state = {
-    phoneNumber: ''
-  }
+  render = () => {
+    const nextButton = (this.state.validNumber) ?
+      (
+        <GradientButton
+          style={{marginTop: 5, height: 40}}
+          rkType='large'
+          text='Next'
+          onPress={this.onTelephoneButtonPressed}
+        />
+      ) :
+      (
+        <GradientButton
+          colors={['#d2d2d2', '#d2d2d2']}
+          style={{marginTop: 5, height: 40}}
+          rkType='large'
+          text='Next'
+        />
+      )
 
-  // TODO: actually call this?
-  async reset() {
-    try {
-      await Keychain.resetGenericPassword({service: 'vote.referenda'});
-    } catch (err) {
-      this.setState({ status: 'Could not reset credentials, ' + err });
-    }
-  }
+    const inputStyle = {borderColor: (this.state.validNumber ? 'green' : 'red')}
 
-  render = () => (
-    <RkAvoidKeyboard
-      style={styles.screen}
-      onStartShouldSetResponder={() => true}
-      onResponderRelease={() => Keyboard.dismiss()}>
+    return (
+      <RkAvoidKeyboard
+        style={styles.screen}
+        onStartShouldSetResponder={() => true}
+        onResponderRelease={() => Keyboard.dismiss()}>
 
-      <View id="width-limiter" style={{flexDirection: 'column', flex: 1, width: '95%'}}>
+        <View id="width-limiter" style={{flexDirection: 'column', flex: 1, width: '95%'}}>
 
-        <View id="top-spacer" style={{height: '10%'}}/>
+          <View id="top-spacer" style={{height: '10%'}}/>
 
-        <View style={{ alignItems: 'center', height: '20%' }}>
-          {this.renderImage()}
-          <RkText rkType='h1' style={{color: 'white'}}>Phone Number</RkText>
-        </View>
-
-        <View id="top-content-spacer" style={{height: '5%'}}/>
-
-        <View style={{alignItems: 'flex-start', flex: 1}}>
-          <View class='text-spacer' style={{height: 10}} />
-          <RkText rkType='h6' style={{color: 'white'}}>Referenda requires your phone number to provide you unique access to our service. This prevents bots and other false identities from participating on the platform.</RkText>
-          <View class='text-spacer' style={{height: 10}} />
-          <RkText rkType='h6' style={{color: 'white'}}>Importantly, we do not store your phone number. Instead we store a unique one-way hash of your number, protecting your identity.</RkText>
-        </View>
-
-        <View style={{height: '25%'}}>
-          <View style={{flex: 1}} />
-          <RkTextInput
-            rkType='rounded'
-            placeholder='Phone Number'
-            keyboardType='phone-pad'
-            onChangeText={(phoneNumber) => this.setState({ phoneNumber })}/>
-          <GradientButton
-            style={[styles.save, {marginTop: 5, height: 40}]}
-            rkType='large'
-            text='Next'
-            onPress={this.onTelephoneButtonPressed}
-          />
-          <View id='footer-spacer' style={{height: 10}} />
-          <View style={styles.textRow}>
-            <RkText rkType='primary3'>Already have an account?</RkText>
-            <RkButton rkType='clear' onPress={this.onSignInButtonPressed}>
-              <RkText rkType='header6'> Sign in now</RkText>
-            </RkButton>
+          <View style={{ alignItems: 'center', height: '20%' }}>
+            {this.renderImage()}
+            <RkText rkType='h1' style={{color: 'white'}}>Phone Number</RkText>
           </View>
-        </View>
 
-        <View id="bottom-spacer" style={{height: '5%'}}/>
-      </View>
-    </RkAvoidKeyboard>
-  )
+          <View id="top-content-spacer" style={{height: '5%'}}/>
+
+          <View style={{alignItems: 'flex-start', flex: 1}}>
+            <View class='text-spacer' style={{height: 10}} />
+            <RkText rkType='h6' style={{color: 'white'}}>Referenda requires your phone number to provide you unique access to our service. This helps prevent bots and other false identities from participating on the platform.</RkText>
+          </View>
+
+          <View style={{height: '25%'}}>
+            <View style={{flex: 1}} />
+            <RkTextInput
+              style={inputStyle}
+              rkType='rounded'
+              placeholder='Phone Number'
+              keyboardType='phone-pad'
+              textContentType='telephoneNumber'
+              onChangeText={ this.onNumberChange }/>
+            {nextButton}
+            <View id='footer-spacer' style={{height: 10}} />
+            <View style={styles.textRow}>
+              <RkText rkType='primary3'>Already have an account?</RkText>
+              <RkButton rkType='clear' onPress={this.onSignInButtonPressed}>
+                <RkText rkType='header6'> Sign in now</RkText>
+              </RkButton>
+            </View>
+          </View>
+
+          <View id="bottom-spacer" style={{height: '5%'}}/>
+        </View>
+      </RkAvoidKeyboard>
+    )
+  }
 }
 
 const styles = RkStyleSheet.create(theme => ({
@@ -136,9 +165,6 @@ const styles = RkStyleSheet.create(theme => ({
   },
   content: {
     justifyContent: 'space-between',
-  },
-  save: {
-    // marginVertical: 20,
   },
   buttons: {
     flexDirection: 'row',

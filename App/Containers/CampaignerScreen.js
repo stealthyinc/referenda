@@ -55,7 +55,8 @@ const avatarArr = {
  11: require('../Data/img/avatars/Image11.png'),
 }
 
-const randomAvatar = (userTypeInstance.getUserType()) ? avatarArr[Math.floor(Math.random() * Math.floor(12))] : require('../Data/img/avatars/agatha.png')
+// const randomAvatar = (userTypeInstance.getUserType()) ? avatarArr[Math.floor(Math.random() * Math.floor(12))] : require('../Data/img/avatars/agatha.png')
+const randomAvatar = require('../Data/img/avatars/agatha.png')
 
 class CampaignerScreen extends Component {
   /**
@@ -178,7 +179,7 @@ class CampaignerScreen extends Component {
 
   headerButtonAction(transitionToState=undefined) {
     if (transitionToState === undefined) {
-      this.props.navigation.toggleDrawer()
+      // this.props.navigation.toggleDrawer()
     } else {
       this.setState({ gsPage:transitionToState })
     }

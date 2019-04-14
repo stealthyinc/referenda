@@ -78,7 +78,7 @@ export const donationFailure = state =>
   state.merge({ dFetching: false, dError: true, dPayload: null })
 
 // request the data from an api
-export const invoiceRequest = (state) => 
+export const invoiceRequest = (state) =>
   state.merge({ iFetching: true, iPayload: null })
 
 // successful api lookup
@@ -92,7 +92,7 @@ export const invoiceFailure = state =>
   state.merge({ iFetching: false, iError: true, iPayload: null })
 
 // request the data from an api
-export const twilioRequest = (state) => 
+export const twilioRequest = (state) =>
   state.merge({ tFetching: true, tPayload: null })
 
 // successful api lookup

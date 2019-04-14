@@ -28,6 +28,19 @@ class NameScreen extends Component {
     navigation: NavigationType.isRequired,
   };
 
+  constructor() {
+    super()
+    this.firstName = ''
+    this.lastName = ''
+    this.userName = ''
+
+    this.state = {
+      validFirstName: false,
+      validLastName: false,
+      validUserName: false
+    }
+  }
+
   getThemeImageSource = (theme) => (
     theme.name === 'light' ?
       require('../Assets/images/verified.png') : require('../Assets/images/logoDark.png')
@@ -38,8 +51,7 @@ class NameScreen extends Component {
   );
 
   onNextButtonPressed = () => {
-    this.props.storeNameInfo(
-      this.state.firstName, this.state.lastName, this.state.userName)
+    this.props.storeNameInfo(this.firstName, this.lastName, this.userName)
 
     console.log('NameScreen "next" button pressed.')
     this.props.navigation.navigate('Age');
@@ -49,58 +61,133 @@ class NameScreen extends Component {
     this.props.navigation.navigate('Login');
   };
 
-  state = {
-    firstName: '',
-    lastName: '',
-    userName: ''
+  onFirstNameChange = (aFirstName) => {
+    this.firstName = aFirstName
+
+    try {
+      if (aFirstName && (aFirstName.length >= 1)) {
+        if (!this.state.validFirstName) {
+          this.setState({validFirstName: true})
+        }
+      } else if (this.state.validFirstName) {
+        this.setState({validFirstName: false})
+      }
+    } catch (error) {
+      if (this.state.validFirstName) {
+        this.setState({validFirstName: false})
+      }
+    }
   }
 
-  render = () => (
-    <RkAvoidKeyboard
-      style={styles.screen}
-      onStartShouldSetResponder={() => true}
-      onResponderRelease={() => Keyboard.dismiss()}>
+  onLastNameChange = (aLastName) => {
+    this.lastName = aLastName
 
-      <View id="width-limiter" style={{flexDirection: 'column', flex: 1, width: '95%'}}>
+    try {
+      if (aLastName && (aLastName.length >= 1)) {
+        if (!this.state.validLastName) {
+          this.setState({validLastName: true})
+        }
+      } else if (this.state.validLastName) {
+        this.setState({validLastName: false})
+      }
+    } catch (error) {
+      if (this.state.validLastName) {
+        this.setState({validLastName: false})
+      }
+    }
+  }
 
-        <View id="top-spacer" style={{height: '10%'}}/>
+  onUserNameChange = (aUserName) => {
+    this.userName = aUserName
 
-        <View style={{ alignItems: 'center', height: '20%' }}>
-          {this.renderImage()}
-          <RkText rkType='h1' style={{color: 'white'}}>Name Information</RkText>
-        </View>
+    try {
+      if (aUserName && (aUserName.length >= 3)) {
+        if (!this.state.validUserName) {
+          this.setState({validUserName: true})
+        }
+      } else if (this.state.validUserName) {
+        this.setState({validUserName: false})
+      }
+    } catch (error) {
+      if (this.state.validUserName) {
+        this.setState({validUserName: false})
+      }
+    }
+  }
 
-        <View id="top-content-spacer" style={{height: '5%'}}/>
+  render = () => {
+    const activateNextButton = this.state.validFirstName &&
+                               this.state.validLastName &&
+                               this.state.validUserName
 
-        <View style={{alignItems: 'flex-start', flex: 1}}>
-          <View class='text-spacer' style={{height: 10}} />
-          <RkText rkType='h6' style={{color: 'white'}}>Referenda uses your name information to track campaigning achievements (i.e. donations & conversations).</RkText>
-        </View>
+    const nextButton = (activateNextButton) ?
+           (
+             <GradientButton
+         style={{marginTop: 5, height: 40}}
+         rkType='large'
+         text='Next'
+         onPress={this.onNextButtonPressed}
+       />
+      ) :
+      (
+       <GradientButton
+         colors={['#d2d2d2', '#d2d2d2']}
+         style={{marginTop: 5, height: 40}}
+         rkType='large'
+         text='Next'
+       />
+      )
 
-        <View style={{height: '45%'}}>
-          <View style={{flex: 1}} />
-          <RkTextInput rkType='rounded' placeholder='First Name' onChangeText={(firstName) => this.setState({ firstName })}/>
-          <RkTextInput rkType='rounded' placeholder='Last Name' onChangeText={(lastName) => this.setState({ lastName })}/>
-          <RkTextInput rkType='rounded' placeholder='Username' onChangeText={(userName) => this.setState({ userName })}/>
-          <GradientButton
-            style={[styles.save, {marginTop: 5, height: 40}]}
-            rkType='large'
-            text='Next'
-            onPress={this.onNextButtonPressed}
-          />
-          <View id='footer-spacer' style={{height: 10}} />
-          <View style={styles.textRow}>
-            <RkText rkType='primary3'>Already have an account?</RkText>
-            <RkButton rkType='clear' onPress={this.onSignInButtonPressed}>
-              <RkText rkType='header6'> Sign in now</RkText>
-            </RkButton>
+    const firstNameInputStyle =
+      {borderColor: (this.state.validFirstName ? 'green' : 'red')}
+    const lastNameInputStyle =
+      {borderColor: (this.state.validLastName ? 'green' : 'red')}
+    const userNameInputStyle =
+      {borderColor: (this.state.validUserName ? 'green' : 'red')}
+
+
+    return (
+      <RkAvoidKeyboard
+        style={styles.screen}
+        onStartShouldSetResponder={() => true}
+        onResponderRelease={() => Keyboard.dismiss()}>
+
+        <View id="width-limiter" style={{flexDirection: 'column', flex: 1, width: '95%'}}>
+
+          <View id="top-spacer" style={{height: '10%'}}/>
+
+          <View style={{ alignItems: 'center', height: '20%' }}>
+            {this.renderImage()}
+            <RkText rkType='h1' style={{color: 'white'}}>Name Information</RkText>
           </View>
-        </View>
 
-        <View id="bottom-spacer" style={{height: '5%'}}/>
-      </View>
-    </RkAvoidKeyboard>
-  )
+          <View id="top-content-spacer" style={{height: '5%'}}/>
+
+          <View style={{alignItems: 'flex-start', flex: 1}}>
+            <View class='text-spacer' style={{height: 10}} />
+            <RkText rkType='h6' style={{color: 'white'}}>Referenda uses your name information to track campaigning achievements (i.e. donations & conversations).</RkText>
+          </View>
+
+          <View style={{height: '45%'}}>
+            <View style={{flex: 1}} />
+            <RkTextInput style={firstNameInputStyle} rkType='rounded' placeholder='First Name' onChangeText={this.onFirstNameChange}/>
+            <RkTextInput style={lastNameInputStyle} rkType='rounded' placeholder='Last Name' onChangeText={this.onLastNameChange}/>
+            <RkTextInput style={userNameInputStyle} rkType='rounded' placeholder='Username' onChangeText={this.onUserNameChange}/>
+            {nextButton}
+            <View id='footer-spacer' style={{height: 10}} />
+            <View style={styles.textRow}>
+              <RkText rkType='primary3'>Already have an account?</RkText>
+              <RkButton rkType='clear' onPress={this.onSignInButtonPressed}>
+                <RkText rkType='header6'> Sign in now</RkText>
+              </RkButton>
+            </View>
+          </View>
+
+          <View id="bottom-spacer" style={{height: '5%'}}/>
+        </View>
+      </RkAvoidKeyboard>
+    )
+  }
 }
 
 const styles = RkStyleSheet.create(theme => ({

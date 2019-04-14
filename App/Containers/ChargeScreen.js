@@ -453,6 +453,9 @@ const styles = StyleSheet.create({
   },
 });
 
+// donation flow is CC
+// invoice flow is pay later (text a link)
+
 
 const mapStateToProps = (state) => {
   return {
@@ -460,6 +463,12 @@ const mapStateToProps = (state) => {
     donationSuccess: DonationSelectors.getDonationSuccess(state),
     donationFetching: DonationSelectors.getDonationFetching(state),
     donationRecord: DonationSelectors.getDonationRecord(state),
+    invoiceError: DonationSelectors.getInvoiceError(state),
+    invoiceSuccess: DonationSelectors.getInvoiceSuccess(state),
+    invoiceFetching: DonationSelectors.getInvoiceFetching(state),
+    twilioError: DonationSelectors.getTwilioError(state),
+    twilioSuccess: DonationSelectors.getTwilioSuccess(state),
+    twilioFetching: DonationSelectors.getTwilioFetching(state),
   }
 }
 
