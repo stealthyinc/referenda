@@ -98,13 +98,13 @@ class ChargeScreen extends Component {
       applePayState: applePayStatus.none,
       applePayError: null,
       waitOnPayNowOperation: false,
-      waitOnPayLaterState: false,
+      waitOnPayLaterOperation: false,
       waitingOnCommand: '',
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.state.waitOnPayLaterState) {
+    if (this.state.waitOnPayLaterOperation) {
       if (nextProps.hasOwnProperty('invoiceSuccess') &&
           nextProps.invoiceSuccess !== null) {
 
@@ -115,14 +115,32 @@ class ChargeScreen extends Component {
         // Reset the state for invoicing and begin waiting for the command we
         // just launched to complete ...
         this.setState({
-          waitOnPayLaterState: false,
+          waitOnPayLaterOperation: false,
           waitingOnCommand: engCmd.getCommandType()
         })
       }
-
+      //
       // Needs to check for invoiceFetching false and invoiceSuccess null, but
       // that will may be problematic. Move the underlying code to engine so we
       // can handle errors and deal with process & state more accurately. TODO
+
+
+    } else if (this.state.waitOnPayNowOperation) {
+      // PBJ: this is not tested -- need you to test
+      if (nextProps.hasOwnProperty('donationSuccess') &&
+          nextProps.donationSuccess !== null) {
+
+        const engCmd =
+          EngineCommand.creditCardDonationCommand(this.props.donationRecord)
+        this.props.engineCommandExec(engCmd)
+
+        // Reset the state for invoicing and begin waiting for the command we
+        // just launched to complete ...
+        this.setState({
+          waitOnPayNowOperation: false,
+          waitingOnCommand: engCmd.getCommandType()
+        })
+      }
     } else if (this.state.waitingOnCommand &&
                nextProps.hasOwnProperty('payLoad') &&
                nextProps.payLoad.hasOwnProperty('commandType') &&
@@ -362,13 +380,15 @@ class ChargeScreen extends Component {
     }
   }
 
+  // TODO: PBJ call this from whereever the CC transaction starts to wait for a
+  // response
   onPayNowPressed = () => {
     this.setState({waitOnPayNowOperation: true})
     // TODO: PBJ call whatever starts the CC transaction here ...
   }
 
   onPayLaterPressed = () => {
-    this.setState({waitOnPayLaterState: true})
+    this.setState({waitOnPayLaterOperation: true})
     this.props.invoiceSquareRequest()
   }
 
@@ -405,7 +425,7 @@ class ChargeScreen extends Component {
     const employerStr = `Employer: ${donationRecord.employer}`
     const amountStr = `Amount: ${donationRecord.amount}`
 
-    const ai = (this.waitOnPayLaterState ||
+    const ai = (this.waitOnPayLaterOperation ||
                 this.waitOnPayNowOperation ||
                 this.waitingOnCommand) ?
       ( <View>
