@@ -1,4 +1,5 @@
 import { NavigationActions } from 'react-navigation'
+const { Analytics } = require('../Utils/Analytics.js')
 
 // gets the current screen from navigation state
 const getCurrentRouteName = (navigationState) => {
@@ -24,14 +25,14 @@ const screenTracking = ({ getState }) => next => (action) => {
   const currentScreen = getCurrentRouteName(getState().nav)
   const result = next(action)
   const nextScreen = getCurrentRouteName(getState().nav)
-  // if (nextScreen !== currentScreen) {
-  //   try {
-  //     // console.tron.log(`NAVIGATING ${currentScreen} to ${nextScreen}`)
-  //     // Example: Analytics.trackEvent('user_navigation', {currentScreen, nextScreen})
-  //   } catch (e) {
-  //     // console.tron.log(e)
-  //   }
-  // }
+  if (nextScreen !== currentScreen) {
+    try {
+      // console.tron.log(`NAVIGATING ${currentScreen} to ${nextScreen}`)
+      Analytics.aeStoreEvent('user_navigation', `NAVIGATING ${currentScreen} to ${nextScreen}`)
+    } catch (e) {
+      // console.tron.log(e)
+    }
+  }
   return result
 }
 

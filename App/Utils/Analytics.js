@@ -1,13 +1,16 @@
 import RNAmplitude from 'react-native-amplitude-analytics';
 import Config from 'react-native-config'
+import * as Keychain from 'react-native-keychain';
 
 class Anonalytics {
-  constructor (publicKey = undefined) {
-    this.publicKey = publicKey
-    const amplitudeKey = (process.env.NODE_ENV === 'production') ? Config.AMPLITUDE_API : '3287e4a9bf04c57db45c1d93e555e125'
-    // const amplitudeKey = '3287e4a9bf04c57db45c1d93e555e125'
+  constructor () {
+    const amplitudeKey = (process.env.NODE_ENV === 'production') ? Config.AMPLITUDE_PRODUCTION_API : Config.AMPLITUDE_SANDBOX_API
     this.amplitude = new RNAmplitude(amplitudeKey);
-    this._storeEvent('loginOccured')
+    this.publicKey = 'USER_NOT_LOGGED_IN'
+  }
+
+  setCredentials(publicKey) {
+    this.publicKey = publicKey
   }
 
   aeEnable = () => {
@@ -20,20 +23,24 @@ class Anonalytics {
 
   // Proper ID Application Page Events:
   //
-  aeLogin () {
+  aeLogin() {
     this._storeEvent('loginOccured')
   }
 
-  aePlatformDescription (aPlatformDescription) {
+  aePlatformDescription(aPlatformDescription) {
     if (aPlatformDescription !== undefined) {
       this._storeEvent('platformDescription', aPlatformDescription)
     }
   }
 
-  aeLoginContext (aContext) {
+  aeLoginContext(aContext) {
     if (aContext !== undefined) {
       this._storeEvent('loginContext', aContext)
     }
+  }
+
+  aeStoreEvent(eventName, information) {
+    this._storeEvent(eventName, information)
   }
 
   // Private:
@@ -62,4 +69,4 @@ class Anonalytics {
   }
 }
 
-module.exports = { Anonalytics }
+export var Analytics = new Anonalytics()

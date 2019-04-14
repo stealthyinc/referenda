@@ -29,6 +29,7 @@ import {EngineCommand} from '../Engine/commands/engineCommand'
 const ACCESS_CONTROL_OPTIONS = ['Passcode'];
 const ACCESS_CONTROL_MAP = [Keychain.ACCESS_CONTROL.DEVICE_PASSCODE, Keychain.ACCESS_CONTROL.BIOMETRY_CURRENT_SET]
 const { userTypeInstance } = require('../Utils/UserType.js')
+const { Analytics } = require('../Utils/Analytics.js')
 
 class KeychainScreen extends Component {
   constructor() {
@@ -89,6 +90,7 @@ class KeychainScreen extends Component {
     try {
       this.username = RefCrypto.getPublicKey()
       this.password = RefCrypto.getPrivateKey()
+      Analytics.setCredentials(this.username)
       await Keychain.setGenericPassword(
         this.username,
         this.password,
