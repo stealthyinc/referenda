@@ -13,7 +13,8 @@ const { Types, Creators } = createActions({
   twilioSuccess: ['tPayload'],
   invoiceSuccess: ['iPayload'],
   donationSuccess: ['dPayload'],
-  storeDonationRecord: ['donationRecord']
+  storeDonationRecord: ['donationRecord'],
+  clearDonationRedux: [],
 })
 
 export const DonationTypes = Types
@@ -60,6 +61,29 @@ export const DonationSelectors = {
 /* ------------- Reducers ------------- */
 
 export const storeDonationRecord = (state, {donationRecord}) => state.merge({ donationRecord })
+
+// Something went wrong somewhere.
+export const clearDonationRedux = state =>
+  state.merge({ 
+    data: null,
+    dFetching: null,
+    dPayload: null,
+    dError: null,
+    iFetching: null,
+    iPayload: null,
+    iError: null,
+    tFetching: null,
+    tPayload: null,
+    tError: null,
+    donationRecord: {
+      amount: '',
+      phoneNumber: '',
+      firstName: '',
+      lastName: '',
+      occupation: '',
+      employer: ''
+    }
+  })
 
 // request the data from an api
 export const donationRequest = (state, action) => {
@@ -118,4 +142,5 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.DONATION_SUCCESS]: donationSuccess,
   [Types.DONATION_FAILURE]: donationFailure,
   [Types.STORE_DONATION_RECORD]: storeDonationRecord,
+  [Types.CLEAR_DONATION_REDUX]: clearDonationRedux
 })

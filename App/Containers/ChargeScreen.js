@@ -123,17 +123,14 @@ class ChargeScreen extends Component {
       // Needs to check for invoiceFetching false and invoiceSuccess null, but
       // that will may be problematic. Move the underlying code to engine so we
       // can handle errors and deal with process & state more accurately. TODO
-
-
     } else if (this.state.waitOnPayNowOperation) {
       // PBJ: this is not tested -- need you to test
       if (nextProps.hasOwnProperty('donationSuccess') &&
           nextProps.donationSuccess !== null) {
 
         const engCmd =
-          EngineCommand.creditCardDonationCommand(this.props.donationRecord)
+          EngineCommand.creditCardDonationCommand(this.props.donationRecord, nextProps.donationSuccess)
         this.props.engineCommandExec(engCmd)
-
         // Reset the state for invoicing and begin waiting for the command we
         // just launched to complete ...
         this.setState({
@@ -559,7 +556,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     invoiceSquareRequest: () => dispatch(DonationActions.invoiceRequest()),
     chargeSquareRequest: (data) => dispatch(DonationActions.donationRequest(data)),
-    engineCommandExec: (aCommand) => dispatch(EngineActions.engineCommandExec(aCommand))
+    engineCommandExec: (aCommand) => dispatch(EngineActions.engineCommandExec(aCommand)),
   }
 }
 

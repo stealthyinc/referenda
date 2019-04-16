@@ -53,6 +53,10 @@ class DonatorNameScreen extends Component {
     this.props.navigation.navigate('CampaignerMenu')
   }
 
+  componentDidMount() {
+    this.props.clearDonationRedux()
+  }
+
   render() {
     // Calculate dimensions for the Agatha image:
     //
@@ -129,6 +133,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    clearDonationRedux: () => dispatch(DonationActions.clearDonationRedux())
   }
 }
 

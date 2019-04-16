@@ -52,7 +52,7 @@ export function * sendInvoiceMessage(action) {
 
 export function * sendSquareInvoice () {
   const donationRecord = yield select(DonationSelectors.getDonationRecord)
-  const amount = parseInt(donationRecord.amount)*100
+  const amount = parseFloat(donationRecord.amount)*100
   console.log('DONATION', donationRecord, amount)
   const data = {
     "idempotency_key": uuidv4(),
@@ -92,7 +92,7 @@ export function * sendSquareInvoice () {
 export function * sendSquareCharge (action) {
   const { data } = action
   const donationRecord = yield select(DonationSelectors.getDonationRecord)
-  const amount = parseInt(donationRecord.amount)*100
+  const amount = parseFloat(donationRecord.amount)*100
   console.log('DONATION', donationRecord, amount)
   const sqData = {
     "idempotency_key": uuidv4(),
@@ -118,6 +118,6 @@ export function * sendSquareCharge (action) {
 export function* startSquare (action) {
   yield takeLatest(DonationTypes.INVOICE_REQUEST, sendSquareInvoice)
   yield takeLatest(DonationTypes.DONATION_REQUEST, sendSquareCharge)
-  yield takeLatest(DonationTypes.DONATION_SUCCESS, sendDonationMessage)
+  // yield takeLatest(DonationTypes.DONATION_SUCCESS, sendDonationMessage)
   yield takeLatest(DonationTypes.INVOICE_SUCCESS, sendInvoiceMessage)
 }
