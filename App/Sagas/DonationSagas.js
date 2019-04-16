@@ -19,12 +19,21 @@ import {
 import Config from 'react-native-config'
 import API from '../Services/Api'
 
-export function * sendDonationMessage() {
-  const donationRecord = yield select(DonationSelectors.getDonationRecord)
-  const message = "Thank you for your donation to Agatha's Campaign. We will notify you when the Referenda App is ready!"
+export function * sendDonationMessage(action) {
+  const { dPayload } = action
+  const { tenders, reference_id } = dPayload.transaction
+  // console.log( "DPAYLOAD", dPayload)
+  // console.log("tenders", tenders)
+  let message = "Thank you for your donation to Agatha's Campaign. We will notify you when the Referenda App is ready!"
+  if (tenders && tenders[0]) {
+    const { id } = tenders[0]
+    const receipt = 'https://squareup.com/receipt/preview/' + id
+    message = message + '\n' + receipt
+  }
+  // const donationRecord = yield select(DonationSelectors.getDonationRecord)
   const url = Config.TWILIO_LAMBDA_URL
-  const api = API.twilio(url, donationRecord.phoneNumber, message)
-  console.log("IN DONATION FLOW", url, donationRecord)
+  const api = API.twilio(url, reference_id, message)
+  // console.log("IN DONATION FLOW", url, donationRecord)
   try {
     const response = yield call(api.send)
     console.log("TWILIO RESPONSE", response.data)
@@ -78,7 +87,7 @@ export function * sendSquareInvoice () {
   }
   const SQUARE_LOCATION_ID = (process.env.NODE_ENV === 'production') ? Config.SQUARE_PRODUCTION_AGATHA_LOCATION_ID : Config.SQUARE_SANDBOX_LOCATION_ID
   const url = `https://connect.squareup.com/v2/locations/${SQUARE_LOCATION_ID}/checkouts`
-  console.log("SQUARE SAGA1", url, data)
+  // console.log("SQUARE SAGA1", url, data)
   const api = API.squareInvoice(url, data)
   try {
     const response = yield call(api.invoice)
@@ -118,6 +127,6 @@ export function * sendSquareCharge (action) {
 export function* startSquare (action) {
   yield takeLatest(DonationTypes.INVOICE_REQUEST, sendSquareInvoice)
   yield takeLatest(DonationTypes.DONATION_REQUEST, sendSquareCharge)
-  // yield takeLatest(DonationTypes.DONATION_SUCCESS, sendDonationMessage)
+  yield takeLatest(DonationTypes.DONATION_SUCCESS, sendDonationMessage)
   yield takeLatest(DonationTypes.INVOICE_SUCCESS, sendInvoiceMessage)
 }
