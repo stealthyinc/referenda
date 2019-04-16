@@ -57,7 +57,17 @@ class DonatorOtherAmountScreen extends Component {
   }
 
   onOtherAmount = (anAmount) => {
-    this.donationRecord.amount = anAmount
+    // Algorithm to prevent more than 2 sig. digits after decimal place.
+    let value = anAmount
+    try {
+      const re = /(.*\...).*/
+      let truncateMe = anAmount
+      value = truncateMe.replace(re, '$1')
+    } catch (suppressedError) {
+      // Sigh ...
+    }
+
+    this.donationRecord.amount = value
     this.storeInRedux()
     this.validateAmount(anAmount)
   }

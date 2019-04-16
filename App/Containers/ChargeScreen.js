@@ -414,6 +414,15 @@ class ChargeScreen extends Component {
       donationSuccess,
       donationFetching,
     } = this.props
+
+    let under200Exception = false
+    try {
+      const amount = parseFloat(donationRecord.amount)
+      under200Exception = (amount < 200.00)
+    } catch (suppressedError) {
+      // Sigh ...
+    }
+
     //ACTODO: here's the info to send to firebase and throw up a spinner
     console.log("donationError", donationError)
     console.log("donationSuccess", donationSuccess)
@@ -423,6 +432,11 @@ class ChargeScreen extends Component {
     const occupationStr = `Occupation: ${donationRecord.occupation}`
     const employerStr = `Employer: ${donationRecord.employer}`
     const amountStr = `Amount: ${donationRecord.amount}`
+
+    const occupation = (under200Exception) ?
+      undefined: ( <Text style={styles.summary}>{occupationStr}</Text> )
+    const employer = (under200Exception) ?
+      undefined : ( <Text style={styles.summary}>{employerStr}</Text> )
 
     const {
       waitOnPayLaterOperation,
@@ -455,13 +469,13 @@ class ChargeScreen extends Component {
                 borderColor: '#389C95',
                 resizeMode: 'contain'}}/>
           </View>
-          
+
           {ai}
           <Text style={styles.title}>Donation Summary</Text>
           <Text style={styles.summary}>{nameStr}</Text>
           <Text style={styles.summary}>{phoneStr}</Text>
-          <Text style={styles.summary}>{occupationStr}</Text>
-          <Text style={styles.summary}>{employerStr}</Text>
+          {occupation}
+          {employer}
           <Text style={styles.summary}>{amountStr}</Text>
           <GradientButton
             rkType='medium'

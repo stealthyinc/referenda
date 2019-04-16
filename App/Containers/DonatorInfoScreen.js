@@ -183,11 +183,22 @@ class DonatorInfoScreen extends Component {
 
     const donationRecord = JSON.parse(JSON.stringify(this.props.donationRecord))
 
+    let under200Exception = false
+    try {
+      const amount = parseFloat(donationRecord.amount)
+      under200Exception = (amount < 200.00)
+    } catch (suppressedError) {
+      // Sigh ...
+    }
+
     // Determine if next button is active and indicate incorrect fields
     //
-    const activateNextButton = this.state.validPhoneNumber &&
+    const activateNextButton = (this.state.validPhoneNumber &&
                                this.state.validOccupation &&
-                               this.state.validEmployer
+                               this.state.validEmployer) ||
+                               (this.state.validPhoneNumber &&
+                                under200Exception)
+
     const nextButton = (activateNextButton) ?
       (
         <GradientButton
@@ -211,6 +222,20 @@ class DonatorInfoScreen extends Component {
     const employerInputStyle =
       {backgroundColor: (this.state.validEmployer ? 'white' : '#FFE4E1')}
 
+    const occupationInput = under200Exception ?
+      undefined :
+      this.getInputElement('Occupation*', this.onOccupation, occupationInputStyle, donationRecord.occupation)
+    const employerInput = under200Exception ?
+      undefined :
+      this.getInputElement('Employer*', this.onEmployer, employerInputStyle, donationRecord.employer)
+    const campaignLaw = under200Exception ?
+      undefined :
+      (
+        <Text style={{color: 'blue'}} onPress={() => Linking.openURL('https://transition.fec.gov/pages/brochures/fecfeca.shtml#Disclosure')}>
+          *Campaign finance laws require occupation & employer.
+        </Text>
+      )
+
     return (
       <RkAvoidKeyboard style={[styles.container, {paddingVertical: `${verticalPaddingPercent}%`}]}>
         <View style={{width: '100%', height: '100%', flexDirection:'column', alignItems:'center', justifyContent:'flex-end'}}>
@@ -229,27 +254,10 @@ class DonatorInfoScreen extends Component {
 
           <Text style={styles.title}>Donor Information</Text>
           {this.getInputElement('Mobile Phone Number', this.onPhoneNumber, phoneNumberInputStyle, donationRecord.phoneNumber, true)}
-          {this.getInputElement('Occupation*', this.onOccupation, occupationInputStyle, donationRecord.occupation)}
-          {this.getInputElement('Employer*', this.onEmployer, employerInputStyle, donationRecord.employer)}
-
-          {/*<RkTextInput
-            rkType='rounded'
-            placeholder='Mobile Phone Number'
-            keyboardType='phone-pad'
-            onChangeText={(phoneNumber) => { this.onPhoneNumber(phoneNumber) }}/>
-          <RkTextInput rkType='rounded' placeholder='Occupation*' onChangeText={(occupation) => { this.onOccupation(occupation) }}/>
-          <RkTextInput rkType='rounded' placeholder='Employer*' onChangeText={(employer) => { this.onEmployer(employer) }}/>*/}
-          {/* Make this asterisk a link to the relevant law for people to see / inspect. */}
-          <Text style={{color: 'blue'}} onPress={() => Linking.openURL('https://transition.fec.gov/pages/brochures/fecfeca.shtml#Disclosure')}>
-            *Campaign finance laws require occupation & employer.
-          </Text>
-
+          {occupationInput}
+          {employerInput}
+          {campaignLaw}
           {nextButton}
-          {/* <GradientButton
-            rkType='medium'
-            text='Next'
-            style={styles.buttonStyle}
-            onPress={this.onNextButtonPressed}/> */}
         </View>
       </RkAvoidKeyboard>
     );
