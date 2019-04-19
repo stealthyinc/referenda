@@ -63,6 +63,7 @@ export function * sendSquareInvoice () {
   const donationRecord = yield select(DonationSelectors.getDonationRecord)
   const amount = parseFloat(donationRecord.amount)*100
   console.log('DONATION', donationRecord, amount)
+  const shippingFlag = amount <= 2000
   const data = {
     "idempotency_key": uuidv4(),
     "order": {
@@ -78,7 +79,7 @@ export function * sendSquareInvoice () {
         }
       ]
     },
-    "ask_for_shipping_address": true,
+    "ask_for_shipping_address": shippingFlag,
     "pre_populate_shipping_address": {
       "first_name": donationRecord.firstName,
       "last_name": donationRecord.lastName

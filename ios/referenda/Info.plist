@@ -46,7 +46,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Referenda needs access to your camera to record video.</string>
 	<key>NSContactsUsageDescription</key>
-	<string>Referend needs access to your contacts to send invites.</string>
+	<string>Referenda needs access to your contacts to send invites.</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Referenda needs access to Face ID to save your password to the keychain.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
