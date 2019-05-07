@@ -62,8 +62,11 @@ export function * sendInvoiceMessage(action) {
 export function * sendSquareInvoice () {
   const donationRecord = yield select(DonationSelectors.getDonationRecord)
   const amount = parseFloat(donationRecord.amount)*100
+  const stAmount = 0.01*amount
+  const clAmount = 0.99*amount
   console.log('DONATION', donationRecord, amount)
   const shippingFlag = amount <= 2000
+  const SQUARE_STEALTHY_LOCATION_ID = (process.env.NODE_ENV === 'production') ? Config.SQUARE_PRODUCTION_STEALTHY_LOCATION_ID : Config.SQUARE_SANDBOX_LOCATION_ID
   const data = {
     "idempotency_key": uuidv4(),
     "order": {
@@ -73,7 +76,7 @@ export function * sendSquareInvoice () {
           "name": "Donation to Agatha Bacelar's Campaign",
           "quantity": "1",
           "base_price_money": {
-            "amount": amount,
+            "amount": clAmount,
             "currency": "USD"
           }
         }
@@ -84,7 +87,17 @@ export function * sendSquareInvoice () {
       "first_name": donationRecord.firstName,
       "last_name": donationRecord.lastName
     },
-    "merchant_support_email": "support@stealthy.im"
+    "merchant_support_email": "support@stealthy.im",
+    "additional_recipients": [
+      {
+        "location_id": SQUARE_STEALTHY_LOCATION_ID,
+        "description": "Application fees",
+        "amount_money": {
+          "amount": stAmount,
+          "currency": "USD"
+        }
+      }
+    ]
   }
   const SQUARE_LOCATION_ID = (process.env.NODE_ENV === 'production') ? Config.SQUARE_PRODUCTION_AGATHA_LOCATION_ID : Config.SQUARE_SANDBOX_LOCATION_ID
   const url = `https://connect.squareup.com/v2/locations/${SQUARE_LOCATION_ID}/checkouts`
@@ -103,14 +116,27 @@ export function * sendSquareCharge (action) {
   const { data } = action
   const donationRecord = yield select(DonationSelectors.getDonationRecord)
   const amount = parseFloat(donationRecord.amount)*100
+  const stAmount = 0.01*amount
+  const clAmount = 0.99*amount
   console.log('DONATION', donationRecord, amount)
+  const SQUARE_STEALTHY_LOCATION_ID = (process.env.NODE_ENV === 'production') ? Config.SQUARE_PRODUCTION_STEALTHY_LOCATION_ID : Config.SQUARE_SANDBOX_LOCATION_ID
   const sqData = {
     "idempotency_key": uuidv4(),
     "reference_id": donationRecord.phoneNumber,
     "amount_money": {
-    "amount": amount,
+    "amount": clAmount,
     "currency": "USD"},
-    "card_nonce": data
+    "card_nonce": data,
+    "additional_recipients": [
+      {
+        "location_id": SQUARE_STEALTHY_LOCATION_ID,
+        "description": "Application fees",
+        "amount_money": {
+          "amount": stAmount,
+          "currency": "USD"
+        }
+      }
+    ]
   }
   const SQUARE_LOCATION_ID = (process.env.NODE_ENV === 'production') ? Config.SQUARE_PRODUCTION_AGATHA_LOCATION_ID : Config.SQUARE_SANDBOX_LOCATION_ID
   const url = `https://connect.squareup.com/v2/locations/${SQUARE_LOCATION_ID}/transactions`
