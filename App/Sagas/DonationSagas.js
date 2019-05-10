@@ -59,13 +59,42 @@ export function * sendInvoiceMessage(action) {
   }
 }
 
+/**
+ * getAmountInCentsFromDonation - converts a string in USD, aDonationStrUSD to
+ *                                an integer in cents, rounded down. Then
+ *                                calculations proceeds and a commission in
+ *                                cents. Commission is rounded up to the nearest
+ *                                cent.
+ *
+ * @return: an object containing the total donation in cents, the fee in cents,
+ *          and the proceeds in cents.
+ *
+ * Does not handle errors in aDonationStrUSD. That argument must be properly
+ * constructed for processing by parseFloat.
+ */
+function getAmountInCentsFromDonation(aDonationStrUSD) {
+  //
+  // Convert from USD to Cents, discard fractional portion:
+  const totalCents = Math.floor(parseFloat(aDonationStrUSD) * 100)
+  //
+  // Calculate 1% commission, rounded to the nearest cent:
+  const feeCents = Math.ceil(totalCents / 100)
+  //
+  return {
+    totalCents: totalCents,
+    proceedsCents: (totalCents - feeCents),
+    feeCents: feeCents
+  }
+}
+
 export function * sendSquareInvoice () {
   const donationRecord = yield select(DonationSelectors.getDonationRecord)
-  const amount = parseFloat(donationRecord.amount)*100
-  const stAmount = 0.01*amount
-  const clAmount = 0.99*amount
-  console.log('DONATION', donationRecord, amount)
-  const shippingFlag = amount <= 2000
+  const amounts = getAmountInCentsFromDonation(donationRecord)
+  const stAmount = amounts.feeCents
+  const clAmount = amounts.proceedsCents
+  const shippingFlag = amounts.totalCents <= 2000
+  console.log('DONATION(cents: total, fee, proceeds):', amounts.totalCents, stAmount, clAmount)
+
   const SQUARE_STEALTHY_LOCATION_ID = (process.env.NODE_ENV === 'production') ? Config.SQUARE_PRODUCTION_STEALTHY_LOCATION_ID : Config.SQUARE_SANDBOX_LOCATION_ID
   const data = {
     "idempotency_key": uuidv4(),
@@ -115,10 +144,11 @@ export function * sendSquareInvoice () {
 export function * sendSquareCharge (action) {
   const { data } = action
   const donationRecord = yield select(DonationSelectors.getDonationRecord)
-  const amount = parseFloat(donationRecord.amount)*100
-  const stAmount = 0.01*amount
-  const clAmount = 0.99*amount
-  console.log('DONATION', donationRecord, amount)
+  const amounts = getAmountInCentsFromDonation(donationRecord)
+  const stAmount = amounts.feeCents
+  const clAmount = amounts.proceedsCents
+  console.log('DONATION(cents: total, fee, proceeds):', amounts.totalCents, stAmount, clAmount)
+
   const SQUARE_STEALTHY_LOCATION_ID = (process.env.NODE_ENV === 'production') ? Config.SQUARE_PRODUCTION_STEALTHY_LOCATION_ID : Config.SQUARE_SANDBOX_LOCATION_ID
   const sqData = {
     "idempotency_key": uuidv4(),
