@@ -89,7 +89,7 @@ function getAmountInCentsFromDonation(aDonationStrUSD) {
 
 export function * sendSquareInvoice () {
   const donationRecord = yield select(DonationSelectors.getDonationRecord)
-  const amounts = getAmountInCentsFromDonation(donationRecord)
+  const amounts = getAmountInCentsFromDonation(donationRecord.amount)
   const stAmount = amounts.feeCents
   const clAmount = amounts.proceedsCents
   const shippingFlag = amounts.totalCents <= 2000
@@ -144,7 +144,7 @@ export function * sendSquareInvoice () {
 export function * sendSquareCharge (action) {
   const { data } = action
   const donationRecord = yield select(DonationSelectors.getDonationRecord)
-  const amounts = getAmountInCentsFromDonation(donationRecord)
+  const amounts = getAmountInCentsFromDonation(donationRecord.amount)
   const stAmount = amounts.feeCents
   const clAmount = amounts.proceedsCents
   console.log('DONATION(cents: total, fee, proceeds):', amounts.totalCents, stAmount, clAmount)
