@@ -19,6 +19,23 @@ import {
 import Config from 'react-native-config'
 import API from '../Services/Api'
 
+const DEBUG_PRODUCTION_SQUARE_CONFIGURATION = false
+//
+getSquareConfiguration() {
+  if ((process.env.NODE_ENV === 'production') ||
+       DEBUG_PRODUCTION_SQUARE_CONFIGURATION) {
+    return {
+      stealthyLocationId: Config.SQUARE_PRODUCTION_STEALTHY_LOCATION_ID,
+      squareLocationId: Config.SQUARE_PRODUCTION_AGATHA_LOCATION_ID,
+    }
+  }
+
+  return {
+    stealthyLocationId: Config.SQUARE_SANDBOX_LOCATION_ID,
+    squareLocationId: Config.SQUARE_SANDBOX_LOCATION_ID,
+  }
+}
+
 export function * sendDonationMessage(action) {
   const { dPayload } = action
   const { tenders, reference_id } = dPayload.transaction
@@ -95,7 +112,8 @@ export function * sendSquareInvoice () {
   const shippingFlag = amounts.totalCents <= 2000
   console.log('DONATION(cents: total, fee, proceeds):', amounts.totalCents, stAmount, clAmount)
 
-  const SQUARE_STEALTHY_LOCATION_ID = (process.env.NODE_ENV === 'production') ? Config.SQUARE_PRODUCTION_STEALTHY_LOCATION_ID : Config.SQUARE_SANDBOX_LOCATION_ID
+  const squareConfig = getSquareConfiguration()
+
   const data = {
     "idempotency_key": uuidv4(),
     "order": {
@@ -119,7 +137,7 @@ export function * sendSquareInvoice () {
     "merchant_support_email": "support@stealthy.im",
     "additional_recipients": [
       {
-        "location_id": SQUARE_STEALTHY_LOCATION_ID,
+        "location_id": squareConfig.stealthyLocationId,
         "description": "Application fees",
         "amount_money": {
           "amount": stAmount,
@@ -128,8 +146,7 @@ export function * sendSquareInvoice () {
       }
     ]
   }
-  const SQUARE_LOCATION_ID = (process.env.NODE_ENV === 'production') ? Config.SQUARE_PRODUCTION_AGATHA_LOCATION_ID : Config.SQUARE_SANDBOX_LOCATION_ID
-  const url = `https://connect.squareup.com/v2/locations/${SQUARE_LOCATION_ID}/checkouts`
+  const url = `https://connect.squareup.com/v2/locations/${squareConfig.squareLocationId}/checkouts`
   // console.log("SQUARE SAGA1", url, data)
   const api = API.squareInvoice(url, data)
   try {
@@ -149,7 +166,7 @@ export function * sendSquareCharge (action) {
   const clAmount = amounts.proceedsCents
   console.log('DONATION(cents: total, fee, proceeds):', amounts.totalCents, stAmount, clAmount)
 
-  const SQUARE_STEALTHY_LOCATION_ID = (process.env.NODE_ENV === 'production') ? Config.SQUARE_PRODUCTION_STEALTHY_LOCATION_ID : Config.SQUARE_SANDBOX_LOCATION_ID
+  const squareConfig = getSquareConfiguration()
   const sqData = {
     "idempotency_key": uuidv4(),
     "reference_id": donationRecord.phoneNumber,
@@ -159,7 +176,7 @@ export function * sendSquareCharge (action) {
     "card_nonce": data,
     "additional_recipients": [
       {
-        "location_id": SQUARE_STEALTHY_LOCATION_ID,
+        "location_id": squareConfig.stealthyLocationId,
         "description": "Application fees",
         "amount_money": {
           "amount": stAmount,
@@ -168,8 +185,7 @@ export function * sendSquareCharge (action) {
       }
     ]
   }
-  const SQUARE_LOCATION_ID = (process.env.NODE_ENV === 'production') ? Config.SQUARE_PRODUCTION_AGATHA_LOCATION_ID : Config.SQUARE_SANDBOX_LOCATION_ID
-  const url = `https://connect.squareup.com/v2/locations/${SQUARE_LOCATION_ID}/transactions`
+  const url = `https://connect.squareup.com/v2/locations/${squareConfig.squareLocationId}/transactions`
   // console.log("SQUARE SAGA1", url, sqData)
   const api = API.squareCharge(url, sqData)
   try {
