@@ -69,7 +69,7 @@ class CombinedScreen extends Component {
     try {
       await ref.once('value', snapshot => {
         console.log('snapshot', snapshot.val());
-        if (snapshot.val() !== currentBuildNumber) {
+        if (snapshot.val() > currentBuildNumber) {
           console.log("Build Does Not Match")
           this.setState({
             showBuildVersionModal: true
