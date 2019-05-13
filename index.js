@@ -1,8 +1,11 @@
-import './App/Config/ReactotronConfig'
-import './shim.js'
-import crypto from 'crypto'
-import { AppRegistry } from 'react-native'
-import App from './App/Containers/App'
-// global.PaymentRequest = require('react-native-payments').PaymentRequest
+import Platform from "react-native-web/dist/exports/Platform";
+import "./font.css";
 
-AppRegistry.registerComponent('referenda', () => App)
+const ReactNative = require("react-native");
+const Modal = require("./ModalComponent/Modal");
+
+ReactNative.Modal = Modal;
+
+// Platform.OS = "ios";
+
+require("./main");
