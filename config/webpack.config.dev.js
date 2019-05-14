@@ -213,7 +213,15 @@ module.exports = {
           // The preset includes JSX, Flow, and some ESnext features.
           {
             test: /\.(js|mjs|jsx|ts|tsx)$/,
-            include: paths.appSrc,
+            include: [
+              paths.appSrc, 
+              path.resolve('node_modules/native-base-shoutem-theme/'),
+              path.resolve('node_modules/react-native-drawer/'),
+              path.resolve('node_modules/react-native-easy-grid/'),
+              path.resolve('node_modules/react-native-keyboard-aware-scroll-view/'),
+              path.resolve('node_modules/react-native-vector-icons/'),
+              path.resolve('node_modules/react-native-ui-kitten/'),
+            ],
             loader: require.resolve('babel-loader'),
             options: {
               customize: require.resolve(

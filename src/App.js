@@ -1,14 +1,16 @@
 import React, { Component } from 'react';
 import {
   StyleSheet,
-  Text,
   View,
   Platform,
   TouchableHighlight,
   Animated,
   Easing,
+  StatusBar,
 } from 'react-native';
+import { Container, Button, H3, Text } from "native-base";
 import logo from './logo.png';
+import CardScreen from './screens/CardScreen'
 
 class App extends Component {
   state = {
@@ -34,19 +36,12 @@ class App extends Component {
     });
 
     return (
-      <View style={styles.container}>
-        <Animated.Image source={logo} style={[styles.logo, { transform: [{rotate: spin}] }]}/>
-        <Text style={styles.title}>Create React Native Web App</Text>
-        <Text>Open up src/App.js to start working on your app!</Text>
-        <Text>Changes you make will automatically reload.</Text>
-        {Platform.OS !== 'web' && <Text>Shake your phone to open the developer menu.</Text>}
-        <TouchableHighlight
-          onPress={this.onClick}
-          style={styles.button}
-          underlayColor={'#0A84D0'}
-        >
-          <Text style={styles.buttonText}>Rotate Logo</Text>
-        </TouchableHighlight>
+      <View style={{flex: 1, flexDirection: 'row'}}>
+        <View style={{flex: 0.2}} />
+        <View style={{flex: 0.6}}>
+          <CardScreen />
+        </View>
+        <View style={{flex: 0.2}} />
       </View>
     );
   }
