@@ -1,80 +1,89 @@
-import React, { Component } from 'react';
+import React from 'react';
+import { Platform, View } from 'react-native';
+import WebRoutesGenerator from './config/navigation/webRouteWrapper';
+import { ModalContainer } from "react-router-modal";
 import {
-  StyleSheet,
-  View,
-  Platform,
-  TouchableHighlight,
-  Animated,
-  Easing,
-  StatusBar,
-} from 'react-native';
-import { Container, Button, H3, Text } from "native-base";
-import logo from './logo.png';
-import CardScreen from './screens/CardScreen'
+  createDrawerNavigator,
+  createStackNavigator,
+} from 'react-navigation';
+import { withRkTheme } from 'react-native-ui-kitten';
+import { AppRoutes } from './config/navigation/routesBuilder';
+import { WebRoutes } from './config/navigation/routes';
+import * as Screens from './screens';
+import { bootstrap } from './config/bootstrap';
+// import track from './config/analytics';
+import TopNav from "./config/navigation//TopNav";
+import { data } from './data';
 
-class App extends Component {
-  state = {
-    spinValue: new Animated.Value(0),
-  }
+bootstrap();
+data.populateData();
 
-  onClick = () => {
-    const wasRotated = this.state.spinValue._value === 1;
-    Animated.timing(
-      this.state.spinValue,
+const KittenApp = createStackNavigator({
+  First: {
+    screen: Screens.SplashScreen,
+  },
+  Home: {
+    screen: createDrawerNavigator(
       {
-        toValue: wasRotated ? 0 : 1,
-        duration: 250,
-        easing: Easing.linear
-      }
-    ).start()
+        ...AppRoutes,
+      },
+      {
+        contentComponent: (props) => {
+          const SideMenu = withRkTheme(Screens.SideMenu);
+          return <SideMenu {...props} />;
+        },
+      },
+    ),
+  },
+}, {
+  headerMode: 'none',
+});
+
+class App extends React.Component {
+  state = {
+    isLoaded: false,
+  };
+
+  componentWillMount() {
+    // this.loadAssets();
   }
+
+  onNavigationStateChange = (previous, current) => {
+    const screen = {
+      current: this.getCurrentRouteName(current),
+      previous: this.getCurrentRouteName(previous),
+    };
+    // if (screen.previous !== screen.current) {
+    //   track(screen.current);
+    // }
+  };
+
+  getCurrentRouteName = (navigation) => {
+    const route = navigation.routes[navigation.index];
+    return route.routes ? this.getCurrentRouteName(route) : route.routeName;
+  };
 
   render() {
-    const spin = this.state.spinValue.interpolate({
-      inputRange: [0, 1],
-      outputRange: ['0deg', '360deg']
-    });
-
-    return (
-      <View style={{flex: 1, flexDirection: 'row'}}>
-        <View style={{flex: 0.2}} />
-        <View style={{flex: 0.6}}>
-          <CardScreen />
+    if (Platform.OS === 'web') {
+      return (
+        <View style={{ height: "100vh", width: "100vw" }}>
+          {/*<TopNav />*/}
+          {WebRoutesGenerator({ routeMap: WebRoutes })}
+          <ModalContainer />
         </View>
-        <View style={{flex: 0.2}} />
-      </View>
-    );
+      );
+    }
+    else {
+      return (
+        <View style={{ flex: 1 }}>
+          <KittenApp onNavigationStateChange={this.onNavigationStateChange} />
+        </View>
+      )
+    }
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  logo: {
-    width: 300,
-    height: 300,
-  },
-  title: {
-    fontWeight: 'bold',
-    fontSize: 16,
-  },
-  button: {
-    borderRadius: 3,
-    padding: 20,
-    marginVertical: 10,
-    marginTop: 10,
-    backgroundColor: '#1B95E0',
-  },
-  buttonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 16,
-  },
-});
+// const dApp = createAppContainer(App)
 
 let hotWrapper = () => () => App;
 if (Platform.OS === 'web') {

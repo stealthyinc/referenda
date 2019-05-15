@@ -209,6 +209,11 @@ module.exports = {
               name: 'static/media/[name].[hash:8].[ext]',
             },
           },
+          {
+            test: /\.ttf$/,
+            loader: "url-loader", // or directly file-loader
+            include: path.resolve('src/assets/fonts'),
+          },
           // Process application JS with Babel.
           // The preset includes JSX, Flow, and some ESnext features.
           {
@@ -221,6 +226,16 @@ module.exports = {
               path.resolve('node_modules/react-native-keyboard-aware-scroll-view/'),
               path.resolve('node_modules/react-native-vector-icons/'),
               path.resolve('node_modules/react-native-ui-kitten/'),
+              path.resolve('node_modules/react-native-foldview/'),
+              path.resolve('node_modules/react-native/'),
+              path.resolve('node_modules/@react-navigation/'),
+              path.resolve('node_modules/react-navigation/'),
+              path.resolve('node_modules/react-navigation-drawer/'),
+              path.resolve('node_modules/react-navigation-stack/'),
+              path.resolve('node_modules/react-navigation-tabs/'),
+              path.resolve('node_modules/victory-native/'),
+              path.resolve('node_modules/react-native-linear-gradient/'),
+              path.resolve('node_modules/react-navigation-deprecated-tab-navigator/'),
             ],
             loader: require.resolve('babel-loader'),
             options: {
@@ -361,7 +376,10 @@ module.exports = {
     new ModuleNotFoundPlugin(paths.appPath),
     // Makes some environment variables available to the JS code, for example:
     // if (process.env.NODE_ENV === 'development') { ... }. See `./env.js`.
-    new webpack.DefinePlugin(env.stringified),
+    // new webpack.DefinePlugin(env.stringified),
+    new webpack.DefinePlugin({
+      __DEV__: true
+    }),
     // This is necessary to emit hot updates (currently CSS only):
     new webpack.HotModuleReplacementPlugin(),
     // Watcher doesn't work well if you mistype casing in a path so we use
