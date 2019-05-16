@@ -11,7 +11,7 @@ import { Avatar } from '../../components/avatar';
 import { Gallery } from '../../components/gallery';
 import { data } from '../../data/';
 import formatNumber from '../../utils/textUtils';
-import NavigationType from '../../config/navigation/propTypes';
+import NavigationType from '../../navigation/propTypes';
 
 export class ProfileV1 extends React.Component {
   static propTypes = {

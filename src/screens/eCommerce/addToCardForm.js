@@ -18,7 +18,7 @@ import {
 } from '../../components/picker/datePicker';
 import { CardInput } from '../../components/cardInput';
 import { scale } from '../../utils/scale';
-import NavigationType from '../../config/navigation/propTypes';
+import NavigationType from '../../navigation/propTypes';
 
 export class AddToCardForm extends React.Component {
   static propTypes = {

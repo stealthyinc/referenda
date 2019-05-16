@@ -220,21 +220,22 @@ module.exports = {
             test: /\.(js|mjs|jsx|ts|tsx)$/,
             include: [
               paths.appSrc, 
-              path.resolve('node_modules/native-base-shoutem-theme/'),
-              path.resolve('node_modules/react-native-drawer/'),
-              path.resolve('node_modules/react-native-easy-grid/'),
-              path.resolve('node_modules/react-native-keyboard-aware-scroll-view/'),
-              path.resolve('node_modules/react-native-vector-icons/'),
-              path.resolve('node_modules/react-native-ui-kitten/'),
-              path.resolve('node_modules/react-native-foldview/'),
               path.resolve('node_modules/react-native/'),
-              path.resolve('node_modules/@react-navigation/'),
-              path.resolve('node_modules/react-navigation/'),
-              path.resolve('node_modules/react-navigation-drawer/'),
-              path.resolve('node_modules/react-navigation-stack/'),
-              path.resolve('node_modules/react-navigation-tabs/'),
               path.resolve('node_modules/victory-native/'),
+              path.resolve('node_modules/react-navigation/'),
+              path.resolve('node_modules/@react-navigation/'),
+              path.resolve('node_modules/react-native-drawer/'),
+              path.resolve('node_modules/react-navigation-tabs/'),
+              path.resolve('node_modules/react-native-keychain/'),
+              path.resolve('node_modules/react-native-firebase/'),
+              path.resolve('node_modules/react-native-easy-grid/'),
+              path.resolve('node_modules/react-native-ui-kitten/'),
+              path.resolve('node_modules/react-navigation-stack/'),
+              path.resolve('node_modules/react-navigation-drawer/'),
+              path.resolve('node_modules/native-base-shoutem-theme/'),
+              path.resolve('node_modules/react-native-vector-icons/'),
               path.resolve('node_modules/react-native-linear-gradient/'),
+              path.resolve('node_modules/react-native-keyboard-aware-scroll-view/'),
               path.resolve('node_modules/react-navigation-deprecated-tab-navigator/'),
             ],
             loader: require.resolve('babel-loader'),
@@ -242,7 +243,6 @@ module.exports = {
               customize: require.resolve(
                 'babel-preset-react-app/webpack-overrides'
               ),
-
               plugins: [
                 [
                   require.resolve('babel-plugin-named-asset-import'),
@@ -268,7 +268,11 @@ module.exports = {
           // Unlike the application JS, we only compile the standard ES features.
           {
             test: /\.(js|mjs)$/,
-            exclude: /@babel(?:\/|\\{1,2})runtime/,
+            exclude: [
+              /@babel(?:\/|\\{1,2})runtime/,
+              path.resolve('node_modules/react-native-keychain/'),
+              path.resolve('node_modules/react-native-firebase/'),
+            ],
             loader: require.resolve('babel-loader'),
             options: {
               babelrc: false,
@@ -378,7 +382,8 @@ module.exports = {
     // if (process.env.NODE_ENV === 'development') { ... }. See `./env.js`.
     // new webpack.DefinePlugin(env.stringified),
     new webpack.DefinePlugin({
-      __DEV__: true
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
+      __DEV__: process.env.NODE_ENV === 'production' || true,
     }),
     // This is necessary to emit hot updates (currently CSS only):
     new webpack.HotModuleReplacementPlugin(),
@@ -434,6 +439,16 @@ module.exports = {
         formatter: typescriptFormatter,
       }),
   ].filter(Boolean),
+
+  resolve: {
+    // If you're working on a multi-platform React Native app, web-specific
+    // module implementations should be written in files using the extension
+    // `.web.js`.
+    extensions: ['.web.js', '.js'],
+    alias: {
+      'react-native': 'react-native-web',
+    },
+  },
 
   // Some libraries import Node modules but don't use them in the browser.
   // Tell Webpack to provide empty mocks for them so importing them works.

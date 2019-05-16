@@ -7,8 +7,8 @@ import {
   RkButton, RkStyleSheet,
   RkText,
 } from 'react-native-ui-kitten';
-import { MainRoutes } from '../../config/navigation/routes';
-import NavigationType from '../../config/navigation/propTypes';
+import { MainRoutes } from '../../navigation/Routes';
+import NavigationType from '../../navigation/propTypes';
 
 const paddingValue = 8;
 

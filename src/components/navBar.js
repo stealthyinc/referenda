@@ -8,8 +8,8 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { RkText, RkButton, RkStyleSheet } from 'react-native-ui-kitten';
 import { FontAwesome } from '../assets/icons';
-import { UIConstants } from '../config/appConstants';
-import NavigationType from '../config/navigation/propTypes';
+import { UIConstants } from '../config/AppConstants';
+import NavigationType from '../navigation/propTypes';
 
 export class NavBar extends React.Component {
   static propTypes = {

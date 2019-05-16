@@ -9,8 +9,8 @@ import {
   RkButton,
   RkStyleSheet,
 } from 'react-native-ui-kitten';
-import { MainRoutes } from '../../config/navigation/routes';
-import NavigationType from '../../config/navigation/propTypes';
+import { MainRoutes } from '../../navigation/Routes';
+import NavigationType from '../../navigation/propTypes';
 
 export class GridV2 extends React.Component {
   static propTypes = {

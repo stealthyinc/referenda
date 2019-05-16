@@ -10,8 +10,8 @@ import {
   RkTheme,
   RkStyleSheet,
 } from 'react-native-ui-kitten';
-import { DarkKittenTheme } from '../../config/darkTheme';
-import { KittenTheme } from '../../config/theme';
+import { DarkKittenTheme } from '../../config/DarkTheme';
+import { KittenTheme } from '../../config/Theme';
 import { GradientButton } from '../../components/gradientButton';
 import { scale, scaleVertical } from '../../utils/scale';
 

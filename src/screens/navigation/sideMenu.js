@@ -12,9 +12,9 @@ import {
   RkText,
   RkTheme,
 } from 'react-native-ui-kitten';
-import { MainRoutes } from '../../config/navigation/routes';
+import { MainRoutes } from '../../navigation/Routes';
 import { FontAwesome } from '../../assets/icons';
-import NavigationType from '../../config/navigation/propTypes';
+import NavigationType from '../../navigation/propTypes';
 
 export class SideMenu extends React.Component {
   static propTypes = {

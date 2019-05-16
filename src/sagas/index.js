@@ -1,0 +1,33 @@
+import { takeLatest, all, fork } from 'redux-saga/effects'
+// import API from '../Services/Api'
+import FixtureAPI from '../services/FixtureApi'
+import DebugConfig from '../config/DebugConfig'
+
+/* ------------- Types ------------- */
+
+import { StartupTypes } from '../redux/StartupRedux'
+import { EngineTypes } from '../redux/EngineRedux'
+
+/* ------------- Sagas ------------- */
+
+import { startup } from './StartupSagas'
+import { startEngine } from './EngineSagas'
+import { startPinata } from './PinataSagas'
+import { startSquare } from './DonationSagas'
+
+/* ------------- API ------------- */
+
+// The API we use is only used from Sagas, so we create it here and pass along
+// to the sagas which need it.
+
+/* ------------- Connect Types To Sagas ------------- */
+
+export default function * root () {
+  yield all([
+    // some sagas only receive an action
+    fork(startPinata),
+    fork(startSquare),
+    takeLatest(EngineTypes.INIT, startEngine),
+    takeLatest(StartupTypes.STARTUP, startup),
+  ])
+}

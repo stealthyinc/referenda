@@ -17,7 +17,7 @@ import {
 // import LinearGradient from 'react-native-linear-gradient';
 import { data } from '../../data';
 import { PasswordTextInput } from '../../components/passwordTextInput';
-import { UIConstants } from '../../config/appConstants';
+import { UIConstants } from '../../config/AppConstants';
 import { scaleVertical } from '../../utils/scale';
 
 export class Cards extends React.Component {

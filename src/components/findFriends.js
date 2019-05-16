@@ -35,7 +35,7 @@ export class FindFriends extends React.Component {
         <View style={styles.container}>
           <View style={styles.text}>
             <RkText rkType='awesome' style={[styles.icon, { color }]}>{this.props.icon}</RkText>
-            <RkText rkType='header6' style={{ color }}>{`Find Friends With ${this.props.text}`}</RkText>
+            <RkText rkType='header6' style={{ color }}>{`${this.props.text}`}</RkText>
           </View>
           <RkText rkType='awesome small' style={{ color }}>{FontAwesome.chevronRight}</RkText>
         </View>

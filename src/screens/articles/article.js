@@ -16,7 +16,7 @@ import {
   Avatar,
   SocialBar,
 } from '../../components';
-import NavigationType from '../../config/navigation/propTypes';
+import NavigationType from '../../navigation/propTypes';
 
 const moment = require('moment');
 

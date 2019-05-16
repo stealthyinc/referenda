@@ -14,7 +14,7 @@ import {
 } from 'react-native-ui-kitten';
 import { GradientButton } from '../../components/';
 import { scaleVertical } from '../../utils/scale';
-import NavigationType from '../../config/navigation/propTypes';
+import NavigationType from '../../navigation/propTypes';
 
 export class SignUp extends React.Component {
   static navigationOptions = {

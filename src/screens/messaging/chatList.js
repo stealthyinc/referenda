@@ -14,7 +14,7 @@ import {
 import { Avatar } from '../../components';
 import { FontAwesome } from '../../assets/icons';
 import { data } from '../../data';
-import NavigationType from '../../config/navigation/propTypes';
+import NavigationType from '../../navigation/propTypes';
 
 const moment = require('moment');
 

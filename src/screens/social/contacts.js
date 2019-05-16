@@ -14,7 +14,7 @@ import {
 import { data } from '../../data';
 import { Avatar } from '../../components/avatar';
 import { FontAwesome } from '../../assets/icons';
-import NavigationType from '../../config/navigation/propTypes';
+import NavigationType from '../../navigation/propTypes';
 
 export class Contacts extends React.Component {
   static propTypes = {

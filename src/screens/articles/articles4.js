@@ -12,7 +12,7 @@ import {
 } from 'react-native-ui-kitten';
 import { SocialBar } from '../../components';
 import { data } from '../../data';
-import NavigationType from '../../config/navigation/propTypes';
+import NavigationType from '../../navigation/propTypes';
 
 
 export class Articles4 extends React.Component {

@@ -2,8 +2,8 @@
 import React from 'react';
 
 import { CategoryMenu } from './categoryMenu';
-import * as Routes from '../../config/navigation/routesBuilder';
-import NavigationType from '../../config/navigation/propTypes';
+import * as Routes from '../../navigation/RoutesBuilder';
+import NavigationType from '../../navigation/propTypes';
 
 export class LoginMenu extends React.Component {
   static propTypes = {

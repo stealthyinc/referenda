@@ -137,6 +137,19 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-video')
+    compile project(':react-native-vector-icons')
+    compile project(':react-native-square-in-app-payments')
+    compile project(':react-native-social-share')
+    compile project(':react-native-keychain')
+    compile project(':react-native-i18n')
+    compile project(':react-native-firebase')
+    compile project(':react-native-device-info')
+    compile project(':react-native-contacts')
+    compile project(':react-native-config')
+    compile project(':react-native-camera')
+    compile project(':react-native-background-fetch')
+    compile project(':react-native-amplitude-analytics')
     compile project(':react-native-svg')
     compile project(':react-native-linear-gradient')
     compile project(':react-native-gesture-handler')

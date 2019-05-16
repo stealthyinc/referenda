@@ -15,7 +15,7 @@ import {
 import { FontAwesome } from '../../assets/icons';
 import { GradientButton } from '../../components/gradientButton';
 import { scaleVertical } from '../../utils/scale';
-import NavigationType from '../../config/navigation/propTypes';
+import NavigationType from '../../navigation/propTypes';
 
 export class LoginV2 extends React.Component {
   static propTypes = {

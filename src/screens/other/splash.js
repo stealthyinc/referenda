@@ -15,9 +15,9 @@ import {
   NavigationActions,
 } from 'react-navigation';
 import { ProgressBar } from '../../components';
-import { KittenTheme } from '../../config/theme';
+import { KittenTheme } from '../../config/Theme';
 import { scale, scaleVertical } from '../../utils/scale';
-import NavigationType from '../../config/navigation/propTypes';
+import NavigationType from '../../navigation/propTypes';
 
 const delay = 500;
 

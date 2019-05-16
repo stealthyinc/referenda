@@ -27,4 +27,11 @@ export const FontAwesome = {
   bars: String.fromCharCode(61641),
   slashEye: String.fromCharCode(61552),
   github: String.fromCharCode(61595),
+  bitcoin: String.fromCharCode(61786),
+  card: String.fromCharCode(61597),
+  donate: String.fromCharCode(62649),
+  dollar: String.fromCharCode(61781),
+  medal: String.fromCharCode(62133),
+  register: String.fromCharCode(62045),
+  token: String.fromCharCode(62139),
 };

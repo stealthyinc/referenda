@@ -11,7 +11,7 @@ import {
   RkTheme,
   RkText,
 } from 'react-native-ui-kitten';
-import NavigationType from '../../config/navigation/propTypes';
+import NavigationType from '../../navigation/propTypes';
 
 export class CategoryMenu extends React.Component {
   static propTypes = {

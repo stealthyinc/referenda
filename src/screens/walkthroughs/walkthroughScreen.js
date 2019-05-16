@@ -8,7 +8,7 @@ import {
 import { Walkthrough } from '../../components/walkthrough';
 import { Walkthrough1 } from './walkthrough1';
 import { Walkthrough2 } from './walkthrough2';
-import NavigationType from '../../config/navigation/propTypes';
+import NavigationType from '../../navigation/propTypes';
 
 export class WalkthroughScreen extends React.Component {
   static propTypes = {
