@@ -14,7 +14,7 @@ const Colors = {
   highlight: '#bcbcbc',
 
   background: '#ffffff',
-  alterBackground: '#f2f2f2',
+  alterBackground: '#ffffff',
   overlayBackground: '#00000057',
   neutralBackground: '#f2f2f2',
   fadedBackground: '#e5e5e5',

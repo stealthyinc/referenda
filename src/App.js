@@ -1,93 +1,49 @@
 import React from 'react';
-import { Platform, View } from 'react-native';
+import { View } from 'react-native';
 import WebRoutesGenerator from './config/navigation/webRouteWrapper';
-import { ModalContainer } from "react-router-modal";
-import {
-  createDrawerNavigator,
-  createStackNavigator,
-} from 'react-navigation';
-import { withRkTheme } from 'react-native-ui-kitten';
 import { AppRoutes } from './config/navigation/routesBuilder';
 import { WebRoutes } from './config/navigation/routes';
-import * as Screens from './screens';
 import { bootstrap } from './config/bootstrap';
-// import track from './config/analytics';
-import TopNav from "./config/navigation//TopNav";
 import { data } from './data';
+import firebase from 'firebase/app';
+import "firebase/auth";
+import "firebase/database";
+import Config from 'react-native-config'
+
+// console.log("CONFIG", Config.FIREBASE_API_KEY)
+
+// const firebaseConfig = {
+//   apiKey: Config.FIREBASE_API_KEY,
+//   authDomain: Config.FIREBASE_AUTH_DOMAIN,
+//   databaseURL: Config.FIREBASE_DATABASE_URL,
+//   projectId: Config.FIREBASE_PROJECT_ID,
+//   storageBucket: Config.FIREBASE_STORAGE_BUCKET,
+//   messagingSenderId: Config.FIREBASE_MESSAGING_SENDER_ID,
+//   appId: Config.FIREBASE_APP_ID
+// };
 
 bootstrap();
 data.populateData();
 
-const KittenApp = createStackNavigator({
-  First: {
-    screen: Screens.SplashScreen,
-  },
-  Home: {
-    screen: createDrawerNavigator(
-      {
-        ...AppRoutes,
-      },
-      {
-        contentComponent: (props) => {
-          const SideMenu = withRkTheme(Screens.SideMenu);
-          return <SideMenu {...props} />;
-        },
-      },
-    ),
-  },
-}, {
-  headerMode: 'none',
-});
+// Initialize Firebase
+// if (!firebase.apps.length) {
+//   firebase.initializeApp(firebaseConfig);
+// }
 
 class App extends React.Component {
-  state = {
-    isLoaded: false,
-  };
-
-  componentWillMount() {
-    // this.loadAssets();
-  }
-
-  onNavigationStateChange = (previous, current) => {
-    const screen = {
-      current: this.getCurrentRouteName(current),
-      previous: this.getCurrentRouteName(previous),
-    };
-    // if (screen.previous !== screen.current) {
-    //   track(screen.current);
-    // }
-  };
-
-  getCurrentRouteName = (navigation) => {
-    const route = navigation.routes[navigation.index];
-    return route.routes ? this.getCurrentRouteName(route) : route.routeName;
-  };
-
-  render() {
-    if (Platform.OS === 'web') {
-      return (
-        <View style={{ height: "100vh", width: "100vw" }}>
-          {/*<TopNav />*/}
-          {WebRoutesGenerator({ routeMap: WebRoutes })}
-          <ModalContainer />
-        </View>
-      );
-    }
-    else {
-      return (
-        <View style={{ flex: 1 }}>
-          <KittenApp onNavigationStateChange={this.onNavigationStateChange} />
-        </View>
-      )
-    }
-  }
+  render = () => (
+    <View style={{flex: 1, flexDirection: 'row'}}>
+      <View style={{flex: 0.1}} />
+      <View style={{flex: 0.8}}>
+        {WebRoutesGenerator({ routeMap: WebRoutes })}
+      </View>
+      <View style={{flex: 0.1}} />
+    </View>
+  )
 }
-
-// const dApp = createAppContainer(App)
 
 let hotWrapper = () => () => App;
-if (Platform.OS === 'web') {
-  const { hot } = require('react-hot-loader');
-  hotWrapper = hot;
-}
+const { hot } = require('react-hot-loader');
+hotWrapper = hot;
+
 export default hotWrapper(module)(App);

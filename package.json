@@ -15,10 +15,12 @@
     "test:native": "node scripts/test.js --config \"./config/native.jest.config.js\"",
     "test:native-watch": "node scripts/test.js --watch --config \"./config/native.jest.config.js\"",
     "coverage": "node scripts/test.js --coverage --config \"./config/web.jest.config.js\"",
-    "coverage:native": "node scripts/test.js --config \"./config/native.jest.config.js\" --coverage"
+    "coverage:native": "node scripts/test.js --config \"./config/native.jest.config.js\" --coverage",
+    "postinstall": "./scripts/buildFixes.sh"
   },
   "dependencies": {
     "blockstack": "^19.1.0",
+    "firebase": "^6.0.2",
     "moment": "^2.24.0",
     "native-base": "^2.12.1",
     "react": "^16.6.x",
@@ -26,8 +28,7 @@
     "react-art": "^16.6.x",
     "react-dom": "^16.6.x",
     "react-native": "0.55.x",
-    "react-native-foldview": "^1.2.1",
-    "react-native-gesture-handler": "^1.2.1",
+    "react-native-config": "^0.11.7",
     "react-native-linear-gradient": "^2.5.4",
     "react-native-svg": "^9.4.0",
     "react-native-ui-kitten": "3.1.2",
@@ -101,7 +102,7 @@
   ],
   "rnpm": {
     "assets": [
-    "./src/assets/fonts/"
+      "./src/assets/fonts/"
     ]
   }
 }

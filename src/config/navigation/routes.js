@@ -1,6 +1,8 @@
 import _ from 'lodash';
 import { FontIcons } from '../../assets/icons';
 import * as Screens from '../../screens/index';
+import FeedContainer from '../../containers/FeedContainer'
+import ArticleContainer from '../../containers/ArticleContainer'
 
 export const MainRoutes = [
   {
@@ -308,7 +310,7 @@ menuRoutes.unshift({
 
 export const WebRoutes = {
   Home: {
-    component: Screens.GridV2,
+    component: FeedContainer,
     path: "/",
     exact: true
   },
@@ -322,6 +324,7 @@ export const WebRoutes = {
   },
   Side: {
     component: Screens.SideMenu,
+    action: 'DrawerOpen',
     path: "/sideMenu"
   },
   OtherMenu: {
@@ -364,7 +367,7 @@ export const WebRoutes = {
     component: Screens.WalkthroughScreen,
     path: "/walkthrough"
   },
-  Dashboards: {
+  DashboardsMenu: {
     component: Screens.DashboardsMenu,
     path: "/dashboardsMenu"
   },
@@ -413,7 +416,7 @@ export const WebRoutes = {
     path: "/blogposts"
   },
   Article: {
-    component: Screens.Article,
+    component: ArticleContainer,
     path: "/article"
   },
   SocialMenu: {
@@ -445,7 +448,7 @@ export const WebRoutes = {
     path: "/contacts"
   },
   Feed: {
-    component: Screens.Feed,
+    component: FeedContainer,
     path: "/feed"
   },
 };
