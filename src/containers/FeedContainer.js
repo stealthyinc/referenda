@@ -18,7 +18,7 @@ import { data } from '../data';
 import ListContainer from './ListContainer'
 import * as blockstack from 'blockstack'
 
-// const firebase = require('firebase');
+const firebase = require('firebase');
 const moment = require('moment');
 
 export default class Feed extends React.Component {
@@ -36,12 +36,12 @@ export default class Feed extends React.Component {
       isSignedIn,
       data: data.getArticles('article'),
     };
-    // if (!firebase.auth().currentUser) {
-    //   firebase.auth().signInAnonymously()
-    //   .then(() => {
-    //     // this.anonalytics.setDatabase(firebase);
-    //   });
-    // }
+    if (!firebase.auth().currentUser) {
+      firebase.auth().signInAnonymously()
+      .then(() => {
+        // this.anonalytics.setDatabase(firebase);
+      });
+    }
   }
   checkSignedInStatus() {
     if (blockstack.isUserSignedIn()) {

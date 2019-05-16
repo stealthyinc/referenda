@@ -8,27 +8,25 @@ import { data } from './data';
 import firebase from 'firebase/app';
 import "firebase/auth";
 import "firebase/database";
-import Config from 'react-native-config'
+const Config = require('Config');
 
-// console.log("CONFIG", Config.FIREBASE_API_KEY)
-
-// const firebaseConfig = {
-//   apiKey: Config.FIREBASE_API_KEY,
-//   authDomain: Config.FIREBASE_AUTH_DOMAIN,
-//   databaseURL: Config.FIREBASE_DATABASE_URL,
-//   projectId: Config.FIREBASE_PROJECT_ID,
-//   storageBucket: Config.FIREBASE_STORAGE_BUCKET,
-//   messagingSenderId: Config.FIREBASE_MESSAGING_SENDER_ID,
-//   appId: Config.FIREBASE_APP_ID
-// };
+const firebaseConfig = {
+  apiKey: Config.FIREBASE_API_KEY,
+  authDomain: Config.FIREBASE_AUTH_DOMAIN,
+  databaseURL: Config.FIREBASE_DATABASE_URL,
+  projectId: Config.FIREBASE_PROJECT_ID,
+  storageBucket: Config.FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: Config.FIREBASE_MESSAGING_SENDER_ID,
+  appId: Config.FIREBASE_APP_ID
+};
 
 bootstrap();
 data.populateData();
 
 // Initialize Firebase
-// if (!firebase.apps.length) {
-//   firebase.initializeApp(firebaseConfig);
-// }
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
 
 class App extends React.Component {
   render = () => (

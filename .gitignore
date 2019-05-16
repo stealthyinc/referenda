@@ -30,6 +30,8 @@ ios/GoogleService-Info.plist
 yarn.lock
 .firebaserc
 PBJ*
+config/
+*webpack*
 
 # Android/IntelliJ
 #
