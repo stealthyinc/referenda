@@ -30,7 +30,6 @@ ios/GoogleService-Info.plist
 yarn.lock
 .firebaserc
 PBJ*
-config/
 *webpack*
 
 # Android/IntelliJ
@@ -48,6 +47,7 @@ android/app/release/
 node_modules/
 npm-debug.log
 yarn-error.log
+config
 
 # BUCK
 buck-out/
