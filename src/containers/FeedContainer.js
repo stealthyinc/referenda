@@ -5,7 +5,6 @@ import {
   Image,
   TouchableOpacity,
   ActivityIndicator,
-  ScrollView,
 } from 'react-native';
 import {
   RkButton,
@@ -17,8 +16,6 @@ import {
 import { FontIcons } from '../assets/icons';
 import { Avatar } from '../components/avatar';
 import { SocialBar } from '../components/socialBar';
-import { data } from '../data';
-import ListContainer from './ListContainer'
 import * as blockstack from 'blockstack'
 
 const firebase = require('firebase');
@@ -262,7 +259,7 @@ export default class Feed extends React.Component {
   }
 
   getFeedButton(aKey) {
-    const isLogin = (aKey == 'LoginMenu')
+    const isLogin = (aKey === 'LoginMenu')
     const rkType = (isLogin) ?
       (this.state.isSignedIn) ? 'clear' : 'primary' : 'clear'
     const handlerFn = (isLogin) ?
@@ -340,10 +337,10 @@ export default class Feed extends React.Component {
     // TODO: get user first & last name from blockstack profile or data stored
     //       for this app.
     //       get avatarPhoto from image stored for this app.
-    const firstName = 'Agatha'
-    const lastName = 'Bacelar'
+    // const firstName = 'Agatha'
+    // const lastName = 'Bacelar'
     // const avatarPhoto = item.user.photo  <-- TODO
-    const postTime = Date.now()
+    // const postTime = Date.now()
 
     return (
       <View style={styles.container}>

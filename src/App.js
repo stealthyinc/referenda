@@ -1,7 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
 import WebRoutesGenerator from './config/navigation/webRouteWrapper';
-import { AppRoutes } from './config/navigation/routesBuilder';
 import { WebRoutes } from './config/navigation/routes';
 import { bootstrap } from './config/bootstrap';
 import { data } from './data';

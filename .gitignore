@@ -31,6 +31,7 @@ yarn.lock
 .firebaserc
 PBJ*
 *webpack*
+*.sh
 
 # Android/IntelliJ
 #
