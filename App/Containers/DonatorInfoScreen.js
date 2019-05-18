@@ -186,7 +186,7 @@ class DonatorInfoScreen extends Component {
     let under200Exception = false
     try {
       const amount = parseFloat(donationRecord.amount)
-      under200Exception = (amount < 200.00)
+      // under200Exception = (amount < 200.00)
     } catch (suppressedError) {
       // Sigh ...
     }

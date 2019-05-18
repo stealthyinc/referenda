@@ -19,63 +19,6 @@ import {
 import Config from 'react-native-config'
 import API from '../Services/Api'
 
-const DEBUG_PRODUCTION_SQUARE_CONFIGURATION = false
-//
-getSquareConfiguration() {
-  if ((process.env.NODE_ENV === 'production') ||
-       DEBUG_PRODUCTION_SQUARE_CONFIGURATION) {
-    return {
-      stealthyLocationId: Config.SQUARE_PRODUCTION_STEALTHY_LOCATION_ID,
-      squareLocationId: Config.SQUARE_PRODUCTION_AGATHA_LOCATION_ID,
-    }
-  }
-
-  return {
-    stealthyLocationId: Config.SQUARE_SANDBOX_LOCATION_ID,
-    squareLocationId: Config.SQUARE_SANDBOX_LOCATION_ID,
-  }
-}
-
-export function * sendDonationMessage(action) {
-  const { dPayload } = action
-  const { tenders, reference_id } = dPayload.transaction
-  // console.log( "DPAYLOAD", dPayload)
-  // console.log("tenders", tenders)
-  let message = "Thank you for your donation to Agatha's Campaign. We will notify you when the Referenda App is ready!"
-  if (tenders && tenders[0]) {
-    const { id } = tenders[0]
-    const receipt = 'https://squareup.com/receipt/preview/' + id
-    message = message + '\n' + receipt
-  }
-  // const donationRecord = yield select(DonationSelectors.getDonationRecord)
-  const url = Config.TWILIO_LAMBDA_URL
-  const api = API.twilio(url, reference_id, message)
-  // console.log("IN DONATION FLOW", url, donationRecord)
-  try {
-    const response = yield call(api.send)
-    console.log("TWILIO RESPONSE", response.data)
-    yield put(DonationActions.twilioSuccess(response.data))
-  } catch (error) {
-      yield put(DonationActions.twilioFailure())
-  }
-}
-
-export function * sendInvoiceMessage(action) {
-  const { iPayload } = action
-  const donationRecord = yield select(DonationSelectors.getDonationRecord)
-  const message = `Thank you for your donation to Agatha's Campaign. Here's a helpful link for you to donate. We will notify you when the Referenda App is ready! ${iPayload}`
-  const url = Config.TWILIO_LAMBDA_URL
-  const api = API.twilio(url, donationRecord.phoneNumber, message)
-  console.log("IN INVOICE FLOW", iPayload, url, donationRecord)
-  try {
-    const response = yield call(api.send)
-    console.log("TWILIO RESPONSE", response.data)
-    yield put(DonationActions.twilioSuccess(response.data))
-  } catch (error) {
-      yield put(DonationActions.twilioFailure())
-  }
-}
-
 /**
  * getAmountInCentsFromDonation - converts a string in USD, aDonationStrUSD to
  *                                an integer in cents, rounded down. Then
@@ -104,102 +47,73 @@ function getAmountInCentsFromDonation(aDonationStrUSD) {
   }
 }
 
-export function * sendSquareInvoice () {
-  const donationRecord = yield select(DonationSelectors.getDonationRecord)
-  const amounts = getAmountInCentsFromDonation(donationRecord.amount)
-  const stAmount = amounts.feeCents
-  const clAmount = amounts.proceedsCents
-  const shippingFlag = amounts.totalCents <= 2000
-  console.log('DONATION(cents: total, fee, proceeds):', amounts.totalCents, stAmount, clAmount)
-
-  const squareConfig = getSquareConfiguration()
-
-  const data = {
-    "idempotency_key": uuidv4(),
-    "order": {
-      "reference_id": donationRecord.phoneNumber,
-      "line_items": [
-        {
-          "name": "Donation to Agatha Bacelar's Campaign",
-          "quantity": "1",
-          "base_price_money": {
-            "amount": clAmount,
-            "currency": "USD"
-          }
-        }
-      ]
-    },
-    "ask_for_shipping_address": shippingFlag,
-    "pre_populate_shipping_address": {
-      "first_name": donationRecord.firstName,
-      "last_name": donationRecord.lastName
-    },
-    "merchant_support_email": "support@stealthy.im",
-    "additional_recipients": [
-      {
-        "location_id": squareConfig.stealthyLocationId,
-        "description": "Application fees",
-        "amount_money": {
-          "amount": stAmount,
-          "currency": "USD"
-        }
-      }
-    ]
-  }
-  const url = `https://connect.squareup.com/v2/locations/${squareConfig.squareLocationId}/checkouts`
-  // console.log("SQUARE SAGA1", url, data)
-  const api = API.squareInvoice(url, data)
-  try {
-    const response = yield call(api.invoice)
-    console.log("RESPONSE", response.data)
-    yield put(DonationActions.invoiceSuccess(response.data.checkout.checkout_page_url))
-  } catch (error) {
-      yield put(DonationActions.invoiceFailure())
-  }
-}
-
 export function * sendSquareCharge (action) {
   const { data } = action
   const donationRecord = yield select(DonationSelectors.getDonationRecord)
-  const amounts = getAmountInCentsFromDonation(donationRecord.amount)
-  const stAmount = amounts.feeCents
-  const clAmount = amounts.proceedsCents
-  console.log('DONATION(cents: total, fee, proceeds):', amounts.totalCents, stAmount, clAmount)
-
-  const squareConfig = getSquareConfiguration()
-  const sqData = {
-    "idempotency_key": uuidv4(),
-    "reference_id": donationRecord.phoneNumber,
-    "amount_money": {
-    "amount": clAmount,
-    "currency": "USD"},
-    "card_nonce": data,
-    "additional_recipients": [
-      {
-        "location_id": squareConfig.stealthyLocationId,
-        "description": "Application fees",
-        "amount_money": {
-          "amount": stAmount,
-          "currency": "USD"
-        }
-      }
-    ]
+  const { phoneNumber, amount } = donationRecord
+  const amounts = getAmountInCentsFromDonation(amount)
+  const feeAmount = amounts.feeCents
+  const donationAmount = amounts.proceedsCents
+  console.log('DONATION(cents: total, fee, proceeds):', amounts.totalCents, feeAmount, donationAmount)
+  const locationId = '0WNJSXGSXWG89'
+  const body = {
+    card_nonce, 
+    locationId, 
+    donationAmount, 
+    feeAmount, 
+    phoneNumber, 
+    message
   }
-  const url = `https://connect.squareup.com/v2/locations/${squareConfig.squareLocationId}/transactions`
-  // console.log("SQUARE SAGA1", url, sqData)
-  const api = API.squareCharge(url, sqData)
   try {
+    const api = API.squareService(body)
     const response = yield call(api.charge)
-    // console.log("RESPONSE", response.data)
+    console.log("RESPONSE", response.data)
     yield put(DonationActions.donationSuccess(response.data))
   } catch (error) {
+      console.log("ERROR", error)
       yield put(DonationActions.donationFailure())
   }
 }
 
+export function * sendSquareInvoice () {
+  const donationRecord = yield select(DonationSelectors.getDonationRecord)
+  const { firstName, lastName, phoneNumber, amount } = donationRecord
+  const amounts = getAmountInCentsFromDonation(amount)
+  const feeAmount = amounts.feeCents
+  const donationAmount = amounts.proceedsCents
+  const shippingFlag = amounts.totalCents <= 2000
+  console.log('DONATION(cents: total, fee, proceeds):', amounts.totalCents, feeAmount, donationAmount)
+  const message = `Thank you for your donation to Agatha's Campaign. Here's a helpful link for you to donate. We will notify you when the Referenda App is ready!`
+  const campaign_message = "Donation to Agatha Bacelar's Campaign"
+  const locationId = '0WNJSXGSXWG89'
+  const pre_populate_shipping_address = {
+    "first_name": firstName,
+    "last_name": lastName
+  }
+  const isMobile = true
+  const data = {
+    message,
+    campaign_message,
+    locationId,
+    donationAmount,
+    feeAmount,
+    phoneNumber,
+    pre_populate_shipping_address,
+    isMobile
+  }
+  console.log("Data being sent to api sauce", data)
+  try {
+    const api = API.squareService(data)
+    const response = yield call(api.invoice)
+    console.log("RESPONSE", response.data)
+    yield put(DonationActions.invoiceSuccess(response.data))
+  } catch (error) {
+      console.log("ERROR", error)
+      yield put(DonationActions.invoiceFailure())
+  }
+}
+
 export function* startSquare (action) {
-  yield takeLatest(DonationTypes.INVOICE_REQUEST, sendSquareInvoice)
   yield takeLatest(DonationTypes.DONATION_REQUEST, sendSquareCharge)
-  yield takeLatest(DonationTypes.DONATION_SUCCESS, sendDonationMessage)
-  yield takeLatest(DonationTypes.INVOICE_SUCCESS, sendInvoiceMessage)
+  yield takeLatest(DonationTypes.INVOICE_REQUEST, sendSquareInvoice)
 }
