@@ -17,7 +17,6 @@ import {
 import { FontIcons } from '../assets/icons';
 import { Avatar } from '../components/avatar';
 import { SocialBar } from '../components/socialBar';
-import { data } from '../data';
 import ListContainer from './ListContainer'
 import * as blockstack from 'blockstack'
 
@@ -28,16 +27,16 @@ export default class Feed extends React.Component {
   static navigationOptions = {
     title: 'Feed'.toUpperCase(),
   };
+
   constructor(props) {
     super(props);
     const isSignedIn = this.checkSignedInStatus();
-    const userData = isSignedIn && this.loadUserData();
+    const userData = isSignedIn && blockstack.loadUserData();
     const person = (userData.username) ? new blockstack.Person(userData.profile) : false;
     this.state = {
       userData,
       person,
       isSignedIn,
-      // data: data.getArticles('article'),
       data: [],
       editingPost: false,
       initializing: true,
@@ -52,7 +51,6 @@ export default class Feed extends React.Component {
     }
 
     this.indexFileData = undefined
-
     this.newPostTitle = undefined
     this.newPostDescription = undefined
   }
@@ -67,65 +65,85 @@ export default class Feed extends React.Component {
    * Begin Feed utilities
    *****************************************************************************
    */
+  INDEX_FILE = 'index.json'
+
+  static getPostFileName(aPostId) {
+    return `p${aPostId}.json`
+  }
+
+  // TODO: make index file data a class. Possibly tie it to a schema.
+  getNewIndex = () => {
+    return {
+      pinnedPostId: '',
+      descTimePostIds: [],
+      version: '1.0',
+      timeUtc: undefined
+    }
+  }
+
+  readIndex = async () => {
+    let indexData = undefined
+
+    // Note: rawData will be null if the file does not exist.
+    const rawData = await blockstack.getFile('index.json', { decrypt: false })
+    if (rawData) {
+      indexData = JSON.parse(rawData)
+    }
+    return indexData
+  }
+
+  writeIndex = async () => {
+    console.log('indexFileData:\n', this.indexFileData)
+
+    this.indexFileData.timeUtc = Date.now()
+    const sIndexFileData = JSON.stringify(this.indexFileData)
+    await blockstack.putFile('index.json', sIndexFileData, {encrypt: false})
+  }
 
   // TODO: refactor this into something clean when and lightweight when it all
   //       works.
   //
-  async getIndexFileData() {
+  // WARNING: forceNewIndex set to true will wipe out user data (i.e. record and
+  //          order of posts).
+  getIndexFileData = async (forceNewIndex=false) => {
     // 1. Check for an index file.
     //
-    this.indexFileData = undefined
     try {
-      // Note: indexFileData will be null if the file does not exist.
-      const rawData = await blockstack.getFile('index.json', { decrypt: false })
-      if (rawData) {
-        this.indexFileData = JSON.parse(rawData)
-      }
-    } catch (error) {
-      // TODO: Suppress if because no file exists. Display otherwise.
-      console.error(error)
+      this.indexFileData = await this.readIndex()
+    } catch (displayedSuppressedError) {
+      console.log(displayedSuppressedError)
     }
 
     // 2. If the index file data doesn't already exist, initialize and write it.
     //
-    if (!this.indexFileData) {
-      // TODO: make index file data a class. Possibly tie it to a schema.
-      this.indexFileData = {
-        pinnedPostPath: "",
-        descTimePostPaths: [],
-        version: "1.0",
-        timeUtc: Date.now()
-      }
+    if (!this.indexFileData || forceNewIndex) {
+      this.indexFileData = this.getNewIndex()
 
       try {
-        const stringifiedIndexFileData = JSON.stringify(this.indexFileData)
-        await blockstack.putFile(
-          'index.json', stringifiedIndexFileData, { encrypt: false })
-        console.log('Successfully wrote index.json.')
+        await this.writeIndex()
       } catch (error) {
         console.error(`Error creating index.json.\n${error}`)
       }
-    } else {
-      console.log('Using existing index.json data.')
     }
 
     // 3. Load posts and initialize data.
     const data = []
 
-    let orderedPostPaths = this.indexFileData.descTimePostPaths
-    if (this.indexFileData.pinnedPostPath) {
-      orderedPostPaths = this.indexFileData.descTimePostPaths.filter(
-        (ele) => { return ele !== this.indexFileData.pinnedPostPath }
+    let orderedPosts = this.indexFileData.descTimePostIds
+    if (this.indexFileData.pinnedPostId) {
+      orderedPosts = this.indexFileData.descTimePostIds.filter(
+        (ele) => { return ele !== this.indexFileData.pinnedPostId }
       )
-      orderedPostPaths.unshift(this.indexFileData.pinnedPostPath)
+      orderedPosts.unshift(this.indexFileData.pinnedPostId)
     }
 
     try {
       const readPromises = []
-      for (const postPath of orderedPostPaths) {
+      for (const postId of orderedPosts) {
+        const postPath = Feed.getPostFileName(postId)
         readPromises.push(
           blockstack.getFile(postPath, { decrypt: false })
-          .catch(postReadError => {
+          .catch((postReadError) => {
             console.error(`Unable to load post ${postPath}.\n${postReadError}`)
             return undefined
           })
@@ -141,23 +159,53 @@ export default class Feed extends React.Component {
           try {
             const postData = JSON.parse(rawPostData)
 
-            const newDataElementArr = {
-              comments: [],
-              header: postData.title,
-              id: postData.id,
-              filename: '',
-              photo: undefined,
-              text: postData.description,
-              time: ((postData.time-Date.now()) / 1000),
-              type: 'article',
-              user: {
-                firstName: 'Todo',
-                lastName: 'Reallysoon',
-                photo: '/static/media/Image9.6ab96ea5.png'
-              }
+/* A map of data we store to PBJ data format:
+ *
+ * Store                  PBJ
+ * -------------------------------------------------
+ * !                      comments: []
+ * title                  header
+ * id                     id
+ * photo                  photo
+ * video
+ * description            text
+ * time!                  time
+ * !                      type
+ * !                      user {firstName, lastName, photo}
+ *
+ */
+
+            // const newDataElementArr = {
+            //   comments: [],
+            //   header: postData.title,
+            //   id: postData.id,
+            //   filename: '',
+            //   photo: undefined,
+            //   text: postData.description,
+            //   time: ((postData.time-Date.now()) / 1000),
+            //   type: 'article',
+            //   user: {
+            //     firstName: 'Todo',
+            //     lastName: 'Reallysoon',
+            //     photo: '/static/media/Image9.6ab96ea5.png'
+            //   }
+            // }
+
+            // TODO: un-hack this.
+            //       - probably best to tie it to blockstack profile data
+            //         or to our own profile settings page (b/c then we aren't
+            //         beholden to Blockstack's delays in storing/caching the
+            //         profile data--or their plug-in developer's side-effects.)
+            //
+            postData.comments = []
+            postData.type = 'article'
+            postData.user = {
+              firstName: 'Todo',
+              lastName: 'Reallysoon',
+              photo: '/static/media/Image9.6ab96ea5.png'
             }
 
-            data.push(newDataElementArr)
+            data.push(postData)
           } catch (postInflateError) {
             console.error(`Unable to inflate post.\n${postInflateError}`)
           }
@@ -186,28 +234,22 @@ export default class Feed extends React.Component {
       blockstack.handlePendingSignIn().then(() => {
         window.location = window.location.origin;
       });
-      return false;
     }
     return false;
   }
 
-  loadUserData() {
-    return blockstack.loadUserData();
+  extractItemKey = (item) => {
+     return `${item.id}`
   }
 
-  extractItemKey = (item) => `${item.id}`;
   onItemPressed = (item) => {
-    const idObj = {
-      id: item.id
-    }
-    console.log(`Navigating to Article with {id: ${idObj.id}}`)
     this.props.navigation.navigate('Article', { id: item.id });
   }
+
   handleLogin = () => {
     if (this.state.isSignedIn) {
       blockstack.signUserOut(window.location.href);
-    }
-    else {
+    } else {
       const origin = window.location.origin;
       blockstack.redirectToSignIn(origin, `${origin}/manifest.json`, ['store_write', 'publish_data']);
     }
@@ -221,15 +263,19 @@ export default class Feed extends React.Component {
       (
         <View style={{flex: 1, flexDirection: 'row-reverse'}}>
           <View style={{marginLeft: 5}}>
+            {this.getPostEditorButton('X', this.handleDelete, item.id, false)}
+          </View>
+          <View style={{marginLeft: 5}}>
             {this.getPostEditorButton('Pin', this.handlePin, item.id, false)}
           </View>
-          <View style={{marginRight: 5}}>
-            {this.getPostEditorButton('Edit...', undefined, undefined, false)}
+          <View>
+            {this.getPostEditorButton('Edit...', this.handleEdit, item.id, false)}
           </View>
         </View>
       ) :
       undefined
 
+    const timeSincePost = (item.time - Date.now()) / 1000
     return (
       <TouchableOpacity
         delayPressIn={70}
@@ -243,15 +289,14 @@ export default class Feed extends React.Component {
               img={item.user.photo}
             />
             <View>
-              { /* <RkText rkType='header4'>{`${item.user.firstName} ${item.user.lastName}`}</RkText> */ }
-              <RkText rkType='header4'>{item.header}</RkText>
-              <RkText rkType='secondary2 hintColor'>{moment().add(item.time, 'seconds').fromNow()}</RkText>
+              <RkText rkType='header4'>{item.title}</RkText>
+              <RkText rkType='secondary2 hintColor'>{moment().add(timeSincePost).fromNow()}</RkText>
             </View>
             {editorControls}
           </View>
           {image}
           <View rkCardContent>
-            <RkText rkType='secondary5'>{item.text}</RkText>
+            <RkText rkType='secondary5'>{item.description}</RkText>
           </View>
           <View rkCardFooter>
             <SocialBar />
@@ -261,7 +306,7 @@ export default class Feed extends React.Component {
     );
   }
 
-  getFeedButton(aKey) {
+  getFeedButton = (aKey) => {
     const isLogin = (aKey == 'LoginMenu')
     const rkType = (isLogin) ?
       (this.state.isSignedIn) ? 'clear' : 'primary' : 'clear'
@@ -282,7 +327,7 @@ export default class Feed extends React.Component {
     )
   }
 
-  getPostEditorTextInput(thePlaceHolderText, aTextChgHandlerFn) {
+  getPostEditorTextInput = (thePlaceHolderText, aTextChgHandlerFn) => {
     const isHeading = (thePlaceHolderText === 'Title ...')
     let inputStyle = (isHeading) ? {} : {fontSize:40}
     let numberOfLines = (isHeading) ? 1 : 4
@@ -300,8 +345,8 @@ export default class Feed extends React.Component {
 
   getPostEditorButton = (buttonName, handlerFn, handlerArg, large=true) => {
     let rkType = (large) ? 'large' : 'small'
-    rkType += (buttonName === 'Cancel') ? ' danger' : ''
-    rkType += (!large) ? ' info' : ''
+    rkType += ((buttonName === 'Cancel') || (buttonName === 'X')) ? ' danger' : ''
+    rkType += (!large && (buttonName !== 'X')) ? ' info' : ''
 
     const textStyle = {
       fontSize: (large) ? 30 : 25,
@@ -335,30 +380,18 @@ export default class Feed extends React.Component {
     }
   }
 
-  renderPostEditor() {
-    console.log('returning post editor html ...')
-    // TODO: get user first & last name from blockstack profile or data stored
-    //       for this app.
-    //       get avatarPhoto from image stored for this app.
-    const firstName = 'Agatha'
-    const lastName = 'Bacelar'
-    // const avatarPhoto = item.user.photo  <-- TODO
-    const postTime = Date.now()
-
+  renderPostEditor = () => {
     return (
       <View style={styles.container}>
         <RkCard style={styles.card}>
           <View rkCardHeader>
-            {/* <Avatar rkType='small' style={styles.avatar} img={avatarPhoto} /> */}
-              <RkText rkType='header4'>New Post</RkText>
+            <RkText rkType='header4'>New Post</RkText>
           </View>
           <View rkCardContent>
-            {/* Introduce fields for: Title, Description, Photo U/L */}
             {this.getPostEditorTextInput('Title ...', this.setNewPostTitle)}
             {this.getPostEditorTextInput('Description ...', this.setNewPostDescription)}
           </View>
           <View rkCardFooter style={{justifyContent: 'space-around'}}>
-            {/* Introduce buttons for: <Post> <Cancel> */}
             {this.getPostEditorButton('Cancel', this.handlePostEditorCancel)}
             {this.getPostEditorButton('Photo ...', this.handleMediaUpload)}
             {this.getPostEditorButton('Post', this.handlePostEditorSubmit)}
@@ -372,18 +405,14 @@ export default class Feed extends React.Component {
     this.newPostTitle = undefined
     this.newPostDescription = undefined
 
-    this.setState({
-      editingPost: true,
-    })
+    this.setState({ editingPost: true })
   }
 
   handlePostEditorCancel = () => {
     this.newPostTitle = undefined
     this.newPostDescription = undefined
 
-    this.setState({
-      editingPost: false,
-    })
+    this.setState({ editingPost: false })
   }
 
   handlePostEditorSubmit = async () => {
@@ -391,22 +420,21 @@ export default class Feed extends React.Component {
 
     // 1. write a post file.
     //
-    const timeUtcMs = Date.now()
-    const postFileName = `post-${timeUtcMs}.json`
+    const postId = Date.now()
+    const postFileName = Feed.getPostFileName(postId)
     const postData = {
       title: this.newPostTitle,
       description: this.newPostDescription,
       picture: '',
       video: '',
-      id: timeUtcMs,
-      time: timeUtcMs,
+      id: postId,
+      time: postId,
     }
 
     try {
       const stringifiedPostData = JSON.stringify(postData)
       await blockstack.putFile(
         postFileName, stringifiedPostData, { encrypt: false } )
-      console.log(`Successfully wrote ${postFileName}`)
     } catch (error) {
       console.log(`Error while writing ${postFileName}.\n${error}`)
       this.setState({ saving: false })
@@ -416,7 +444,7 @@ export default class Feed extends React.Component {
     // 2. update the index file.
     //  TODO: refactor with earlier index saving code.
     //
-    this.indexFileData.descTimePostPaths.unshift(postFileName)
+    this.indexFileData.descTimePostIds.unshift(postId)
 
     try {
       this.writeIndex()
@@ -427,22 +455,36 @@ export default class Feed extends React.Component {
     }
 
     // 3. update the data for this view.
-    const newDataElementArr = [{
-      comments: [],
-      header: this.newPostTitle,
-      id: timeUtcMs,
-      filename: postFileName,
-      photo: undefined,
-      text: this.newPostDescription,
-      time: (timeUtcMs-Date.now()),
-      type: 'article',
-      user: {
-        firstName: 'Todo',
-        lastName: 'Reallysoon',
-        photo: '/static/media/Image9.6ab96ea5.png'
-      }
-    }]
+    // const newDataElementArr = [{
+    //   comments: [],
+    //   header: this.newPostTitle,
+    //   id: postId,
+    //   filename: postFileName,
+    //   photo: undefined,
+    //   text: this.newPostDescription,
+    //   time: (postId-Date.now()),
+    //   type: 'article',
+    //   user: {
+    //     firstName: 'Todo',
+    //     lastName: 'Reallysoon',
+    //     photo: '/static/media/Image9.6ab96ea5.png'
+    //   }
+    // }]
 
+    // TODO: un-hack this.
+    //       - probably best to tie it to blockstack profile data
+    //         or to our own profile settings page (b/c then we aren't
+    //         beholden to Blockstack's delays in storing/caching the
+    //         profile data--or their plug-in developer's side-effects.)
+    //
+    postData.comments = []
+    postData.type = 'article'
+    postData.user = {
+      firstName: 'Todo',
+      lastName: 'Reallysoon',
+      photo: '/static/media/Image9.6ab96ea5.png'
+    }
+    const newDataElementArr = [postData]
     const joinedArr = newDataElementArr.concat(this.state.data)
 
     this.setState({
@@ -459,10 +501,8 @@ export default class Feed extends React.Component {
     //    (The pinned post is skipped in the render of regular items)
     //    If the post Id is currently pinned, unpin it.
     //
-    const pinPostFileName = `post-${aPostId}.json`
-    this.indexFileData.pinnedPostPath =
-      (this.indexFileData.pinnedPostPath !== pinPostFileName) ?
-        pinPostFileName : ''
+    this.indexFileData.pinnedPostId =
+      (this.indexFileData.pinnedPostId !== aPostId) ? aPostId : ''
 
     // 2. Save the index
     //
@@ -480,6 +520,46 @@ export default class Feed extends React.Component {
     this.setState({ saving: false })
   }
 
+  handleDelete = async (aPostId) => {
+    this.setState({ saving: true })
+
+    // 1. Delete the data in this post.
+    const postFileName = Feed.getPostFileName(aPostId)
+    try {
+      const postData = {}
+      const sPostData = JSON.stringify(postData)
+      await blockstack.putFile(postFileName, sPostData, {encrypt: false})
+    } catch (error) {
+      console.log(`Unable to delete ${postFileName}.\n${error}`)
+      this.setState({ saving: false })
+      return
+    }
+    // 2. Remove this post from index data.
+
+
+    this.indexFileData.pinnedPostId =
+      (this.indexFileData.pinnedPostId !== aPostId) ? aPostId : ''
+
+    // 2. Save the index
+    //
+    try {
+      await this.writeIndex()
+    } catch (error) {
+      console.error(`Error saving index.json.\n${error}`)
+      this.setState({ saving: false })
+      return
+    }
+
+    // 3. Update the data for this view
+    //  TODO: this is slow AF--something faster
+
+    this.setState({ saving: false })
+  }
+
+  handleEdit = async (postId) => {
+
+  }
+
   handleMediaUpload = () => {
     // TODO:
   }
@@ -492,17 +572,6 @@ export default class Feed extends React.Component {
     this.newPostDescription = theDescriptionText
   }
 
-  writeIndex = async () => {
-    console.log('indexFileData:')
-    console.log(this.indexFileData)
-
-    this.indexFileData.timeUtc = Date.now()
-    const stringifiedIndexFileData = JSON.stringify(this.indexFileData)
-    await blockstack.putFile(
-      'index.json', stringifiedIndexFileData, {encrypt: false})
-
-    console.log('Successfully wrote index.json.')
-  }
 
   render() {
     console.log('In render, data:', this.state.data)
