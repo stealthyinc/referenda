@@ -302,22 +302,18 @@ export default class Feed extends React.Component {
 
   getFeedButton = (aKey) => {
     const isLogin = (aKey == 'LoginMenu')
-    const rkType = (isLogin) ?
-      (this.state.isSignedIn) ? 'clear' : 'primary' : 'clear'
-    const handlerFn = (isLogin) ?
-      this.handleLogin : this.handlePostEditorRequest
-    const icon = (isLogin) ?
-      FontIcons.login : FontIcons.article
+    const buttonName = (isLogin) ?
+      ( (this.state.isSignedIn) ? 'Log Out' : 'Log In' ) : 'New Post ...'
+    const buttonText = (<Text uppercase={false}>{buttonName}</Text>)
+    const handlerFn = (isLogin) ? this.handleLogin : this.handlePostEditorRequest
+    // const icon = (isLogin) ?
+    //   FontIcons.login : FontIcons.article
 
     return (
       <Button
-        rkType={rkType}
-        key={aKey}
-        onPress={() => handlerFn()} >
-        <Text style={styles.icon} rkType='primary moon small'>
-          {icon}
-        </Text>
-      </Button>
+         medium
+         primary
+         onPress={() => handlerFn()}>{buttonText}</Button>
     )
   }
 
@@ -353,7 +349,6 @@ export default class Feed extends React.Component {
         info={info}
         primary={primary}
         danger={danger}
-        rounded={true}
         onPress={onPress}>{buttonText}</Button>
     )
   }
@@ -667,7 +662,7 @@ export default class Feed extends React.Component {
 
     return (
       <View>
-        <View style={styles.main}>
+        <View id='PageHeader' style={styles.main}>
           {logInOutButton}
           {postButton}
         </View>
@@ -684,9 +679,9 @@ export default class Feed extends React.Component {
   }
 }
 
-const styles = StyleSheet.create(theme => ({
+const styles = StyleSheet.create({
   container: {
-    backgroundColor: theme.colors.screen.scroll,
+    backgroundColor: 'white',
     paddingVertical: 8,
     paddingHorizontal: 10,
   },
@@ -706,4 +701,4 @@ const styles = StyleSheet.create(theme => ({
   icon: {
     margin: 5,
   },
-}));
+});
