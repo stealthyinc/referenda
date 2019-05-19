@@ -185,6 +185,11 @@ export default class Feed extends React.Component {
             //   }
             // }
 
+            if (this.indexFileData.pinnedPostId &&
+                (this.indexFileData.pinnedPostId === postData.id)) {
+              postData.pinned = true
+            }
+
             // TODO: un-hack this.
             //       - probably best to tie it to blockstack profile data
             //         or to our own profile settings page (b/c then we aren't
@@ -253,6 +258,8 @@ export default class Feed extends React.Component {
     const image = (item.photo) ?
       (<Image rkCardImg source={item.photo} />) : undefined
 
+    const pinButtonText = (item.hasOwnProperty('pinned') && item.pinned) ?
+      'Unpin' : 'Pin'
     const editorControls = (this.state.isSignedIn) ?
       (
         <View style={{flex: 1, flexDirection: 'row-reverse'}}>
@@ -260,7 +267,7 @@ export default class Feed extends React.Component {
             {this.getPostEditorButton('X', this.handleDelete, item.id, false)}
           </View>
           <View style={{marginLeft: 5}}>
-            {this.getPostEditorButton('Pin', this.handlePin, item.id, false)}
+            {this.getPostEditorButton(pinButtonText, this.handlePin, item.id, false)}
           </View>
         </View>
       ) :
@@ -497,13 +504,17 @@ export default class Feed extends React.Component {
       for (const index in updatedData) {
         const postId = updatedData[index].id
         if (postId == aPostId) {
-          postToPin = updatedData.splice(index, 1)
+          const postToPinArr = updatedData.splice(index, 1)
+          if (postToPinArr) {
+            postToPin = postToPinArr[0]
+          }
           break
         }
       }
 
       if (postToPin) {
-        updatedData.unshift(postToPin[0])
+        postToPin.pinned = true
+        updatedData.unshift(postToPin)
       }
     } else { // unpinning
       // A. Find the post to unpin in the current render list and remove it:
@@ -513,7 +524,13 @@ export default class Feed extends React.Component {
         const postId = updatedData[index].id
         if (postId == aPostId) {
           if (index == 0) {
-            postToUnpin = updatedData.splice(index, 1)
+            const postToUnpinArr = updatedData.splice(index, 1)
+            if (postToUnpinArr) {
+              postToUnpin = postToUnpinArr[0]
+            }
+            if (postToUnpin && postToUnpin.hasOwnProperty('pinned')) {
+              delete postToUnpin.pinned
+            }
           } else {
             console.error(`Unable to unpin specified post--it's not at the expected position: ${index} (expected 0).`)
           }
@@ -532,13 +549,13 @@ export default class Feed extends React.Component {
           if (aPostId > postId) {
             if (index == 0) {
               // Special case (1)
-              updatedData.unshift(postToUnpin[0])
+              updatedData.unshift(postToUnpin)
               console.log('Inserted at front of list ...')
             } else {
 
               // Generic case
               const insertAtIndex = index
-              updatedData.splice(insertAtIndex, 0, postToUnpin[0])
+              updatedData.splice(insertAtIndex, 0, postToUnpin)
               console.log(`Inserted at index ${insertAtIndex} ...`)
             }
 
@@ -549,7 +566,7 @@ export default class Feed extends React.Component {
 
         if (!inserted) {
           // Special case (2), (3)
-          updatedData.push(postToUnpin[0])
+          updatedData.push(postToUnpin)
           console.log(`Inserted by push (special case 2/3): ...`)
           inserted = true
         }
