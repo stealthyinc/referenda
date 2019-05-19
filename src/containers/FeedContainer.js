@@ -5,18 +5,29 @@ import {
   Image,
   TouchableOpacity,
   ActivityIndicator,
-  TextInput,
   StyleSheet,
 } from 'react-native';
 import {
+  Container,
+  Header,
   Button,
+  Body,
+  Content,
   Card,
+  CardItem,
   Text,
   Icon,
+  Item,
+  Input,
+  Label,
+  Left,
+  Right,
+  Form,
+  Title,
+  H1,
+  Thumbnail
 } from 'native-base';
 import { FontIcons } from '../assets/icons';
-// import { Avatar } from '../components/avatar';
-// import { SocialBar } from '../components/socialBar';
 import * as blockstack from 'blockstack'
 
 const firebase = require('firebase');
@@ -257,20 +268,20 @@ export default class Feed extends React.Component {
 
   renderItem = ({ item }) => {
     const image = (item.photo) ?
-      (<Image rkCardImg source={item.photo} />) : undefined
+      (<Image source={item.photo} />) : undefined
 
     const pinButtonText = (item.hasOwnProperty('pinned') && item.pinned) ?
       'Unpin' : 'Pin'
     const editorControls = (this.state.isSignedIn) ?
       (
-        <View style={{flex: 1, flexDirection: 'row-reverse'}}>
-          <View style={{marginLeft: 5}}>
-            {this.getPostEditorButton('X', this.handleDelete, item.id, false)}
-          </View>
-          <View style={{marginLeft: 5}}>
-            {this.getPostEditorButton(pinButtonText, this.handlePin, item.id, false)}
-          </View>
-        </View>
+        <CardItem footer>
+          <Left>
+            {this.getPostEditorButton('X', this.handleDelete, "trash", item.id, false)}
+          </Left>
+          <Right>
+            {this.getPostEditorButton(pinButtonText, this.handlePin, "pin", item.id, false)}
+          </Right>
+        </CardItem>
       ) :
       undefined
 
@@ -280,26 +291,47 @@ export default class Feed extends React.Component {
         delayPressIn={70}
         activeOpacity={0.8}
         onPress={() => this.onItemPressed(item)}>
-        <Card style={styles.card}>
-          <View rkCardHeader>
-{/*            <Avatar
-              rkType='circle'
-              style={styles.avatar}
-              img={item.user.photo}
-            /> */}
-            <View>
-              <Text rkType='header4'>{item.title}</Text>
-              <Text rkType='secondary2 hintColor'>{moment().add(timeSincePost).fromNow()}</Text>
-            </View>
-            {editorControls}
-          </View>
-          {image}
-          <View rkCardContent>
-            <Text rkType='secondary5'>{item.description}</Text>
-          </View>
-          <View rkCardFooter>
-            {/*<SocialBar /> */}
-          </View >
+        <Card style={{flex: 0}}>
+          <CardItem bordered>
+            <Left>
+              <Thumbnail source={item.user.photo}/>
+              <Body>
+                <Text>{item.title}</Text>
+                <Text note>{moment().add(timeSincePost).fromNow()}</Text>
+              </Body>
+            </Left>
+          </CardItem>
+          <CardItem>
+            <Body>
+              {image}
+              <Text>
+                {item.description}
+              </Text>
+            </Body>
+          </CardItem>
+          <CardItem bordered>
+            <Left>
+              <Button rounded success>
+                <Icon name='chatbubbles' />
+              </Button>
+            </Left>
+            <Left>
+              <Button rounded info>
+                <Icon name='logo-twitter' />
+              </Button>
+            </Left>
+            <Right>
+              <Button rounded warning>
+                <Icon name='logo-bitcoin' />
+              </Button>
+            </Right>
+            <Right>
+              <Button rounded danger>
+                <Icon active name="heart" />
+              </Button>
+            </Right>
+          </CardItem>
+          {editorControls}
         </Card>
       </TouchableOpacity>
     );
@@ -331,7 +363,7 @@ export default class Feed extends React.Component {
     let numberOfLines = (isHeading) ? 1 : 4
 
     return (
-      <TextInput
+      <Input
         style={{borderStyle: 'solid', borderWidth: 1, borderColor: 'rgba(242, 242, 242, 1)', borderRadius: 5}}
         inputStyle={inputStyle}
         multiline={!isHeading}
@@ -341,44 +373,55 @@ export default class Feed extends React.Component {
     )
   }
 
-  getPostEditorButton = (buttonName, handlerFn, handlerArg, large=true) => {
+  getPostEditorButton = (buttonName, handlerFn, icon, handlerArg, large=true) => {
     const buttonText = (<Text uppercase={false}>{buttonName}</Text>)
     const danger = ((buttonName === 'Cancel') || (buttonName === 'X'))
-    const info = ((buttonName !== 'X') && !large)
-    const primary = !info && !danger
+    const info = (buttonName === 'Post')
+    console.log("info", info, buttonName)
+    const success = !info && !danger
     const onPress = (handlerArg) ?
       () => handlerFn(handlerArg) :
       () => handlerFn()
-
     return (
       <Button
+        bordered
+        iconLeft
         small={!large}
         medium={large}
         info={info}
-        primary={primary}
+        success={success}
         danger={danger}
-        onPress={onPress}>{buttonText}</Button>
+        onPress={onPress}>
+        <Icon name={icon} />
+        {buttonText}
+      </Button>
     )
   }
 
   renderPostEditor = () => {
     return (
-      <View style={styles.container}>
-        <Card style={styles.card}>
-          <View rkCardHeader>
-            <Text rkType='header4'>New Post</Text>
-          </View>
-          <View rkCardContent>
-            {this.getPostEditorTextInput('Title ...', this.setNewPostTitle)}
-            {this.getPostEditorTextInput('Description ...', this.setNewPostDescription)}
-          </View>
-          <View rkCardFooter style={{justifyContent: 'space-around'}}>
-            {this.getPostEditorButton('Cancel', this.handlePostEditorCancel)}
-            {this.getPostEditorButton('Photo ...', this.handleMediaUpload)}
-            {this.getPostEditorButton('Post', this.handlePostEditorSubmit)}
-          </View >
+      <Content padder>
+        <Card>
+          <CardItem header>
+            <H1>New Post</H1>
+          </CardItem>
+          <CardItem>
+              {this.getPostEditorTextInput('Title ...', this.setNewPostTitle)}
+          </CardItem>
+          <CardItem bordered>
+              {this.getPostEditorTextInput('Description ...', this.setNewPostDescription)}
+          </CardItem>
+          <CardItem bordered>
+            <Left>
+              {this.getPostEditorButton('Cancel', this.handlePostEditorCancel, "close-circle-outline")}
+            </Left>
+            {this.getPostEditorButton('Photo ...', this.handleMediaUpload, "images")}
+            <Right>
+              {this.getPostEditorButton('Post', this.handlePostEditorSubmit, "checkbox")}
+            </Right>
+          </CardItem>
         </Card>
-      </View>
+      </Content>
     )
   }
 
