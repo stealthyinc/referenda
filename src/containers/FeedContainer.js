@@ -262,9 +262,6 @@ export default class Feed extends React.Component {
           <View style={{marginLeft: 5}}>
             {this.getPostEditorButton('Pin', this.handlePin, item.id, false)}
           </View>
-          <View>
-            {this.getPostEditorButton('Edit...', this.handleEdit, item.id, false)}
-          </View>
         </View>
       ) :
       undefined
@@ -617,10 +614,6 @@ export default class Feed extends React.Component {
        saving: false,
        data: updatedData
      })
-  }
-
-  handleEdit = async (postId) => {
-
   }
 
   handleMediaUpload = () => {
