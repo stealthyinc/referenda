@@ -533,14 +533,21 @@ export default class Feed extends React.Component {
       this.setState({ saving: false })
       return
     }
-    // 2. Remove this post from index data.
 
-
-    this.indexFileData.pinnedPostId =
-      (this.indexFileData.pinnedPostId !== aPostId) ? aPostId : ''
-
-    // 2. Save the index
+    // 2. Remove this post from index data and save the index
     //
+    if (this.indexFileData.pinnedPostId === aPostId) {
+      this.indexFileData.pinnedPostId = ''
+    }
+
+    for (const index in this.indexFileData.descTimePostIds) {
+      const postId = this.indexFileData.descTimePostIds[index]
+      if (postId === aPostId) {
+        this.indexFileData.descTimePostIds.splice(index, 1)
+        break
+      }
+    }
+
     try {
       await this.writeIndex()
     } catch (error) {
@@ -550,9 +557,20 @@ export default class Feed extends React.Component {
     }
 
     // 3. Update the data for this view
-    //  TODO: this is slow AF--something faster
+    //
+    let updatedData = [ ...this.state.data ]
+    for (const index in updatedData) {
+      const id = updatedData[index].id
+      if (id === aPostId) {
+        updatedData.splice(index, 1)
+        break;
+      }
+    }
 
-    this.setState({ saving: false })
+    this.setState({
+       saving: false,
+       data: updatedData
+     })
   }
 
   handleEdit = async (postId) => {
