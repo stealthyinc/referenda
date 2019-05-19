@@ -3,24 +3,25 @@ import {
   FlatList,
   View,
   Image,
-  TextInput,
   TouchableOpacity,
-  StyleSheet,
   ActivityIndicator,
 } from 'react-native';
+import {
+  RkButton,
+  RkTextInput,
+  RkCard,
+  RkText,
+  RkStyleSheet,
+} from 'react-native-ui-kitten';
 import { FontIcons } from '../assets/icons';
-import { Button, Card, Thumbnail, Text } from 'native-base';
-// import { SocialBar } from '../components/socialBar';
+import { Avatar } from '../components/avatar';
+import { SocialBar } from '../components/socialBar';
 import * as blockstack from 'blockstack'
 
 const firebase = require('firebase');
 const moment = require('moment');
 
 export default class Feed extends React.Component {
-  static navigationOptions = {
-    title: 'Feed'.toUpperCase(),
-  };
-
   constructor(props) {
     super(props);
     const isSignedIn = this.checkSignedInStatus();
@@ -36,12 +37,12 @@ export default class Feed extends React.Component {
       saving: false,
     };
 
-    if (!firebase.auth().currentUser) {
-      firebase.auth().signInAnonymously()
-      .then(() => {
-        // this.anonalytics.setDatabase(firebase);
-      });
-    }
+    // if (!firebase.auth().currentUser) {
+    //   firebase.auth().signInAnonymously()
+    //   .then(() => {
+    //     // this.anonalytics.setDatabase(firebase);
+    //   });
+    // }
 
     this.indexFileData = undefined
     this.newPostTitle = undefined
@@ -236,7 +237,7 @@ export default class Feed extends React.Component {
   }
 
   onItemPressed = (item) => {
-    // this.props.navigation.navigate('Article', { id: item.id });
+    this.props.navigation.navigate('Article', { id: item.id });
   }
 
   handleLogin = () => {
@@ -274,28 +275,33 @@ export default class Feed extends React.Component {
         delayPressIn={70}
         activeOpacity={0.8}
         onPress={() => this.onItemPressed(item)}>
-        <Card style={styles.card}>
+        <RkCard style={styles.card}>
           <View rkCardHeader>
-            <Thumbnail
-              source={item.user.photo}
+            <Avatar
+              rkType='circle'
+              style={styles.avatar}
+              img={item.user.photo}
             />
             <View>
-              <Text rkType='header4'>{item.title}</Text>
-              <Text rkType='secondary2 hintColor'>{moment().add(timeSincePost).fromNow()}</Text>
+              <RkText rkType='header4'>{item.title}</RkText>
+              <RkText rkType='secondary2 hintColor'>{moment().add(timeSincePost).fromNow()}</RkText>
             </View>
             {editorControls}
           </View>
           {image}
           <View rkCardContent>
-            <Text rkType='secondary5'>{item.description}</Text>
+            <RkText rkType='secondary5'>{item.description}</RkText>
           </View>
-        </Card>
+          <View rkCardFooter>
+            <SocialBar />
+          </View >
+        </RkCard>
       </TouchableOpacity>
     );
   }
 
   getFeedButton = (aKey) => {
-    const isLogin = (aKey === 'LoginMenu')
+    const isLogin = (aKey == 'LoginMenu')
     const rkType = (isLogin) ?
       (this.state.isSignedIn) ? 'clear' : 'primary' : 'clear'
     const handlerFn = (isLogin) ?
@@ -304,14 +310,14 @@ export default class Feed extends React.Component {
       FontIcons.login : FontIcons.article
 
     return (
-      <Button
+      <RkButton
         rkType={rkType}
         key={aKey}
         onPress={() => handlerFn()} >
-        <Text style={styles.icon} rkType='primary moon small'>
+        <RkText style={styles.icon} rkType='primary moon small'>
           {icon}
-        </Text>
-      </Button>
+        </RkText>
+      </RkButton>
     )
   }
 
@@ -321,7 +327,7 @@ export default class Feed extends React.Component {
     let numberOfLines = (isHeading) ? 1 : 4
 
     return (
-      <TextInput
+      <RkTextInput
         style={{borderStyle: 'solid', borderWidth: 1, borderColor: 'rgba(242, 242, 242, 1)', borderRadius: 5}}
         inputStyle={inputStyle}
         multiline={!isHeading}
@@ -345,25 +351,25 @@ export default class Feed extends React.Component {
     if (handlerArg) {
       // debugger
       return (
-        <Button
+        <RkButton
           rkType={rkType}
           onPress={() => handlerFn(handlerArg)} >
           { /* styling below b/c things are really silly for some reason w/o it */ }
-          <Text style={textStyle}>
+          <RkText style={textStyle}>
             {buttonName}
-          </Text>
-        </Button>
+          </RkText>
+        </RkButton>
       )
     } else {
       return (
-        <Button
+        <RkButton
           rkType={rkType}
           onPress={() => handlerFn()} >
           { /* styling below b/c things are really silly for some reason w/o it */ }
-          <Text style={textStyle}>
+          <RkText style={textStyle}>
             {buttonName}
-          </Text>
-        </Button>
+          </RkText>
+        </RkButton>
       )
     }
   }
@@ -371,9 +377,9 @@ export default class Feed extends React.Component {
   renderPostEditor = () => {
     return (
       <View style={styles.container}>
-        <Card style={styles.card}>
+        <RkCard style={styles.card}>
           <View rkCardHeader>
-            <Text rkType='header4'>New Post</Text>
+            <RkText rkType='header4'>New Post</RkText>
           </View>
           <View rkCardContent>
             {this.getPostEditorTextInput('Title ...', this.setNewPostTitle)}
@@ -384,7 +390,7 @@ export default class Feed extends React.Component {
             {this.getPostEditorButton('Photo ...', this.handleMediaUpload)}
             {this.getPostEditorButton('Post', this.handlePostEditorSubmit)}
           </View >
-        </Card>
+        </RkCard>
       </View>
     )
   }
@@ -472,11 +478,13 @@ export default class Feed extends React.Component {
       lastName: 'Reallysoon',
       photo: '/static/media/Image9.6ab96ea5.png'
     }
-    const newDataElementArr = [postData]
-    const joinedArr = newDataElementArr.concat(this.state.data)
+
+    const newData = [ ...this.state.data ]
+    const newPostIndex = (this.indexFileData.pinnedPostId) ? 1 : 0
+    newData.splice(newPostIndex, 0, postData)
 
     this.setState({
-      data: joinedArr,
+      data: newData,
       editingPost: false,
       saving: false
     })
@@ -489,8 +497,8 @@ export default class Feed extends React.Component {
     //    (The pinned post is skipped in the render of regular items)
     //    If the post Id is currently pinned, unpin it.
     //
-    this.indexFileData.pinnedPostId =
-      (this.indexFileData.pinnedPostId !== aPostId) ? aPostId : ''
+    let pinning = (this.indexFileData.pinnedPostId !== aPostId)
+    this.indexFileData.pinnedPostId = (pinning) ? aPostId : ''
 
     // 2. Save the index
     //
@@ -502,10 +510,80 @@ export default class Feed extends React.Component {
       return
     }
 
-    // 3. Update the data for this view
-    //  TODO: this is slow AF--something faster
+    // 3. Update the data for this view.
+    //    If we're pinning, move the post to the front.
+    //    If we're unpinning, move the post from the front to it's correct
+    //    position.
+    //
+    let updatedData = [ ...this.state.data ]
+    if (pinning) {
+      let postToPin = undefined
+      for (const index in updatedData) {
+        const postId = updatedData[index].id
+        if (postId == aPostId) {
+          postToPin = updatedData.splice(index, 1)
+          break
+        }
+      }
 
-    this.setState({ saving: false })
+      if (postToPin) {
+        updatedData.unshift(postToPin[0])
+      }
+    } else { // unpinning
+      // A. Find the post to unpin in the current render list and remove it:
+      //
+      let postToUnpin = undefined
+      for (const index in updatedData) {
+        const postId = updatedData[index].id
+        if (postId == aPostId) {
+          if (index == 0) {
+            postToUnpin = updatedData.splice(index, 1)
+          } else {
+            console.error(`Unable to unpin specified post--it's not at the expected position: ${index} (expected 0).`)
+          }
+          break
+        }
+      }
+      // B. Find the correct place to reinsert the unpinned post:
+      //
+      if (postToUnpin) {
+        // Find the first post that happened before this one and insert it in
+        // front of that. Special cases include: (1) front of the list.
+        // (2) end of the list. (3) only item in the list.
+        let inserted = false
+        for (const index in updatedData) {
+          const postId = updatedData[index].id
+          if (aPostId > postId) {
+            if (index == 0) {
+              // Special case (1)
+              updatedData.unshift(postToUnpin[0])
+              console.log('Inserted at front of list ...')
+            } else {
+
+              // Generic case
+              const insertAtIndex = index
+              updatedData.splice(insertAtIndex, 0, postToUnpin[0])
+              console.log(`Inserted at index ${insertAtIndex} ...`)
+            }
+
+            inserted = true
+            break
+          }
+        }
+
+        if (!inserted) {
+          // Special case (2), (3)
+          updatedData.push(postToUnpin[0])
+          console.log(`Inserted by push (special case 2/3): ...`)
+          inserted = true
+        }
+      }
+    }
+
+    this.setState({
+      saving: false,
+      data: updatedData
+    })
   }
 
   handleDelete = async (aPostId) => {
@@ -522,14 +600,21 @@ export default class Feed extends React.Component {
       this.setState({ saving: false })
       return
     }
-    // 2. Remove this post from index data.
 
-
-    this.indexFileData.pinnedPostId =
-      (this.indexFileData.pinnedPostId !== aPostId) ? aPostId : ''
-
-    // 2. Save the index
+    // 2. Remove this post from index data and save the index
     //
+    if (this.indexFileData.pinnedPostId === aPostId) {
+      this.indexFileData.pinnedPostId = ''
+    }
+
+    for (const index in this.indexFileData.descTimePostIds) {
+      const postId = this.indexFileData.descTimePostIds[index]
+      if (postId === aPostId) {
+        this.indexFileData.descTimePostIds.splice(index, 1)
+        break
+      }
+    }
+
     try {
       await this.writeIndex()
     } catch (error) {
@@ -539,9 +624,20 @@ export default class Feed extends React.Component {
     }
 
     // 3. Update the data for this view
-    //  TODO: this is slow AF--something faster
+    //
+    let updatedData = [ ...this.state.data ]
+    for (const index in updatedData) {
+      const id = updatedData[index].id
+      if (id === aPostId) {
+        updatedData.splice(index, 1)
+        break;
+      }
+    }
 
-    this.setState({ saving: false })
+    this.setState({
+       saving: false,
+       data: updatedData
+     })
   }
 
   handleEdit = async (postId) => {
@@ -575,13 +671,13 @@ export default class Feed extends React.Component {
     const activityIndicator = (this.state.initializing) ?
       ( <View style={{flexDirection:'row', justifyContent:'center', marginVertical:50, borderStyle:'solid', borderWidth:1, borderRadius:5, borderColor:'rgba(242, 242, 242, 1)'}}>
           <ActivityIndicator size='large' color='black'/>
-          <Text style={{color:'rgba(242, 242, 242, 1)'}} rkType="large center"> Loading ...</Text>
+          <RkText style={{color:'rgba(242, 242, 242, 1)'}} rkType="large center"> Loading ...</RkText>
         </View>
       ) : undefined
     const postActivityIndicator = (this.state.saving) ?
       ( <View style={{flexDirection:'row', justifyContent:'center', marginVertical:50, borderStyle:'solid', borderWidth:1, borderRadius:5, borderColor:'rgba(242, 242, 242, 1)'}}>
           <ActivityIndicator size='large' color='black'/>
-          <Text style={{color:'rgba(242, 242, 242, 1)'}} rkType="large center"> Saving ...</Text>
+          <RkText style={{color:'rgba(242, 242, 242, 1)'}} rkType="large center"> Saving ...</RkText>
         </View>
       ) : undefined
 
@@ -604,9 +700,9 @@ export default class Feed extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = RkStyleSheet.create(theme => ({
   container: {
-    backgroundColor: '#f2f2f2',
+    backgroundColor: theme.colors.screen.scroll,
     paddingVertical: 8,
     paddingHorizontal: 10,
   },
@@ -626,4 +722,4 @@ const styles = StyleSheet.create({
   icon: {
     margin: 5,
   },
-});
+}));

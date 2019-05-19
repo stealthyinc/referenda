@@ -4,28 +4,18 @@ import {
   Image,
   View,
   TouchableOpacity,
+  StyleSheet,
 } from 'react-native';
 import {
-  RkCard,
-  RkText,
-  RkStyleSheet,
-} from 'react-native-ui-kitten';
+  Card,
+  Text,
+  Thumbnail
+} from 'native-base';
 import { data } from '../data';
-import {
-  Avatar,
-  SocialBar,
-} from '../components';
-import NavigationType from '../config/navigation/propTypes';
 
 const moment = require('moment');
 
 export default class Article extends React.Component {
-  static propTypes = {
-    navigation: NavigationType.isRequired,
-  };
-  static navigationOptions = {
-    title: 'Article View'.toUpperCase(),
-  };
 
   constructor(props) {
     super(props);
@@ -39,28 +29,28 @@ export default class Article extends React.Component {
 
   render = () => (
     <ScrollView style={styles.root}>
-      <RkCard rkType='article'>
+      <Card rkType='article'>
         <Image rkCardImg source={this.data.photo} />
         <View rkCardHeader>
           <View>
-            <RkText style={styles.title} rkType='header4'>{this.data.header}</RkText>
-            <RkText rkType='secondary2 hintColor'>
+            <Text style={styles.title} rkType='header4'>{this.data.header}</Text>
+            <Text rkType='secondary2 hintColor'>
               {moment().add(this.data.time, 'seconds').fromNow()}
-            </RkText>
+            </Text>
           </View>
           <TouchableOpacity onPress={this.onAvatarPressed}>
-            <Avatar rkType='circle' img={this.data.user.photo} />
+            <Thumbnail source={this.data.user.photo} />
           </TouchableOpacity>
         </View>
         <View rkCardContent>
           <View>
-            <RkText rkType='secondary5'>{this.data.text}</RkText>
+            <Text rkType='secondary5'>{this.data.text}</Text>
           </View>
         </View>
         <View rkCardFooter>
           <SocialBar />
         </View>
-      </RkCard>
+      </Card>
     </ScrollView>
   )
 }

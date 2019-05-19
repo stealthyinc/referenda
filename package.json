@@ -6,6 +6,7 @@
     "@babel/plugin-proposal-class-properties": "^7.4.4",
     "blockstack": "^19.1.0",
     "customize-cra": "^0.2.12",
+    "dotenv": "^8.0.0",
     "firebase": "^6.0.2",
     "moment": "^2.24.0",
     "native-base": "^2.12.1",
