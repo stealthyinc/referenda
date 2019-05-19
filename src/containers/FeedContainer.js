@@ -19,6 +19,10 @@ import { FontIcons } from '../assets/icons';
 // import { SocialBar } from '../components/socialBar';
 import * as blockstack from 'blockstack'
 
+// TODO: how do we rip this out / disable it for mobile web and the app (use
+//       the photo chooser / picker for the app).
+import Dropzone from 'react-dropzone'
+
 const firebase = require('firebase');
 const moment = require('moment');
 
@@ -36,6 +40,7 @@ export default class Feed extends React.Component {
       editingPost: false,
       initializing: true,
       saving: false,
+      mediaPicking: false,
     };
 
     if (!firebase.auth().currentUser) {
@@ -362,12 +367,40 @@ export default class Feed extends React.Component {
   }
 
   renderPostEditor = () => {
+
+    const dropZone = (!this.state.mediaPicking) ?
+      undefined :
+      (
+        <View
+          style={{
+            borderStyle:'dashed',
+            borderWidth: 2,
+            borderRadius: 10,
+            borderColor:'rgb(204,204,204)',
+            marginHorizontal:15,
+            marginVertical:15}}>
+          <Dropzone onDrop={acceptedFiles => this.completeMediaUpload(acceptedFiles)}>
+            {({getRootProps, getInputProps}) => (
+              <section>
+                <div {...getRootProps()}>
+                  <input {...getInputProps()} />
+                  <p style={{textAlign: 'center'}}>Drag 'n' drop an image here</p>
+                  <p style={{textAlign: 'center'}}>or</p>
+                  <p style={{textAlign: 'center'}}>click here to choose one.</p>
+                </div>
+              </section>
+            )}
+          </Dropzone>
+        </View>
+      )
+
     return (
       <View style={styles.container}>
         <Card style={styles.card}>
           <View rkCardHeader>
             <Text rkType='header4'>New Post</Text>
           </View>
+          {dropZone}
           <View rkCardContent>
             {this.getPostEditorTextInput('Title ...', this.setNewPostTitle)}
             {this.getPostEditorTextInput('Description ...', this.setNewPostDescription)}
@@ -638,7 +671,15 @@ export default class Feed extends React.Component {
   }
 
   handleMediaUpload = () => {
-    // TODO:
+    this.setState({mediaPicking: true})
+  }
+
+  completeMediaUpload = (acceptedFiles) => {
+    this.setState({mediaPicking: false})
+
+    console.log(`completeMediaUpload: `, acceptedFiles)
+    // Set up an other activity indicator and upload the file.
+    // Then throw the file into the post.
   }
 
   setNewPostTitle = (theTitleText) => {
@@ -649,6 +690,7 @@ export default class Feed extends React.Component {
     this.newPostDescription = theDescriptionText
   }
 
+
   render() {
     console.log('In render, data:', this.state.data)
     const postEditor = (this.state.editingPost) ?
@@ -657,6 +699,7 @@ export default class Feed extends React.Component {
       this.getFeedButton('LoginMenu') : undefined
     const postButton = (!this.state.editingPost) ?
       this.getFeedButton('ArticleMenu') : undefined
+
 
     const activityIndicator = (this.state.initializing) ?
       ( <View style={{flexDirection:'row', justifyContent:'center', marginVertical:50, borderStyle:'solid', borderWidth:1, borderRadius:5, borderColor:'rgba(242, 242, 242, 1)'}}>
