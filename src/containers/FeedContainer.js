@@ -3,20 +3,14 @@ import {
   FlatList,
   View,
   Image,
+  TextInput,
   TouchableOpacity,
+  StyleSheet,
   ActivityIndicator,
 } from 'react-native';
-import {
-  RkButton,
-  RkTextInput,
-  RkCard,
-  RkText,
-  RkStyleSheet,
-} from 'react-native-ui-kitten';
 import { FontIcons } from '../assets/icons';
-import { Avatar } from '../components/avatar';
-import { SocialBar } from '../components/socialBar';
-import ListContainer from './ListContainer'
+import { Button, Card, Thumbnail, Text } from 'native-base';
+// import { SocialBar } from '../components/socialBar';
 import * as blockstack from 'blockstack'
 
 const firebase = require('firebase');
@@ -242,7 +236,7 @@ export default class Feed extends React.Component {
   }
 
   onItemPressed = (item) => {
-    this.props.navigation.navigate('Article', { id: item.id });
+    // this.props.navigation.navigate('Article', { id: item.id });
   }
 
   handleLogin = () => {
@@ -280,33 +274,28 @@ export default class Feed extends React.Component {
         delayPressIn={70}
         activeOpacity={0.8}
         onPress={() => this.onItemPressed(item)}>
-        <RkCard style={styles.card}>
+        <Card style={styles.card}>
           <View rkCardHeader>
-            <Avatar
-              rkType='circle'
-              style={styles.avatar}
-              img={item.user.photo}
+            <Thumbnail
+              source={item.user.photo}
             />
             <View>
-              <RkText rkType='header4'>{item.title}</RkText>
-              <RkText rkType='secondary2 hintColor'>{moment().add(timeSincePost).fromNow()}</RkText>
+              <Text rkType='header4'>{item.title}</Text>
+              <Text rkType='secondary2 hintColor'>{moment().add(timeSincePost).fromNow()}</Text>
             </View>
             {editorControls}
           </View>
           {image}
           <View rkCardContent>
-            <RkText rkType='secondary5'>{item.description}</RkText>
+            <Text rkType='secondary5'>{item.description}</Text>
           </View>
-          <View rkCardFooter>
-            <SocialBar />
-          </View >
-        </RkCard>
+        </Card>
       </TouchableOpacity>
     );
   }
 
   getFeedButton = (aKey) => {
-    const isLogin = (aKey == 'LoginMenu')
+    const isLogin = (aKey === 'LoginMenu')
     const rkType = (isLogin) ?
       (this.state.isSignedIn) ? 'clear' : 'primary' : 'clear'
     const handlerFn = (isLogin) ?
@@ -315,14 +304,14 @@ export default class Feed extends React.Component {
       FontIcons.login : FontIcons.article
 
     return (
-      <RkButton
+      <Button
         rkType={rkType}
         key={aKey}
         onPress={() => handlerFn()} >
-        <RkText style={styles.icon} rkType='primary moon small'>
+        <Text style={styles.icon} rkType='primary moon small'>
           {icon}
-        </RkText>
-      </RkButton>
+        </Text>
+      </Button>
     )
   }
 
@@ -332,7 +321,7 @@ export default class Feed extends React.Component {
     let numberOfLines = (isHeading) ? 1 : 4
 
     return (
-      <RkTextInput
+      <TextInput
         style={{borderStyle: 'solid', borderWidth: 1, borderColor: 'rgba(242, 242, 242, 1)', borderRadius: 5}}
         inputStyle={inputStyle}
         multiline={!isHeading}
@@ -356,25 +345,25 @@ export default class Feed extends React.Component {
     if (handlerArg) {
       // debugger
       return (
-        <RkButton
+        <Button
           rkType={rkType}
           onPress={() => handlerFn(handlerArg)} >
           { /* styling below b/c things are really silly for some reason w/o it */ }
-          <RkText style={textStyle}>
+          <Text style={textStyle}>
             {buttonName}
-          </RkText>
-        </RkButton>
+          </Text>
+        </Button>
       )
     } else {
       return (
-        <RkButton
+        <Button
           rkType={rkType}
           onPress={() => handlerFn()} >
           { /* styling below b/c things are really silly for some reason w/o it */ }
-          <RkText style={textStyle}>
+          <Text style={textStyle}>
             {buttonName}
-          </RkText>
-        </RkButton>
+          </Text>
+        </Button>
       )
     }
   }
@@ -382,9 +371,9 @@ export default class Feed extends React.Component {
   renderPostEditor = () => {
     return (
       <View style={styles.container}>
-        <RkCard style={styles.card}>
+        <Card style={styles.card}>
           <View rkCardHeader>
-            <RkText rkType='header4'>New Post</RkText>
+            <Text rkType='header4'>New Post</Text>
           </View>
           <View rkCardContent>
             {this.getPostEditorTextInput('Title ...', this.setNewPostTitle)}
@@ -395,7 +384,7 @@ export default class Feed extends React.Component {
             {this.getPostEditorButton('Photo ...', this.handleMediaUpload)}
             {this.getPostEditorButton('Post', this.handlePostEditorSubmit)}
           </View >
-        </RkCard>
+        </Card>
       </View>
     )
   }
@@ -586,13 +575,13 @@ export default class Feed extends React.Component {
     const activityIndicator = (this.state.initializing) ?
       ( <View style={{flexDirection:'row', justifyContent:'center', marginVertical:50, borderStyle:'solid', borderWidth:1, borderRadius:5, borderColor:'rgba(242, 242, 242, 1)'}}>
           <ActivityIndicator size='large' color='black'/>
-          <RkText style={{color:'rgba(242, 242, 242, 1)'}} rkType="large center"> Loading ...</RkText>
+          <Text style={{color:'rgba(242, 242, 242, 1)'}} rkType="large center"> Loading ...</Text>
         </View>
       ) : undefined
     const postActivityIndicator = (this.state.saving) ?
       ( <View style={{flexDirection:'row', justifyContent:'center', marginVertical:50, borderStyle:'solid', borderWidth:1, borderRadius:5, borderColor:'rgba(242, 242, 242, 1)'}}>
           <ActivityIndicator size='large' color='black'/>
-          <RkText style={{color:'rgba(242, 242, 242, 1)'}} rkType="large center"> Saving ...</RkText>
+          <Text style={{color:'rgba(242, 242, 242, 1)'}} rkType="large center"> Saving ...</Text>
         </View>
       ) : undefined
 
@@ -615,9 +604,9 @@ export default class Feed extends React.Component {
   }
 }
 
-const styles = RkStyleSheet.create(theme => ({
+const styles = StyleSheet.create({
   container: {
-    backgroundColor: theme.colors.screen.scroll,
+    backgroundColor: '#f2f2f2',
     paddingVertical: 8,
     paddingHorizontal: 10,
   },
@@ -637,4 +626,4 @@ const styles = RkStyleSheet.create(theme => ({
   icon: {
     margin: 5,
   },
-}));
+});

@@ -1,13 +1,17 @@
 import React from 'react';
 import { View } from 'react-native';
 import WebRoutesGenerator from './config/navigation/webRouteWrapper';
-import { WebRoutes } from './config/navigation/routes';
-import { bootstrap } from './config/bootstrap';
-import { data } from './data';
 import firebase from 'firebase/app';
 import "firebase/auth";
 import "firebase/database";
-const Config = require('Config');
+import FeedContainer from './containers/FeedContainer'
+// import ArticleContainer from './containers/ArticleContainer'
+// import { bootstrap } from './config/bootstrap';
+// import { data } from './data';
+// import Config from 'react-native-config'
+
+// bootstrap();
+// data.populateData();
 
 const firebaseConfig = {
   apiKey: Config.FIREBASE_API_KEY,
@@ -17,17 +21,30 @@ const firebaseConfig = {
   storageBucket: Config.FIREBASE_STORAGE_BUCKET,
   messagingSenderId: Config.FIREBASE_MESSAGING_SENDER_ID,
   appId: Config.FIREBASE_APP_ID
-};
-
-bootstrap();
-data.populateData();
+}
 
 // Initialize Firebase
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
 
-class App extends React.Component {
+export const WebRoutes = {
+  Home: {
+    component: FeedContainer,
+    path: "/",
+    exact: true
+  },
+  // Article: {
+  //   component: ArticleContainer,
+  //   path: "/article"
+  // },
+  Feed: {
+    component: FeedContainer,
+    path: "/feed"
+  },
+}
+
+export default class App extends React.Component {
   render = () => (
     <View style={{flex: 1, flexDirection: 'row'}}>
       <View style={{flex: 0.1}} />
@@ -38,9 +55,3 @@ class App extends React.Component {
     </View>
   )
 }
-
-let hotWrapper = () => () => App;
-const { hot } = require('react-hot-loader');
-hotWrapper = hot;
-
-export default hotWrapper(module)(App);
