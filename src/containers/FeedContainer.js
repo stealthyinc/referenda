@@ -12,6 +12,7 @@ import {
   Button,
   Card,
   Text,
+  Icon,
 } from 'native-base';
 import { FontIcons } from '../assets/icons';
 // import { Avatar } from '../components/avatar';
@@ -301,16 +302,19 @@ export default class Feed extends React.Component {
     const isLogin = (aKey == 'LoginMenu')
     const buttonName = (isLogin) ?
       ( (this.state.isSignedIn) ? 'Log Out' : 'Log In' ) : 'New Post ...'
-    const buttonText = (<Text uppercase={false}>{buttonName}</Text>)
+    const buttonText = (<Text uppercase={true}>{buttonName}</Text>)
     const handlerFn = (isLogin) ? this.handleLogin : this.handlePostEditorRequest
-    // const icon = (isLogin) ?
-    //   FontIcons.login : FontIcons.article
-
+    const icon = (isLogin) ?
+      (this.state.isSignedIn) ? 'log-out' : 'log-in' : 'create'
     return (
       <Button
-         medium
-         primary
-         onPress={() => handlerFn()}>{buttonText}</Button>
+        success
+        iconLeft
+        bordered
+        onPress={() => handlerFn()}>
+        <Icon name={icon}/>
+        {buttonText}
+      </Button>
     )
   }
 
@@ -628,11 +632,8 @@ export default class Feed extends React.Component {
     this.newPostDescription = theDescriptionText
   }
 
-
   render() {
     console.log('In render, data:', this.state.data)
-
-
     const postEditor = (this.state.editingPost) ?
       this.renderPostEditor() : undefined
     const logInOutButton = (!this.state.editingPost) ?
@@ -652,7 +653,6 @@ export default class Feed extends React.Component {
           <Text style={{color:'rgba(242, 242, 242, 1)'}} rkType="large center"> Saving ...</Text>
         </View>
       ) : undefined
-
     return (
       <View>
         <View id='PageHeader' style={styles.main}>

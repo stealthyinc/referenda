@@ -37,7 +37,7 @@ export default class Article extends React.Component {
     <Container>
       <Content>
         <Card style={{flex: 0}}>
-          <CardItem>
+          <CardItem bordered>
             <Left>
               <Thumbnail source={this.data.user.photo} />
               <Body>
@@ -46,19 +46,31 @@ export default class Article extends React.Component {
               </Body>
             </Left>
           </CardItem>
-          <CardItem>
-            <Button iconLeft transparent light>
-              <Icon name='arrow-back' />
-              <Text>Back</Text>
-            </Button>
-            <Button iconRight transparent light>
-              <Text>Next</Text>
-              <Icon name='arrow-forward' />
-            </Button>
+          <CardItem bordered>
+            <Left>
+              <Button rounded success>
+                <Icon name='chatbubbles' />
+              </Button>
+            </Left>
+            <Left>
+              <Button rounded info>
+                <Icon name='logo-twitter' />
+              </Button>
+            </Left>
+            <Right>
+              <Button rounded warning>
+                <Icon name='logo-bitcoin' />
+              </Button>
+            </Right>
+            <Right>
+              <Button rounded danger>
+                <Icon name='heart' />
+              </Button>
+            </Right>
           </CardItem>
           <CardItem>
             <Body>
-              <Image source={this.data.photo} style={{height: 300, width: 580, flex: 1}}/>
+              <Image source={this.data.photo} style={{height: '40vh', width: '80vw', flex: 1}}/>
               <Text>
                 {this.data.text}
               </Text>
