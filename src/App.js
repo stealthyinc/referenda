@@ -4,7 +4,7 @@ import WebRoutesGenerator from './config/navigation/webRouteWrapper';
 import firebase from 'firebase/app';
 import "firebase/auth";
 import "firebase/database";
-// import FeedContainer from './containers/FeedContainer'
+import FeedContainer from './containers/FeedContainer'
 import ArticleContainer from './containers/ArticleContainer'
 
 const firebaseConfig = {
@@ -24,7 +24,7 @@ if (!firebase.apps.length) {
 
 export const WebRoutes = {
   Home: {
-    component: ArticleContainer,
+    component: FeedContainer,
     path: "/",
     exact: true
   },
