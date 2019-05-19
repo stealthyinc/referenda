@@ -2,7 +2,7 @@
   "name": "Referenda",
   "theme_color": "#b1624d",
   "background_color": "#fafafa",
-  "description": "Referenda | A Blockstack Chat Client",
+  "description": "Referenda | Winning Campaign Tool & Electorate Social Network",
   "display": "standalone",
   "start_url": "https://www.referenda.io/",
   "icons": [
