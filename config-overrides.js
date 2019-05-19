@@ -19,6 +19,7 @@ module.exports = override(
     path.resolve('node_modules/react-native-drawer'),
     path.resolve('node_modules/react-native-safe-area-view'),
     path.resolve('node_modules/react-native-vector-icons'),
+    path.resolve('node_modules/native-base/node_modules/react-native-vector-icons'),
     path.resolve('node_modules/react-native-keyboard-aware-scroll-view'),
     path.resolve('node_modules/react-native-web'),
     path.resolve('node_modules/react-native-tab-view'),

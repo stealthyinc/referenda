@@ -1,16 +1,22 @@
 import React from 'react';
 import {
-  ScrollView,
   Image,
-  View,
-  TouchableOpacity,
-  StyleSheet,
 } from 'react-native';
-import {
+import { 
+  Container,
+  Header,
+  Content,
   Card,
+  CardItem,
+  Thumbnail,
   Text,
-  Thumbnail
+  Button,
+  Icon,
+  Left,
+  Right,
+  Body 
 } from 'native-base';
+
 import { data } from '../data';
 
 const moment = require('moment');
@@ -28,40 +34,38 @@ export default class Article extends React.Component {
   };
 
   render = () => (
-    <ScrollView style={styles.root}>
-      <Card rkType='article'>
-        <Image rkCardImg source={this.data.photo} />
-        <View rkCardHeader>
-          <View>
-            <Text style={styles.title} rkType='header4'>{this.data.header}</Text>
-            <Text rkType='secondary2 hintColor'>
-              {moment().add(this.data.time, 'seconds').fromNow()}
-            </Text>
-          </View>
-          <TouchableOpacity onPress={this.onAvatarPressed}>
-            <Thumbnail source={this.data.user.photo} />
-          </TouchableOpacity>
-        </View>
-        <View rkCardContent>
-          <View>
-            <Text rkType='secondary5'>{this.data.text}</Text>
-          </View>
-        </View>
-        {/*<View rkCardFooter>
-          <SocialBar />
-        </View>*/}
-      </Card>
-    </ScrollView>
+    <Container>
+      <Content>
+        <Card style={{flex: 0}}>
+          <CardItem>
+            <Left>
+              <Thumbnail source={this.data.user.photo} />
+              <Body>
+                <Text>{this.data.header}</Text>
+                <Text note>{moment().add(this.data.time, 'seconds').fromNow()}</Text>
+              </Body>
+            </Left>
+          </CardItem>
+          <CardItem>
+            <Button iconLeft transparent light>
+              <Icon name='arrow-back' />
+              <Text>Back</Text>
+            </Button>
+            <Button iconRight transparent light>
+              <Text>Next</Text>
+              <Icon name='arrow-forward' />
+            </Button>
+          </CardItem>
+          <CardItem>
+            <Body>
+              <Image source={this.data.photo} style={{height: 300, width: 580, flex: 1}}/>
+              <Text>
+                {this.data.text}
+              </Text>
+            </Body>
+          </CardItem>
+        </Card>
+      </Content>
+    </Container>
   )
 }
-
-const styles = StyleSheet.create({
-  root: {
-    marginTop: 20,
-    marginBottom: 20,
-    backgroundColor: '#f2f2f2',
-  },
-  title: {
-    marginBottom: 5,
-  },
-});

@@ -28,14 +28,14 @@ export const WebRoutes = {
     path: "/",
     exact: true
   },
-  // Article: {
-  //   component: ArticleContainer,
-  //   path: "/article"
-  // },
-  // Feed: {
-  //   component: FeedContainer,
-  //   path: "/feed"
-  // },
+  Article: {
+    component: ArticleContainer,
+    path: "/article"
+  },
+  Feed: {
+    component: FeedContainer,
+    path: "/feed"
+  },
 }
 
 export default class App extends React.Component {

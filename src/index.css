@@ -11,3 +11,88 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+@font-face { 
+  font-family: "icomoon"; 
+  src: url('./assets/fonts/icomoon.ttf'); 
+}
+
+@font-face { 
+  font-family: "Righteous-Regular"; 
+  src: url('./assets/fonts/Righteous-Regular.ttf'); 
+}
+
+@font-face { 
+  font-family: "Roboto-Bold"; 
+  src: url('./assets/fonts/Roboto-Bold.ttf'); 
+}
+
+@font-face { 
+  font-family: "Roboto-Medium"; 
+  src: url('./assets/fonts/Roboto-Medium.ttf'); 
+}
+
+@font-face { 
+  font-family: "Roboto-Regular"; 
+  src: url('./assets/fonts/Roboto-Regular.ttf'); 
+}
+
+@font-face { 
+  font-family: "Roboto-Light"; 
+  src: url('./assets/fonts/Roboto-Light.ttf'); 
+}
+
+@font-face {
+  font-family: "Entypo";
+  src: url("../node_modules/react-native-vector-icons/Fonts/Entypo.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "EvilIcons";
+  src: url("../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "FontAwesome";
+  src: url("../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf")
+    format("truetype");
+}
+
+@font-face {
+  font-family: "fontcustom";
+  src: url("../node_modules/react-native-vector-icons/Fonts/Foundation.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Ionicons";
+  src: url("../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf") format("truetype");
+}
+
+@font-face {
+  /*font-family: 'MaterialCommunityIcons';*/
+  font-family: "Material Design Icons";
+  src: url("../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf")
+    format("truetype");
+}
+
+@font-face {
+  font-family: "MaterialIcons";
+  src: url("../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf")
+    format("truetype");
+}
+
+@font-face {
+  font-family: "Octicons";
+  src: url("../node_modules/react-native-vector-icons/Fonts/Octicons.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "simple-line-icons";
+  src: url("../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf")
+    format("truetype");
+}
+
+@font-face {
+  font-family: "Zocial";
+  src: url("../node_modules/react-native-vector-icons/Fonts/Zocial.ttf") format("truetype");
+}
