@@ -47,21 +47,21 @@ export default class Article extends React.Component {
             <Text rkType='secondary5'>{this.data.text}</Text>
           </View>
         </View>
-        <View rkCardFooter>
+        {/*<View rkCardFooter>
           <SocialBar />
-        </View>
+        </View>*/}
       </Card>
     </ScrollView>
   )
 }
 
-const styles = RkStyleSheet.create(theme => ({
+const styles = StyleSheet.create({
   root: {
     marginTop: 20,
     marginBottom: 20,
-    backgroundColor: theme.colors.screen.base,
+    backgroundColor: '#f2f2f2',
   },
   title: {
     marginBottom: 5,
   },
-}));
+});

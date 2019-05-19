@@ -37,12 +37,12 @@ export default class Feed extends React.Component {
       saving: false,
     };
 
-    // if (!firebase.auth().currentUser) {
-    //   firebase.auth().signInAnonymously()
-    //   .then(() => {
-    //     // this.anonalytics.setDatabase(firebase);
-    //   });
-    // }
+    if (!firebase.auth().currentUser) {
+      firebase.auth().signInAnonymously()
+      .then(() => {
+        // this.anonalytics.setDatabase(firebase);
+      });
+    }
 
     this.indexFileData = undefined
     this.newPostTitle = undefined
