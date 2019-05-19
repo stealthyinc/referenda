@@ -483,11 +483,13 @@ export default class Feed extends React.Component {
       lastName: 'Reallysoon',
       photo: '/static/media/Image9.6ab96ea5.png'
     }
-    const newDataElementArr = [postData]
-    const joinedArr = newDataElementArr.concat(this.state.data)
+
+    const newData = [ ...this.state.data ]
+    const newPostIndex = (this.indexFileData.pinnedPostId) ? 1 : 0
+    newData.splice(newPostIndex, 0, postData)
 
     this.setState({
-      data: joinedArr,
+      data: newData,
       editingPost: false,
       saving: false
     })
@@ -500,8 +502,8 @@ export default class Feed extends React.Component {
     //    (The pinned post is skipped in the render of regular items)
     //    If the post Id is currently pinned, unpin it.
     //
-    this.indexFileData.pinnedPostId =
-      (this.indexFileData.pinnedPostId !== aPostId) ? aPostId : ''
+    let pinning = (this.indexFileData.pinnedPostId !== aPostId)
+    this.indexFileData.pinnedPostId = (pinning) ? aPostId : ''
 
     // 2. Save the index
     //
@@ -513,10 +515,80 @@ export default class Feed extends React.Component {
       return
     }
 
-    // 3. Update the data for this view
-    //  TODO: this is slow AF--something faster
+    // 3. Update the data for this view.
+    //    If we're pinning, move the post to the front.
+    //    If we're unpinning, move the post from the front to it's correct
+    //    position.
+    //
+    let updatedData = [ ...this.state.data ]
+    if (pinning) {
+      let postToPin = undefined
+      for (const index in updatedData) {
+        const postId = updatedData[index].id
+        if (postId == aPostId) {
+          postToPin = updatedData.splice(index, 1)
+          break
+        }
+      }
 
-    this.setState({ saving: false })
+      if (postToPin) {
+        updatedData.unshift(postToPin[0])
+      }
+    } else { // unpinning
+      // A. Find the post to unpin in the current render list and remove it:
+      //
+      let postToUnpin = undefined
+      for (const index in updatedData) {
+        const postId = updatedData[index].id
+        if (postId == aPostId) {
+          if (index == 0) {
+            postToUnpin = updatedData.splice(index, 1)
+          } else {
+            console.error(`Unable to unpin specified post--it's not at the expected position: ${index} (expected 0).`)
+          }
+          break
+        }
+      }
+      // B. Find the correct place to reinsert the unpinned post:
+      //
+      if (postToUnpin) {
+        // Find the first post that happened before this one and insert it in
+        // front of that. Special cases include: (1) front of the list.
+        // (2) end of the list. (3) only item in the list.
+        let inserted = false
+        for (const index in updatedData) {
+          const postId = updatedData[index].id
+          if (aPostId > postId) {
+            if (index == 0) {
+              // Special case (1)
+              updatedData.unshift(postToUnpin[0])
+              console.log('Inserted at front of list ...')
+            } else {
+
+              // Generic case
+              const insertAtIndex = index
+              updatedData.splice(insertAtIndex, 0, postToUnpin[0])
+              console.log(`Inserted at index ${insertAtIndex} ...`)
+            }
+
+            inserted = true
+            break
+          }
+        }
+
+        if (!inserted) {
+          // Special case (2), (3)
+          updatedData.push(postToUnpin[0])
+          console.log(`Inserted by push (special case 2/3): ...`)
+          inserted = true
+        }
+      }
+    }
+
+    this.setState({
+      saving: false,
+      data: updatedData
+    })
   }
 
   handleDelete = async (aPostId) => {
