@@ -1,27 +1,24 @@
-import React from 'react';
+import React, { Component } from 'react';
 import {
   Image,
 } from 'react-native';
 import { 
   Container,
-  Header,
   Content,
   Card,
   CardItem,
   Thumbnail,
   Text,
-  Button,
-  Icon,
   Left,
-  Right,
   Body 
 } from 'native-base';
+import SocialBar from '../components/SocialBar'
 
 import { data } from '../data';
 
 const moment = require('moment');
 
-export default class Article extends React.Component {
+export default class Article extends Component {
 
   constructor(props) {
     super(props);
@@ -46,28 +43,7 @@ export default class Article extends React.Component {
               </Body>
             </Left>
           </CardItem>
-          <CardItem bordered>
-            <Left>
-              <Button rounded success>
-                <Icon name='chatbubbles' />
-              </Button>
-            </Left>
-            <Left>
-              <Button rounded info>
-                <Icon name='logo-twitter' />
-              </Button>
-            </Left>
-            <Right>
-              <Button rounded warning>
-                <Icon name='logo-bitcoin' />
-              </Button>
-            </Right>
-            <Right>
-              <Button rounded danger>
-                <Icon name='heart' />
-              </Button>
-            </Right>
-          </CardItem>
+          <SocialBar />
           <CardItem>
             <Body>
               <Image source={this.data.photo} style={{height: '40vh', width: '80vw', flex: 1}}/>
