@@ -43,7 +43,9 @@ export default class Article extends Component {
               </Body>
             </Left>
           </CardItem>
-          <SocialBar />
+          <SocialBar 
+            paymentFunction={() => this.props.navigation.navigate('Square')}
+          />
           <CardItem>
             <Body>
               <Image source={this.data.photo} style={{height: '40vh', width: '80vw', flex: 1}}/>

@@ -45,7 +45,7 @@ export default class Feed extends Component {
       editingPost: false,
       initializing: true,
       saving: false,
-      mediaPicking: false,
+      mediaUploading: '',
     };
 
     if (!firebase.auth().currentUser) {
@@ -58,6 +58,7 @@ export default class Feed extends Component {
     this.indexFileData = undefined
     this.newPostTitle = undefined
     this.newPostDescription = undefined
+    this.newPostImageFile = undefined
   }
 
   componentDidMount() {
@@ -291,8 +292,8 @@ export default class Feed extends Component {
             <Left>
               <Thumbnail source={item.user.photo}/>
               <Body>
-                <Text>{item.title}</Text>
-                <Text note>{moment().add(timeSincePost).fromNow()}</Text>
+                <Text style={{fontFamily:'arial', fontSize:27}}>{item.title}</Text>
+                <Text style={{fontFamily:'arial', fontStyle:'italic', fontSize:21, color:'lightgray'}}>{moment().add(timeSincePost).fromNow()}</Text>
               </Body>
             </Left>
           </CardItem>
@@ -303,7 +304,7 @@ export default class Feed extends Component {
             <CardItem>
               <Body>
                 {image}
-                <Text>
+                <Text style={{fontFamily:'arial', fontSize: 21}}>
                   {item.description}
                 </Text>
               </Body>
@@ -321,7 +322,7 @@ export default class Feed extends Component {
     const isLogin = (aKey === 'LoginMenu')
     const buttonName = (isLogin) ?
       ( (this.state.isSignedIn) ? 'Log Out' : 'Log In' ) : 'New Post ...'
-    const buttonText = (<Text>{buttonName}</Text>)
+    const buttonText = (<Text style={{fontFamily:'arial', fontSize:27}} uppercase={false}>{buttonName}</Text>)
     const handlerFn = (isLogin) ? this.handleLogin : this.handlePostEditorRequest
     const icon = (isLogin) ?
       (this.state.isSignedIn) ? 'log-out' : 'log-in' : 'create'
@@ -330,6 +331,7 @@ export default class Feed extends Component {
         success
         iconLeft
         bordered
+        style={{borderRadius: 15}}
         onPress={() => handlerFn()}>
         <Icon name={icon}/>
         {buttonText}
@@ -354,7 +356,8 @@ export default class Feed extends Component {
   }
 
   getPostEditorButton = (buttonName, handlerFn, icon, handlerArg, large=true) => {
-    const buttonText = (<Text>{buttonName}</Text>)
+    const fontSize = (large) ? 27 : 21
+    const buttonText = (<Text style={{fontFamily:'arial', fontSize:fontSize}} uppercase={false}>{buttonName}</Text>)
     const danger = ((buttonName === 'Cancel') || (buttonName === 'X'))
     const info = (buttonName === 'Post')
     const success = !info && !danger
@@ -370,6 +373,7 @@ export default class Feed extends Component {
         info={info}
         success={success}
         danger={danger}
+        style={{borderRadius:10}}
         onPress={onPress}>
         <Icon name={icon} />
         {buttonText}
@@ -378,6 +382,21 @@ export default class Feed extends Component {
   }
 
   renderPostEditor = () => {
+    console.log(this.state.mediaUploading)
+    const uploadStatusView = (this.state.mediaUploading) ?
+      (
+        <View
+          style={{
+            marginHorizontal:15,
+            marginTop:0,
+            marginBottom: 15,
+            width:'70vw'}}>
+
+            <Text style={{textAlign: 'center', color: 'rgb(204,204,204)'}}>{this.state.mediaUploading}</Text>
+        </View>
+      ) :
+      undefined
+
     return (
       <Content padder>
         <Card>
@@ -385,29 +404,33 @@ export default class Feed extends Component {
             <H1>New Post</H1>
           </CardItem>
           <CardItem bordered>
-            <View
-              style={{
-                borderStyle:'dashed',
-                borderWidth: 2,
-                borderRadius: 10,
-                borderColor:'rgb(204,204,204)',
-                marginHorizontal:15,
-                marginVertical:15,
-                width:'70vw'}}>
-              <Dropzone onDrop={acceptedFiles => this.completeMediaUpload(acceptedFiles)}>
-                {({getRootProps, getInputProps}) => (
-                  <section>
-                    <div {...getRootProps()}>
-                      <input {...getInputProps()} />
-                      <p style={{textAlign: 'center'}}>Drag 'n' drop an image here</p>
-                      <p style={{textAlign: 'center'}}>or</p>
-                      <p style={{textAlign: 'center'}}>click here to choose one.</p>
-                    </div>
-                  </section>
-                )}
-              </Dropzone>
+            <View style={{flexDirection: 'column'}}>
+              <View
+                style={{
+                  borderStyle:'dashed',
+                  borderWidth: 2,
+                  borderRadius: 10,
+                  borderColor:'rgb(204,204,204)',
+                  marginHorizontal:15,
+                  marginVertical:15,
+                  width:'70vw'}}>
+                <Dropzone onDrop={acceptedFiles => this.handleMediaUpload(acceptedFiles)}>
+                  {({getRootProps, getInputProps}) => (
+                    <section>
+                      <div {...getRootProps()}>
+                        <input {...getInputProps()} />
+                        <p style={{textAlign: 'center'}}>Drag 'n' drop an image here</p>
+                        <p style={{textAlign: 'center'}}>or</p>
+                        <p style={{textAlign: 'center'}}>click here to choose one.</p>
+                      </div>
+                    </section>
+                  )}
+                </Dropzone>
+              </View>
+              {uploadStatusView}
             </View>
           </CardItem>
+
           <CardItem>
               {this.getPostEditorTextInput('Title ...', this.setNewPostTitle)}
           </CardItem>
@@ -430,6 +453,7 @@ export default class Feed extends Component {
   handlePostEditorRequest = () => {
     this.newPostTitle = undefined
     this.newPostDescription = undefined
+    this.newPostImageFile = undefined
 
     this.setState({ editingPost: true })
   }
@@ -437,6 +461,7 @@ export default class Feed extends Component {
   handlePostEditorCancel = () => {
     this.newPostTitle = undefined
     this.newPostDescription = undefined
+    this.newPostImageFile = undefined
 
     this.setState({ editingPost: false })
   }
@@ -451,7 +476,7 @@ export default class Feed extends Component {
     const postData = {
       title: this.newPostTitle,
       description: this.newPostDescription,
-      picture: '',
+      picture: this.newPostImageFile,
       video: '',
       id: postId,
       time: postId,
@@ -682,16 +707,55 @@ export default class Feed extends Component {
      })
   }
 
-  handleMediaUpload = () => {
-    this.setState({mediaPicking: true})
-  }
+  handleMediaUpload = async (acceptedFiles) => {
+    //
+    // TODO:
+    //   - limit types of files (media - photo/video formats)
+    //   - check size (file.size is in bytes) and limit or chunk or s3
+    //   - scale and compress to jpg
+    //   - deal with multiple files (carousel?)
+    //
+    // For now only deal with the first file:
+    //
+    if (acceptedFiles && acceptedFiles.length >= 1) {
+      const firstFile = acceptedFiles[0]
 
-  completeMediaUpload = (acceptedFiles) => {
-    this.setState({mediaPicking: false})
+      const reader = new FileReader()
+      reader.onabort = () => {
+        const msg = `${this.state.mediaUploading} aborted.`
+        console.log('file reading was aborted')
+        this.setState({mediaUploading: msg})
+      }
+      reader.onerror = () => {
+        const msg = `${this.state.mediaUploading} failed.`
+        console.log('file reading has failed')
+        this.setState({mediaUploading: msg})
+      }
+      reader.onload = () => {
+        // Do whatever you want with the file contents
+        // const binaryStr = reader.result
+        // console.log(binaryStr)
 
-    console.log(`completeMediaUpload: `, acceptedFiles)
-    // Set up an other activity indicator and upload the file.
-    // Then throw the file into the post.
+        // if (file) {
+        //   this.newPostImageFile = {
+        //     name: file.name,
+        //     type: file.type,
+        //     data: undefined
+        //   }
+        // }
+
+        const msg = `${this.state.mediaUploading} read.`
+        this.setState({mediaUploading: msg})
+
+        // Now upload it and set newPostImageFile:
+        //   - TODO
+      }
+
+      this.setState({mediaUploading: `Uploading ${firstFile.name} ...`})
+      reader.readAsBinaryString(firstFile)
+    } else {
+      this.setState({mediaUploading: false})
+    }
   }
 
   setNewPostTitle = (theTitleText) => {
@@ -712,19 +776,19 @@ export default class Feed extends Component {
     const postButton = (!this.state.editingPost) ?
       this.getFeedButton('ArticleMenu') : undefined
 
-
     const activityIndicator = (this.state.initializing) ?
-      ( <View style={{flexDirection:'row', justifyContent:'center', marginVertical:50, borderStyle:'solid', borderWidth:1, borderRadius:5, borderColor:'rgba(242, 242, 242, 1)'}}>
+      ( <View style={{paddingVertical:10, alignItems:'center', flexDirection:'row', justifyContent:'center', marginVertical:50, borderStyle:'solid', borderWidth:1, borderRadius:5, borderColor:'rgba(242, 242, 242, 1)'}}>
           <ActivityIndicator size='large' color='black'/>
-          <Text style={{color:'rgba(242, 242, 242, 1)'}}> Loading ...</Text>
+          <Text style={{fontFamily:'arial', fontSize:27, color:'rgba(242, 242, 242, 1)'}}> Loading ...</Text>
         </View>
       ) : undefined
     const postActivityIndicator = (this.state.saving) ?
-      ( <View style={{flexDirection:'row', justifyContent:'center', marginVertical:50, borderStyle:'solid', borderWidth:1, borderRadius:5, borderColor:'rgba(242, 242, 242, 1)'}}>
+      ( <View style={{paddingVertical:10, alignItems:'center', flexDirection:'row', justifyContent:'center', marginVertical:50, borderStyle:'solid', borderWidth:1, borderRadius:5, borderColor:'rgba(242, 242, 242, 1)'}}>
           <ActivityIndicator size='large' color='black'/>
-          <Text style={{color:'rgba(242, 242, 242, 1)'}}> Saving ...</Text>
+          <Text style={{fontFamily:'arial', fontSize:27, color:'rgba(242, 242, 242, 1)'}} rkType="large center"> Saving ...</Text>
         </View>
       ) : undefined
+
     return (
       <View>
         <View id='PageHeader' style={styles.main}>
@@ -749,13 +813,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     paddingVertical: 8,
     paddingHorizontal: 10,
-  },
-  card: {
-    marginVertical: 8,
-  },
-  avatar: {
-    marginRight: 16,
-    alignItems: 'flex-start'
   },
   main: {
     marginTop: 20,
