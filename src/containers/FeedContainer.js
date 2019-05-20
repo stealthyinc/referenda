@@ -275,12 +275,11 @@ export default class Feed extends Component {
     const editorControls = (this.state.isSignedIn) ?
       (
         <CardItem footer>
-          <Left>
+          <View style={{flexDirection:'row', justifyContent:'flex-end', flex:1}}>
             {this.getPostEditorButton('X', this.handleDelete, "trash", item.id, false)}
-          </Left>
-          <Right>
+            <View style={{width:5}} />
             {this.getPostEditorButton(pinButtonText, this.handlePin, "pin", item.id, false)}
-          </Right>
+          </View>
         </CardItem>
       ) :
       undefined
@@ -310,7 +309,7 @@ export default class Feed extends Component {
               </Body>
             </CardItem>
           </TouchableOpacity>
-          <SocialBar 
+          <SocialBar
             paymentFunction={() => this.props.navigation.navigate('Square')}
           />
           {editorControls}
@@ -438,12 +437,11 @@ export default class Feed extends Component {
               {this.getPostEditorTextInput('Description ...', this.setNewPostDescription)}
           </CardItem>
           <CardItem bordered>
-            <Left>
+            <View style={{flexDirection:'row', justifyContent:'flex-end', flex:1}}>
               {this.getPostEditorButton('Cancel', this.handlePostEditorCancel, "close-circle-outline")}
-            </Left>
-            <Right>
+              <View style={{width:5}} />
               {this.getPostEditorButton('Post', this.handlePostEditorSubmit, "checkbox")}
-            </Right>
+            </View>
           </CardItem>
         </Card>
       </Content>
@@ -776,18 +774,15 @@ export default class Feed extends Component {
     const postButton = (!this.state.editingPost) ?
       this.getFeedButton('ArticleMenu') : undefined
 
-    const activityIndicator = (this.state.initializing) ?
-      ( <View style={{paddingVertical:10, alignItems:'center', flexDirection:'row', justifyContent:'center', marginVertical:50, borderStyle:'solid', borderWidth:1, borderRadius:5, borderColor:'rgba(242, 242, 242, 1)'}}>
-          <ActivityIndicator size='large' color='black'/>
-          <Text style={{fontFamily:'arial', fontSize:27, color:'rgba(242, 242, 242, 1)'}}> Loading ...</Text>
-        </View>
-      ) : undefined
-    const postActivityIndicator = (this.state.saving) ?
-      ( <View style={{paddingVertical:10, alignItems:'center', flexDirection:'row', justifyContent:'center', marginVertical:50, borderStyle:'solid', borderWidth:1, borderRadius:5, borderColor:'rgba(242, 242, 242, 1)'}}>
-          <ActivityIndicator size='large' color='black'/>
-          <Text style={{fontFamily:'arial', fontSize:27, color:'rgba(242, 242, 242, 1)'}}> Saving ...</Text>
-        </View>
-      ) : undefined
+    let activityIndicator = undefined
+    if (this.state.initializing || this.state.saving) {
+      const aiText = (this.state.initializing) ? ' Loading ...' : 'Saving ...'
+      activityIndicator = (
+        <View style={{paddingVertical:10, alignItems:'center', flexDirection:'row', justifyContent:'center', marginVertical:50, borderStyle:'solid', borderWidth:1, borderRadius:5, borderColor:'rgba(242, 242, 242, 1)'}}>
+            <ActivityIndicator size='large' color='black'/>
+            <Text style={{fontFamily:'arial', fontSize:27, color:'rgba(242, 242, 242, 1)'}}> {aiText}</Text>
+        </View> )
+    }
 
     return (
       <View>
@@ -797,7 +792,6 @@ export default class Feed extends Component {
         </View>
         {postEditor}
         {activityIndicator}
-        {postActivityIndicator}
         <FlatList
           data={this.state.data}
           renderItem={this.renderItem}

@@ -8,42 +8,41 @@ import {
   Body
 } from 'native-base'
 import {
+  View
+} from 'react-native';
+import {
   TwitterShareButton,
   FacebookShareButton,
 } from 'react-share';
 
 const SocialBar = ({ chatFunction, socialFunction, bitcoinFunction, paymentFunction, likeFunction }) => (
   <CardItem bordered>
-    <Left>
+    <View style={{flexDirection:'row', justifyContent:'space-evenly', alignItems:'center', flex:1}}>
       <Button small rounded info onPress={chatFunction}>
         <Icon name='chatbubbles' />
       </Button>
-    </Left>
-    <Left>
+      <View style={{width:5}} />
       <Button small rounded warning onPress={bitcoinFunction}>
         <Icon name='logo-bitcoin' />
       </Button>
-    </Left>
-    {/*<Left>
-      <Button small rounded info onPress={socialFunction}>
-        <TwitterShareButton 
-          url="https://www.referenda.io" 
+      <View style={{width:5}} />
+    {/* <Button small rounded info onPress={socialFunction}>
+        <TwitterShareButton
+          url="https://www.referenda.io"
           title="test"
           onPress={socialFunction}>
           <Icon name='logo-twitter' />
         </TwitterShareButton>
       </Button>
-    </Left>*/}
-    <Right>
+      <View style={{width:5}} /> */}
       <Button small rounded success onPress={paymentFunction}>
         <Icon name='cash' />
       </Button>
-    </Right>
-    <Right>
+      <View style={{width:5}} />
       <Button small rounded danger onPress={likeFunction}>
         <Icon name='heart' />
       </Button>
-    </Right>
+    </View>
   </CardItem>
 )
 
