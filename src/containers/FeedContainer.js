@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import {
   FlatList,
   View,
@@ -8,8 +8,6 @@ import {
   StyleSheet,
 } from 'react-native';
 import {
-  Container,
-  Header,
   Button,
   Body,
   Content,
@@ -17,18 +15,14 @@ import {
   CardItem,
   Text,
   Icon,
-  Item,
   Input,
-  Label,
   Left,
   Right,
-  Form,
-  Title,
   H1,
   Thumbnail
 } from 'native-base';
-import { FontIcons } from '../assets/icons';
 import * as blockstack from 'blockstack'
+import SocialBar from '../components/SocialBar'
 
 // TODO: how do we rip this out / disable it for mobile web and the app (use
 //       the photo chooser / picker for the app).
@@ -37,7 +31,7 @@ import Dropzone from 'react-dropzone'
 const firebase = require('firebase');
 const moment = require('moment');
 
-export default class Feed extends React.Component {
+export default class Feed extends Component {
   constructor(props) {
     super(props);
     const isSignedIn = this.checkSignedInStatus();
@@ -293,10 +287,6 @@ export default class Feed extends React.Component {
 
     const timeSincePost = (item.time - Date.now()) / 1000
     return (
-      <TouchableOpacity
-        delayPressIn={70}
-        activeOpacity={0.8}
-        onPress={() => this.onItemPressed(item)}>
         <Card style={{flex: 0}}>
           <CardItem bordered>
             <Left>
@@ -307,44 +297,29 @@ export default class Feed extends React.Component {
               </Body>
             </Left>
           </CardItem>
-          <CardItem>
-            <Body>
-              {image}
-              <Text style={{fontFamily:'arial', fontSize: 21}}>
-                {item.description}
-              </Text>
-            </Body>
-          </CardItem>
-          <CardItem bordered>
-            <Left>
-              <Button rounded success>
-                <Icon name='chatbubbles' />
-              </Button>
-            </Left>
-            <Left>
-              <Button rounded info>
-                <Icon name='logo-twitter' />
-              </Button>
-            </Left>
-            <Right>
-              <Button rounded warning>
-                <Icon name='logo-bitcoin' />
-              </Button>
-            </Right>
-            <Right>
-              <Button rounded danger>
-                <Icon active name="heart" />
-              </Button>
-            </Right>
-          </CardItem>
+          <TouchableOpacity
+            delayPressIn={70}
+            activeOpacity={0.8}
+            onPress={() => this.onItemPressed(item)}>
+            <CardItem>
+              <Body>
+                {image}
+                <Text style={{fontFamily:'arial', fontSize: 21}}>
+                  {item.description}
+                </Text>
+              </Body>
+            </CardItem>
+          </TouchableOpacity>
+          <SocialBar 
+            paymentFunction={() => this.props.navigation.navigate('Square')}
+          />
           {editorControls}
         </Card>
-      </TouchableOpacity>
     );
   }
 
   getFeedButton = (aKey) => {
-    const isLogin = (aKey == 'LoginMenu')
+    const isLogin = (aKey === 'LoginMenu')
     const buttonName = (isLogin) ?
       ( (this.state.isSignedIn) ? 'Log Out' : 'Log In' ) : 'New Post ...'
     const buttonText = (<Text style={{fontFamily:'arial', fontSize:27}} uppercase={false}>{buttonName}</Text>)
@@ -385,7 +360,6 @@ export default class Feed extends React.Component {
     const buttonText = (<Text style={{fontFamily:'arial', fontSize:fontSize}} uppercase={false}>{buttonName}</Text>)
     const danger = ((buttonName === 'Cancel') || (buttonName === 'X'))
     const info = (buttonName === 'Post')
-    console.log("info", info, buttonName)
     const success = !info && !danger
     const onPress = (handlerArg) ?
       () => handlerFn(handlerArg) :
@@ -603,7 +577,7 @@ export default class Feed extends React.Component {
       let postToPin = undefined
       for (const index in updatedData) {
         const postId = updatedData[index].id
-        if (postId == aPostId) {
+        if (postId === aPostId) {
           const postToPinArr = updatedData.splice(index, 1)
           if (postToPinArr) {
             postToPin = postToPinArr[0]
@@ -622,8 +596,8 @@ export default class Feed extends React.Component {
       let postToUnpin = undefined
       for (const index in updatedData) {
         const postId = updatedData[index].id
-        if (postId == aPostId) {
-          if (index == 0) {
+        if (postId === aPostId) {
+          if (index === 0) {
             const postToUnpinArr = updatedData.splice(index, 1)
             if (postToUnpinArr) {
               postToUnpin = postToUnpinArr[0]
@@ -647,7 +621,7 @@ export default class Feed extends React.Component {
         for (const index in updatedData) {
           const postId = updatedData[index].id
           if (aPostId > postId) {
-            if (index == 0) {
+            if (index === 0) {
               // Special case (1)
               updatedData.unshift(postToUnpin)
               console.log('Inserted at front of list ...')
@@ -794,7 +768,7 @@ export default class Feed extends React.Component {
 
 
   render() {
-    console.log('In render, data:', this.state.data)
+    // console.log('In render, data:', this.state.data)
     const postEditor = (this.state.editingPost) ?
       this.renderPostEditor() : undefined
     const logInOutButton = (!this.state.editingPost) ?

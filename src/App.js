@@ -1,11 +1,13 @@
 import React from 'react';
 import { View } from 'react-native';
 import WebRoutesGenerator from './config/navigation/webRouteWrapper';
+import { ModalContainer } from "react-router-modal";
 import firebase from 'firebase/app';
 import "firebase/auth";
 import "firebase/database";
 import FeedContainer from './containers/FeedContainer'
 import ArticleContainer from './containers/ArticleContainer'
+import SquareContainer from './containers/SquareContainer'
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -36,6 +38,11 @@ export const WebRoutes = {
     component: FeedContainer,
     path: "/feed"
   },
+  Square: {
+    component: SquareContainer,
+    path: "*/square",
+    modal: true
+  }
 }
 
 export default class App extends React.Component {
@@ -44,6 +51,7 @@ export default class App extends React.Component {
       <View style={{flex: 0.1}} />
       <View style={{flex: 0.8}}>
         {WebRoutesGenerator({ routeMap: WebRoutes })}
+        <ModalContainer />
       </View>
       <View style={{flex: 0.1}} />
     </View>
