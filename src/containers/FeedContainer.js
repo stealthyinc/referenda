@@ -811,7 +811,7 @@ export default class Feed extends React.Component {
     const postActivityIndicator = (this.state.saving) ?
       ( <View style={{paddingVertical:10, alignItems:'center', flexDirection:'row', justifyContent:'center', marginVertical:50, borderStyle:'solid', borderWidth:1, borderRadius:5, borderColor:'rgba(242, 242, 242, 1)'}}>
           <ActivityIndicator size='large' color='black'/>
-          <Text style={{fontFamily:'arial', fontSize:27, color:'rgba(242, 242, 242, 1)'}} rkType="large center"> Saving ...</Text>
+          <Text style={{fontFamily:'arial', fontSize:27, color:'rgba(242, 242, 242, 1)'}}> Saving ...</Text>
         </View>
       ) : undefined
 
