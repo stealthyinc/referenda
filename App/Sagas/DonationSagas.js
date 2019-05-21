@@ -64,6 +64,7 @@ export function * sendSquareCharge (action) {
     phoneNumber, 
     message
   }
+  console.log("BODY", body)
   try {
     const api = API.squareService(body)
     const response = yield call(api.charge)

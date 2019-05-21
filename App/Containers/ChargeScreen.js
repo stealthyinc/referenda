@@ -88,6 +88,7 @@ class ChargeScreen extends Component {
     this.onShowDigitalWallet = this.onShowDigitalWallet.bind(this);
     this.showOrderScreen = this.showOrderScreen.bind(this);
     this.startCardEntry = this.startCardEntry.bind(this);
+    this.startDigitalWallet = this.startDigitalWallet.bind(this);
     this.closeOrderScreen = this.closeOrderScreen.bind(this);
 
     this.state = {
@@ -148,7 +149,6 @@ class ChargeScreen extends Component {
   }
 
   async componentDidMount() {
-    await SQIPCore.setSquareApplicationId(SQUARE_APP_ID);
     let digitalWalletEnabled = false;
     if (Platform.OS === 'ios') {
       await SQIPCardEntry.setIOSCardEntryTheme({
@@ -173,6 +173,7 @@ class ChargeScreen extends Component {
       try {
         await SQIPApplePay.initializeApplePay(APPLE_PAY_MERCHANT_ID);
         digitalWalletEnabled = await SQIPApplePay.canUseApplePay();
+        console.log("digitalWalletEnabled", digitalWalletEnabled)
       } catch (ex) {
         console.log(ex);
       }
@@ -285,7 +286,7 @@ class ChargeScreen extends Component {
   }
 
   onShowDigitalWallet() {
-    this.closeOrderScreen();
+    // this.closeOrderScreen();
     this.setState({ showingDigitalWallet: true });
   }
 
@@ -482,6 +483,11 @@ class ChargeScreen extends Component {
             text='Pay Now (Credit Card)'
             style={{marginVertical:9}}
             onPress={this.startCardEntry}/>
+          {/*<GradientButton
+            rkType='medium'
+            text={(Platform.OS === 'ios') ? 'Apple Pay' : 'Google Pay'}
+            style={{marginVertical:9}}
+            onPress={this.startDigitalWallet}/>*/}
           <GradientButton
             rkType='medium'
             text='Pay Later (Text a Link)'
