@@ -1,6 +1,11 @@
 import React, { Component } from 'react'
 import '../styles/Square.css'
 import PaymentForm from '../components/PaymentForm'
+import {
+  Card,
+  CardItem,
+  H2,
+} from "native-base";
 
 export default class Square extends Component {
   constructor(props){
@@ -11,6 +16,14 @@ export default class Square extends Component {
   }
   componentWillMount(){
     const that = this
+    let basicPaymentScript = document.createElement('script')
+    basicPaymentScript.src = "./sqpaymentform-basic.js"
+    basicPaymentScript.type = "text/javascript"
+    basicPaymentScript.async = false
+    let basicPaymentCss = document.createElement('script')
+    basicPaymentCss.src = "./sqpaymentform-basic.css"
+    basicPaymentCss.type = "stylesheet"
+    basicPaymentCss.async = false
     let sqPaymentScript = document.createElement('script')
     sqPaymentScript.src = "https://js.squareup.com/v2/paymentform"
     sqPaymentScript.type = "text/javascript"
@@ -19,17 +32,23 @@ export default class Square extends Component {
       loaded: true
     })}
     document.getElementsByTagName("head")[0].appendChild(sqPaymentScript)
+    document.getElementsByTagName("head")[0].appendChild(basicPaymentScript)
+    document.getElementsByTagName("head")[0].appendChild(basicPaymentCss)
   }
   render() {
-    {/*<Button
-      onPress={() => this.props.navigation.goBack()}
-      title="Dismiss"
-    />*/}
     return (
-      this.state.loaded &&
-        <PaymentForm
-          paymentForm={ window.SqPaymentForm }
-        />
+      this.state.loaded && (
+        <Card style={{marginBottom: 15}}>
+          <CardItem header bordered>
+            <H2>Campaign Donations</H2>
+          </CardItem>
+          <CardItem>
+            <PaymentForm
+              paymentForm={ window.SqPaymentForm }
+            />
+          </CardItem>
+        </Card>
+      )
     )
   }
 }

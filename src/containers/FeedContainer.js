@@ -23,6 +23,10 @@ import {
 } from 'native-base';
 import * as blockstack from 'blockstack'
 import SocialBar from '../components/SocialBar'
+import ModalContainer from './ModalContainer'
+// import SquareContainer from './SquareContainer'
+import PhoneNumber from '../components/PhoneNumber'
+import ShareBar from '../components/ShareBar'
 
 // TODO: how do we rip this out / disable it for mobile web and the app (use
 //       the photo chooser / picker for the app).
@@ -46,6 +50,9 @@ export default class Feed extends Component {
       initializing: true,
       saving: false,
       mediaUploading: '',
+      showShareModal: false,
+      showSquareModal: false,
+      showPhoneModal: false
     };
 
     if (!firebase.auth().currentUser) {
@@ -266,6 +273,18 @@ export default class Feed extends Component {
     }
   }
 
+  toggleShareModal = () => {
+    this.setState({showShareModal: !this.state.showShareModal})
+  }
+
+  toggleSquareModal = () => {
+    this.setState({showSquareModal: !this.state.showSquareModal})
+  }
+
+  togglePhoneModal = () => {
+    this.setState({showPhoneModal: !this.state.showPhoneModal})
+  }
+
   renderItem = ({ item }) => {
     const image = (item.photo) ?
       (<Image source={item.photo} />) : undefined
@@ -287,6 +306,7 @@ export default class Feed extends Component {
 
     const timeSincePost = (item.time - Date.now()) / 1000
     return (
+      <View>
         <Card style={{flex: 0}}>
           <CardItem bordered>
             <Left>
@@ -296,6 +316,16 @@ export default class Feed extends Component {
                 <Text style={{fontFamily:'arial', fontStyle:'italic', fontSize:21, color:'lightgray'}}>{moment().add(timeSincePost).fromNow()}</Text>
               </Body>
             </Left>
+            <Right>
+              <Button 
+                small
+                rounded
+                info
+                onPress={() => this.toggleShareModal()}
+              >
+                <Icon name='share-alt' />
+              </Button>
+            </Right>
           </CardItem>
           <TouchableOpacity
             delayPressIn={70}
@@ -311,10 +341,11 @@ export default class Feed extends Component {
             </CardItem>
           </TouchableOpacity>
           <SocialBar 
-            paymentFunction={() => this.props.navigation.navigate('Square')}
+            paymentFunction={() => this.togglePhoneModal()}
           />
           {editorControls}
         </Card>
+      </View>
     );
   }
 
@@ -791,6 +822,24 @@ export default class Feed extends Component {
 
     return (
       <View>
+        <ModalContainer 
+          component={<ShareBar />}
+          showModal={this.state.showShareModal}
+          toggleModal={this.toggleShareModal}
+          modalHeader='Social Share'
+        />
+        {/*<ModalContainer 
+          component={<SquareContainer />}
+          showModal={this.state.showSquareModal}
+          toggleModal={this.toggleSquareModal}
+          modalHeader='Campaign Donation'
+        />*/}
+        <ModalContainer 
+          component={<PhoneNumber />}
+          showModal={this.state.showPhoneModal}
+          toggleModal={this.togglePhoneModal}
+          modalHeader='Text Campaign Donation Link'
+        />
         <View id='PageHeader' style={styles.main}>
           {logInOutButton}
           {postButton}

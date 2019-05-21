@@ -104,7 +104,7 @@ export default class PaymentForm extends Component {
           }
           if(methods.masterpass){
             this.setState({
-              masterpass: methods.masterpass
+              masterpass: false
             })
           }
           return;
