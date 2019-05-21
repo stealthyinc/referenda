@@ -379,7 +379,7 @@ export default class Feed extends Component {
               </Body>
             </Left>
             <Right>
-              <Button 
+              <Button
                 small
                 rounded
                 info
@@ -399,7 +399,7 @@ export default class Feed extends Component {
                 <View style={{width:'100%'}}>
                   {image}
                 </View>
-                <View style={{marginTop:10, padding:10, width:'100%', borderStyle:'solid',borderColor:'lightgray',borderWidth:1}}>
+                <View style={{padding:15, width:'100%', borderRadius: 10, borderStyle:'solid',borderColor:'rgb(245,245,245)',borderWidth:1}}>
                   <Text style={{fontFamily:'arial', fontSize: 21}}>
                     {item.description}
                   </Text>
@@ -407,7 +407,7 @@ export default class Feed extends Component {
               </Body>
             </CardItem>
           </TouchableOpacity>
-          <SocialBar 
+          <SocialBar
             paymentFunction={() => this.togglePhoneModal()}
           />
           {editorControls}
@@ -488,7 +488,7 @@ export default class Feed extends Component {
             marginHorizontal:15,
             marginTop:0,
             marginBottom: 15,
-            width:'70vw'}}>
+            width:'100%'}}>
 
             <Text style={{textAlign: 'center', color: 'rgb(204,204,204)'}}>{this.state.mediaUploading}</Text>
         </View>
@@ -502,7 +502,7 @@ export default class Feed extends Component {
             <H1>New Post</H1>
           </CardItem>
           <CardItem bordered>
-            <View style={{flexDirection: 'column'}}>
+            <View style={{flex: 1, flexDirection: 'column'}}>
               <View
                 style={{
                   borderStyle:'dashed',
@@ -511,7 +511,7 @@ export default class Feed extends Component {
                   borderColor:'rgb(204,204,204)',
                   marginHorizontal:15,
                   marginVertical:15,
-                  width:'70vw'}}>
+                  flex:1}}>
                 <Dropzone onDrop={acceptedFiles => this.handleMediaUpload(acceptedFiles)}>
                   {({getRootProps, getInputProps}) => (
                     <section>
@@ -757,8 +757,8 @@ export default class Feed extends Component {
     // 1. Delete the data in this post.
     const postFileName = Feed.getPostFileName(aPostId)
     try {
-      const postData = {}
-      const sPostData = JSON.stringify(postData)
+      const emptyPostData = {}
+      const sPostData = JSON.stringify(emptyPostData)
       await blockstack.putFile(postFileName, sPostData, {encrypt: false})
     } catch (error) {
       console.log(`Unable to delete ${postFileName}.\n${error}`)
@@ -790,11 +790,14 @@ export default class Feed extends Component {
 
     // 3. Update the data for this view
     //
+    let deletedPostData = undefined
     let updatedData = [ ...this.state.data ]
     for (const index in updatedData) {
       const id = updatedData[index].id
       if (id === aPostId) {
-        updatedData.splice(index, 1)
+        const removedEleArr = updatedData.splice(index, 1)
+        deletedPostData = (removedEleArr && removedEleArr.length > 0) ?
+          removedEleArr[0] : undefined
         break;
       }
     }
@@ -803,6 +806,29 @@ export default class Feed extends Component {
        saving: false,
        data: updatedData
      })
+
+    // 4. Get the post & check for media files--if there are any, delete them
+    //    too:
+    try {
+     if (deletedPostData) {
+       const fileDelPromises = []
+       for (const property of ['picture', 'video']) {
+         if (deletedPostData.hasOwnProperty(property) && deletedPostData[property]) {
+           console.log(`Deleting ${property} from deletedPostData (${deletedPostData[property]})`)
+           fileDelPromises.push(
+             blockstack.putFile(deletedPostData[property], JSON.stringify({}), {encrypt: false})
+             .then(() => {
+               console.log(`Deleted ${deletedPostData[property]}.`)
+             })
+             .catch((suppressedError) => {
+               console.log(`Unable to delete ${deletedPostData[property]}.\n${suppressedError}`)})
+           )
+         }
+       }
+     }
+    } catch (error) {
+     console.error(`Problems while deleting media files associated with post ${aPostId}.`)
+    }
   }
 
   handleMediaUpload = async (acceptedFiles) => {
@@ -902,19 +928,19 @@ export default class Feed extends Component {
 
     return (
       <View>
-        <ModalContainer 
+        <ModalContainer
           component={<ShareBar />}
           showModal={this.state.showShareModal}
           toggleModal={this.toggleShareModal}
           modalHeader='Social Share'
         />
-        {/*<ModalContainer 
+        {/*<ModalContainer
           component={<SquareContainer />}
           showModal={this.state.showSquareModal}
           toggleModal={this.toggleSquareModal}
           modalHeader='Campaign Donation'
         />*/}
-        <ModalContainer 
+        <ModalContainer
           component={<PhoneNumber />}
           showModal={this.state.showPhoneModal}
           toggleModal={this.togglePhoneModal}
