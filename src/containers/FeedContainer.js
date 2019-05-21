@@ -26,6 +26,7 @@ import SocialBar from '../components/SocialBar'
 
 // TODO: how do we rip this out / disable it for mobile web and the app (use
 //       the photo chooser / picker for the app).
+import FitImage from 'react-native-fit-image';
 import Dropzone from 'react-dropzone'
 
 const firebase = require('firebase');
@@ -85,7 +86,8 @@ export default class Feed extends Component {
   //       ...
   //
   GAIA_MAP = {
-    agatha: 'https://gaia.blockstack.org/hub/1KFqr64mYNP6Ma6D88ErxiY6YhaUgcdKHz'
+    agatha: 'https://gaia.blockstack.org/hub/1KFqr64mYNP6Ma6D88ErxiY6YhaUgcdKHz',
+    agathaImg: 'gaia.blockstack.org/hub/1KFqr64mYNP6Ma6D88ErxiY6YhaUgcdKHz'
   }
 
   // getFile: abstraction above blockstack getFile that works if we're not
@@ -226,7 +228,7 @@ export default class Feed extends Component {
  * !                      comments: []
  * title                  header
  * id                     id
- * photo                  photo
+ * picture                photo
  * video
  * description            text
  * time!                  time
@@ -271,6 +273,8 @@ export default class Feed extends Component {
             }
 
             data.push(postData)
+
+            // Handle images if specified ()
           } catch (postInflateError) {
             console.error(`Unable to inflate post.\n${postInflateError}`)
           }
@@ -321,8 +325,11 @@ export default class Feed extends Component {
   }
 
   renderItem = ({ item }) => {
-    const image = (item.photo) ?
-      (<Image source={item.photo} />) : undefined
+    let image = undefined
+    if (item.picture) {
+      const imagePath = `${this.GAIA_MAP['agatha']}/${item.picture}`
+      image = (<FitImage source={{uri: imagePath}} />)
+    }
 
     const pinButtonText = (item.hasOwnProperty('pinned') && item.pinned) ?
       'Unpin' : 'Pin'
@@ -341,6 +348,7 @@ export default class Feed extends Component {
     let timeStr = moment(item.time).fromNow()
     timeStr = (item.hasOwnProperty('pinned') && item.pinned) ?
       `pinned post - ${timeStr}` : timeStr
+
     return (
         <Card style={{flex: 0}}>
           <CardItem bordered>
@@ -358,10 +366,15 @@ export default class Feed extends Component {
             onPress={() => this.onItemPressed(item)}>
             <CardItem>
               <Body>
-                {image}
-                <Text style={{fontFamily:'arial', fontSize: 21}}>
-                  {item.description}
-                </Text>
+                {/* FitImage needs this view or it doesn't understand the width to size the image height to.' */}
+                <View style={{width:'100%'}}>
+                  {image}
+                </View>
+                <View style={{marginTop:10, padding:10, width:'100%', borderStyle:'solid',borderColor:'lightgray',borderWidth:1}}>
+                  <Text style={{fontFamily:'arial', fontSize: 21}}>
+                    {item.description}
+                  </Text>
+                </View>
               </Body>
             </CardItem>
           </TouchableOpacity>
@@ -804,10 +817,10 @@ export default class Feed extends Component {
 
         // Now upload it and set newPostMediaFileName:
         this.newPostMediaFileName = Feed.getPostMediaFileName(this.newPostId)
-        const b64_postMediaData = reader.result
-        debugger
+        // this.newPostMediaFileName = firstFile.name
+        const postMediaDataBuffer = reader.result
         blockstack.putFile(
-          this.newPostMediaFileName, b64_postMediaData, { encrypt: false })
+          this.newPostMediaFileName, postMediaDataBuffer, { encrypt: false })
         .then(() => {
           console.log(`Media file uploaded: ${this.newPostMediaFileName}`)
           this.setState({mediaUploading: false})
@@ -819,7 +832,8 @@ export default class Feed extends Component {
 
       this.setState({mediaUploading: `Uploading ${firstFile.name} ...`})
       // reader.readAsBinaryString(firstFile)
-      reader.readAsDataURL(firstFile)
+      // reader.readAsDataURL(firstFile)
+      reader.readAsArrayBuffer(firstFile)
       // TODO: filter file types (image types) and message on unsupported types.
       // TODO: only allow a single file.
     } else {
