@@ -1,15 +1,12 @@
 import React from 'react';
 import { View } from 'react-native';
 import WebRoutesGenerator from './config/navigation/webRouteWrapper';
-// import { ModalContainer } from 'react-router-modal'
 import firebase from 'firebase/app';
 import "firebase/auth";
 import "firebase/database";
 import FeedContainer from './containers/FeedContainer'
 import ArticleContainer from './containers/ArticleContainer'
-import SquareContainer from './containers/SquareContainer'
-// import ShareBar from './components/ShareBar'
-
+import { isMobile } from "react-device-detect"
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
   authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
@@ -38,28 +35,21 @@ export const WebRoutes = {
   Feed: {
     component: FeedContainer,
     path: "/feed"
-  },
-  // Share: {
-  //   component: ShareBar,
-  //   path: "*/share",
-  //   modal: true
-  // },
-  Square: {
-    component: SquareContainer,
-    path: "*/square",
-    modal: true
   }
 }
 
 export default class App extends React.Component {
-  render = () => (
+  render = () => ((!isMobile) ? (
     <View style={{flex: 1, flexDirection: 'row'}}>
       <View style={{flex: 0.1}} />
       <View style={{flex: 0.8}}>
         {WebRoutesGenerator({ routeMap: WebRoutes })}
-        {/*<ModalContainer />*/}
       </View>
       <View style={{flex: 0.1}} />
     </View>
-  )
+    ) : (
+    <View>
+      {WebRoutesGenerator({ routeMap: WebRoutes })}
+    </View>
+  ))
 }

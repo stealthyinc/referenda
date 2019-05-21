@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import {
   FlatList,
   View,
-  Image,
   TouchableOpacity,
   ActivityIndicator,
   StyleSheet,
@@ -30,6 +29,7 @@ import ShareBar from '../components/ShareBar'
 
 // TODO: how do we rip this out / disable it for mobile web and the app (use
 //       the photo chooser / picker for the app).
+import FitImage from 'react-native-fit-image';
 import Dropzone from 'react-dropzone'
 
 const firebase = require('firebase');
@@ -63,15 +63,17 @@ export default class Feed extends Component {
     }
 
     this.indexFileData = undefined
+
+    this.newPostId = undefined
     this.newPostTitle = undefined
     this.newPostDescription = undefined
-    this.newPostImageFile = undefined
+    this.newPostMediaFileName = undefined
   }
 
   componentDidMount() {
-    if (this.state.userData) {
+    // if (this.state.userData) {
       this.getIndexFileData()
-    }
+    // }
   }
 
   /*
@@ -80,8 +82,55 @@ export default class Feed extends Component {
    */
   INDEX_FILE = 'index.json'
 
+  // TODO: create a mapping mechanism to get the appropriate gaia bucket for
+  //       the provided URL / argument.  i.e.:
+  //
+  //       ?name= or /name      gaia-bucket
+  //       ---------------------------------------------------------------------------------------
+  //       agatha               https://gaia.blockstack.org/hub/1KFqr64mYNP6Ma6D88ErxiY6YhaUgcdKHz
+  //       guaido               https://gaia.blockstack.org/hub/<...>
+  //       ...
+  //
+  GAIA_MAP = {
+    agatha: 'https://gaia.blockstack.org/hub/1KFqr64mYNP6Ma6D88ErxiY6YhaUgcdKHz',
+    agathaImg: 'gaia.blockstack.org/hub/1KFqr64mYNP6Ma6D88ErxiY6YhaUgcdKHz'
+  }
+
+  // getFile: abstraction above blockstack getFile that works if we're not
+  //          signed in for reading files for static site load
+  //
+  getFile = async(aFileName, theOptions={ decrypt:false }) => {
+    if (this.state.isSignedIn) {
+      return blockstack.getFile(aFileName, theOptions)
+      .then((response) => {
+        try {
+          let result = undefined
+          if (response) {
+            result = JSON.parse(response)
+          }
+          return result
+        } catch (error) {
+          throw new Error(`Blockstack.getFile failed in getFile.\n${error}`)
+        }
+      })
+    } else {
+      const pathToRead = `${this.GAIA_MAP['agatha']}/${aFileName}`
+      return fetch(pathToRead)
+      .then((response) => {
+        if (response.ok) {
+          return response.json()
+        }
+        throw new Error(`Fetch failed in getFile with status ${response.status}.`)
+      })
+    }
+  }
+
   static getPostFileName(aPostId) {
     return `p${aPostId}.json`
+  }
+
+  static getPostMediaFileName(aPostId) {
+    return `p${aPostId}.media`
   }
 
   // TODO: make index file data a class. Possibly tie it to a schema.
@@ -95,14 +144,8 @@ export default class Feed extends Component {
   }
 
   readIndex = async () => {
-    let indexData = undefined
-
     // Note: rawData will be null if the file does not exist.
-    const rawData = await blockstack.getFile('index.json', { decrypt: false })
-    if (rawData) {
-      indexData = JSON.parse(rawData)
-    }
-    return indexData
+    return await this.getFile(this.INDEX_FILE)
   }
 
   writeIndex = async () => {
@@ -110,7 +153,7 @@ export default class Feed extends Component {
 
     this.indexFileData.timeUtc = Date.now()
     const sIndexFileData = JSON.stringify(this.indexFileData)
-    await blockstack.putFile('index.json', sIndexFileData, {encrypt: false})
+    await blockstack.putFile(this.INDEX_FILE, sIndexFileData, {encrypt: false})
   }
 
   // TODO: refactor this into something clean when and lightweight when it all
@@ -127,15 +170,26 @@ export default class Feed extends Component {
       console.log(displayedSuppressedError)
     }
 
-    // 2. If the index file data doesn't already exist, initialize and write it.
+    // 2. If the index file data doesn't already exist, initialize and write it
+    //    if we are signed in.
     //
     if (!this.indexFileData || forceNewIndex) {
-      this.indexFileData = this.getNewIndex()
+      if (this.state.isSignedIn) {
+        this.indexFileData = this.getNewIndex()
 
-      try {
-        await this.writeIndex()
-      } catch (error) {
-        console.error(`Error creating index.json.\n${error}`)
+        try {
+          await this.writeIndex()
+        } catch (error) {
+          console.error(`Error creating ${this.INDEX_FILE}.\n${error}`)
+        }
+      } else {
+        // TODO: Present a message that there is no information to the user.
+        //
+        this.setState({
+          initializing: false,
+          data: []
+        })
+        return
       }
     }
 
@@ -155,7 +209,7 @@ export default class Feed extends Component {
       for (const postId of orderedPosts) {
         const postPath = Feed.getPostFileName(postId)
         readPromises.push(
-          blockstack.getFile(postPath, { decrypt: false })
+          this.getFile(postPath)
           .catch((postReadError) => {
             console.error(`Unable to load post ${postPath}.\n${postReadError}`)
             return undefined
@@ -170,7 +224,8 @@ export default class Feed extends Component {
           //       post.
         } else {
           try {
-            const postData = JSON.parse(rawPostData)
+            // const postData = JSON.parse(rawPostData)
+            const postData = rawPostData
 
 /* A map of data we store to PBJ data format:
  *
@@ -179,7 +234,7 @@ export default class Feed extends Component {
  * !                      comments: []
  * title                  header
  * id                     id
- * photo                  photo
+ * picture                photo
  * video
  * description            text
  * time!                  time
@@ -224,6 +279,8 @@ export default class Feed extends Component {
             }
 
             data.push(postData)
+
+            // Handle images if specified ()
           } catch (postInflateError) {
             console.error(`Unable to inflate post.\n${postInflateError}`)
           }
@@ -286,25 +343,30 @@ export default class Feed extends Component {
   }
 
   renderItem = ({ item }) => {
-    const image = (item.photo) ?
-      (<Image source={item.photo} />) : undefined
+    let image = undefined
+    if (item.picture) {
+      const imagePath = `${this.GAIA_MAP['agatha']}/${item.picture}`
+      image = (<FitImage source={{uri: imagePath}} />)
+    }
 
     const pinButtonText = (item.hasOwnProperty('pinned') && item.pinned) ?
       'Unpin' : 'Pin'
     const editorControls = (this.state.isSignedIn) ?
       (
         <CardItem footer>
-          <Left>
+          <View style={{flexDirection:'row', justifyContent:'flex-end', flex:1}}>
             {this.getPostEditorButton('X', this.handleDelete, "trash", item.id, false)}
-          </Left>
-          <Right>
+            <View style={{width:5}} />
             {this.getPostEditorButton(pinButtonText, this.handlePin, "pin", item.id, false)}
-          </Right>
+          </View>
         </CardItem>
       ) :
       undefined
 
-    const timeSincePost = (item.time - Date.now()) / 1000
+    let timeStr = moment(item.time).fromNow()
+    timeStr = (item.hasOwnProperty('pinned') && item.pinned) ?
+      `pinned post - ${timeStr}` : timeStr
+
     return (
       <View>
         <Card style={{flex: 0}}>
@@ -313,7 +375,7 @@ export default class Feed extends Component {
               <Thumbnail source={item.user.photo}/>
               <Body>
                 <Text style={{fontFamily:'arial', fontSize:27}}>{item.title}</Text>
-                <Text style={{fontFamily:'arial', fontStyle:'italic', fontSize:21, color:'lightgray'}}>{moment().add(timeSincePost).fromNow()}</Text>
+                <Text style={{fontFamily:'arial', fontStyle:'italic', fontSize:21, color:'lightgray'}}>{timeStr}</Text>
               </Body>
             </Left>
             <Right>
@@ -333,10 +395,15 @@ export default class Feed extends Component {
             onPress={() => this.onItemPressed(item)}>
             <CardItem>
               <Body>
-                {image}
-                <Text style={{fontFamily:'arial', fontSize: 21}}>
-                  {item.description}
-                </Text>
+                {/* FitImage needs this view or it doesn't understand the width to size the image height to.' */}
+                <View style={{width:'100%'}}>
+                  {image}
+                </View>
+                <View style={{marginTop:10, padding:10, width:'100%', borderStyle:'solid',borderColor:'lightgray',borderWidth:1}}>
+                  <Text style={{fontFamily:'arial', fontSize: 21}}>
+                    {item.description}
+                  </Text>
+                </View>
               </Body>
             </CardItem>
           </TouchableOpacity>
@@ -469,12 +536,11 @@ export default class Feed extends Component {
               {this.getPostEditorTextInput('Description ...', this.setNewPostDescription)}
           </CardItem>
           <CardItem bordered>
-            <Left>
+            <View style={{flexDirection:'row', justifyContent:'flex-end', flex:1}}>
               {this.getPostEditorButton('Cancel', this.handlePostEditorCancel, "close-circle-outline")}
-            </Left>
-            <Right>
+              <View style={{width:5}} />
               {this.getPostEditorButton('Post', this.handlePostEditorSubmit, "checkbox")}
-            </Right>
+            </View>
           </CardItem>
         </Card>
       </Content>
@@ -482,17 +548,19 @@ export default class Feed extends Component {
   }
 
   handlePostEditorRequest = () => {
+    this.newPostId = Date.now()
     this.newPostTitle = undefined
     this.newPostDescription = undefined
-    this.newPostImageFile = undefined
+    this.newPostMediaFileName = undefined
 
     this.setState({ editingPost: true })
   }
 
   handlePostEditorCancel = () => {
+    this.newPostId = undefined
     this.newPostTitle = undefined
     this.newPostDescription = undefined
-    this.newPostImageFile = undefined
+    this.newPostMediaFileName = undefined
 
     this.setState({ editingPost: false })
   }
@@ -502,15 +570,14 @@ export default class Feed extends Component {
 
     // 1. write a post file.
     //
-    const postId = Date.now()
-    const postFileName = Feed.getPostFileName(postId)
+    const postFileName = Feed.getPostFileName(this.newPostId)
     const postData = {
       title: this.newPostTitle,
       description: this.newPostDescription,
-      picture: this.newPostImageFile,
+      picture: this.newPostMediaFileName,
       video: '',
-      id: postId,
-      time: postId,
+      id: this.newPostId,
+      time: Date.now(),
     }
 
     try {
@@ -526,12 +593,12 @@ export default class Feed extends Component {
     // 2. update the index file.
     //  TODO: refactor with earlier index saving code.
     //
-    this.indexFileData.descTimePostIds.unshift(postId)
+    this.indexFileData.descTimePostIds.unshift(this.newPostId)
 
     try {
       this.writeIndex()
     } catch (error) {
-      console.error(`Error saving index.json.\n${error}`)
+      console.error(`Error saving ${this.INDEX_FILE}.\n${error}`)
       this.setState({ saving: false })
       return
     }
@@ -540,11 +607,11 @@ export default class Feed extends Component {
     // const newDataElementArr = [{
     //   comments: [],
     //   header: this.newPostTitle,
-    //   id: postId,
+    //   id: this.newPostId,
     //   filename: postFileName,
     //   photo: undefined,
     //   text: this.newPostDescription,
-    //   time: (postId-Date.now()),
+    //   time: (this.newPostId-Date.now()),
     //   type: 'article',
     //   user: {
     //     firstName: 'Todo',
@@ -593,7 +660,7 @@ export default class Feed extends Component {
     try {
       await this.writeIndex()
     } catch (error) {
-      console.error(`Error saving index.json.\n${error}`)
+      console.error(`Error saving ${this.INDEX_FILE}.\n${error}`)
       this.setState({ saving: false })
       return
     }
@@ -716,7 +783,7 @@ export default class Feed extends Component {
     try {
       await this.writeIndex()
     } catch (error) {
-      console.error(`Error saving index.json.\n${error}`)
+      console.error(`Error saving ${this.INDEX_FILE}.\n${error}`)
       this.setState({ saving: false })
       return
     }
@@ -768,7 +835,7 @@ export default class Feed extends Component {
         // console.log(binaryStr)
 
         // if (file) {
-        //   this.newPostImageFile = {
+        //   this.newPostMediaFileName = {
         //     name: file.name,
         //     type: file.type,
         //     data: undefined
@@ -778,12 +845,27 @@ export default class Feed extends Component {
         const msg = `${this.state.mediaUploading} read.`
         this.setState({mediaUploading: msg})
 
-        // Now upload it and set newPostImageFile:
-        //   - TODO
+        // Now upload it and set newPostMediaFileName:
+        this.newPostMediaFileName = Feed.getPostMediaFileName(this.newPostId)
+        // this.newPostMediaFileName = firstFile.name
+        const postMediaDataBuffer = reader.result
+        blockstack.putFile(
+          this.newPostMediaFileName, postMediaDataBuffer, { encrypt: false })
+        .then(() => {
+          console.log(`Media file uploaded: ${this.newPostMediaFileName}`)
+          this.setState({mediaUploading: false})
+        })
+        .catch((error) => {
+          console.error(`Unable to upload file: ${this.newPostMediaFileName}`)
+        })
       }
 
       this.setState({mediaUploading: `Uploading ${firstFile.name} ...`})
-      reader.readAsBinaryString(firstFile)
+      // reader.readAsBinaryString(firstFile)
+      // reader.readAsDataURL(firstFile)
+      reader.readAsArrayBuffer(firstFile)
+      // TODO: filter file types (image types) and message on unsupported types.
+      // TODO: only allow a single file.
     } else {
       this.setState({mediaUploading: false})
     }
@@ -804,21 +886,19 @@ export default class Feed extends Component {
       this.renderPostEditor() : undefined
     const logInOutButton = (!this.state.editingPost) ?
       this.getFeedButton('LoginMenu') : undefined
-    const postButton = (!this.state.editingPost) ?
-      this.getFeedButton('ArticleMenu') : undefined
+    const postButton = (!this.state.editingPost && this.state.isSignedIn) ?
+      this.getFeedButton('ArticleMenu') :
+      ( <Text style={{fontFamily:'arial', fontSize:40, color:'gray'}}>Referenda</Text> )
 
-    const activityIndicator = (this.state.initializing) ?
-      ( <View style={{paddingVertical:10, alignItems:'center', flexDirection:'row', justifyContent:'center', marginVertical:50, borderStyle:'solid', borderWidth:1, borderRadius:5, borderColor:'rgba(242, 242, 242, 1)'}}>
-          <ActivityIndicator size='large' color='black'/>
-          <Text style={{fontFamily:'arial', fontSize:27, color:'rgba(242, 242, 242, 1)'}}> Loading ...</Text>
-        </View>
-      ) : undefined
-    const postActivityIndicator = (this.state.saving) ?
-      ( <View style={{paddingVertical:10, alignItems:'center', flexDirection:'row', justifyContent:'center', marginVertical:50, borderStyle:'solid', borderWidth:1, borderRadius:5, borderColor:'rgba(242, 242, 242, 1)'}}>
-          <ActivityIndicator size='large' color='black'/>
-          <Text style={{fontFamily:'arial', fontSize:27, color:'rgba(242, 242, 242, 1)'}} rkType="large center"> Saving ...</Text>
-        </View>
-      ) : undefined
+    let activityIndicator = undefined
+    if (this.state.initializing || this.state.saving) {
+      const aiText = (this.state.initializing) ? ' Loading ...' : 'Saving ...'
+      activityIndicator = (
+        <View style={{paddingVertical:10, alignItems:'center', flexDirection:'row', justifyContent:'center', marginVertical:50, borderStyle:'solid', borderWidth:1, borderRadius:5, borderColor:'rgba(242, 242, 242, 1)'}}>
+            <ActivityIndicator size='large' color='black'/>
+            <Text style={{fontFamily:'arial', fontSize:27, color:'rgba(242, 242, 242, 1)'}}> {aiText}</Text>
+        </View> )
+    }
 
     return (
       <View>
@@ -846,7 +926,6 @@ export default class Feed extends Component {
         </View>
         {postEditor}
         {activityIndicator}
-        {postActivityIndicator}
         <FlatList
           data={this.state.data}
           renderItem={this.renderItem}
@@ -865,9 +944,10 @@ const styles = StyleSheet.create({
   },
   main: {
     marginTop: 20,
+    paddingHorizontal: 10,
     flexDirection: "row",
-    justifyContent: "space-around",
-    backgroundColor: "#ffffff"
+    justifyContent: "space-between",
+    alignItems: 'center',
   },
   icon: {
     margin: 5,
