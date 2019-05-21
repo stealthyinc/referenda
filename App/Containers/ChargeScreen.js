@@ -16,6 +16,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import {
+  Alert,
   StyleSheet,
   Text,
   View,
@@ -35,7 +36,6 @@ import {
 import {
   SQIPCardEntry,
   SQIPApplePay,
-  SQIPCore,
   SQIPGooglePay,
 } from 'react-native-square-in-app-payments';
 
@@ -144,7 +144,25 @@ class ChargeScreen extends Component {
                nextProps.payLoad.hasOwnProperty('commandType') &&
                (nextProps.payLoad.commandType === this.state.waitingOnCommand)) {
       console.log(`ChargeScreen - ${nextProps.payLoad.commandType} completed.`)
-      this.props.navigation.navigate('Donation Complete')
+      if (nextProps.donationSuccess.errorMessage) {
+        Alert.alert(
+          'Credit Card Error',
+          nextProps.donationSuccess.errorMessage,
+          [
+            {
+              text: 'Close',
+              onPress: () => this.setState({ 
+                waitOnPayNowOperation: false,
+                waitingOnCommand: ''
+              }),
+              style: 'cancel',
+            },
+          ],
+        )
+      }
+      else {
+        this.props.navigation.navigate('Donation Complete')
+      }
     }
   }
 
@@ -384,6 +402,7 @@ class ChargeScreen extends Component {
   onPayNowPressed = (nonce) => {
     this.setState({waitOnPayNowOperation: true})
     // TODO: PBJ call whatever starts the CC transaction here ...
+    console.log("GOING TO SAGAS WITH NONCE", nonce)
     this.props.chargeSquareRequest(nonce)
   }
 

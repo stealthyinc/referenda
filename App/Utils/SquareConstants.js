@@ -11,10 +11,12 @@
  limitations under the License.
 */
 import Config from 'react-native-config'
-const SQUARE_APP_ID = (process.env.NODE_ENV === 'production') ? Config.SQUARE_PRODUCTION_APPLICATION_ID : Config.SQUARE_SANDBOX_APPLICATION_ID;
+const SQUARE_APP_ID = Config.SQUARE_PRODUCTION_APPLICATION_ID;
 // Make sure to remove trailing `/` since the CHARGE_SERVER_URL puts it
-const CHARGE_SERVER_HOST = Config.SQUARE_URL;
-const CHARGE_SERVER_URL = `${CHARGE_SERVER_HOST}/createCharge`;
+// const CHARGE_SERVER_HOST = Config.SQUARE_URL;
+const CHARGE_SERVER_HOST = 'REPLACE_ME';
+// const CHARGE_SERVER_URL = `${CHARGE_SERVER_HOST}/createCharge`;
+const CHARGE_SERVER_URL = 'REPLACE_ME';
 const GOOGLE_PAY_LOCATION_ID = 'REPLACE_ME';
 const APPLE_PAY_MERCHANT_ID = 'merchant.stealthy.inc';
 

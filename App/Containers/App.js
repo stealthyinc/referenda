@@ -21,7 +21,7 @@ const store = createStore()
  */
 class App extends Component {
   async componentDidMount() {
-    const SQUARE_APP_ID = (process.env.NODE_ENV === 'production') ? Config.SQUARE_PRODUCTION_APPLICATION_ID : Config.SQUARE_SANDBOX_APPLICATION_ID;
+    const SQUARE_APP_ID = Config.SQUARE_PRODUCTION_APPLICATION_ID
     console.log("****************SQUARE_APP_ID****************", SQUARE_APP_ID)
     await SQIPCore.setSquareApplicationId(SQUARE_APP_ID);
   }

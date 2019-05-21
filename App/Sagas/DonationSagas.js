@@ -49,15 +49,17 @@ function getAmountInCentsFromDonation(aDonationStrUSD) {
 
 export function * sendSquareCharge (action) {
   const { data } = action
+  console.log("INSIDE SQUARE CHARGE", data)
   const donationRecord = yield select(DonationSelectors.getDonationRecord)
   const { phoneNumber, amount } = donationRecord
   const amounts = getAmountInCentsFromDonation(amount)
   const feeAmount = amounts.feeCents
   const donationAmount = amounts.proceedsCents
   console.log('DONATION(cents: total, fee, proceeds):', amounts.totalCents, feeAmount, donationAmount)
+  const message = "Thank you for your donation to Agatha's Campaign. We will notify you when the Referenda App is ready!"
   const locationId = '0WNJSXGSXWG89'
   const body = {
-    card_nonce, 
+    card_nonce: data, 
     locationId, 
     donationAmount, 
     feeAmount, 
