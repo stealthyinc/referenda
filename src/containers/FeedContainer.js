@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   StyleSheet,
+  ImageBackground,
 } from 'react-native';
 import {
   Button,
@@ -75,6 +76,7 @@ export default class Feed extends Component {
     this.newPostTitle = undefined
     this.newPostDescription = undefined
     this.newPostMedia = undefined
+
   }
 
   componentDidMount() {
@@ -233,6 +235,7 @@ export default class Feed extends Component {
         )
       }
 
+      let firstItem = true
       const rawPostDataArr = await Promise.all(readPromises)
       for (const rawPostData of rawPostDataArr) {
         if (!rawPostData) {
@@ -274,6 +277,12 @@ export default class Feed extends Component {
             //     photo: '/static/media/Image9.6ab96ea5.png'
             //   }
             // }
+
+            // TODO: fix this hack and also address it when pinned items happen
+            if (firstItem) {
+              firstItem=false
+              postData.firstItem = true
+            }
 
             if (this.indexFileData.pinnedPostId &&
                 (this.indexFileData.pinnedPostId === postData.id)) {
@@ -369,6 +378,7 @@ export default class Feed extends Component {
     return aString
   }
 
+  firstItem=true
   renderItem = ({ item }) => {
     let image = undefined
     try {
@@ -409,8 +419,38 @@ export default class Feed extends Component {
     timeStr = (item.hasOwnProperty('pinned') && item.pinned) ?
       `pinned post - ${timeStr}` : timeStr
 
+    let firstCard = undefined
+    if (item.hasOwnProperty('firstItem')) {
+      firstCard = (
+        <ImageBackground
+          source={{uri: 'https://untamedskies.files.wordpress.com/2012/07/americanflags.jpg'}}
+          resizeMode='cover'
+          style={{
+            width:'100%',
+            height:(isMobile ? '33vh' : '25vh'),
+            backgroundColor:'lightblue',
+            }}>
+          <View style={{width:'100%', height:'100%', backgroundColor:'rgba(0,0,0,0.5)',
+                        flexDirection:'column', justifyContent:'flex-end',}}>
+            <View>
+              <Thumbnail large style={{marginLeft:10, borderWidth:2, borderColor:'white', borderStyle:'solid'}} source={item.user.photo}/>
+            </View>
+            <View style={{width:'100%', height:10}} />
+            <Text style={{paddingHorizontal: 10, fontFamily:'arial', fontSize:20, fontWeight:'bold', color:'white'}}>Agatha Bacelar</Text>
+            <View style={{width:'100%', height:10}} />
+            <Text style={{paddingHorizontal: 10, fontFamily:'arial', fontSize:16, color:'white'}}>US Congress Candidate, CA12, 2020</Text>
+            <Text style={{paddingHorizontal: 10, fontFamily:'arial', fontSize:16, fontWeight:'bold', color:'white'}}>29,521
+              <Text style={{fontFamily:'arial', fontSize:16, fontWeight:'normal', color:'white'}}> Followers</Text>
+            </Text>
+            <View style={{width:'100%', height:20}} />
+          </View>
+        </ImageBackground>
+      )
+    }
+
     return (
       <View>
+        {firstCard}
         <Card style={{flex: 0}}>
           <CardItem bordered>
             <Thumbnail source={item.user.photo}/>
@@ -1088,7 +1128,6 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
     paddingVertical: 8,
-    paddingHorizontal: 10,
   },
   headerStyle: {
     flexDirection: "row",
