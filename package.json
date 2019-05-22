@@ -21,6 +21,7 @@
     "react-native-vector-icons": "^6.4.2",
     "react-native-web": "0.10.1",
     "react-phone-number-input": "^2.3.13",
+    "react-player": "^1.11.0",
     "react-router-dom": "^5.0.0",
     "react-router-modal": "^1.4.2",
     "react-scripts": "3.0.1",

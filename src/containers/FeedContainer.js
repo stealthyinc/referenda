@@ -13,12 +13,15 @@ import {
   Card,
   CardItem,
   Text,
+  Header,
   Icon,
   Input,
   Left,
   Right,
   H1,
-  Thumbnail
+  Thumbnail,
+  Container,
+  Grid,
 } from 'native-base';
 import * as blockstack from 'blockstack'
 import SocialBar from '../components/SocialBar'
@@ -30,6 +33,7 @@ import ShareBar from '../components/ShareBar'
 // TODO: how do we rip this out / disable it for mobile web and the app (use
 //       the photo chooser / picker for the app).
 import FitImage from 'react-native-fit-image';
+import ReactPlayer from 'react-player'
 import Dropzone from 'react-dropzone'
 
 const firebase = require('firebase');
@@ -67,7 +71,7 @@ export default class Feed extends Component {
     this.newPostId = undefined
     this.newPostTitle = undefined
     this.newPostDescription = undefined
-    this.newPostMediaFileName = undefined
+    this.newPostMedia = undefined
   }
 
   componentDidMount() {
@@ -95,6 +99,15 @@ export default class Feed extends Component {
     agatha: 'https://gaia.blockstack.org/hub/1KFqr64mYNP6Ma6D88ErxiY6YhaUgcdKHz',
     agathaImg: 'gaia.blockstack.org/hub/1KFqr64mYNP6Ma6D88ErxiY6YhaUgcdKHz'
   }
+
+  MEDIA_TYPES = {
+    UNKNOWN: 0,
+    VIDEO: 1,
+    IMAGE: 2
+  }
+
+  VIDEO_EXTENSIONS = ['mp4', 'mpeg', 'mpg', 'avi', 'mov']
+  IMAGE_EXTENSIONS = ['png', 'jpg', 'jpeg', 'bmp', 'gif']
 
   // getFile: abstraction above blockstack getFile that works if we're not
   //          signed in for reading files for static site load
@@ -344,9 +357,24 @@ export default class Feed extends Component {
 
   renderItem = ({ item }) => {
     let image = undefined
-    if (item.picture) {
-      const imagePath = `${this.GAIA_MAP['agatha']}/${item.picture}`
-      image = (<FitImage source={{uri: imagePath}} />)
+    try {
+      if (item.media) {
+        const itemUrl = `${this.GAIA_MAP['agatha']}/${item.media.fileName}`
+        if (item.media.type === this.MEDIA_TYPES.IMAGE) {
+          image = (
+            <TouchableOpacity
+              delayPressIn={70}
+              activeOpacity={0.8}
+              onPress={() => this.onItemPressed(item)}>
+              <FitImage source={{uri: itemUrl}} />
+            </TouchableOpacity>)
+        } else if (item.media.type === this.MEDIA_TYPES.VIDEO) {
+          image = (
+            <ReactPlayer width='100%' controls={true} light={false} muted={true} playing={true} url={itemUrl} />)
+        }
+      }
+    } catch (suppressedError) {
+      console.log(`Couldn\'t render item.\n${suppressedError}`)
     }
 
     const pinButtonText = (item.hasOwnProperty('pinned') && item.pinned) ?
@@ -380,6 +408,7 @@ export default class Feed extends Component {
             </Left>
             <Right>
               <Button
+                bordered style={{borderColor:'lightgray'}}
                 small
                 rounded
                 info
@@ -389,24 +418,25 @@ export default class Feed extends Component {
               </Button>
             </Right>
           </CardItem>
-          <TouchableOpacity
-            delayPressIn={70}
-            activeOpacity={0.8}
-            onPress={() => this.onItemPressed(item)}>
             <CardItem>
               <Body>
                 {/* FitImage needs this view or it doesn't understand the width to size the image height to.' */}
                 <View style={{width:'100%'}}>
                   {image}
                 </View>
-                <View style={{padding:15, width:'100%', borderRadius: 10, borderStyle:'solid',borderColor:'rgb(245,245,245)',borderWidth:1}}>
-                  <Text style={{fontFamily:'arial', fontSize: 21}}>
-                    {item.description}
-                  </Text>
-                </View>
+                <TouchableOpacity
+                  delayPressIn={70}
+                  activeOpacity={0.8}
+                  onPress={() => this.onItemPressed(item)}>
+                  { /*<View style={{padding:10, width:'100%', borderRadius: 10, borderStyle:'solid',borderColor:'rgb(245,245,245)',borderWidth:1}}> */ }
+                  <View style={{padding:10, width:'100%'}}>
+                    <Text style={{fontFamily:'arial', fontSize: 21}}>
+                      {item.description}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
               </Body>
             </CardItem>
-          </TouchableOpacity>
           <SocialBar
             paymentFunction={() => this.togglePhoneModal()}
           />
@@ -462,16 +492,16 @@ export default class Feed extends Component {
     const onPress = (handlerArg) ?
       () => handlerFn(handlerArg) :
       () => handlerFn()
+
     return (
       <Button
-        bordered
+        bordered style={{borderColor:'lightgray', borderRadius:10}}
         iconLeft
         small={!large}
         medium={large}
         info={info}
         success={success}
         danger={danger}
-        style={{borderRadius:10}}
         onPress={onPress}>
         <Icon name={icon} />
         {buttonText}
@@ -551,7 +581,7 @@ export default class Feed extends Component {
     this.newPostId = Date.now()
     this.newPostTitle = undefined
     this.newPostDescription = undefined
-    this.newPostMediaFileName = undefined
+    this.newPostMedia = undefined
 
     this.setState({ editingPost: true })
   }
@@ -560,7 +590,7 @@ export default class Feed extends Component {
     this.newPostId = undefined
     this.newPostTitle = undefined
     this.newPostDescription = undefined
-    this.newPostMediaFileName = undefined
+    this.newPostMedia = undefined
 
     this.setState({ editingPost: false })
   }
@@ -574,8 +604,7 @@ export default class Feed extends Component {
     const postData = {
       title: this.newPostTitle,
       description: this.newPostDescription,
-      picture: this.newPostMediaFileName,
-      video: '',
+      media: this.newPostMedia,
       id: this.newPostId,
       time: Date.now(),
     }
@@ -809,26 +838,40 @@ export default class Feed extends Component {
 
     // 4. Get the post & check for media files--if there are any, delete them
     //    too:
-    try {
-     if (deletedPostData) {
-       const fileDelPromises = []
-       for (const property of ['picture', 'video']) {
-         if (deletedPostData.hasOwnProperty(property) && deletedPostData[property]) {
-           console.log(`Deleting ${property} from deletedPostData (${deletedPostData[property]})`)
-           fileDelPromises.push(
-             blockstack.putFile(deletedPostData[property], JSON.stringify({}), {encrypt: false})
-             .then(() => {
-               console.log(`Deleted ${deletedPostData[property]}.`)
-             })
-             .catch((suppressedError) => {
-               console.log(`Unable to delete ${deletedPostData[property]}.\n${suppressedError}`)})
-           )
-         }
-       }
-     }
-    } catch (error) {
-     console.error(`Problems while deleting media files associated with post ${aPostId}.`)
+    if (deletedPostData) {
+      try {
+        const fileNameToDel = deletedPostData.media.fileName
+
+        blockstack.putFile(fileNameToDel, JSON.stringify({}), {encrypt: false})
+        .then(() => {
+          console.log(`Deleted ${fileNameToDel}.`)
+        })
+        .catch((suppressedError) => {
+          console.log(`Unable to delete ${fileNameToDel}.\n${suppressedError}`)
+        })
+      } catch (error) {
+        console.error(`Problems while deleting media files associated with post ${aPostId}.`)
+      }
     }
+  }
+
+  getFileType = (aFileName) => {
+    try {
+      // See: https://stackoverflow.com/questions/680929/how-to-extract-extension-from-filename-string-in-javascript
+      const re = /(?:\.([^.]+))?$/
+      const extensionRaw = re.exec(aFileName)[1]
+
+      if (extensionRaw) {
+        const extensionLc = extensionRaw.toLowerCase()
+
+        if (this.IMAGE_EXTENSIONS.includes(extensionLc)) {
+          return this.MEDIA_TYPES.IMAGE
+        } else if (this.VIDEO_EXTENSIONS.includes(extensionLc)) {
+          return this.MEDIA_TYPES.VIDEO
+        }
+      }
+    } catch (suppressedError) {}
+    return this.MEDIA_TYPES.UNKNOWN
   }
 
   handleMediaUpload = async (acceptedFiles) => {
@@ -861,32 +904,53 @@ export default class Feed extends Component {
         // console.log(binaryStr)
 
         // if (file) {
-        //   this.newPostMediaFileName = {
+        //   this.newPostMedia = {
         //     name: file.name,
         //     type: file.type,
         //     data: undefined
         //   }
         // }
 
-        const msg = `${this.state.mediaUploading} read.`
+        const msg = `${this.state.mediaUploading} read. Uploading ...`
         this.setState({mediaUploading: msg})
 
-        // Now upload it and set newPostMediaFileName:
-        this.newPostMediaFileName = Feed.getPostMediaFileName(this.newPostId)
-        // this.newPostMediaFileName = firstFile.name
+        debugger
+        // Now set newPostMedia values and upload the file:
+        this.newPostMedia = {
+          originalFileName: firstFile.name,
+          fileName: Feed.getPostMediaFileName(this.newPostId),
+          size: firstFile.size,
+          type: this.getFileType(firstFile.name)
+        }
+
         const postMediaDataBuffer = reader.result
+
         blockstack.putFile(
-          this.newPostMediaFileName, postMediaDataBuffer, { encrypt: false })
+          this.newPostMedia.fileName, postMediaDataBuffer, { encrypt: false })
         .then(() => {
-          console.log(`Media file uploaded: ${this.newPostMediaFileName}`)
-          this.setState({mediaUploading: false})
+          this.setState({mediaUploading: `Media file uploaded: ${this.newPostMedia.originalFileName}`})
         })
         .catch((error) => {
-          console.error(`Unable to upload file: ${this.newPostMediaFileName}`)
+          this.setState({mediaUploading: `Unable to upload file: ${this.newPostMedia.originalFileName}`})
         })
       }
 
-      this.setState({mediaUploading: `Uploading ${firstFile.name} ...`})
+      this.setState({mediaUploading: `Processing ${firstFile.name} ...`})
+
+      debugger
+      //
+      // If the file is too big, return and set state with a message.
+      if (firstFile.size > 24500000) {
+        this.setState({mediaUploading: `${firstFile.name} is too large. Try a file less than 24Mb.`})
+        return
+      }
+      //
+      // If the file is the wrong type, return and set state with a message.
+      if (!this.getFileType(firstFile.name)) {
+        this.setState({mediaUploading: `${firstFile.name} is an unsupported type.\nSupported image types: ${this.IMAGE_EXTENSIONS.join()}\nSupported video types: ${this.VIDEO_EXTENSIONS.join()}`})
+        return
+      }
+
       // reader.readAsBinaryString(firstFile)
       // reader.readAsDataURL(firstFile)
       reader.readAsArrayBuffer(firstFile)
@@ -910,11 +974,14 @@ export default class Feed extends Component {
     // console.log('In render, data:', this.state.data)
     const postEditor = (this.state.editingPost) ?
       this.renderPostEditor() : undefined
-    const logInOutButton = (!this.state.editingPost) ?
+    const loginButton = (!this.state.editingPost) ?
       this.getFeedButton('LoginMenu') : undefined
-    const postButton = (!this.state.editingPost && this.state.isSignedIn) ?
+    const newPostOrLogo = (!this.state.editingPost && this.state.isSignedIn) ?
       this.getFeedButton('ArticleMenu') :
       ( <Text style={{fontFamily:'arial', fontSize:40, color:'gray'}}>Referenda</Text> )
+
+    const leftHeaderContent = (this.state.isSignedIn) ? loginButton : newPostOrLogo
+    const rightHeaderContent = (this.state.isSignedIn) ? newPostOrLogo : loginButton
 
     let activityIndicator = undefined
     if (this.state.initializing || this.state.saving) {
@@ -927,7 +994,7 @@ export default class Feed extends Component {
     }
 
     return (
-      <View>
+      <Container>
         <ModalContainer
           component={<ShareBar />}
           showModal={this.state.showShareModal}
@@ -946,18 +1013,22 @@ export default class Feed extends Component {
           toggleModal={this.togglePhoneModal}
           modalHeader='Text Campaign Donation Link'
         />
-        <View id='PageHeader' style={styles.main}>
-          {logInOutButton}
-          {postButton}
+        <Header transparent style={styles.headerStyle}>
+          {leftHeaderContent}
+          {rightHeaderContent}
+        </Header>
+        <View>
+          {postEditor}
+          {activityIndicator}
         </View>
-        {postEditor}
-        {activityIndicator}
-        <FlatList
-          data={this.state.data}
-          renderItem={this.renderItem}
-          keyExtractor={this.extractItemKey}
-          style={styles.container} />
-      </View>
+        <Grid>
+          <FlatList
+            data={this.state.data}
+            renderItem={this.renderItem}
+            keyExtractor={this.extractItemKey}
+            style={styles.container} />
+        </Grid>
+      </Container>
     )
   }
 }
@@ -968,9 +1039,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 10,
   },
-  main: {
-    marginTop: 20,
-    paddingHorizontal: 10,
+  headerStyle: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: 'center',
