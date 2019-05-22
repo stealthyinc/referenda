@@ -36,8 +36,11 @@ import FitImage from 'react-native-fit-image';
 import ReactPlayer from 'react-player'
 import Dropzone from 'react-dropzone'
 
+import { isMobile } from "react-device-detect";
+
 const firebase = require('firebase');
 const moment = require('moment');
+const runes = require('runes')
 
 export default class Feed extends Component {
   constructor(props) {
@@ -355,6 +358,17 @@ export default class Feed extends Component {
     this.setState({showPhoneModal: !this.state.showPhoneModal})
   }
 
+  // Safe on emoji / unicode
+  static getTruncatedStr(aString, aTruncatedLen=256) {
+    try {
+      if (Array.from(aString).length > aTruncatedLen) {
+        return `${runes.substr(aString, 0, aTruncatedLen)} ...`
+      }
+    } catch (suppressedError) {}
+
+    return aString
+  }
+
   renderItem = ({ item }) => {
     let image = undefined
     try {
@@ -399,24 +413,22 @@ export default class Feed extends Component {
       <View>
         <Card style={{flex: 0}}>
           <CardItem bordered>
-            <Left>
-              <Thumbnail source={item.user.photo}/>
-              <Body>
-                <Text style={{fontFamily:'arial', fontSize:27}}>{item.title}</Text>
-                <Text style={{fontFamily:'arial', fontStyle:'italic', fontSize:21, color:'lightgray'}}>{timeStr}</Text>
-              </Body>
-            </Left>
-            <Right>
-              <Button
-                bordered style={{borderColor:'lightgray'}}
-                small
-                rounded
-                info
-                onPress={() => this.toggleShareModal()}
-              >
-                <Icon name='share-alt' />
-              </Button>
-            </Right>
+            <Thumbnail source={item.user.photo}/>
+            <Body style={{marginHorizontal:10}}>
+              <Text style={styles.postTitleText}>
+                {(isMobile ? Feed.getTruncatedStr(item.title) : item.title)}
+              </Text>
+              <Text style={styles.postTimeText}>{timeStr}</Text>
+            </Body>
+            <Button
+              bordered style={{borderColor:'lightgray'}}
+              small
+              rounded
+              info
+              onPress={() => this.toggleShareModal()}
+            >
+              <Icon name='share-alt' />
+            </Button>
           </CardItem>
             <CardItem>
               <Body>
@@ -430,8 +442,8 @@ export default class Feed extends Component {
                   onPress={() => this.onItemPressed(item)}>
                   { /*<View style={{padding:10, width:'100%', borderRadius: 10, borderStyle:'solid',borderColor:'rgb(245,245,245)',borderWidth:1}}> */ }
                   <View style={{padding:10, width:'100%'}}>
-                    <Text style={{fontFamily:'arial', fontSize: 21}}>
-                      {item.description}
+                    <Text style={styles.postBodyText}>
+                      {(isMobile ? Feed.getTruncatedStr(item.description) : Feed.getTruncatedStr(item.description, 512))}
                     </Text>
                   </View>
                 </TouchableOpacity>
@@ -449,17 +461,19 @@ export default class Feed extends Component {
   getFeedButton = (aKey) => {
     const isLogin = (aKey === 'LoginMenu')
     const buttonName = (isLogin) ?
-      ( (this.state.isSignedIn) ? 'Log Out' : 'Log In' ) : 'New Post ...'
-    const buttonText = (<Text style={{fontFamily:'arial', fontSize:27}} uppercase={false}>{buttonName}</Text>)
+      ( (this.state.isSignedIn) ? 'Log Out' : 'Log In' ) :
+      ( isMobile ? 'New Post' : 'New Post ...' )
+    const buttonText = (<Text style={styles.feedButtonText} uppercase={false}>{buttonName}</Text>)
     const handlerFn = (isLogin) ? this.handleLogin : this.handlePostEditorRequest
     const icon = (isLogin) ?
       (this.state.isSignedIn) ? 'log-out' : 'log-in' : 'create'
     return (
       <Button
+        small={isMobile}
         success
         iconLeft
         bordered
-        style={{borderRadius: 15}}
+        style={styles.feedButton}
         onPress={() => handlerFn()}>
         <Icon name={icon}/>
         {buttonText}
@@ -483,9 +497,11 @@ export default class Feed extends Component {
     )
   }
 
-  getPostEditorButton = (buttonName, handlerFn, icon, handlerArg, large=true) => {
-    const fontSize = (large) ? 27 : 21
-    const buttonText = (<Text style={{fontFamily:'arial', fontSize:fontSize}} uppercase={false}>{buttonName}</Text>)
+  getPostEditorButton = (buttonName, handlerFn, icon, handlerArg, medium=true) => {
+    const fontStyle = (medium) ?
+      styles.postEditorButtonTextLarge : styles.postEditorButtonTextSmall
+
+    const buttonText = (<Text style={fontStyle} uppercase={false}>{buttonName}</Text>)
     const danger = ((buttonName === 'Cancel') || (buttonName === 'X'))
     const info = (buttonName === 'Post')
     const success = !info && !danger
@@ -493,12 +509,13 @@ export default class Feed extends Component {
       () => handlerFn(handlerArg) :
       () => handlerFn()
 
+    const buttonSizeSmall = (isMobile) ? true : (!medium)
     return (
       <Button
         bordered style={{borderColor:'lightgray', borderRadius:10}}
         iconLeft
-        small={!large}
-        medium={large}
+        small={buttonSizeSmall}
+        medium={buttonSizeSmall}
         info={info}
         success={success}
         danger={danger}
@@ -529,7 +546,7 @@ export default class Feed extends Component {
       <Content padder>
         <Card>
           <CardItem header>
-            <H1>New Post</H1>
+            <Text style={styles.postTitleText}>New Post</Text>
           </CardItem>
           <CardItem bordered>
             <View style={{flex: 1, flexDirection: 'column'}}>
@@ -838,7 +855,9 @@ export default class Feed extends Component {
 
     // 4. Get the post & check for media files--if there are any, delete them
     //    too:
-    if (deletedPostData) {
+    if (deletedPostData &&
+        deletedPostData.hasOwnProperty('media') &&
+        deletedPostData.media) {
       try {
         const fileNameToDel = deletedPostData.media.fileName
 
@@ -850,7 +869,7 @@ export default class Feed extends Component {
           console.log(`Unable to delete ${fileNameToDel}.\n${suppressedError}`)
         })
       } catch (error) {
-        console.error(`Problems while deleting media files associated with post ${aPostId}.`)
+        console.error(`Problems while deleting media files associated with post ${aPostId}.\n${error}`)
       }
     }
   }
@@ -914,7 +933,6 @@ export default class Feed extends Component {
         const msg = `${this.state.mediaUploading} read. Uploading ...`
         this.setState({mediaUploading: msg})
 
-        debugger
         // Now set newPostMedia values and upload the file:
         this.newPostMedia = {
           originalFileName: firstFile.name,
@@ -937,7 +955,6 @@ export default class Feed extends Component {
 
       this.setState({mediaUploading: `Processing ${firstFile.name} ...`})
 
-      debugger
       //
       // If the file is too big, return and set state with a message.
       if (firstFile.size > 24500000) {
@@ -978,7 +995,7 @@ export default class Feed extends Component {
       this.getFeedButton('LoginMenu') : undefined
     const newPostOrLogo = (!this.state.editingPost && this.state.isSignedIn) ?
       this.getFeedButton('ArticleMenu') :
-      ( <Text style={{fontFamily:'arial', fontSize:40, color:'gray'}}>Referenda</Text> )
+      ( <Text style={styles.headerLogoText}>Referenda</Text> )
 
     const leftHeaderContent = (this.state.isSignedIn) ? loginButton : newPostOrLogo
     const rightHeaderContent = (this.state.isSignedIn) ? newPostOrLogo : loginButton
@@ -1034,6 +1051,40 @@ export default class Feed extends Component {
 }
 
 const styles = StyleSheet.create({
+  headerLogoText: {
+    fontFamily:'arial',
+    fontSize: (isMobile ? 27 : 40),
+    color:'gray'
+  },
+  feedButtonText: {
+    fontFamily:'arial',
+    fontSize: (isMobile ? 14 : 27)
+  },
+  feedButton: {
+    borderRadius: (isMobile ? 10 : 15)
+  },
+  postTitleText: {
+    fontFamily:'arial',
+    fontSize: (isMobile ? 20 : 27)
+  },
+  postTimeText: {
+    fontFamily:'arial',
+    fontSize: (isMobile ? 14 : 21),
+    fontStyle: 'italic',
+    color:'lightgray'
+  },
+  postBodyText: {
+    fontFamily:'arial',
+    fontSize: (isMobile ? 14 : 21),
+  },
+  postEditorButtonTextLarge: {
+    fontFamily:'arial',
+    fontSize: (isMobile ? 20 : 27),
+  },
+  postEditorButtonTextSmall: {
+    fontFamily:'arial',
+    fontSize: (isMobile ? 14 : 21),
+  },
   container: {
     backgroundColor: 'white',
     paddingVertical: 8,

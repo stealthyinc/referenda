@@ -39,17 +39,20 @@ export const WebRoutes = {
 }
 
 export default class App extends React.Component {
-  render = () => ((!isMobile) ? (
-    <View style={{flex: 1, flexDirection: 'row'}}>
-      <View style={{flex: 0.1}} />
-      <View style={{flex: 0.8}}>
+  render = () => {
+    return ((!isMobile) ?
+      (
+        <View style={{flex: 1, flexDirection: 'row'}}>
+          <View style={{flex: 0.1}} />
+          <View style={{flex: 0.8}}>
+            {WebRoutesGenerator({ routeMap: WebRoutes })}
+          </View>
+          <View style={{flex: 0.1}} />
+        </View>
+      ) : (
+      <View id='AppView'>
         {WebRoutesGenerator({ routeMap: WebRoutes })}
       </View>
-      <View style={{flex: 0.1}} />
-    </View>
-    ) : (
-    <View>
-      {WebRoutesGenerator({ routeMap: WebRoutes })}
-    </View>
-  ))
+    ))
+  }
 }
