@@ -17,9 +17,6 @@ import {
   Header,
   Icon,
   Input,
-  Left,
-  Right,
-  H1,
   Thumbnail,
   Container,
   Grid,
@@ -28,6 +25,7 @@ import * as blockstack from 'blockstack'
 import SocialBar from '../components/SocialBar'
 import ModalContainer from './ModalContainer'
 // import SquareContainer from './SquareContainer'
+import ArticleContainer from './ArticleContainer'
 import PhoneNumber from '../components/PhoneNumber'
 import ShareBar from '../components/ShareBar'
 
@@ -60,7 +58,8 @@ export default class Feed extends Component {
       mediaUploading: '',
       showShareModal: false,
       showSquareModal: false,
-      showPhoneModal: false
+      showPhoneModal: false,
+      showArticleModal: false
     };
 
     if (!firebase.auth().currentUser) {
@@ -343,7 +342,8 @@ export default class Feed extends Component {
   }
 
   onItemPressed = (item) => {
-    this.props.navigation.navigate('Article', { id: item.id });
+    // this.props.navigation.navigate('Article', { id: item.id });
+    this.toggleArticleModal()
   }
 
   handleLogin = () => {
@@ -365,6 +365,10 @@ export default class Feed extends Component {
 
   togglePhoneModal = () => {
     this.setState({showPhoneModal: !this.state.showPhoneModal})
+  }
+
+  toggleArticleModal = () => {
+    this.setState({showArticleModal: !this.state.showArticleModal})
   }
 
   // Safe on emoji / unicode
@@ -398,7 +402,7 @@ export default class Feed extends Component {
         }
       }
     } catch (suppressedError) {
-      console.log(`Couldn\'t render item.\n${suppressedError}`)
+      console.log(`Couldn't render item.\n${suppressedError}`)
     }
 
     const pinButtonText = (item.hasOwnProperty('pinned') && item.pinned) ?
@@ -430,10 +434,10 @@ export default class Feed extends Component {
             height:(isMobile ? '33vh' : '25vh'),
             backgroundColor:'lightblue',
             }}>
-          <View style={{width:'100%', height:'100%', backgroundColor:'rgba(0,0,0,0.5)',
+          <View style={{width:'100%', height:'100%', backgroundColor:'rgba(0,0,0,0.3)',
                         flexDirection:'column', justifyContent:'flex-end',}}>
             <View>
-              <Thumbnail large style={{marginLeft:10, borderWidth:2, borderColor:'white', borderStyle:'solid'}} source={item.user.photo}/>
+              <Thumbnail large style={{marginLeft:10, borderWidth:2, borderColor:'white', borderStyle:'solid'}} source={require('../data/img/avatars/agatha.png')}/>
             </View>
             <View style={{width:'100%', height:10}} />
             <Text style={{paddingHorizontal: 10, fontFamily:'arial', fontSize:20, fontWeight:'bold', color:'white'}}>Agatha Bacelar</Text>
@@ -453,7 +457,7 @@ export default class Feed extends Component {
         {firstCard}
         <Card style={{flex: 0}}>
           <CardItem bordered>
-            <Thumbnail source={item.user.photo}/>
+            <Thumbnail source={require('../data/img/avatars/agatha.png')}/>
             <Body style={{marginHorizontal:10}}>
               <Text style={styles.postTitleText}>
                 {(isMobile ? Feed.getTruncatedStr(item.title) : item.title)}
@@ -1069,6 +1073,12 @@ export default class Feed extends Component {
           showModal={this.state.showPhoneModal}
           toggleModal={this.togglePhoneModal}
           modalHeader='Text Campaign Donation Link'
+        />
+        <ModalContainer
+          component={<ArticleContainer />}
+          showModal={this.state.showArticleModal}
+          toggleModal={this.toggleArticleModal}
+          modalHeader='Article View'
         />
         <Header transparent style={styles.headerStyle}>
           {leftHeaderContent}

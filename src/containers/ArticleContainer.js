@@ -29,7 +29,8 @@ const moment = require('moment')
 export default class Article extends Component {
   constructor(props) {
     super(props)
-    const articleId = this.props.navigation.getParam('id', 1)
+    // const articleId = this.props.navigation.getParam('id', 1)
+    const articleId = 1
     this.data = data.getArticle(articleId)
     this.state = {
       showShareModal: false,
@@ -64,7 +65,7 @@ export default class Article extends Component {
                 <TouchableOpacity
                   delayPressIn={70}
                   activeOpacity={0.8}
-                   onPress={() => this.props.navigation.navigate('Home')}>
+                   onPress={() => this.props.toggleModal()}>
                   <Thumbnail source={this.data.user.photo} />
                 </TouchableOpacity>
                 <Body>
@@ -74,6 +75,7 @@ export default class Article extends Component {
               </Left>
               <Right>
                 <Button 
+                  bordered style={{borderColor:'lightgray'}}
                   small
                   rounded
                   info

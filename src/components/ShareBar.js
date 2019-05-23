@@ -1,20 +1,11 @@
 import React, { Component } from "react";
 import {
-  Icon,
   Card,
   CardItem,
-  Text,
-  H2,
-  Left,
-  Right,
 } from "native-base";
 import {
-  RedditShareButton,
-  RedditIcon,
   TwitterShareButton,
   TwitterIcon,
-  LinkedinShareButton,
-  LinkedinIcon,
   EmailShareButton,
   EmailIcon,
   FacebookShareButton,
