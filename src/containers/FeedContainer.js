@@ -1084,13 +1084,13 @@ export default class Feed extends Component {
           modalHeader='Campaign Donation'
         />*/}
         <ModalContainer
-          component={<PhoneNumber />}
+          component={<PhoneNumber campaignName={this.state.campaignName} toggleModal={this.togglePhoneModal}/>}
           showModal={this.state.showPhoneModal}
           toggleModal={this.togglePhoneModal}
           modalHeader='Text Campaign Donation Link'
         />
         <ModalContainer
-          component={<ArticleContainer />}
+          component={<ArticleContainer toggleModal={this.toggleArticleModal}/>}
           showModal={this.state.showArticleModal}
           toggleModal={this.toggleArticleModal}
           modalHeader='Article View'
