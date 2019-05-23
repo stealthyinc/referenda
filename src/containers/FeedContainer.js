@@ -104,6 +104,7 @@ export default class Feed extends Component {
     this.newPostDescription = undefined
     this.newPostMedia = undefined
 
+    this.shareModelContent = undefined
   }
 
   componentDidMount() {
@@ -359,7 +360,16 @@ export default class Feed extends Component {
     }
   }
 
-  toggleShareModal = () => {
+  toggleShareModal = (aPostId=undefined) => {
+    this.shareModelContent = (aPostId) ?
+      {
+        url:`https://www.referenda.io`,
+        twitterTitle: `TODO: title for postId ${aPostId}`,
+        facebookQuote: `TODO: quote or title for postId ${aPostId} (facebook)`,
+        emailSubject: `TODO ...`,
+        emailBody: `TODO ... (255 chars of description), then link for more - automagic`
+      } :
+      undefined
     this.setState({showShareModal: !this.state.showShareModal})
   }
 
@@ -485,7 +495,7 @@ export default class Feed extends Component {
                 small
                 rounded
                 info
-                onPress={() => this.toggleShareModal()}
+                onPress={() => this.toggleShareModal(item.id)}
               >
                 <Icon name='share-alt' />
               </Button>
@@ -1072,7 +1082,7 @@ export default class Feed extends Component {
     return (
       <Container>
         <ModalContainer
-          component={<ShareBar />}
+          component={<ShareBar content={this.shareModelContent}/>}
           showModal={this.state.showShareModal}
           toggleModal={this.toggleShareModal}
           modalHeader='Social Share'

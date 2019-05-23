@@ -16,21 +16,41 @@ import './ShareBar.css'
 
 class ShareBar extends Component {
   render() {
+    let content = {
+      url:'https://www.referenda.io',
+      twitterTitle:'Article on Referenda',
+      facebookQuote:'Content from Referenda',
+      emailSubject:'Referenda Articles',
+      emailBody:''
+    }
+    try {
+      if (this.props.content) {
+        content = this.props.content
+      }
+    } catch (suppressedError) {}
+
     const iconSize = 64
     return (
       <Card id='shareCard' style={{borderStyle:'none', backgroundColor:'transparent', flexDirection: 'row', justifyContent: 'space-evenly'}}>
         <CardItem style={{backgroundColor:'transparent'}} >
-          <TwitterShareButton url="https://www.referenda.io">
+          <TwitterShareButton
+            url={content.url}
+            title={content.twitterTitle}>
             <TwitterIcon size={iconSize} round />
           </TwitterShareButton>
         </CardItem>
         <CardItem style={{backgroundColor:'transparent'}}>
-          <FacebookShareButton url="https://www.referenda.io">
+          <FacebookShareButton
+            url={content.url}
+            quote={content.facebookQuote}>
             <FacebookIcon size={iconSize} round />
           </FacebookShareButton>
         </CardItem>
         <CardItem style={{backgroundColor:'transparent'}}>
-          <EmailShareButton url="https://www.referenda.io">
+          <EmailShareButton
+          url={content.url}
+          subject={content.emailSubject}
+          body={content.emailBody}>
             <EmailIcon size={iconSize} round />
           </EmailShareButton>
         </CardItem>
