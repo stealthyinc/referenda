@@ -1,12 +1,12 @@
-import React from 'react';
-import { View } from 'react-native';
-import WebRoutesGenerator from './config/navigation/webRouteWrapper';
-import firebase from 'firebase/app';
-import "firebase/auth";
-import "firebase/database";
+import React from 'react'
+import { View } from 'react-native'
+import WebRoutesGenerator from './config/navigation/webRouteWrapper'
 import FeedContainer from './containers/FeedContainer'
 import ArticleContainer from './containers/ArticleContainer'
 import { isMobile } from "react-device-detect"
+const firebase = require('firebase/app')
+require ('firebase/auth')
+require ('firebase/database')
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
   authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
@@ -17,9 +17,8 @@ const firebaseConfig = {
   appId: process.env.REACT_APP_FIREBASE_APP_ID
 }
 
-// // Initialize Firebase
 if (!firebase.apps.length) {
-  firebase.initializeApp(firebaseConfig);
+  firebase.initializeApp(firebaseConfig)
 }
 
 export const WebRoutes = {
