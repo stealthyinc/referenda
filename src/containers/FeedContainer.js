@@ -42,13 +42,15 @@ const firebase = require('firebase');
 const moment = require('moment');
 const runes = require('runes')
 
+const C = require('../utils/constants.js')
+
 export default class Feed extends Component {
   constructor(props) {
     super(props);
     const isSignedIn = this.checkSignedInStatus();
     const userData = isSignedIn && blockstack.loadUserData();
     const person = (userData.username) ? new blockstack.Person(userData.profile) : false;
-    console.log("ACTODO Here's your campaign name:", this.props.navigation.getParam('campaignName'))
+
     this.state = {
       userData,
       person,
@@ -62,7 +64,6 @@ export default class Feed extends Component {
       showSquareModal: false,
       showPhoneModal: false,
       showArticleModal: false,
-      campaignName: this.props.navigation.getParam('campaignName')
     };
 
     if (!firebase.auth().currentUser) {
@@ -70,6 +71,29 @@ export default class Feed extends Component {
       .then(() => {
         // this.anonalytics.setDatabase(firebase);
       });
+    }
+
+    // TODO: check if campaignName is valid (i.e. either in the GAIA_MAP or
+    //       if we can read from it. If not then redirect to the 'undefined'/
+    //       default GAIA bucket which features or own content for new users.
+    //
+    this.mediaUrlRoot = undefined
+    if (userData &&
+        userData.hasOwnProperty('gaiaHubConfig') && userData.gaiaHubConfig &&
+        userData.gaiaHubConfig.hasOwnProperty('url_prefix') && userData.gaiaHubConfig.url_prefix &&
+        userData.gaiaHubConfig.hasOwnProperty('address') && userData.gaiaHubConfig.address) {
+      const gaiaRoot = userData.gaiaHubConfig.url_prefix
+      const appAddress = userData.gaiaHubConfig.address
+      this.mediaUrlRoot = `${gaiaRoot}${appAddress}`
+    } else {
+      const campaignNameProp = this.props.navigation.getParam('campaignName')
+      if (campaignNameProp in C.GAIA_MAP) {
+        this.mediaUrlRoot = C.GAIA_MAP[campaignNameProp]
+      } else {
+        // TODO: change this to a default with info for a prospective campaign
+        const unsignedInUserDefault = 'agatha'
+        this.mediaUrlRoot = C.GAIA_MAP[unsignedInUserDefault]
+      }
     }
 
     this.indexFileData = undefined
@@ -89,30 +113,8 @@ export default class Feed extends Component {
    * Begin Feed utilities
    *****************************************************************************
    */
-  INDEX_FILE = 'index.json'
 
-  // TODO: create a mapping mechanism to get the appropriate gaia bucket for
-  //       the provided URL / argument.  i.e.:
-  //
-  //       ?name= or /name      gaia-bucket
-  //       ---------------------------------------------------------------------------------------
-  //       agatha               https://gaia.blockstack.org/hub/1KFqr64mYNP6Ma6D88ErxiY6YhaUgcdKHz
-  //       guaido               https://gaia.blockstack.org/hub/<...>
-  //       ...
-  //
-  GAIA_MAP = {
-    agatha: 'https://gaia.blockstack.org/hub/1KFqr64mYNP6Ma6D88ErxiY6YhaUgcdKHz',
-    agathaImg: 'gaia.blockstack.org/hub/1KFqr64mYNP6Ma6D88ErxiY6YhaUgcdKHz'
-  }
 
-  MEDIA_TYPES = {
-    UNKNOWN: 0,
-    VIDEO: 1,
-    IMAGE: 2
-  }
-
-  VIDEO_EXTENSIONS = ['mp4', 'mpeg', 'mpg', 'avi', 'mov']
-  IMAGE_EXTENSIONS = ['png', 'jpg', 'jpeg', 'bmp', 'gif']
 
   // getFile: abstraction above blockstack getFile that works if we're not
   //          signed in for reading files for static site load
@@ -132,7 +134,7 @@ export default class Feed extends Component {
         }
       })
     } else {
-      const pathToRead = `${this.GAIA_MAP['agatha']}/${aFileName}`
+      const pathToRead = `${this.mediaUrlRoot}/${aFileName}`
       return fetch(pathToRead)
       .then((response) => {
         if (response.ok) {
@@ -163,7 +165,7 @@ export default class Feed extends Component {
 
   readIndex = async () => {
     // Note: rawData will be null if the file does not exist.
-    return await this.getFile(this.INDEX_FILE)
+    return await this.getFile(C.INDEX_FILE)
   }
 
   writeIndex = async () => {
@@ -171,7 +173,7 @@ export default class Feed extends Component {
 
     this.indexFileData.timeUtc = Date.now()
     const sIndexFileData = JSON.stringify(this.indexFileData)
-    await blockstack.putFile(this.INDEX_FILE, sIndexFileData, {encrypt: false})
+    await blockstack.putFile(C.INDEX_FILE, sIndexFileData, {encrypt: false})
   }
 
   // TODO: refactor this into something clean when and lightweight when it all
@@ -198,7 +200,7 @@ export default class Feed extends Component {
         try {
           await this.writeIndex()
         } catch (error) {
-          console.error(`Error creating ${this.INDEX_FILE}.\n${error}`)
+          console.error(`Error creating ${C.INDEX_FILE}.\n${error}`)
         }
       } else {
         // TODO: Present a message that there is no information to the user.
@@ -388,8 +390,8 @@ export default class Feed extends Component {
     let image = undefined
     try {
       if (item.media) {
-        const itemUrl = `${this.GAIA_MAP['agatha']}/${item.media.fileName}`
-        if (item.media.type === this.MEDIA_TYPES.IMAGE) {
+        const itemUrl = `${this.mediaUrlRoot}/${item.media.fileName}`
+        if (item.media.type === C.MEDIA_TYPES.IMAGE) {
           image = (
             <TouchableOpacity
               delayPressIn={70}
@@ -397,7 +399,7 @@ export default class Feed extends Component {
               onPress={() => this.onItemPressed(item)}>
               <FitImage source={{uri: itemUrl}} />
             </TouchableOpacity>)
-        } else if (item.media.type === this.MEDIA_TYPES.VIDEO) {
+        } else if (item.media.type === C.MEDIA_TYPES.VIDEO) {
           image = (
             <ReactPlayer width='100%' controls={true} light={false} muted={true} playing={true} url={itemUrl} />)
         }
@@ -424,11 +426,22 @@ export default class Feed extends Component {
     timeStr = (item.hasOwnProperty('pinned') && item.pinned) ?
       `pinned post - ${timeStr}` : timeStr
 
+    let fcData = {
+      avatarImg: undefined,
+      fcBackgroundImg: undefined,
+      nameStr: 'Your Name',
+      positionStr: 'Your Position',
+      followers: '0'
+    }
+    if (this.mediaUrlRoot in C.FIRST_CARD_WORKAROUND) {
+      fcData = C.FIRST_CARD_WORKAROUND[this.mediaUrlRoot]
+    }
+
     let firstCard = undefined
     if (item.hasOwnProperty('firstItem')) {
       firstCard = (
         <ImageBackground
-          source={{uri: 'https://untamedskies.files.wordpress.com/2012/07/americanflags.jpg'}}
+          source={{uri: fcData.fcBackgroundImg}}
           resizeMode='cover'
           style={{
             width:'100%',
@@ -438,13 +451,13 @@ export default class Feed extends Component {
           <View style={{width:'100%', height:'100%', backgroundColor:'rgba(0,0,0,0.3)',
                         flexDirection:'column', justifyContent:'flex-end',}}>
             <View>
-              <Thumbnail large style={{marginLeft:10, borderWidth:2, borderColor:'white', borderStyle:'solid'}} source={require('../data/img/avatars/agatha.png')}/>
+              <Thumbnail large style={{marginLeft:10, borderWidth:2, borderColor:'white', borderStyle:'solid'}} source={fcData.avatarImg}/>
             </View>
             <View style={{width:'100%', height:10}} />
-            <Text style={{paddingHorizontal: 10, fontFamily:'arial', fontSize:20, fontWeight:'bold', color:'white'}}>Agatha Bacelar</Text>
+            <Text style={{paddingHorizontal: 10, fontFamily:'arial', fontSize:20, fontWeight:'bold', color:'white'}}>{fcData.nameStr}</Text>
             <View style={{width:'100%', height:10}} />
-            <Text style={{paddingHorizontal: 10, fontFamily:'arial', fontSize:16, color:'white'}}>US Congress Candidate, CA12, 2020</Text>
-            <Text style={{paddingHorizontal: 10, fontFamily:'arial', fontSize:16, fontWeight:'bold', color:'white'}}>29,521
+            <Text style={{paddingHorizontal: 10, fontFamily:'arial', fontSize:16, color:'white'}}>{fcData.positionStr}</Text>
+            <Text style={{paddingHorizontal: 10, fontFamily:'arial', fontSize:16, fontWeight:'bold', color:'white'}}>{fcData.followers}
               <Text style={{fontFamily:'arial', fontSize:16, fontWeight:'normal', color:'white'}}> Followers</Text>
             </Text>
             <View style={{width:'100%', height:20}} />
@@ -458,7 +471,7 @@ export default class Feed extends Component {
         {firstCard}
         <Card style={{flex: 0}}>
           <CardItem bordered>
-            <Thumbnail source={require('../data/img/avatars/agatha.png')}/>
+            <Thumbnail source={fcData.avatarImg}/>
             <Body style={{marginHorizontal:10}}>
               <Text style={styles.postTitleText}>
                 {(isMobile ? Feed.getTruncatedStr(item.title) : item.title)}
@@ -688,7 +701,7 @@ export default class Feed extends Component {
     try {
       this.writeIndex()
     } catch (error) {
-      console.error(`Error saving ${this.INDEX_FILE}.\n${error}`)
+      console.error(`Error saving ${C.INDEX_FILE}.\n${error}`)
       this.setState({ saving: false })
       return
     }
@@ -750,7 +763,7 @@ export default class Feed extends Component {
     try {
       await this.writeIndex()
     } catch (error) {
-      console.error(`Error saving ${this.INDEX_FILE}.\n${error}`)
+      console.error(`Error saving ${C.INDEX_FILE}.\n${error}`)
       this.setState({ saving: false })
       return
     }
@@ -873,7 +886,7 @@ export default class Feed extends Component {
     try {
       await this.writeIndex()
     } catch (error) {
-      console.error(`Error saving ${this.INDEX_FILE}.\n${error}`)
+      console.error(`Error saving ${C.INDEX_FILE}.\n${error}`)
       this.setState({ saving: false })
       return
     }
@@ -927,14 +940,14 @@ export default class Feed extends Component {
       if (extensionRaw) {
         const extensionLc = extensionRaw.toLowerCase()
 
-        if (this.IMAGE_EXTENSIONS.includes(extensionLc)) {
-          return this.MEDIA_TYPES.IMAGE
-        } else if (this.VIDEO_EXTENSIONS.includes(extensionLc)) {
-          return this.MEDIA_TYPES.VIDEO
+        if (C.IMAGE_EXTENSIONS.includes(extensionLc)) {
+          return C.MEDIA_TYPES.IMAGE
+        } else if (C.VIDEO_EXTENSIONS.includes(extensionLc)) {
+          return C.MEDIA_TYPES.VIDEO
         }
       }
     } catch (suppressedError) {}
-    return this.MEDIA_TYPES.UNKNOWN
+    return C.MEDIA_TYPES.UNKNOWN
   }
 
   handleMediaUpload = async (acceptedFiles) => {
@@ -1008,7 +1021,7 @@ export default class Feed extends Component {
       //
       // If the file is the wrong type, return and set state with a message.
       if (!this.getFileType(firstFile.name)) {
-        this.setState({mediaUploading: `${firstFile.name} is an unsupported type.\nSupported image types: ${this.IMAGE_EXTENSIONS.join()}\nSupported video types: ${this.VIDEO_EXTENSIONS.join()}`})
+        this.setState({mediaUploading: `${firstFile.name} is an unsupported type.\nSupported image types: ${C.IMAGE_EXTENSIONS.join()}\nSupported video types: ${C.VIDEO_EXTENSIONS.join()}`})
         return
       }
 
