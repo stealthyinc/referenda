@@ -6,6 +6,7 @@ import {
   ActivityIndicator,
   StyleSheet,
   ImageBackground,
+  Linking,
 } from 'react-native';
 import {
   Button,
@@ -79,9 +80,7 @@ export default class Feed extends Component {
   }
 
   componentDidMount() {
-    // if (this.state.userData) {
-      this.getIndexFileData()
-    // }
+    this.getIndexFileData()
   }
 
   /*
@@ -484,7 +483,6 @@ export default class Feed extends Component {
                   delayPressIn={70}
                   activeOpacity={0.8}
                   onPress={() => this.onItemPressed(item)}>
-                  { /*<View style={{padding:10, width:'100%', borderRadius: 10, borderStyle:'solid',borderColor:'rgb(245,245,245)',borderWidth:1}}> */ }
                   <View style={{padding:10, width:'100%'}}>
                     <Text style={styles.postBodyText}>
                       {(isMobile ? Feed.getTruncatedStr(item.description) : Feed.getTruncatedStr(item.description, 512))}
@@ -1039,7 +1037,7 @@ export default class Feed extends Component {
       this.getFeedButton('LoginMenu') : undefined
     const newPostOrLogo = (!this.state.editingPost && this.state.isSignedIn) ?
       this.getFeedButton('ArticleMenu') :
-      ( <Text style={styles.headerLogoText}>Referenda</Text> )
+      ( <Text style={styles.headerLogoText} onPress={()=>Linking.openURL('https://referenda.io')}>Referenda</Text> )
 
     const leftHeaderContent = (this.state.isSignedIn) ? loginButton : newPostOrLogo
     const rightHeaderContent = (this.state.isSignedIn) ? newPostOrLogo : loginButton
