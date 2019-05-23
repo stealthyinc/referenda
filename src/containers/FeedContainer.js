@@ -91,6 +91,7 @@ export default class Feed extends Component {
         this.mediaUrlRoot = C.GAIA_MAP[campaignNameProp]
       } else {
         // TODO: change this to a default with info for a prospective campaign
+        // TODO: check if the path is a gaia hub and pull from that too.
         const unsignedInUserDefault = 'agatha'
         this.mediaUrlRoot = C.GAIA_MAP[unsignedInUserDefault]
       }
@@ -445,7 +446,7 @@ export default class Feed extends Component {
           resizeMode='cover'
           style={{
             width:'100%',
-            height:(isMobile ? '33vh' : '25vh'),
+            height:(isMobile ? '33vh' : '30vh'),
             backgroundColor:'lightblue',
             }}>
           <View style={{width:'100%', height:'100%', backgroundColor:'rgba(0,0,0,0.3)',
@@ -454,13 +455,13 @@ export default class Feed extends Component {
               <Thumbnail large style={{marginLeft:10, borderWidth:2, borderColor:'white', borderStyle:'solid'}} source={fcData.avatarImg}/>
             </View>
             <View style={{width:'100%', height:10}} />
-            <Text style={{paddingHorizontal: 10, fontFamily:'arial', fontSize:20, fontWeight:'bold', color:'white'}}>{fcData.nameStr}</Text>
+            <Text style={styles.firstCardNameText}>{fcData.nameStr}</Text>
             <View style={{width:'100%', height:10}} />
-            <Text style={{paddingHorizontal: 10, fontFamily:'arial', fontSize:16, color:'white'}}>{fcData.positionStr}</Text>
-            <Text style={{paddingHorizontal: 10, fontFamily:'arial', fontSize:16, fontWeight:'bold', color:'white'}}>{fcData.followers}
-              <Text style={{fontFamily:'arial', fontSize:16, fontWeight:'normal', color:'white'}}> Followers</Text>
+            <Text style={styles.firstCardPositionText}>{fcData.positionStr}</Text>
+            <Text style={styles.firstCardFolowersNumber}>{fcData.followers}
+              <Text style={styles.firstCardFollowersText}> Followers</Text>
             </Text>
-            <View style={{width:'100%', height:20}} />
+            <View style={{width:'100%', height:10}} />
           </View>
         </ImageBackground>
       )
@@ -469,48 +470,50 @@ export default class Feed extends Component {
     return (
       <View>
         {firstCard}
-        <Card style={{flex: 0}}>
-          <CardItem bordered>
-            <Thumbnail source={fcData.avatarImg}/>
-            <Body style={{marginHorizontal:10}}>
-              <Text style={styles.postTitleText}>
-                {(isMobile ? Feed.getTruncatedStr(item.title) : item.title)}
-              </Text>
-              <Text style={styles.postTimeText}>{timeStr}</Text>
-            </Body>
-            <Button
-              bordered style={{borderColor:'lightgray'}}
-              small
-              rounded
-              info
-              onPress={() => this.toggleShareModal()}
-            >
-              <Icon name='share-alt' />
-            </Button>
-          </CardItem>
-            <CardItem>
-              <Body>
-                {/* FitImage needs this view or it doesn't understand the width to size the image height to.' */}
-                <View style={{width:'100%'}}>
-                  {image}
-                </View>
-                <TouchableOpacity
-                  delayPressIn={70}
-                  activeOpacity={0.8}
-                  onPress={() => this.onItemPressed(item)}>
-                  <View style={{padding:10, width:'100%'}}>
-                    <Text style={styles.postBodyText}>
-                      {(isMobile ? Feed.getTruncatedStr(item.description) : Feed.getTruncatedStr(item.description, 512))}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
+        <View style={{paddingHorizontal: (isMobile ? 0 : '15vh')}}>
+          <Card style={{flex: 0, marginLeft:(isMobile? 2 : 0), marginRight:(isMobile ? 2 : 0)}}>
+            <CardItem bordered>
+              <Thumbnail source={fcData.avatarImg}/>
+              <Body style={{marginHorizontal:10}}>
+                <Text style={styles.postTitleText}>
+                  {(isMobile ? Feed.getTruncatedStr(item.title) : item.title)}
+                </Text>
+                <Text style={styles.postTimeText}>{timeStr}</Text>
               </Body>
+              <Button
+                bordered style={{borderColor:'lightgray'}}
+                small
+                rounded
+                info
+                onPress={() => this.toggleShareModal()}
+              >
+                <Icon name='share-alt' />
+              </Button>
             </CardItem>
-          <SocialBar
-            paymentFunction={() => this.togglePhoneModal()}
-          />
-          {editorControls}
-        </Card>
+              <CardItem>
+                <Body>
+                  {/* FitImage needs this view or it doesn't understand the width to size the image height to.' */}
+                  <View style={{width:'100%'}}>
+                    {image}
+                  </View>
+                  <TouchableOpacity
+                    delayPressIn={70}
+                    activeOpacity={0.8}
+                    onPress={() => this.onItemPressed(item)}>
+                    <View style={{padding:10, width:'100%'}}>
+                      <Text style={styles.postBodyText}>
+                        {(isMobile ? Feed.getTruncatedStr(item.description) : Feed.getTruncatedStr(item.description, 512))}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                </Body>
+              </CardItem>
+            <SocialBar
+              paymentFunction={() => this.togglePhoneModal()}
+            />
+            {editorControls}
+          </Card>
+        </View>
       </View>
     );
   }
@@ -589,7 +592,6 @@ export default class Feed extends Component {
       (
         <View
           style={{
-            marginHorizontal:15,
             marginTop:0,
             marginBottom: 15,
             width:'100%'}}>
@@ -600,8 +602,8 @@ export default class Feed extends Component {
       undefined
 
     return (
-      <Content padder>
-        <Card>
+      <Content>
+        <Card style={{marginLeft:(isMobile? 2 : 0), marginRight:(isMobile ? 2 : 0)}}>
           <CardItem header>
             <Text style={styles.postTitleText}>New Post</Text>
           </CardItem>
@@ -1093,21 +1095,25 @@ export default class Feed extends Component {
           toggleModal={this.toggleArticleModal}
           modalHeader='Article View'
         />
+
         <Header transparent style={styles.headerStyle}>
           {leftHeaderContent}
           {rightHeaderContent}
         </Header>
-        <View>
+
+        <View style={{paddingHorizontal:(isMobile ? '0vh': '15vh')}} >
           {postEditor}
           {activityIndicator}
         </View>
-        <Grid>
-          <FlatList
-            data={this.state.data}
-            renderItem={this.renderItem}
-            keyExtractor={this.extractItemKey}
-            style={styles.container} />
-        </Grid>
+
+
+          <Grid>
+            <FlatList
+              data={this.state.data}
+              renderItem={this.renderItem}
+              keyExtractor={this.extractItemKey}
+              style={styles.container} />
+          </Grid>
       </Container>
     )
   }
@@ -1140,6 +1146,32 @@ const styles = StyleSheet.create({
     fontFamily:'arial',
     fontSize: (isMobile ? 14 : 21),
   },
+  firstCardNameText: {
+    paddingHorizontal: 10,
+    fontFamily:'arial',
+    fontSize: (isMobile ? 16 : 21),
+    fontWeight:'bold',
+    color:'white',
+  },
+  firstCardPositionText: {
+    paddingHorizontal: 10,
+    fontFamily:'arial',
+    fontSize: (isMobile ? 14 : 16),
+    color:'white',
+  },
+  firstCardFollowersText: {
+    fontFamily:'arial',
+    fontSize: (isMobile ? 14 : 16),
+    fontWeight:'normal',
+    color:'white'
+  },
+  firstCardFolowersNumber: {
+    paddingHorizontal: 10,
+    fontFamily:'arial',
+    fontSize: (isMobile ? 14 : 16),
+    fontWeight:'bold',
+    color:'white'
+  },
   postEditorButtonTextLarge: {
     fontFamily:'arial',
     fontSize: (isMobile ? 20 : 27),
@@ -1150,12 +1182,14 @@ const styles = StyleSheet.create({
   },
   container: {
     backgroundColor: 'white',
-    paddingVertical: 8,
+    paddingHorizontal:0
   },
   headerStyle: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: 'center',
+    paddingLeft: (isMobile ? 5 : '15vh'),
+    paddingRight: (isMobile ? 5 : '15vh')
   },
   icon: {
     margin: 5,
