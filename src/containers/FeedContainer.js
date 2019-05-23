@@ -47,6 +47,7 @@ export default class Feed extends Component {
     const isSignedIn = this.checkSignedInStatus();
     const userData = isSignedIn && blockstack.loadUserData();
     const person = (userData.username) ? new blockstack.Person(userData.profile) : false;
+    console.log("ACTODO Here's your campaign name:", this.props.navigation.getParam('campaignName'))
     this.state = {
       userData,
       person,
@@ -59,7 +60,8 @@ export default class Feed extends Component {
       showShareModal: false,
       showSquareModal: false,
       showPhoneModal: false,
-      showArticleModal: false
+      showArticleModal: false,
+      campaignName: this.props.navigation.getParam('campaignName')
     };
 
     if (!firebase.auth().currentUser) {
