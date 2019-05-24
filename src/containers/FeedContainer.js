@@ -80,6 +80,7 @@ export default class Feed extends Component {
     //       default GAIA bucket which features or own content for new users.
     //
     this.mediaUrlRoot = undefined
+    this.showPostId = undefined
     if (userData &&
         userData.hasOwnProperty('gaiaHubConfig') && userData.gaiaHubConfig &&
         userData.gaiaHubConfig.hasOwnProperty('url_prefix') && userData.gaiaHubConfig.url_prefix &&
@@ -87,12 +88,33 @@ export default class Feed extends Component {
       const gaiaRoot = userData.gaiaHubConfig.url_prefix
       const appAddress = userData.gaiaHubConfig.address
       this.mediaUrlRoot = `${gaiaRoot}${appAddress}`
+
+      // We look for a link post id if the user is signed in or if the campaign link is
+      // correct to navigate to the specified post.
+      try {
+        const postIdArg = this.props.navigation.getParam('postId')
+        if (postIdArg) {
+          this.showPostId = parseInt(postIdArg)
+        }
+      } catch (suppressedError) {}
+
     } else {
       const campaignNameProp = this.props.navigation.getParam('campaignName')
       if (campaignNameProp in C.GAIA_MAP) {
         this.mediaUrlRoot = C.GAIA_MAP[campaignNameProp]
+
+        // We look for a link post id if the user is signed in or if the campaign link is
+        // correct to navigate to the specified post.
+        try {
+          const postIdArg = this.props.navigation.getParam('postId')
+          if (postIdArg) {
+            this.showPostId = parseInt(postIdArg)
+          }
+        } catch (suppressedError) {}
+
       } else {
         // TODO: change this to a default with info for a prospective campaign
+        // TODO: check if the path is a gaia hub and pull from that too.
         const unsignedInUserDefault = 'agatha'
         this.mediaUrlRoot = C.GAIA_MAP[unsignedInUserDefault]
       }
@@ -105,6 +127,8 @@ export default class Feed extends Component {
     this.newPostDescription = undefined
     this.newPostMedia = undefined
 
+    this.articleModalItem = undefined
+    this.shareModelContent = undefined
   }
 
   componentDidMount() {
@@ -319,6 +343,10 @@ export default class Feed extends Component {
       console.error(`Problem reading posts.\n${error}`)
     }
 
+    // TODO: check this.showPostId and if set to something in the model, do the
+    //       toggleArticleModal work (i.e. set state appropriately to show the
+    //       modal).
+
     this.setState({
       initializing: false,
       data
@@ -347,8 +375,8 @@ export default class Feed extends Component {
   }
 
   onItemPressed = (item) => {
-    // this.props.navigation.navigate('Article', { id: item.id });
-    this.toggleArticleModal()
+
+    this.toggleArticleModal(item)
   }
 
   handleLogin = () => {
@@ -360,7 +388,16 @@ export default class Feed extends Component {
     }
   }
 
-  toggleShareModal = () => {
+  toggleShareModal = (aPostId=undefined) => {
+    this.shareModelContent = (aPostId) ?
+      {
+        url:`https://www.referenda.io`,
+        twitterTitle: `TODO: title for postId ${aPostId}`,
+        facebookQuote: `TODO: quote or title for postId ${aPostId} (facebook)`,
+        emailSubject: `TODO ...`,
+        emailBody: `TODO ... (255 chars of description), then link for more - automagic`
+      } :
+      undefined
     this.setState({showShareModal: !this.state.showShareModal})
   }
 
@@ -372,7 +409,8 @@ export default class Feed extends Component {
     this.setState({showPhoneModal: !this.state.showPhoneModal})
   }
 
-  toggleArticleModal = () => {
+  toggleArticleModal = (item=undefined) => {
+    this.articleModalItem = item
     this.setState({showArticleModal: !this.state.showArticleModal})
   }
 
@@ -393,6 +431,8 @@ export default class Feed extends Component {
 
   firstItem=true
   renderItem = ({ item }) => {
+    const MAX_CARD_WIDTH = 512
+
     let image = undefined
     try {
       if (item.media) {
@@ -445,55 +485,65 @@ export default class Feed extends Component {
 
     let firstCard = undefined
     if (item.hasOwnProperty('firstItem')) {
+      const firstCardStyle = {
+        width: '100%',
+        height: '33vh'
+      }
+      if (!isMobile) {
+        firstCardStyle.maxWidth = 2*MAX_CARD_WIDTH
+      }
+
       firstCard = (
         <ImageBackground
           source={{uri: fcData.fcBackgroundImg}}
           resizeMode='cover'
-          style={{
-            width:'100%',
-            height:(isMobile ? '33vh' : '25vh'),
-            backgroundColor:'lightblue',
-            }}>
+          style={firstCardStyle}>
           <View style={{width:'100%', height:'100%', backgroundColor:'rgba(0,0,0,0.3)',
                         flexDirection:'column', justifyContent:'flex-end',}}>
             <View>
               <Thumbnail large style={{marginLeft:10, borderWidth:2, borderColor:'white', borderStyle:'solid'}} source={fcData.avatarImg}/>
             </View>
             <View style={{width:'100%', height:10}} />
-            <Text style={{paddingHorizontal: 10, fontFamily:'arial', fontSize:20, fontWeight:'bold', color:'white'}}>{fcData.nameStr}</Text>
+            <Text style={styles.firstCardNameText}>{fcData.nameStr}</Text>
             <View style={{width:'100%', height:10}} />
-            <Text style={{paddingHorizontal: 10, fontFamily:'arial', fontSize:16, color:'white'}}>{fcData.positionStr}</Text>
-            <Text style={{paddingHorizontal: 10, fontFamily:'arial', fontSize:16, fontWeight:'bold', color:'white'}}>{fcData.followers}
-              <Text style={{fontFamily:'arial', fontSize:16, fontWeight:'normal', color:'white'}}> Followers</Text>
+            <Text style={styles.firstCardPositionText}>{fcData.positionStr}</Text>
+            <Text style={styles.firstCardFolowersNumber}>{fcData.followers}
+              <Text style={styles.firstCardFollowersText}> Followers</Text>
             </Text>
-            <View style={{width:'100%', height:20}} />
+            <View style={{width:'100%', height:10}} />
           </View>
         </ImageBackground>
       )
     }
 
+    const widthStyle = {}
+    if (!isMobile) {
+      widthStyle.width = 512
+    }
+
     return (
-      <View>
+      <View style={{alignItems:'center'}}>
         {firstCard}
-        <Card style={{flex: 0}}>
-          <CardItem bordered>
-            <Thumbnail source={fcData.avatarImg}/>
-            <Body style={{marginHorizontal:10}}>
-              <Text style={styles.postTitleText}>
-                {(isMobile ? Feed.getTruncatedStr(item.title) : item.title)}
-              </Text>
-              <Text style={styles.postTimeText}>{timeStr}</Text>
-            </Body>
-            <Button
-              bordered style={{borderColor:'lightgray'}}
-              small
-              rounded
-              info
-              onPress={() => this.toggleShareModal()}
-            >
-              <Icon name='share-alt' />
-            </Button>
-          </CardItem>
+        <View style={widthStyle}>
+          <Card style={{flex: 0, marginLeft:(isMobile? 2 : 0), marginRight:(isMobile ? 2 : 0)}}>
+            <CardItem bordered>
+              <Thumbnail source={fcData.avatarImg}/>
+              <Body style={{marginHorizontal:10}}>
+                <Text style={styles.postTitleText}>
+                  {(isMobile ? Feed.getTruncatedStr(item.title) : item.title)}
+                </Text>
+                <Text style={styles.postTimeText}>{timeStr}</Text>
+              </Body>
+              <Button
+                bordered style={{borderColor:'lightgray'}}
+                small
+                rounded
+                info
+                onPress={() => this.toggleShareModal(item.id)}
+              >
+                <Icon name='share-alt' />
+              </Button>
+            </CardItem>
             <CardItem>
               <Body>
                 {/* FitImage needs this view or it doesn't understand the width to size the image height to.' */}
@@ -512,12 +562,13 @@ export default class Feed extends Component {
                 </TouchableOpacity>
               </Body>
             </CardItem>
-          <SocialBar
-            paymentFunction={() => this.togglePhoneModal()}
-            chatFunction={() => this.toggleMessageModal()}
-          />
-          {editorControls}
-        </Card>
+            <SocialBar
+              paymentFunction={() => this.togglePhoneModal()}
+              chatFunction={() => this.toggleMessageModal()}
+            />
+            {editorControls}
+          </Card>
+        </View>
       </View>
     );
   }
@@ -596,7 +647,6 @@ export default class Feed extends Component {
       (
         <View
           style={{
-            marginHorizontal:15,
             marginTop:0,
             marginBottom: 15,
             width:'100%'}}>
@@ -607,8 +657,8 @@ export default class Feed extends Component {
       undefined
 
     return (
-      <Content padder>
-        <Card>
+      <Content>
+        <Card style={{marginLeft:(isMobile? 2 : 0), marginRight:(isMobile ? 2 : 0)}}>
           <CardItem header>
             <Text style={styles.postTitleText}>New Post</Text>
           </CardItem>
@@ -1074,10 +1124,21 @@ export default class Feed extends Component {
         </View> )
     }
 
+    let headerContentStyle = {
+      width: '100%',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      paddingLeft: (isMobile ? 5 : 0),
+      paddingRight: (isMobile ? 5 : 0)
+    }
+    if (!isMobile) {
+      headerContentStyle.maxWidth = 1024
+    }
+
     return (
       <Container>
         <ModalContainer
-          component={<ShareBar />}
+          component={<ShareBar content={this.shareModelContent}/>}
           showModal={this.state.showShareModal}
           toggleModal={this.toggleShareModal}
           modalHeader='Social Share'
@@ -1095,7 +1156,11 @@ export default class Feed extends Component {
           modalHeader='Text Campaign Donation Link'
         />
         <ModalContainer
-          component={<ArticleContainer toggleModal={this.toggleArticleModal}/>}
+          component={ <ArticleContainer
+                         toggleModal={this.toggleArticleModal}
+                         item={this.articleModalItem}
+                         mediaUrlRoot={this.mediaUrlRoot}
+                          />}
           showModal={this.state.showArticleModal}
           toggleModal={this.toggleArticleModal}
           modalHeader='Article View'
@@ -1107,20 +1172,25 @@ export default class Feed extends Component {
           modalHeader='App Sign Up'
         />
         <Header transparent style={styles.headerStyle}>
-          {leftHeaderContent}
-          {rightHeaderContent}
+          <View style={headerContentStyle}>
+            {leftHeaderContent}
+            {rightHeaderContent}
+          </View>
         </Header>
-        <View>
+
+        <View style={{paddingHorizontal:(isMobile ? '0vh': '15vh')}} >
           {postEditor}
           {activityIndicator}
         </View>
-        <Grid>
-          <FlatList
-            data={this.state.data}
-            renderItem={this.renderItem}
-            keyExtractor={this.extractItemKey}
-            style={styles.container} />
-        </Grid>
+
+
+          <Grid>
+            <FlatList
+              data={this.state.data}
+              renderItem={this.renderItem}
+              keyExtractor={this.extractItemKey}
+              style={styles.container} />
+          </Grid>
       </Container>
     )
   }
@@ -1153,6 +1223,32 @@ const styles = StyleSheet.create({
     fontFamily:'arial',
     fontSize: (isMobile ? 14 : 21),
   },
+  firstCardNameText: {
+    paddingHorizontal: 10,
+    fontFamily:'arial',
+    fontSize: (isMobile ? 16 : 21),
+    fontWeight:'bold',
+    color:'white',
+  },
+  firstCardPositionText: {
+    paddingHorizontal: 10,
+    fontFamily:'arial',
+    fontSize: (isMobile ? 14 : 16),
+    color:'white',
+  },
+  firstCardFollowersText: {
+    fontFamily:'arial',
+    fontSize: (isMobile ? 14 : 16),
+    fontWeight:'normal',
+    color:'white'
+  },
+  firstCardFolowersNumber: {
+    paddingHorizontal: 10,
+    fontFamily:'arial',
+    fontSize: (isMobile ? 14 : 16),
+    fontWeight:'bold',
+    color:'white'
+  },
   postEditorButtonTextLarge: {
     fontFamily:'arial',
     fontSize: (isMobile ? 20 : 27),
@@ -1163,12 +1259,14 @@ const styles = StyleSheet.create({
   },
   container: {
     backgroundColor: 'white',
-    paddingVertical: 8,
+    paddingHorizontal:0
   },
   headerStyle: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    // justifyContent: "space-between",
     alignItems: 'center',
+    // paddingLeft: (isMobile ? 5 : '15vh'),
+    // paddingRight: (isMobile ? 5 : '15vh')
   },
   icon: {
     margin: 5,

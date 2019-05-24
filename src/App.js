@@ -3,7 +3,6 @@ import { View } from 'react-native'
 import WebRoutesGenerator from './config/navigation/webRouteWrapper'
 import FeedContainer from './containers/FeedContainer'
 import ArticleContainer from './containers/ArticleContainer'
-import { isMobile } from "react-device-detect"
 const firebase = require('firebase/app')
 require ('firebase/auth')
 require ('firebase/database')
@@ -24,7 +23,7 @@ if (!firebase.apps.length) {
 export const WebRoutes = {
   Home: {
     component: FeedContainer,
-    path: ["/", "/:campaignName"],
+    path: ["/", "/:campaignName/:postId"],
     exact: true
   },
   Article: {
@@ -35,19 +34,10 @@ export const WebRoutes = {
 
 export default class App extends React.Component {
   render = () => {
-    return ((!isMobile) ?
-      (
-        <View style={{flex: 1, flexDirection: 'row'}}>
-          <View style={{flex: 0.1}} />
-          <View style={{flex: 0.8}}>
-            {WebRoutesGenerator({ routeMap: WebRoutes })}
-          </View>
-          <View style={{flex: 0.1}} />
-        </View>
-      ) : (
-      <View id='AppView'>
+    return (
+      <View>
         {WebRoutesGenerator({ routeMap: WebRoutes })}
       </View>
-    ))
+    )
   }
 }

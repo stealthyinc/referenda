@@ -4,11 +4,12 @@ export default class ModalContainer extends Component {
   render () {
     return (
       <Modal
+        style={{alignItems:'center'}}
         isVisible={this.props.showModal}
         onBackdropPress={() => this.props.toggleModal()}
       >
         {this.props.component}
       </Modal>
     )
-  } 
+  }
 }
