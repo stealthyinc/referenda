@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import {
-  Image,
   View,
   TouchableOpacity,
   StyleSheet,
@@ -8,14 +7,10 @@ import {
 } from 'react-native'
 import {
   Button,
-  Container,
-  Content,
   Card,
   CardItem,
   Thumbnail,
   Text,
-  Left,
-  Right,
   Icon,
   Body
 } from 'native-base'

@@ -1,17 +1,12 @@
 import React, { Component } from 'react';
 import {
-  Body,
   Button,
   Card,
   CardItem,
   Content,
   Form,
   Icon,
-  Left,
-  Right,
-  H2,
   H3,
-  H4,
   Item,
   Input,
   Label,

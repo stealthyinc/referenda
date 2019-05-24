@@ -118,7 +118,7 @@ export default class Feed extends Component {
       } else {
         // TODO: change this to a default with info for a prospective campaign
         // TODO: check if the path is a gaia hub and pull from that too.
-        const unsignedInUserDefault = 'agatha'
+        const unsignedInUserDefault = 'default'
         this.mediaUrlRoot = C.GAIA_MAP[unsignedInUserDefault]
       }
     }
@@ -352,7 +352,7 @@ export default class Feed extends Component {
     let validShowArg = false
     if (this.showPostId) {
       for (const dataItem of data) {
-        if (dataItem.id == this.showPostId) {
+        if (dataItem.id === this.showPostId) {
           this.articleModalItem = dataItem
           validShowArg = true
           break
@@ -608,7 +608,7 @@ export default class Feed extends Component {
     const buttonName = (isLogin) ?
       ( (this.state.isSignedIn) ? 'Log Out' : 'Log In' ) :
       ( isMobile ? 'New Post' : 'New Post ...' )
-    const buttonText = (isMobile && (buttonName != 'Log In')) ?
+    const buttonText = (isMobile && (buttonName !== 'Log In')) ?
       undefined :
       (<Text style={styles.feedButtonText} uppercase={false}>{buttonName}</Text>)
     const handlerFn = (isLogin) ? this.handleLogin : this.handlePostEditorRequest
