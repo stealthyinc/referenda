@@ -27,6 +27,7 @@ import SocialBar from '../components/SocialBar'
 import ModalContainer from './ModalContainer'
 // import SquareContainer from './SquareContainer'
 import ArticleContainer from './ArticleContainer'
+import AppSignUp from '../components/AppSignUp'
 import PhoneNumber from '../components/PhoneNumber'
 import ShareBar from '../components/ShareBar'
 
@@ -64,6 +65,7 @@ export default class Feed extends Component {
       showSquareModal: false,
       showPhoneModal: false,
       showArticleModal: false,
+      showMessageModal: false,
     };
 
     if (!firebase.auth().currentUser) {
@@ -374,6 +376,10 @@ export default class Feed extends Component {
     this.setState({showArticleModal: !this.state.showArticleModal})
   }
 
+  toggleMessageModal = () => {
+    this.setState({showMessageModal: !this.state.showMessageModal})
+  }
+
   // Safe on emoji / unicode
   static getTruncatedStr(aString, aTruncatedLen=256) {
     try {
@@ -508,6 +514,7 @@ export default class Feed extends Component {
             </CardItem>
           <SocialBar
             paymentFunction={() => this.togglePhoneModal()}
+            chatFunction={() => this.toggleMessageModal()}
           />
           {editorControls}
         </Card>
@@ -1092,6 +1099,12 @@ export default class Feed extends Component {
           showModal={this.state.showArticleModal}
           toggleModal={this.toggleArticleModal}
           modalHeader='Article View'
+        />
+        <ModalContainer
+          component={<AppSignUp toggleModal={this.toggleMessageModal}/>}
+          showModal={this.state.showMessageModal}
+          toggleModal={this.toggleMessageModal}
+          modalHeader='App Sign Up'
         />
         <Header transparent style={styles.headerStyle}>
           {leftHeaderContent}
