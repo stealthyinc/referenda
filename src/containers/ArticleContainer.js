@@ -95,17 +95,23 @@ export default class Article extends Component {
                onPress={() => toggleFn()}>
               <Thumbnail source={fcData.avatarImg}/>
             </TouchableOpacity>
-            <TouchableOpacity
-              delayPressIn={70}
-              activeOpacity={0.8}
-               onPress={() => toggleFn()}>
-              <Body style={{marginHorizontal:10}}>
+            <Body style={{marginHorizontal:10}}>
+              <TouchableOpacity
+                delayPressIn={70}
+                activeOpacity={0.8}
+                 onPress={() => toggleFn()}>
                 <Text style={styles.postTitleText}>
                   {item.title}
                 </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                delayPressIn={70}
+                activeOpacity={0.8}
+                 onPress={() => toggleFn()}>
                 <Text style={styles.postTimeText}>{timeStr}</Text>
-              </Body>
-            </TouchableOpacity>
+              </TouchableOpacity>
+            </Body>
+
             <Button
               bordered style={{borderColor:'lightgray'}}
               small
@@ -143,6 +149,9 @@ export default class Article extends Component {
     if (!isMobile) {
       zoomStyle.maxWidth = MAX_ZOOM_CARD_DIM
       zoomStyle.maxHeight = MAX_ZOOM_CARD_DIM
+    } else {
+      zoomStyle.maxWidth = '90vw'
+      zoomStyle.maxHeight = '80vh'
     }
     return (
       <View style={zoomStyle}>
@@ -166,6 +175,8 @@ export default class Article extends Component {
 
 const styles = StyleSheet.create({
   postTitleText: {
+    flex: 1,
+    flexWrap: 'wrap',
     fontFamily:'arial',
     fontSize: (isMobile ? 20 : 27)
   },
