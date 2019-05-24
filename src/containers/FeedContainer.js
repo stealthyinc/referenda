@@ -347,11 +347,29 @@ export default class Feed extends Component {
     // TODO: check this.showPostId and if set to something in the model, do the
     //       toggleArticleModal work (i.e. set state appropriately to show the
     //       modal).
+    let validShowArg = false
+    if (this.showPostId) {
+      for (const dataItem of data) {
+        if (dataItem.id == this.showPostId) {
+          this.articleModalItem = dataItem
+          validShowArg = true
+          break
+        }
+      }
+    }
 
-    this.setState({
-      initializing: false,
-      data
-    })
+    if (validShowArg) {
+      this.setState({
+        initializing: false,
+        data,
+        showArticleModal: true
+      })
+    } else {
+      this.setState({
+        initializing: false,
+        data
+      })
+    }
   }
 
   /*

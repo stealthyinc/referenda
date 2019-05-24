@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { 
+import {
+  Body,
   Button,
   Card,
   CardItem,
@@ -9,12 +10,16 @@ import {
   Left,
   Right,
   H2,
+  H3,
   H4,
   Item,
   Input,
   Label,
   Text
 } from 'native-base';
+import {
+  View,
+} from 'react-native';
 const firebase = require('firebase');
 export default class AppSignUp extends Component {
   state = {
@@ -46,14 +51,13 @@ export default class AppSignUp extends Component {
     return (
       <Card style={{marginBottom: 15}}>
         <CardItem header bordered>
-          <Left>
-            <H2>Mobile Feature: Signup to get the App</H2>
-          </Left>
-          <Right>
-            <Button small onClick={()=>this.cleanClose()} danger style={{marginBottom: 15}}>
+          <View style={{width: '100%', flexDirection:'row', justifyContent:'space-between'}}>
+            <H3>This feature is only available in the App, sign-up now to get the App:</H3>
+            <View style={{width:15}} />
+            <Button small bordered rounded onClick={()=>this.cleanClose()} danger style={{marginBottom: 15}}>
               <Icon active name="close" />
             </Button>
-          </Right>
+          </View>
         </CardItem>
         <CardItem>
           <Content>
