@@ -24,6 +24,7 @@ import PhoneNumber from '../components/PhoneNumber'
 import ShareBar from '../components/ShareBar'
 import SocialBar from '../components/SocialBar'
 
+import Feed from './FeedContainer'
 import { isMobile } from "react-device-detect";
 import FitImage from 'react-native-fit-image';
 import ReactPlayer from 'react-player'
@@ -35,14 +36,36 @@ export default class Article extends Component {
 
   constructor(props) {
     super(props)
+    this.campaignName = this.props.campaignName
     this.mediaUrlRoot = this.props.mediaUrlRoot
+
+    this.shareModalContent = undefined
+
     this.state = {
       showShareModal: false,
       showPhoneModal: false
     }
   }
 
-  toggleShareModal = () => {
+  toggleShareModal = (aPost=undefined) => {
+    if (aPost) {
+      // The 2nd variant of this conditional isn't done yet, but will be when we
+      // release publically.
+      const url = (this.campaignName) ?
+        `https://www.referenda.io/${this.campaignName}/${aPost.id}` :
+        `${this.mediaUrlRoot}/${aPost.id}`
+
+      this.shareModelContent = {
+          url:url,
+          twitterTitle: aPost.title,
+          facebookQuote: aPost.title,
+          emailSubject: aPost.title,
+          emailBody: Feed.getTruncatedStr(aPost.description, 255)
+        }
+    } else {
+      this.shareModelContent = undefined
+    }
+
     this.setState({showShareModal: !this.state.showShareModal})
   }
 
@@ -117,7 +140,7 @@ export default class Article extends Component {
               small
               rounded
               info
-              onPress={() => this.toggleShareModal(item.id)}>
+              onPress={() => this.toggleShareModal(item)}>
               <Icon name='share-alt' />
             </Button>
           </CardItem>
@@ -156,7 +179,7 @@ export default class Article extends Component {
     return (
       <View style={zoomStyle}>
         <ModalContainer
-          component={<ShareBar />}
+          component={<ShareBar content={this.shareModelContent}/>}
           showModal={this.state.showShareModal}
           toggleModal={this.toggleShareModal}
           modalHeader='Social Share'

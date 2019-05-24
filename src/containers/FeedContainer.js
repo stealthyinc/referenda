@@ -80,6 +80,7 @@ export default class Feed extends Component {
     //       if we can read from it. If not then redirect to the 'undefined'/
     //       default GAIA bucket which features or own content for new users.
     //
+    this.campaignName = undefined
     this.mediaUrlRoot = undefined
     this.showPostId = undefined
     if (userData &&
@@ -102,6 +103,7 @@ export default class Feed extends Component {
     } else {
       const campaignNameProp = this.props.navigation.getParam('campaignName')
       if (campaignNameProp in C.GAIA_MAP) {
+        this.campaignName = campaignNameProp
         this.mediaUrlRoot = C.GAIA_MAP[campaignNameProp]
 
         // We look for a link post id if the user is signed in or if the campaign link is
@@ -407,16 +409,25 @@ export default class Feed extends Component {
     }
   }
 
-  toggleShareModal = (aPostId=undefined) => {
-    this.shareModelContent = (aPostId) ?
-      {
-        url:`https://www.referenda.io`,
-        twitterTitle: `TODO: title for postId ${aPostId}`,
-        facebookQuote: `TODO: quote or title for postId ${aPostId} (facebook)`,
-        emailSubject: `TODO ...`,
-        emailBody: `TODO ... (255 chars of description), then link for more - automagic`
-      } :
-      undefined
+  toggleShareModal = (aPost=undefined) => {
+    if (aPost) {
+      // The 2nd variant of this conditional isn't done yet, but will be when we
+      // release publically.
+      const url = (this.campaignName) ?
+        `https://www.referenda.io/${this.campaignName}/${aPost.id}` :
+        `${this.mediaUrlRoot}/${aPost.id}`
+
+      this.shareModelContent = {
+          url:url,
+          twitterTitle: aPost.title,
+          facebookQuote: aPost.title,
+          emailSubject: aPost.title,
+          emailBody: Feed.getTruncatedStr(aPost.description, 255)
+        }
+    } else {
+      this.shareModelContent = undefined
+    }
+
     this.setState({showShareModal: !this.state.showShareModal})
   }
 
@@ -558,7 +569,7 @@ export default class Feed extends Component {
                 small
                 rounded
                 info
-                onPress={() => this.toggleShareModal(item.id)}
+                onPress={() => this.toggleShareModal(item)}
               >
                 <Icon name='share-alt' />
               </Button>
@@ -1198,6 +1209,7 @@ export default class Feed extends Component {
           component={ <ArticleContainer
                          toggleModal={this.toggleArticleModal}
                          item={this.articleModalItem}
+                         campaignName={this.campaignName}
                          mediaUrlRoot={this.mediaUrlRoot}
                           />}
           showModal={this.state.showArticleModal}
