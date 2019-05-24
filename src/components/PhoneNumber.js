@@ -85,12 +85,11 @@ export default class PhoneNumber extends Component {
       pre_populate_shipping_address: {},
       isMobile: false
     }
-    return request(`${SQUARE_URL}/checkout`, {
+    return request(`${SQUARE_URL}/createCheckout`, {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'cache-control': 'no-cache',
       },
       form: data,
     })
@@ -101,7 +100,7 @@ export default class PhoneNumber extends Component {
     })
     .catch((error) => {
       this.setState({error, showSpinner: false})
-      console.error(error);
+      // console.error(error);
     });
   }
   renderSpinner = () => {

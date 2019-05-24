@@ -28,6 +28,7 @@ import SocialBar from '../components/SocialBar'
 import ModalContainer from './ModalContainer'
 // import SquareContainer from './SquareContainer'
 import ArticleContainer from './ArticleContainer'
+import AppSignUp from '../components/AppSignUp'
 import PhoneNumber from '../components/PhoneNumber'
 import ShareBar from '../components/ShareBar'
 
@@ -65,6 +66,7 @@ export default class Feed extends Component {
       showSquareModal: false,
       showPhoneModal: false,
       showArticleModal: false,
+      showMessageModal: false,
     };
 
     if (!firebase.auth().currentUser) {
@@ -413,6 +415,10 @@ export default class Feed extends Component {
     this.setState({showArticleModal: !this.state.showArticleModal})
   }
 
+  toggleMessageModal = () => {
+    this.setState({showMessageModal: !this.state.showMessageModal})
+  }
+
   // Safe on emoji / unicode
   static getTruncatedStr(aString, aTruncatedLen=256) {
     try {
@@ -539,26 +545,27 @@ export default class Feed extends Component {
                 <Icon name='share-alt' />
               </Button>
             </CardItem>
-              <CardItem>
-                <Body>
-                  {/* FitImage needs this view or it doesn't understand the width to size the image height to.' */}
-                  <View style={{width:'100%'}}>
-                    {image}
+            <CardItem>
+              <Body>
+                {/* FitImage needs this view or it doesn't understand the width to size the image height to.' */}
+                <View style={{width:'100%'}}>
+                  {image}
+                </View>
+                <TouchableOpacity
+                  delayPressIn={70}
+                  activeOpacity={0.8}
+                  onPress={() => this.onItemPressed(item)}>
+                  <View style={{padding:10, width:'100%'}}>
+                    <Text style={styles.postBodyText}>
+                      {(isMobile ? Feed.getTruncatedStr(item.description) : Feed.getTruncatedStr(item.description, 512))}
+                    </Text>
                   </View>
-                  <TouchableOpacity
-                    delayPressIn={70}
-                    activeOpacity={0.8}
-                    onPress={() => this.onItemPressed(item)}>
-                    <View style={{padding:10, width:'100%'}}>
-                      <Text style={styles.postBodyText}>
-                        {(isMobile ? Feed.getTruncatedStr(item.description) : Feed.getTruncatedStr(item.description, 512))}
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
-                </Body>
-              </CardItem>
+                </TouchableOpacity>
+              </Body>
+            </CardItem>
             <SocialBar
               paymentFunction={() => this.togglePhoneModal()}
+              chatFunction={() => this.toggleMessageModal()}
             />
             {editorControls}
           </Card>
@@ -1179,7 +1186,12 @@ export default class Feed extends Component {
           toggleModal={this.toggleArticleModal}
           modalHeader='Article View'
         />
-
+        <ModalContainer
+          component={<AppSignUp toggleModal={this.toggleMessageModal}/>}
+          showModal={this.state.showMessageModal}
+          toggleModal={this.toggleMessageModal}
+          modalHeader='App Sign Up'
+        />
         <Header transparent style={styles.headerStyle}>
           <View style={headerContentStyle}>
             {leftHeaderContent}
@@ -1191,15 +1203,13 @@ export default class Feed extends Component {
           {postEditor}
           {activityIndicator}
         </View>
-
-
-          <Grid>
-            <FlatList
-              data={this.state.data}
-              renderItem={this.renderItem}
-              keyExtractor={this.extractItemKey}
-              style={styles.container} />
-          </Grid>
+        <Grid>
+          <FlatList
+            data={this.state.data}
+            renderItem={this.renderItem}
+            keyExtractor={this.extractItemKey}
+            style={styles.container} />
+        </Grid>
       </Container>
     )
   }

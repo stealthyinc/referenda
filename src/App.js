@@ -23,7 +23,7 @@ if (!firebase.apps.length) {
 export const WebRoutes = {
   Home: {
     component: FeedContainer,
-    path: ["/", "/:campaignName/:postId"],
+    path: ["/", "/:campaignName/", "/:campaignName/:postId"],
     exact: true
   },
   Article: {
