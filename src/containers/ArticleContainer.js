@@ -189,7 +189,7 @@ export default class Article extends Component {
           modalHeader='Social Share'
         />
         <ModalContainer
-          component={<PhoneNumber />}
+          component={<PhoneNumber campaignName={this.props.campaignName} toggleModal={this.togglePhoneModal} />}
           showModal={this.state.showPhoneModal}
           toggleModal={this.togglePhoneModal}
           modalHeader='Text Campaign Donation Link'

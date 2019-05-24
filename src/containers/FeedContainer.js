@@ -528,7 +528,7 @@ export default class Feed extends Component {
           source={{uri: fcData.fcBackgroundImg}}
           resizeMode='cover'
           style={firstCardStyle}>
-          <View style={{width:'100%', height:'100%', backgroundColor:'rgba(0,0,0,0.3)',
+          <View style={{width:'100%', height:'100%', backgroundColor:'rgba(0,0,0,0.4)',
                         flexDirection:'column', justifyContent:'flex-end',}}>
             <View>
               <Thumbnail large style={{marginLeft:10, borderWidth:2, borderColor:'white', borderStyle:'solid'}} source={fcData.avatarImg}/>
@@ -1208,6 +1208,7 @@ export default class Feed extends Component {
         <ModalContainer
           component={ <ArticleContainer
                          toggleModal={this.toggleArticleModal}
+                         togglePhoneModal={this.togglePhoneModal}
                          item={this.articleModalItem}
                          campaignName={this.campaignName}
                          mediaUrlRoot={this.mediaUrlRoot}

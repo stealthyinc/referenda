@@ -49,7 +49,7 @@ export default class AppSignUp extends Component {
           <View style={{width: '100%', flexDirection:'row', justifyContent:'space-between'}}>
             <H3>This feature is only available in the App, sign-up now to get the App:</H3>
             <View style={{width:15}} />
-            <Button small bordered rounded onClick={()=>this.cleanClose()} danger style={{marginBottom: 15}}>
+            <Button rounded onClick={()=>this.cleanClose()} danger style={{marginBottom: 15}}>
               <Icon active name="close" />
             </Button>
           </View>

@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { View } from 'react-native'
 import 'react-phone-number-input/style.css'
 import 'react-responsive-ui/style.css'
 import PhoneInput from 'react-phone-number-input/react-responsive-ui'
@@ -17,6 +18,7 @@ import {
   Content,
   Spinner
 } from "native-base";
+import { isMobile } from "react-device-detect";
 const SQUARE_URL = process.env.REACT_APP_SQUARE_URL
 const request = require('request-promise')
 
@@ -67,7 +69,7 @@ export default class PhoneNumber extends Component {
       locationId = 'NVXZ9K1H1K3T5'
     }
     else {
-      candidateName = 'Test Account'
+      candidateName = `Default Politician's`
       locationId = 'NVXZ9K1H1K3T5'
     }
     const message = `Thank you for your donation to ${candidateName} Campaign. Here's a helpful link for you to donate. We will notify you when the Referenda App is ready!`
@@ -123,21 +125,33 @@ export default class PhoneNumber extends Component {
       return null
     }
   }
-  render () {
-    return (
-      <Card style={{marginBottom: 15}}>
-        {this.renderHeader()}
-        <CardItem header bordered>
-          <Left>
-            <H2>Text Campaign Donation Link</H2>
-          </Left>
-          <Right>
-            <Button onClick={()=>this.props.toggleModal()} danger style={{marginBottom: 15}}>
-              <Icon active name="close" />
+  renderButtonContent = () => {
+    if (isMobile) {
+      return (
+        <View>
+          <CardItem style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            {this.renderButton(5)}
+            {this.renderButton(10)}
+            {this.renderButton(25)}
+            {this.renderButton(50)}
+          <CardItem style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+          </CardItem>
+            {this.renderButton(100)}
+            {this.renderButton(250)}
+            {this.renderButton(500)}
+            <Button
+              bordered
+              success 
+              style={{borderColor:'lightgray', borderWidth: 5, marginLeft: 5, marginBottom: 20}}
+            >
+              <Input placeholder="  $Other" value={this.state.amount} onChangeText={(text) => this.setState({amount: text})}/>
             </Button>
-          </Right>
-        </CardItem>
-        {this.renderSpinner()}
+          </CardItem>
+        </View>
+      )
+    }
+    else {
+      return (
         <CardItem style={{flexDirection: 'row', justifyContent: 'space-between'}}>
           {this.renderButton(5)}
           {this.renderButton(10)}
@@ -154,6 +168,25 @@ export default class PhoneNumber extends Component {
             <Input placeholder="  $Other" value={this.state.amount} onChangeText={(text) => this.setState({amount: text})}/>
           </Button>
         </CardItem>
+      )
+    }
+  }
+  render () {
+    return (
+      <Card style={{marginBottom: 15}}>
+        {this.renderHeader()}
+        <CardItem header bordered>
+          <Left>
+            <H2>Text Campaign Donation Link</H2>
+          </Left>
+          <Right>
+            <Button rounded onClick={()=>this.props.toggleModal()} danger style={{marginBottom: 15}}>
+              <Icon active name="close" />
+            </Button>
+          </Right>
+        </CardItem>
+        {this.renderSpinner()}
+        {this.renderButtonContent()}
         <CardItem bordered>
           <PhoneInput
             style={{width: '70vw'}}
