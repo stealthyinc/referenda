@@ -1182,15 +1182,13 @@ export default class Feed extends Component {
           {postEditor}
           {activityIndicator}
         </View>
-
-
-          <Grid>
-            <FlatList
-              data={this.state.data}
-              renderItem={this.renderItem}
-              keyExtractor={this.extractItemKey}
-              style={styles.container} />
-          </Grid>
+        <Grid>
+          <FlatList
+            data={this.state.data}
+            renderItem={this.renderItem}
+            keyExtractor={this.extractItemKey}
+            style={styles.container} />
+        </Grid>
       </Container>
     )
   }
