@@ -34,11 +34,12 @@ export default class PhoneNumber extends Component {
     return (
       <Button
         onPress={() => this.setState({amount})}
-        bordered={!(this.state.amount === amount)} 
-        success 
-        style={{borderColor:'lightgray', borderWidth: 5, marginLeft: 5, marginBottom: 20}}
+        bordered={!(this.state.amount === amount)}
+        success
+        style={{
+          borderRadius:15, borderColor: 'lightgray', marginLeft: 5, marginBottom: 5}}
       >
-        <Text style={{fontWeight: 'bold'}}>${amount}</Text>
+        <Text style={{textAlign: 'center', width:'4em', paddingLeft: 5, paddingRight: 5, fontFamily: 'arial',}}>${amount}</Text>
       </Button>
     )
   }
@@ -128,23 +129,25 @@ export default class PhoneNumber extends Component {
   renderButtonContent = () => {
     if (isMobile) {
       return (
-        <View>
-          <CardItem style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+        <View style={{width: '100%', flexDirection: 'column', justifyContent: 'space-between'}}>
+          <CardItem style={{width:'100%', flexDirection: 'row', justifyContent: 'center'}}>
             {this.renderButton(5)}
             {this.renderButton(10)}
             {this.renderButton(25)}
             {this.renderButton(50)}
-          <CardItem style={{flexDirection: 'row', justifyContent: 'space-between'}}>
           </CardItem>
+          <CardItem style={{width:'100%', flexDirection: 'row', justifyContent: 'center'}}>
             {this.renderButton(100)}
             {this.renderButton(250)}
             {this.renderButton(500)}
             <Button
               bordered
-              success 
-              style={{borderColor:'lightgray', borderWidth: 5, marginLeft: 5, marginBottom: 20}}
+              success
+              style={{borderColor:'lightgray', borderRadius: 15, marginLeft: 5, marginBottom: 5}}
             >
-              <Input placeholder="  $Other" value={this.state.amount} onChangeText={(text) => this.setState({amount: text})}/>
+              <Input style={{textAlign: 'center', width:'4em', fontFamily:'arial', fontSize:14}}
+                     placeholder="$____" value={this.state.amount}
+                     onChangeText={(text) => this.setState({amount: text})}/>
             </Button>
           </CardItem>
         </View>
@@ -162,10 +165,12 @@ export default class PhoneNumber extends Component {
           {this.renderButton(500)}
           <Button
             bordered
-            success 
-            style={{borderColor:'lightgray', borderWidth: 5, marginLeft: 5, marginBottom: 20}}
+            success
+            style={{borderColor:'lightgray', borderWidth: 5, borderRadius: 15, marginLeft: 5, marginBottom: 5}}
           >
-            <Input placeholder="  $Other" value={this.state.amount} onChangeText={(text) => this.setState({amount: text})}/>
+            <Input
+              style={{textAlign: 'center', width:'4em', fontFamily:'arial', fontSize:14}}
+              placeholder="$Other" value={this.state.amount} onChangeText={(text) => this.setState({amount: text})}/>
           </Button>
         </CardItem>
       )
@@ -196,17 +201,18 @@ export default class PhoneNumber extends Component {
             onChange={ phone => this.setState({ phoneNumber: phone }) } />
         </CardItem>
         <CardItem>
-          <Content padder>
+          <View style={{flexDirection: 'row', width:'100%', justifyContent:'center'}}>
             <Button
               success
-              block
               disabled={(!this.state.amount || !(this.state.phoneNumber && this.state.phoneNumber.length > 11))}
-              style={{ margin: 15 }}
+              style={{ borderRadius: 15, margin: 15 }}
               onPress={() => this.sendInformation() }
             >
-              <Text>Submit</Text>
+              <Text
+                uppercase={false}
+                style={{width:'10em', textAlign: 'center', fontFamily:'arial', fontSize: (isMobile ? 17 : 20)}}>Submit</Text>
             </Button>
-          </Content>
+          </View>
         </CardItem>
       </Card>
     )

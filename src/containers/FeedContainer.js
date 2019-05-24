@@ -1143,15 +1143,18 @@ export default class Feed extends Component {
       this.getFeedButton('ArticleMenu') :
       undefined
 
-    const leftHeaderContent = (
-      <View style={{height:(isMobile ? 21 : 31), width:(isMobile ? 113 : 166)}}>
-        <TouchableOpacity
-          delayPressIn={70}
-          activeOpacity={0.8}
-          onPress={()=>Linking.openURL('https://referenda.io')}>
-          <Image style={{height:(isMobile ? 21 : 31), width:(isMobile ? 128 : 189)}} source={require('../data/img/logo.png')} />
-        </TouchableOpacity>
-      </View>)
+    const leftHeaderContent =
+      ( <Text style={styles.headerLogoText} onPress={()=>Linking.openURL('https://referenda.io')}>Referenda</Text> )
+
+    // const leftHeaderContent = (
+    //   <View style={{height:(isMobile ? 21 : 31), width:(isMobile ? 113 : 166)}}>
+    //     <TouchableOpacity
+    //       delayPressIn={70}
+    //       activeOpacity={0.8}
+    //       onPress={()=>Linking.openURL('https://referenda.io')}>
+    //       <Image style={{height:(isMobile ? 21 : 31), width:(isMobile ? 128 : 189)}} source={require('../data/img/logo.png')} />
+    //     </TouchableOpacity>
+    //   </View>)
 
     const rightHeaderContent = (
       <View style={{flexDirection:'row', justifyContent:'flex-end'}}>
