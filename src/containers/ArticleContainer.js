@@ -23,6 +23,7 @@ import ModalContainer from './ModalContainer'
 import PhoneNumber from '../components/PhoneNumber'
 import ShareBar from '../components/ShareBar'
 import SocialBar from '../components/SocialBar'
+import AppSignUp from '../components/AppSignUp'
 
 import Feed from './FeedContainer'
 import { isMobile } from "react-device-detect";
@@ -43,7 +44,8 @@ export default class Article extends Component {
 
     this.state = {
       showShareModal: false,
-      showPhoneModal: false
+      showPhoneModal: false,
+      showMessageModal: false,
     }
   }
 
@@ -71,6 +73,10 @@ export default class Article extends Component {
 
   togglePhoneModal = () => {
     this.setState({showPhoneModal: !this.state.showPhoneModal})
+  }
+
+  toggleMessageModal = () => {
+    this.setState({showMessageModal: !this.state.showMessageModal})
   }
 
   // TODO: when time permits refactor this and renderItem in FeedContainer
@@ -152,7 +158,10 @@ export default class Article extends Component {
                 {image}
               </View>
               <View style={{width:'100%'}}>
-                <SocialBar paymentFunction={() => this.togglePhoneModal()} />
+                <SocialBar 
+                  paymentFunction={() => this.togglePhoneModal()} 
+                  chatFunction={() => this.toggleMessageModal()}
+                />
               </View>
               <View style={{padding:10, width:'100%'}}>
                 <Text style={styles.postBodyText}>
@@ -189,6 +198,12 @@ export default class Article extends Component {
           showModal={this.state.showPhoneModal}
           toggleModal={this.togglePhoneModal}
           modalHeader='Text Campaign Donation Link'
+        />
+        <ModalContainer
+          component={<AppSignUp toggleModal={this.toggleMessageModal}/>}
+          showModal={this.state.showMessageModal}
+          toggleModal={this.toggleMessageModal}
+          modalHeader='App Sign Up'
         />
         {this.renderItem(this.props.item, this.props.toggleModal)}
       </View>
