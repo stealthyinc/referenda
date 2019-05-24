@@ -7,6 +7,7 @@ import {
   StyleSheet,
   ImageBackground,
   Linking,
+  Image,
 } from 'react-native';
 import {
   Button,
@@ -519,7 +520,7 @@ export default class Feed extends Component {
       <View style={{alignItems:'center'}}>
         {firstCard}
         <View style={widthStyle}>
-          <Card style={{flex: 0, marginLeft:(isMobile? 2 : 0), marginRight:(isMobile ? 2 : 0)}}>
+          <Card style={{flex: 0}}>
             <CardItem bordered>
               <Thumbnail source={fcData.avatarImg}/>
               <Body style={{marginHorizontal:10}}>
@@ -571,7 +572,9 @@ export default class Feed extends Component {
     const buttonName = (isLogin) ?
       ( (this.state.isSignedIn) ? 'Log Out' : 'Log In' ) :
       ( isMobile ? 'New Post' : 'New Post ...' )
-    const buttonText = (<Text style={styles.feedButtonText} uppercase={false}>{buttonName}</Text>)
+    const buttonText = (isMobile && (buttonName != 'Log In')) ?
+      undefined :
+      (<Text style={styles.feedButtonText} uppercase={false}>{buttonName}</Text>)
     const handlerFn = (isLogin) ? this.handleLogin : this.handlePostEditorRequest
     const icon = (isLogin) ?
       (this.state.isSignedIn) ? 'log-out' : 'log-in' : 'create'
@@ -579,11 +582,11 @@ export default class Feed extends Component {
       <Button
         small={isMobile}
         success
-        iconLeft
+        iconLeft={!isMobile}
         bordered
         style={styles.feedButton}
         onPress={() => handlerFn()}>
-        <Icon name={icon}/>
+        <Icon style={{marginLeft:0, marginRight:0}} name={icon}/>
         {buttonText}
       </Button>
     )
@@ -1102,10 +1105,27 @@ export default class Feed extends Component {
       this.getFeedButton('LoginMenu') : undefined
     const newPostOrLogo = (!this.state.editingPost && this.state.isSignedIn) ?
       this.getFeedButton('ArticleMenu') :
-      ( <Text style={styles.headerLogoText} onPress={()=>Linking.openURL('https://referenda.io')}>Referenda</Text> )
+      undefined
 
-    const leftHeaderContent = (this.state.isSignedIn) ? loginButton : newPostOrLogo
-    const rightHeaderContent = (this.state.isSignedIn) ? newPostOrLogo : loginButton
+    const leftHeaderContent = (
+      <View style={{height:(isMobile ? 21 : 31), width:(isMobile ? 113 : 166)}}>
+        <TouchableOpacity
+          delayPressIn={70}
+          activeOpacity={0.8}
+          onPress={()=>Linking.openURL('https://referenda.io')}>
+          <Image style={{height:(isMobile ? 21 : 31), width:(isMobile ? 128 : 189)}} source={require('../data/img/logo.png')} />
+        </TouchableOpacity>
+      </View>)
+
+    const rightHeaderContent = (
+      <View style={{flexDirection:'row', justifyContent:'flex-end'}}>
+        {loginButton}
+        <View style={{width:5}} />
+        {newPostOrLogo}
+      </View>
+    )
+    // const leftHeaderContent = (this.state.isSignedIn) ? loginButton : newPostOrLogo
+    // const rightHeaderContent = (this.state.isSignedIn) ? newPostOrLogo : loginButton
 
     let activityIndicator = undefined
     if (this.state.initializing || this.state.saving) {
@@ -1122,7 +1142,8 @@ export default class Feed extends Component {
       flexDirection: 'row',
       justifyContent: 'space-between',
       paddingLeft: (isMobile ? 5 : 0),
-      paddingRight: (isMobile ? 5 : 0)
+      paddingRight: (isMobile ? 5 : 0),
+      alignItems: 'center'
     }
     if (!isMobile) {
       headerContentStyle.maxWidth = 1024
