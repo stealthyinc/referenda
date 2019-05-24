@@ -78,6 +78,7 @@ export default class Feed extends Component {
     //       default GAIA bucket which features or own content for new users.
     //
     this.mediaUrlRoot = undefined
+    this.showPostId = undefined
     if (userData &&
         userData.hasOwnProperty('gaiaHubConfig') && userData.gaiaHubConfig &&
         userData.gaiaHubConfig.hasOwnProperty('url_prefix') && userData.gaiaHubConfig.url_prefix &&
@@ -85,10 +86,30 @@ export default class Feed extends Component {
       const gaiaRoot = userData.gaiaHubConfig.url_prefix
       const appAddress = userData.gaiaHubConfig.address
       this.mediaUrlRoot = `${gaiaRoot}${appAddress}`
+
+      // We look for a link post id if the user is signed in or if the campaign link is
+      // correct to navigate to the specified post.
+      try {
+        const postIdArg = this.props.navigation.getParam('postId')
+        if (postIdArg) {
+          this.showPostId = parseInt(postIdArg)
+        }
+      } catch (suppressedError) {}
+
     } else {
       const campaignNameProp = this.props.navigation.getParam('campaignName')
       if (campaignNameProp in C.GAIA_MAP) {
         this.mediaUrlRoot = C.GAIA_MAP[campaignNameProp]
+
+        // We look for a link post id if the user is signed in or if the campaign link is
+        // correct to navigate to the specified post.
+        try {
+          const postIdArg = this.props.navigation.getParam('postId')
+          if (postIdArg) {
+            this.showPostId = parseInt(postIdArg)
+          }
+        } catch (suppressedError) {}
+
       } else {
         // TODO: change this to a default with info for a prospective campaign
         // TODO: check if the path is a gaia hub and pull from that too.
@@ -104,6 +125,7 @@ export default class Feed extends Component {
     this.newPostDescription = undefined
     this.newPostMedia = undefined
 
+    this.articleModalItem = undefined
     this.shareModelContent = undefined
   }
 
@@ -319,6 +341,10 @@ export default class Feed extends Component {
       console.error(`Problem reading posts.\n${error}`)
     }
 
+    // TODO: check this.showPostId and if set to something in the model, do the
+    //       toggleArticleModal work (i.e. set state appropriately to show the
+    //       modal).
+
     this.setState({
       initializing: false,
       data
@@ -347,8 +373,8 @@ export default class Feed extends Component {
   }
 
   onItemPressed = (item) => {
-    // this.props.navigation.navigate('Article', { id: item.id });
-    this.toggleArticleModal()
+
+    this.toggleArticleModal(item)
   }
 
   handleLogin = () => {
@@ -381,7 +407,8 @@ export default class Feed extends Component {
     this.setState({showPhoneModal: !this.state.showPhoneModal})
   }
 
-  toggleArticleModal = () => {
+  toggleArticleModal = (item=undefined) => {
+    this.articleModalItem = item
     this.setState({showArticleModal: !this.state.showArticleModal})
   }
 
@@ -398,6 +425,8 @@ export default class Feed extends Component {
 
   firstItem=true
   renderItem = ({ item }) => {
+    const MAX_CARD_WIDTH = 512
+
     let image = undefined
     try {
       if (item.media) {
@@ -450,15 +479,19 @@ export default class Feed extends Component {
 
     let firstCard = undefined
     if (item.hasOwnProperty('firstItem')) {
+      const firstCardStyle = {
+        width: '100%',
+        height: '33vh'
+      }
+      if (!isMobile) {
+        firstCardStyle.maxWidth = 2*MAX_CARD_WIDTH
+      }
+
       firstCard = (
         <ImageBackground
           source={{uri: fcData.fcBackgroundImg}}
           resizeMode='cover'
-          style={{
-            width:'100%',
-            height:(isMobile ? '33vh' : '30vh'),
-            backgroundColor:'lightblue',
-            }}>
+          style={firstCardStyle}>
           <View style={{width:'100%', height:'100%', backgroundColor:'rgba(0,0,0,0.3)',
                         flexDirection:'column', justifyContent:'flex-end',}}>
             <View>
@@ -477,10 +510,15 @@ export default class Feed extends Component {
       )
     }
 
+    const widthStyle = {}
+    if (!isMobile) {
+      widthStyle.width = 512
+    }
+
     return (
-      <View>
+      <View style={{alignItems:'center'}}>
         {firstCard}
-        <View style={{paddingHorizontal: (isMobile ? 0 : '15vh')}}>
+        <View style={widthStyle}>
           <Card style={{flex: 0, marginLeft:(isMobile? 2 : 0), marginRight:(isMobile ? 2 : 0)}}>
             <CardItem bordered>
               <Thumbnail source={fcData.avatarImg}/>
@@ -1079,6 +1117,17 @@ export default class Feed extends Component {
         </View> )
     }
 
+    let headerContentStyle = {
+      width: '100%',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      paddingLeft: (isMobile ? 5 : 0),
+      paddingRight: (isMobile ? 5 : 0)
+    }
+    if (!isMobile) {
+      headerContentStyle.maxWidth = 1024
+    }
+
     return (
       <Container>
         <ModalContainer
@@ -1100,15 +1149,21 @@ export default class Feed extends Component {
           modalHeader='Text Campaign Donation Link'
         />
         <ModalContainer
-          component={<ArticleContainer toggleModal={this.toggleArticleModal}/>}
+          component={ <ArticleContainer
+                         toggleModal={this.toggleArticleModal}
+                         item={this.articleModalItem}
+                         mediaUrlRoot={this.mediaUrlRoot}
+                          />}
           showModal={this.state.showArticleModal}
           toggleModal={this.toggleArticleModal}
           modalHeader='Article View'
         />
 
         <Header transparent style={styles.headerStyle}>
-          {leftHeaderContent}
-          {rightHeaderContent}
+          <View style={headerContentStyle}>
+            {leftHeaderContent}
+            {rightHeaderContent}
+          </View>
         </Header>
 
         <View style={{paddingHorizontal:(isMobile ? '0vh': '15vh')}} >
@@ -1196,10 +1251,10 @@ const styles = StyleSheet.create({
   },
   headerStyle: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    // justifyContent: "space-between",
     alignItems: 'center',
-    paddingLeft: (isMobile ? 5 : '15vh'),
-    paddingRight: (isMobile ? 5 : '15vh')
+    // paddingLeft: (isMobile ? 5 : '15vh'),
+    // paddingRight: (isMobile ? 5 : '15vh')
   },
   icon: {
     margin: 5,

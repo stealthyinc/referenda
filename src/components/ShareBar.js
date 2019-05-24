@@ -31,7 +31,9 @@ class ShareBar extends Component {
 
     const iconSize = 64
     return (
-      <Card id='shareCard' style={{borderStyle:'none', backgroundColor:'transparent', flexDirection: 'row', justifyContent: 'space-evenly'}}>
+      <Card id='shareCard' style={{
+        borderLeftWidth:0, borderRightWidth:0, borderTopWidth:0, borderBottomWidth: 0,
+        backgroundColor:'transparent', flexDirection: 'row', justifyContent: 'space-evenly'}}>
         <CardItem style={{backgroundColor:'transparent'}} >
           <TwitterShareButton
             url={content.url}
