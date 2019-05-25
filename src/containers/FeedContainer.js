@@ -73,6 +73,8 @@ export default class Feed extends Component {
       firebase.auth().signInAnonymously()
       .then(() => {
         // this.anonalytics.setDatabase(firebase);
+         var user = firebase.auth().currentUser;
+         console.log("ACTODO: USER", user)
       });
     }
 
