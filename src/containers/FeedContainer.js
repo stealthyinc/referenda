@@ -394,6 +394,7 @@ export default class Feed extends Component {
   }
 
   onItemPressed = (item) => {
+    firebaseInstance.clickPost(item.id, firebaseInstance.getUserId())
     this.toggleArticleModal(item)
   }
 

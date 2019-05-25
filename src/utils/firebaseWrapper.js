@@ -36,15 +36,15 @@ class FirebaseWrapper {
     }
   }
   likesNumber (id) {
-    const path = this.campaignName + '/' + id
+    const path = this.campaignName + '/likes/' + id
     return this.snapshot.child(path).numChildren()
   }
   postExists (id) {
-    const path = this.campaignName + '/' + id
+    const path = this.campaignName + '/likes/' + id
     return this.snapshot.child(path).exists()
   }
   userLikeExists (id, uid) {
-    const path = this.campaignName + '/' + id + '/' + uid
+    const path = this.campaignName + '/likes/' + id + '/' + uid
     return this.snapshot.child(path).exists()
   }
   getSnapshotValue (value) {
@@ -61,8 +61,12 @@ class FirebaseWrapper {
     const path = '/global/webapp/' + this.campaignName + '/views/' + uid
     return firebase.database().ref(path).set({viewed: true});
   }
+  clickPost(postId, uid) {
+    const path = '/global/webapp/' + this.campaignName + '/clicks/' + postId + '/' + uid
+    return firebase.database().ref(path).set({clicked: true});
+  }
   likePost(postId, uid) {
-    const path = '/global/webapp/' + this.campaignName + '/' + postId + '/' + uid
+    const path = '/global/webapp/' + this.campaignName + '/likes/' + postId + '/' + uid
     return firebase.database().ref(path).set({like: true});
   }
   unlikePost(postId, uid) {
