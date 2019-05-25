@@ -265,7 +265,6 @@ export default class Feed extends Component {
         )
       }
 
-      let firstItem = true
       const rawPostDataArr = await Promise.all(readPromises)
       for (const rawPostData of rawPostDataArr) {
         if (!rawPostData) {
@@ -307,12 +306,6 @@ export default class Feed extends Component {
             //     photo: '/static/media/Image9.6ab96ea5.png'
             //   }
             // }
-
-            // TODO: fix this hack and also address it when pinned items happen
-            if (firstItem) {
-              firstItem=false
-              postData.firstItem = true
-            }
 
             if (this.indexFileData.pinnedPostId &&
                 (this.indexFileData.pinnedPostId === postData.id)) {
@@ -467,7 +460,6 @@ export default class Feed extends Component {
     return aString
   }
 
-  firstItem=true
   renderItem = ({ item }) => {
     const MAX_CARD_WIDTH = 512
 
@@ -522,7 +514,8 @@ export default class Feed extends Component {
     }
 
     let firstCard = undefined
-    if (item.hasOwnProperty('firstItem')) {
+    if ((this.state.data.length > 0) &&
+        item.id === this.state.data[0].id) {
       const firstCardStyle = {
         width: '100%',
         height: '33vh'
