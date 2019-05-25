@@ -43,6 +43,7 @@ import { isMobile } from "react-device-detect";
 const firebase = require('firebase');
 const moment = require('moment');
 const runes = require('runes')
+const { firebaseInstance } = require('../utils/firebaseWrapper.js')
 
 const C = require('../utils/constants.js')
 
@@ -69,20 +70,28 @@ export default class Feed extends Component {
       showMessageModal: false,
     };
 
-    if (!firebase.auth().currentUser) {
-      firebase.auth().signInAnonymously()
-      .then(() => {
-        // this.anonalytics.setDatabase(firebase);
-         var user = firebase.auth().currentUser;
-         console.log("ACTODO: USER", user)
-      });
-    }
+    this.indexFileData = undefined
+
+    this.newPostId = undefined
+    this.newPostTitle = undefined
+    this.newPostDescription = undefined
+    this.newPostMedia = undefined
+
+    this.articleModalItem = undefined
+    this.shareModelContent = undefined
+  }
+
+  async componentDidMount() {
+    await firebaseInstance.loadUser()
+    await firebaseInstance.loadSnapshot()
+    const GAIA_MAP = firebaseInstance.getSnapshotValue('gaiaMap')
+    const { userData } = this.state
 
     // TODO: check if campaignName is valid (i.e. either in the GAIA_MAP or
     //       if we can read from it. If not then redirect to the 'undefined'/
     //       default GAIA bucket which features or own content for new users.
     //
-    this.campaignName = undefined
+    this.campaignName = 'default'
     this.mediaUrlRoot = undefined
     this.showPostId = undefined
     if (userData &&
@@ -104,9 +113,9 @@ export default class Feed extends Component {
 
     } else {
       const campaignNameProp = this.props.navigation.getParam('campaignName')
-      if (campaignNameProp in C.GAIA_MAP) {
+      if (campaignNameProp in GAIA_MAP) {
         this.campaignName = campaignNameProp
-        this.mediaUrlRoot = C.GAIA_MAP[campaignNameProp]
+        this.mediaUrlRoot = GAIA_MAP[campaignNameProp]
 
         // We look for a link post id if the user is signed in or if the campaign link is
         // correct to navigate to the specified post.
@@ -121,24 +130,12 @@ export default class Feed extends Component {
         // TODO: change this to a default with info for a prospective campaign
         // TODO: check if the path is a gaia hub and pull from that too.
         const unsignedInUserDefault = 'default'
-        this.mediaUrlRoot = C.GAIA_MAP[unsignedInUserDefault]
+        this.mediaUrlRoot = GAIA_MAP[unsignedInUserDefault]
       }
     }
-
-    this.indexFileData = undefined
-
-    this.newPostId = undefined
-    this.newPostTitle = undefined
-    this.newPostDescription = undefined
-    this.newPostMedia = undefined
-
-    this.articleModalItem = undefined
-    this.shareModelContent = undefined
-  }
-
-  componentDidMount() {
     this.getIndexFileData()
   }
+
 
   /*
    * Begin Feed utilities
@@ -268,6 +265,7 @@ export default class Feed extends Component {
         )
       }
 
+      let firstItem = true
       const rawPostDataArr = await Promise.all(readPromises)
       for (const rawPostData of rawPostDataArr) {
         if (!rawPostData) {
@@ -310,6 +308,11 @@ export default class Feed extends Component {
             //   }
             // }
 
+            // TODO: fix this hack and also address it when pinned items happen
+            if (firstItem) {
+              firstItem=false
+              postData.firstItem = true
+            }
 
             if (this.indexFileData.pinnedPostId &&
                 (this.indexFileData.pinnedPostId === postData.id)) {
@@ -388,7 +391,16 @@ export default class Feed extends Component {
   }
 
   extractItemKey = (item) => {
-     return `${item.id}`
+    debugger
+    const uid = firebaseInstance.getUserId()
+    const path = '/global/webapp/' + this.campaignName + '/' + item.id
+    if (firebaseInstance.snapshotExists(path)) {
+      console.log("SNAPHSHOT NUMBER", firebaseInstance.snapshotNumber(path))
+    }
+    else {
+      firebaseInstance.starPost(this.campaignName, item.id, uid)
+    }
+    return `${item.id}`
   }
 
   onItemPressed = (item) => {
@@ -455,6 +467,7 @@ export default class Feed extends Component {
     return aString
   }
 
+  firstItem=true
   renderItem = ({ item }) => {
     const MAX_CARD_WIDTH = 512
 
@@ -509,8 +522,7 @@ export default class Feed extends Component {
     }
 
     let firstCard = undefined
-    if ((this.state.data.length > 0) &&
-        item.id === this.state.data[0].id) {
+    if (item.hasOwnProperty('firstItem')) {
       const firstCardStyle = {
         width: '100%',
         height: '33vh'
@@ -883,7 +895,7 @@ export default class Feed extends Component {
       for (const index in updatedData) {
         const postId = updatedData[index].id
         if (postId === aPostId) {
-          if (index === "0") {
+          if (index === 0) {
             const postToUnpinArr = updatedData.splice(index, 1)
             if (postToUnpinArr) {
               postToUnpin = postToUnpinArr[0]
@@ -907,7 +919,7 @@ export default class Feed extends Component {
         for (const index in updatedData) {
           const postId = updatedData[index].id
           if (aPostId > postId) {
-            if (index === "0") {
+            if (index === 0) {
               // Special case (1)
               updatedData.unshift(postToUnpin)
               console.log('Inserted at front of list ...')

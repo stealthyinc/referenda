@@ -1,10 +1,10 @@
 export const INDEX_FILE = 'index.json'
 
-export const GAIA_MAP = {
-  default: 'https://gaia.blockstack.org/hub/16BzKWyRz4MtxQAz4Z1jE4s1GJz2xL1d7z',   // default: https://core.blockstack.org/v1/users/braphaav.personal.id
-  agatha: 'https://gaia.blockstack.org/hub/1GECbWbpaDhEfpUi2Q46TtuHgfUvDStd5W',   // agatha: https://core.blockstack.org/v1/users/stealthy.id
-  guaido: 'https://gaia.blockstack.org/hub/17xxKVFrjq1DAkphELyP2NVvhVwM81XSSs',   // guaido: https://core.blockstack.org/v1/users/pbj.id
-}
+// export const GAIA_MAP = {
+//   default: 'https://gaia.blockstack.org/hub/16BzKWyRz4MtxQAz4Z1jE4s1GJz2xL1d7z',   // default: https://core.blockstack.org/v1/users/braphaav.personal.id
+//   agatha: 'https://gaia.blockstack.org/hub/1GECbWbpaDhEfpUi2Q46TtuHgfUvDStd5W',   // agatha: https://core.blockstack.org/v1/users/stealthy.id
+//   guaido: 'https://gaia.blockstack.org/hub/17xxKVFrjq1DAkphELyP2NVvhVwM81XSSs',   // guaido: https://core.blockstack.org/v1/users/pbj.id
+// }
 
 // TODO: post Oslo, all this will get pushed to GAIA via a profile editor.
 //  - require is needed here b/c these it is elaborated at build time and
