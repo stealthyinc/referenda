@@ -27,9 +27,9 @@ const SocialBar = ({ chatFunction, paymentFunction, likeFunction, likeCount }) =
         <Icon name='cash' />
       </Button>
       <View style={{width:5}} />
-      {(likeCount > 0) ? <Badge><Text>{likeCount}</Text></Badge> : null}
-      <Button bordered style={{borderColor:'lightgray'}} small rounded danger onPress={likeFunction}>
+      <Button iconLeft bordered style={{borderColor:'lightgray'}} small rounded danger onPress={likeFunction}>
         <Icon name='heart' />
+        <Text style={{fontFamily:'arial', fontSize:14, paddingLeft:5}}>{likeCount}</Text>
       </Button>
     </View>
   </CardItem>
