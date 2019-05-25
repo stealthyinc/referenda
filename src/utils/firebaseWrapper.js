@@ -17,6 +17,9 @@ class FirebaseWrapper {
       firebase.initializeApp(firebaseConfig)
     }
   }
+  setCampaignName(campaignName) {
+    this.campaignName = campaignName
+  }
   getUserId () {
     return this.user.uid
   }
@@ -32,11 +35,17 @@ class FirebaseWrapper {
       this.user = firebase.auth().currentUser;
     }
   }
-  snapshotNumber (value) {
-    return this.snapshot.child(value).numChildren()
+  likesNumber (id) {
+    const path = this.campaignName + '/' + id
+    return this.snapshot.child(path).numChildren()
   }
-  snapshotExists (value) {
-    return this.snapshot.child(value).exists()
+  postExists (id) {
+    const path = this.campaignName + '/' + id
+    return this.snapshot.child(path).exists()
+  }
+  userLikeExists (id, uid) {
+    const path = this.campaignName + '/' + id + '/' + uid
+    return this.snapshot.child(path).exists()
   }
   getSnapshotValue (value) {
     return this.snapshot.child(value).val()
@@ -48,12 +57,16 @@ class FirebaseWrapper {
       return snapshot
     });
   }
-  starPost(campaignName, postId, uid) {
-    const path = '/global/webapp/' + campaignName + '/' + postId + '/' + uid
+  viewPost(uid) {
+    const path = '/global/webapp/' + this.campaignName + '/views/' + uid
+    return firebase.database().ref(path).set({viewed: true});
+  }
+  likePost(postId, uid) {
+    const path = '/global/webapp/' + this.campaignName + '/' + postId + '/' + uid
     return firebase.database().ref(path).set({like: true});
   }
-  unstarPost(campaignName, postId, uid) {
-    const path = '/global/webapp/' + campaignName + '/' + postId + '/' + uid
+  unlikePost(postId, uid) {
+    const path = '/global/webapp/' + this.campaignName + '/' + postId + '/' + uid
     return firebase.database().ref(path).remove();
   }
 }

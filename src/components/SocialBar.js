@@ -4,12 +4,14 @@ import {
   Linking,
 } from 'react-native';
 import {
+  Badge,
   CardItem,
   Button,
-  Icon
+  Icon,
+  Text
 } from 'native-base'
 
-const SocialBar = ({ chatFunction, socialFunction, bitcoinFunction, paymentFunction, likeFunction }) => (
+const SocialBar = ({ chatFunction, paymentFunction, likeFunction, likeCount }) => (
   <CardItem bordered>
     <View style={{flexDirection:'row', justifyContent:'space-evenly', alignItems:'center', flex:1}}>
       <Button bordered style={{borderColor:'lightgray'}} small rounded info onPress={chatFunction}>
@@ -25,6 +27,7 @@ const SocialBar = ({ chatFunction, socialFunction, bitcoinFunction, paymentFunct
         <Icon name='cash' />
       </Button>
       <View style={{width:5}} />
+      {(likeCount > 0) ? <Badge><Text>{likeCount}</Text></Badge> : null}
       <Button bordered style={{borderColor:'lightgray'}} small rounded danger onPress={likeFunction}>
         <Icon name='heart' />
       </Button>

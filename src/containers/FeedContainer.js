@@ -7,7 +7,6 @@ import {
   StyleSheet,
   ImageBackground,
   Linking,
-  Image,
 } from 'react-native';
 import {
   Button,
@@ -40,7 +39,6 @@ import Dropzone from 'react-dropzone'
 
 import { isMobile } from "react-device-detect";
 
-const firebase = require('firebase');
 const moment = require('moment');
 const runes = require('runes')
 const { firebaseInstance } = require('../utils/firebaseWrapper.js')
@@ -92,6 +90,7 @@ export default class Feed extends Component {
     //       default GAIA bucket which features or own content for new users.
     //
     this.campaignName = 'default'
+    firebaseInstance.setCampaignName(this.campaignName)
     this.mediaUrlRoot = undefined
     this.showPostId = undefined
     if (userData &&
@@ -112,10 +111,10 @@ export default class Feed extends Component {
       } catch (suppressedError) {}
 
     } else {
-      const campaignNameProp = this.props.navigation.getParam('campaignName')
-      if (campaignNameProp in GAIA_MAP) {
-        this.campaignName = campaignNameProp
-        this.mediaUrlRoot = GAIA_MAP[campaignNameProp]
+      this.campaignName = (this.props.navigation.getParam('campaignName')) ? this.props.navigation.getParam('campaignName') : 'default'
+      if (this.campaignName in GAIA_MAP) {
+        firebaseInstance.setCampaignName(this.campaignName)
+        this.mediaUrlRoot = GAIA_MAP[this.campaignName]
 
         // We look for a link post id if the user is signed in or if the campaign link is
         // correct to navigate to the specified post.
@@ -134,6 +133,7 @@ export default class Feed extends Component {
       }
     }
     this.getIndexFileData()
+    firebaseInstance.viewPost(firebaseInstance.getUserId())
   }
 
 
@@ -325,6 +325,12 @@ export default class Feed extends Component {
               lastName: 'Reallysoon',
               photo: '/static/media/Image9.6ab96ea5.png'
             }
+            if (firebaseInstance.likesNumber(postData.id)) {
+              postData.likes = firebaseInstance.likesNumber(postData.id)
+            }
+            else {
+              postData.likes = 0
+            }
 
             data.push(postData)
 
@@ -384,20 +390,10 @@ export default class Feed extends Component {
   }
 
   extractItemKey = (item) => {
-    debugger
-    const uid = firebaseInstance.getUserId()
-    const path = '/global/webapp/' + this.campaignName + '/' + item.id
-    if (firebaseInstance.snapshotExists(path)) {
-      console.log("SNAPHSHOT NUMBER", firebaseInstance.snapshotNumber(path))
-    }
-    else {
-      firebaseInstance.starPost(this.campaignName, item.id, uid)
-    }
     return `${item.id}`
   }
 
   onItemPressed = (item) => {
-
     this.toggleArticleModal(item)
   }
 
@@ -594,8 +590,10 @@ export default class Feed extends Component {
               </Body>
             </CardItem>
             <SocialBar
-              paymentFunction={() => this.togglePhoneModal()}
               chatFunction={() => this.toggleMessageModal()}
+              paymentFunction={() => this.togglePhoneModal()}
+              likeFunction={() => this.handlePostLike(item.id)}
+              likeCount={item.likes}
             />
             {editorControls}
           </Card>
@@ -836,6 +834,25 @@ export default class Feed extends Component {
       editingPost: false,
       saving: false
     })
+  }
+
+  handlePostLike = async (aPostId) => {
+    const uid = firebaseInstance.getUserId()
+    let updatedData = [ ...this.state.data ]
+    for (const index in updatedData) {
+      const postId = updatedData[index].id
+      if (postId === aPostId) {
+        if (!firebaseInstance.userLikeExists(postId, uid)) {
+          firebaseInstance.likePost(postId, uid)
+          const newLikeCount = updatedData[index].likes + 1
+          updatedData[index].likes = newLikeCount
+          await firebaseInstance.loadSnapshot()
+          this.setState({
+            data: updatedData
+          })
+        }
+      }
+    }
   }
 
   handlePin = async (aPostId) => {
@@ -1211,11 +1228,12 @@ export default class Feed extends Component {
         />
         <ModalContainer
           component={ <ArticleContainer
-                         toggleModal={this.toggleArticleModal}
-                         togglePhoneModal={this.togglePhoneModal}
-                         item={this.articleModalItem}
-                         campaignName={this.campaignName}
-                         mediaUrlRoot={this.mediaUrlRoot}
+                          toggleModal={this.toggleArticleModal}
+                          togglePhoneModal={this.togglePhoneModal}
+                          item={this.articleModalItem}
+                          campaignName={this.campaignName}
+                          mediaUrlRoot={this.mediaUrlRoot}
+                          handlePostLike={(id) => this.handlePostLike(id)}
                           />}
           showModal={this.state.showArticleModal}
           toggleModal={this.toggleArticleModal}

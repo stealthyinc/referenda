@@ -32,8 +32,6 @@ export default class Article extends Component {
 
   constructor(props) {
     super(props)
-    this.campaignName = this.props.campaignName
-    this.mediaUrlRoot = this.props.mediaUrlRoot
 
     this.shareModalContent = undefined
 
@@ -48,9 +46,9 @@ export default class Article extends Component {
     if (aPost) {
       // The 2nd variant of this conditional isn't done yet, but will be when we
       // release publically.
-      const url = (this.campaignName) ?
-        `https://www.referenda.io/${this.campaignName}/${aPost.id}` :
-        `${this.mediaUrlRoot}/${aPost.id}`
+      const url = (this.props.campaignName) ?
+        `https://www.referenda.io/${this.props.campaignName}/${aPost.id}` :
+        `${this.props.mediaUrlRoot}/${aPost.id}`
 
       this.shareModelContent = {
           url:url,
@@ -85,7 +83,7 @@ export default class Article extends Component {
     let image = undefined
     try {
       if (item.media) {
-        const itemUrl = `${this.mediaUrlRoot}/${item.media.fileName}`
+        const itemUrl = `${this.props.mediaUrlRoot}/${item.media.fileName}`
         if (item.media.type === C.MEDIA_TYPES.IMAGE) {
           image = ( <FitImage source={{uri: itemUrl}} /> )
         } else if (item.media.type === C.MEDIA_TYPES.VIDEO) {
@@ -105,10 +103,9 @@ export default class Article extends Component {
       positionStr: 'Your Position',
       followers: '0'
     }
-    if (this.mediaUrlRoot in C.FIRST_CARD_WORKAROUND) {
-      fcData = C.FIRST_CARD_WORKAROUND[this.mediaUrlRoot]
+    if (this.props.mediaUrlRoot in C.FIRST_CARD_WORKAROUND) {
+      fcData = C.FIRST_CARD_WORKAROUND[this.props.mediaUrlRoot]
     }
-
     return (
       <ScrollView style={{width:'100%', height:'100%'}}>
         <Card style={{flex: 0, marginLeft:(isMobile? 2 : 0), marginRight:(isMobile ? 2 : 0)}}>
@@ -153,9 +150,11 @@ export default class Article extends Component {
                 {image}
               </View>
               <View style={{width:'100%'}}>
-                <SocialBar 
-                  paymentFunction={() => this.togglePhoneModal()} 
+                <SocialBar
                   chatFunction={() => this.toggleMessageModal()}
+                  paymentFunction={() => this.togglePhoneModal()} 
+                  likeFunction={() => this.props.handlePostLike(item.id)}
+                  likeCount={item.likes}
                 />
               </View>
               <View style={{padding:10, width:'100%'}}>

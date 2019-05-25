@@ -15,7 +15,6 @@ import {
   Left,
   Icon,
   Right,
-  Content,
   Spinner
 } from "native-base";
 import { isMobile } from "react-device-detect";
