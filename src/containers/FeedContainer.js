@@ -268,7 +268,6 @@ export default class Feed extends Component {
         )
       }
 
-      let firstItem = true
       const rawPostDataArr = await Promise.all(readPromises)
       for (const rawPostData of rawPostDataArr) {
         if (!rawPostData) {
@@ -311,11 +310,6 @@ export default class Feed extends Component {
             //   }
             // }
 
-            // TODO: fix this hack and also address it when pinned items happen
-            if (firstItem) {
-              firstItem=false
-              postData.firstItem = true
-            }
 
             if (this.indexFileData.pinnedPostId &&
                 (this.indexFileData.pinnedPostId === postData.id)) {
@@ -461,7 +455,6 @@ export default class Feed extends Component {
     return aString
   }
 
-  firstItem=true
   renderItem = ({ item }) => {
     const MAX_CARD_WIDTH = 512
 
@@ -516,7 +509,8 @@ export default class Feed extends Component {
     }
 
     let firstCard = undefined
-    if (item.hasOwnProperty('firstItem')) {
+    if ((this.state.data.length > 0) &&
+        item.id === this.state.data[0].id) {
       const firstCardStyle = {
         width: '100%',
         height: '33vh'
@@ -889,7 +883,7 @@ export default class Feed extends Component {
       for (const index in updatedData) {
         const postId = updatedData[index].id
         if (postId === aPostId) {
-          if (index === 0) {
+          if (index === "0") {
             const postToUnpinArr = updatedData.splice(index, 1)
             if (postToUnpinArr) {
               postToUnpin = postToUnpinArr[0]
@@ -913,7 +907,7 @@ export default class Feed extends Component {
         for (const index in updatedData) {
           const postId = updatedData[index].id
           if (aPostId > postId) {
-            if (index === 0) {
+            if (index === "0") {
               // Special case (1)
               updatedData.unshift(postToUnpin)
               console.log('Inserted at front of list ...')
