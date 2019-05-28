@@ -24,6 +24,7 @@ import Feed from './FeedContainer'
 import { isMobile } from "react-device-detect";
 import FitImage from 'react-native-fit-image';
 import ReactPlayer from 'react-player'
+import Hyperlink from 'react-native-hyperlink'
 const C = require('../utils/constants.js')
 
 const moment = require('moment')
@@ -152,15 +153,17 @@ export default class Article extends Component {
               <View style={{width:'100%'}}>
                 <SocialBar
                   chatFunction={() => this.toggleMessageModal()}
-                  paymentFunction={() => this.togglePhoneModal()} 
+                  paymentFunction={() => this.togglePhoneModal()}
                   likeFunction={() => this.props.handlePostLike(item.id)}
                   likeCount={item.likes}
                 />
               </View>
               <View style={{padding:10, width:'100%'}}>
-                <Text style={styles.postBodyText}>
-                  {item.description}
-                </Text>
+                <Hyperlink linkDefault={true} linkStyle={{color: '#2980b9', textDecorationLine:'underline' }}>
+                  <Text style={styles.postBodyText}>
+                    {item.description}
+                  </Text>
+                </Hyperlink>
               </View>
             </Body>
           </CardItem>

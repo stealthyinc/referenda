@@ -129,7 +129,22 @@ export default class Feed extends Component {
         // TODO: change this to a default with info for a prospective campaign
         // TODO: check if the path is a gaia hub and pull from that too.
         const unsignedInUserDefault = 'default'
-        this.mediaUrlRoot = GAIA_MAP[unsignedInUserDefault]
+        // Quick test to see if a valid gaia bucket was specified--if so use that as the mediaUrlRoot
+        // allowing any user's gaia bucket link to work
+        let campaignNameIsGaiaBucket = false
+        if (this.campaignName) {
+          this.mediaUrlRoot = `https://gaia.blockstack.org/hub/${this.campaignName}`
+          try {
+            const indexData = await this.readIndex()
+            campaignNameIsGaiaBucket = true
+          } catch (suppressedError) {
+            campaignNameIsGaiaBucket = false
+          }
+        }
+        //
+        if (!campaignNameIsGaiaBucket) {
+          this.mediaUrlRoot = GAIA_MAP[unsignedInUserDefault]
+        }
       }
     }
     this.getIndexFileData()
@@ -541,6 +556,23 @@ export default class Feed extends Component {
         firstCardStyle.maxWidth = 2*MAX_CARD_WIDTH
       }
 
+      // Allow the user to edit the first card data.
+      let editButton = undefined
+      // TODO: finish this:
+      // if (this.state.isSignedIn) {
+      //   editButton = (
+      //     <Button
+      //       small
+      //       rounded
+      //       success
+      //       bordered
+      //       style={{borderColor:'lightgray', marginRight: 10}}
+      //       onPress={() => this.handleFirstCardEditorRequest()}>
+      //       <Icon name='create'/>
+      //     </Button>
+      //   )
+      // }
+
       firstCard = (
         <ImageBackground
           source={{uri: fcData.fcBackgroundImg}}
@@ -555,9 +587,12 @@ export default class Feed extends Component {
             <Text style={styles.firstCardNameText}>{fcData.nameStr}</Text>
             <View style={{width:'100%', height:10}} />
             <Text style={styles.firstCardPositionText}>{fcData.positionStr}</Text>
-            <Text style={styles.firstCardFolowersNumber}>{fcData.followers}
-              <Text style={styles.firstCardFollowersText}> Followers</Text>
-            </Text>
+            <View style={{flexDirection:'row', justifyContent: 'space-between'}}>
+              <Text style={styles.firstCardFolowersNumber}>{fcData.followers}
+                <Text style={styles.firstCardFollowersText}> Followers</Text>
+              </Text>
+              {editButton}
+            </View>
             <View style={{width:'100%', height:10}} />
           </View>
         </ImageBackground>
@@ -758,6 +793,10 @@ export default class Feed extends Component {
         </Card>
       </Content>
     )
+  }
+
+  handleFirstCardEditorRequest = () => {
+
   }
 
   handlePostEditorRequest = () => {
