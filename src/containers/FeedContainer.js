@@ -177,8 +177,19 @@ export default class Feed extends Component {
     return `p${aPostId}.json`
   }
 
-  static getPostMediaFileName(aPostId) {
-    return `p${aPostId}.media`
+  static getPostMediaFileName(aPostId, theOriginalFileName) {
+    // Get the extension of the original file name and use that to
+    // set the media file name extension. (The reason for this is
+    // that ReactPlayer's canPlay functionality on mobile seems to
+    // match against the extension to determine if something is
+    // playable or not.)
+    const extensionRaw = Feed.getFileExtension(theOriginalFileName)
+
+    if (extensionRaw) {
+      return `p${aPostId}.${extensionRaw}`
+    } else {
+      return `p${aPostId}.media`
+    }
   }
 
   // TODO: make index file data a class. Possibly tie it to a schema.
@@ -473,8 +484,17 @@ export default class Feed extends Component {
               <FitImage source={{uri: itemUrl}} />
             </TouchableOpacity>)
         } else if (item.media.type === C.MEDIA_TYPES.VIDEO) {
+          // const canPlayStr =
+          //   `ReactPlayer.canPlay = ${ReactPlayer.canPlay(itemUrl)}`
           image = (
-            <ReactPlayer width='100%' controls={true} light={false} muted={true} playing={true} url={itemUrl} />)
+            <ReactPlayer
+              width='100%'
+              controls={true}
+              light={false}
+              muted={true}
+              playing={!isMobile}
+              url={itemUrl} />
+          )
         }
       }
     } catch (suppressedError) {
@@ -1039,11 +1059,17 @@ export default class Feed extends Component {
     }
   }
 
+  static getFileExtension (aFileName) {
+    // See: https://stackoverflow.com/questions/680929/how-to-extract-extension-from-filename-string-in-javascript
+    const re = /(?:\.([^.]+))?$/
+    const extensionRaw = re.exec(aFileName)[1]
+
+    return extensionRaw
+  }
+
   getFileType = (aFileName) => {
     try {
-      // See: https://stackoverflow.com/questions/680929/how-to-extract-extension-from-filename-string-in-javascript
-      const re = /(?:\.([^.]+))?$/
-      const extensionRaw = re.exec(aFileName)[1]
+      const extensionRaw = Feed.getFileExtension(aFileName)
 
       if (extensionRaw) {
         const extensionLc = extensionRaw.toLowerCase()
@@ -1101,7 +1127,7 @@ export default class Feed extends Component {
         // Now set newPostMedia values and upload the file:
         this.newPostMedia = {
           originalFileName: firstFile.name,
-          fileName: Feed.getPostMediaFileName(this.newPostId),
+          fileName: Feed.getPostMediaFileName(this.newPostId, firstFile.name),
           size: firstFile.size,
           type: this.getFileType(firstFile.name)
         }
