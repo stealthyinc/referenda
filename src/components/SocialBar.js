@@ -14,8 +14,8 @@ import {
 } from "@amplitude/react-amplitude";
 const { firebaseInstance } = require('../utils/firebaseWrapper.js')
 
-const SocialBar = ({ chatFunction, paymentFunction, likeFunction, likeCount, id, origin }) => (
-  <Amplitude eventProperties={{postId: id, origin, userId: firebaseInstance.getUserId()}}>
+const SocialBar = ({ chatFunction, paymentFunction, likeFunction, likeCount, id, origin, campaignName }) => (
+  <Amplitude eventProperties={{campaign: campaignName, postId: id, origin, userId: firebaseInstance.getUserId()}}>
     {({ logEvent }) =>
       <CardItem bordered>
         <View style={{flexDirection:'row', justifyContent:'space-evenly', alignItems:'center', flex:1}}>

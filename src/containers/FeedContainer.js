@@ -172,7 +172,7 @@ export default class Feed extends Component {
       }
     }
     this.getIndexFileData()
-    firebaseInstance.viewPost(firebaseInstance.getUserId())
+    // firebaseInstance.viewPost(firebaseInstance.getUserId())
   }
 
 
@@ -448,7 +448,7 @@ export default class Feed extends Component {
   onItemPressed = (item, logEvent) => {
     if (logEvent)
       logEvent('Post Clicked')
-    firebaseInstance.clickPost(item.id, firebaseInstance.getUserId())
+    // firebaseInstance.clickPost(item.id, firebaseInstance.getUserId())
     this.toggleArticleModal(item)
   }
 
@@ -523,7 +523,7 @@ export default class Feed extends Component {
         const itemUrl = `${this.mediaUrlRoot}/${item.media.fileName}`
         if (item.media.type === C.MEDIA_TYPES.IMAGE) {
           image = (
-            <Amplitude eventProperties={{postId: item.id, userId: firebaseInstance.getUserId()}}>
+            <Amplitude eventProperties={{campaign: this.campaignName, postId: item.id, userId: firebaseInstance.getUserId()}}>
               {({ logEvent }) =>
                 <TouchableOpacity
                   delayPressIn={70}
@@ -645,7 +645,7 @@ export default class Feed extends Component {
         {firstCard}
         <View style={widthStyle}>
           <Card style={{flex: 0}}>
-            <Amplitude eventProperties={{postId: item.id, userId: firebaseInstance.getUserId()}}>
+            <Amplitude eventProperties={{campaign: this.campaignName, postId: item.id, userId: firebaseInstance.getUserId()}}>
               {({ logEvent }) =>
                 <CardItem bordered>
                   <Thumbnail source={fcData.avatarImg}/>
@@ -694,6 +694,7 @@ export default class Feed extends Component {
               likeCount={item.likes}
               id={item.id}
               origin={'feed'}
+              campaignName={this.props.campaignName}
             />
             {editorControls}
           </Card>
@@ -714,7 +715,7 @@ export default class Feed extends Component {
     const icon = (isLogin) ?
       (this.state.isSignedIn) ? 'log-out' : 'log-in' : 'create'
     return (
-      <Amplitude eventProperties={{buttonAction: icon, isMobile, userId: firebaseInstance.getUserId()}}>
+      <Amplitude eventProperties={{campaign: this.campaignName, buttonAction: icon, isMobile, userId: firebaseInstance.getUserId()}}>
         {({ logEvent }) =>
           <Button
             small={isMobile}
@@ -761,7 +762,7 @@ export default class Feed extends Component {
 
     const buttonSizeSmall = (isMobile) ? true : (!medium)
     return (
-      <Amplitude eventProperties={{userId: firebaseInstance.getUserId()}}>
+      <Amplitude eventProperties={{campaign: this.campaignName, userId: firebaseInstance.getUserId()}}>
         {({ logEvent }) =>
           <Button
             bordered style={{borderColor:'lightgray', borderRadius:10}}
@@ -957,7 +958,7 @@ export default class Feed extends Component {
       const postId = updatedData[index].id
       if (postId === aPostId) {
         if (!firebaseInstance.userLikeExists(postId, uid)) {
-          firebaseInstance.likePost(postId, uid)
+          // firebaseInstance.likePost(postId, uid)
           const newLikeCount = updatedData[index].likes + 1
           updatedData[index].likes = newLikeCount
           await firebaseInstance.loadSnapshot()
@@ -1330,7 +1331,7 @@ export default class Feed extends Component {
       <Container>
         <LogOnMount eventType="Campaign Viewed" eventProperties={{campaign: this.campaignName, userId: firebaseInstance.getUserId()}} />
         <ModalContainer
-          component={<ShareBar content={this.shareModelContent}/>}
+          component={<ShareBar campaignName={this.props.campaignName} content={this.shareModelContent}/>}
           showModal={this.state.showShareModal}
           toggleModal={this.toggleShareModal}
           modalHeader='Social Share'

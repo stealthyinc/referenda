@@ -37,7 +37,7 @@ class ShareBar extends Component {
 
     const iconSize = 64
     return (
-      <Amplitude eventProperties={{postId: id, userId: firebaseInstance.getUserId()}}>
+      <Amplitude eventProperties={{campaign: this.props.campaignName, postId: id, userId: firebaseInstance.getUserId()}}>
         {({ logEvent }) =>
           <Card id='shareCard' style={{
             borderLeftWidth:0, borderRightWidth:0, borderTopWidth:0, borderBottomWidth: 0,

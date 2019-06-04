@@ -115,7 +115,7 @@ export default class Article extends Component {
     return (
       <ScrollView style={{width:'100%', height:'100%'}}>
         <Card style={{flex: 0, marginLeft:(isMobile? 2 : 0), marginRight:(isMobile ? 2 : 0)}}>
-          <Amplitude eventProperties={{postId: item.id, userId: firebaseInstance.getUserId()}}>
+          <Amplitude eventProperties={{campaign: this.props.campaignName, postId: item.id, userId: firebaseInstance.getUserId()}}>
             {({ logEvent }) =>
               <CardItem bordered>
                 <TouchableOpacity
@@ -174,6 +174,7 @@ export default class Article extends Component {
                   likeCount={item.likes}
                   id={item.id}
                   origin={'article'}
+                  campaignName={this.props.campaignName}
                 />
               </View>
               <View style={{padding:10, width:'100%'}}>
@@ -203,7 +204,7 @@ export default class Article extends Component {
     return (
       <View style={zoomStyle}>
         <ModalContainer
-          component={<ShareBar content={this.shareModelContent}/>}
+          component={<ShareBar campaignName={this.props.campaignName} content={this.shareModelContent}/>}
           showModal={this.state.showShareModal}
           toggleModal={this.toggleShareModal}
           modalHeader='Social Share'
