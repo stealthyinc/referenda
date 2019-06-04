@@ -22,7 +22,11 @@ import {
   Container,
   Grid,
 } from 'native-base';
-import * as blockstack from 'blockstack'
+import {
+  Amplitude,
+  LogOnMount
+} from "@amplitude/react-amplitude";
+import { AppConfig, UserSession, Person } from 'blockstack'
 import SocialBar from '../components/SocialBar'
 import ModalContainer from './ModalContainer'
 // import SquareContainer from './SquareContainer'
@@ -48,9 +52,12 @@ const C = require('../utils/constants.js')
 export default class Feed extends Component {
   constructor(props) {
     super(props);
+    const origin = window.location.origin;
+    const appConfig = new AppConfig(['store_write', 'publish_data', 'email'])
+    this.userSession = new UserSession({ appConfig })
     const isSignedIn = this.checkSignedInStatus();
-    const userData = isSignedIn && blockstack.loadUserData();
-    const person = (userData.username) ? new blockstack.Person(userData.profile) : false;
+    const userData = isSignedIn && this.userSession.loadUserData();
+    const person = (userData.username) ? new Person(userData.profile) : false;
 
     this.state = {
       userData,
@@ -79,8 +86,22 @@ export default class Feed extends Component {
     this.shareModelContent = undefined
   }
 
-  async componentDidMount() {
-    await firebaseInstance.loadUser()
+  componentWillMount = async () => {
+    if(!this.userSession.isUserSignedIn() && this.userSession.isSignInPending()) {
+      this.userSession.handlePendingSignIn()
+      .then((userData) => {
+        if(!userData.username) {
+          throw new Error('This app requires a username.')
+        }
+        window.location = `/${userData.username}`
+        const person = (userData.username) ? new Person(userData.profile) : false;
+        this.setState({userData, person})
+      })
+    }
+  }
+
+  componentDidMount = async () => {
+    // await firebaseInstance.loadUser()
     await firebaseInstance.loadSnapshot()
     const GAIA_MAP = firebaseInstance.getSnapshotValue('gaiaMap')
     const { userData } = this.state
@@ -100,6 +121,8 @@ export default class Feed extends Component {
       const gaiaRoot = userData.gaiaHubConfig.url_prefix
       const appAddress = userData.gaiaHubConfig.address
       this.mediaUrlRoot = `${gaiaRoot}${appAddress}`
+      firebaseInstance.setCampaignName(this.state.userData.username)
+      firebaseInstance.storeCampaignGaia(this.mediaUrlRoot, this.state.userData.email)
 
       // We look for a link post id if the user is signed in or if the campaign link is
       // correct to navigate to the specified post.
@@ -112,9 +135,10 @@ export default class Feed extends Component {
 
     } else {
       this.campaignName = (this.props.navigation.getParam('campaignName')) ? this.props.navigation.getParam('campaignName') : 'default'
-      if (this.campaignName in GAIA_MAP) {
+      let campaignName = this.campaignName.replace(/\./g, '_');
+      if (campaignName in GAIA_MAP) {
         firebaseInstance.setCampaignName(this.campaignName)
-        this.mediaUrlRoot = GAIA_MAP[this.campaignName]
+        this.mediaUrlRoot = GAIA_MAP[campaignName].url
 
         // We look for a link post id if the user is signed in or if the campaign link is
         // correct to navigate to the specified post.
@@ -158,13 +182,27 @@ export default class Feed extends Component {
    */
 
 
+  checkSignedInStatus() {
+    if (this.userSession.isUserSignedIn()) {
+      return true;
+    } else if (this.userSession.isSignInPending()) {
+      this.userSession.handlePendingSignIn()
+      .then((userData) => {
+        if(!userData.username) {
+          throw new Error('This app requires a username.')
+        }
+        window.location = `/${userData.username}`
+      })
+    }
+    return false;
+  }
 
   // getFile: abstraction above blockstack getFile that works if we're not
   //          signed in for reading files for static site load
   //
   getFile = async(aFileName, theOptions={ decrypt:false }) => {
     if (this.state.isSignedIn) {
-      return blockstack.getFile(aFileName, theOptions)
+      return this.userSession.getFile(aFileName, theOptions)
       .then((response) => {
         try {
           let result = undefined
@@ -227,7 +265,7 @@ export default class Feed extends Component {
 
     this.indexFileData.timeUtc = Date.now()
     const sIndexFileData = JSON.stringify(this.indexFileData)
-    await blockstack.putFile(C.INDEX_FILE, sIndexFileData, {encrypt: false})
+    await this.userSession.putFile(C.INDEX_FILE, sIndexFileData, {encrypt: false})
   }
 
   // TODO: refactor this into something clean when and lightweight when it all
@@ -403,33 +441,25 @@ export default class Feed extends Component {
    *****************************************************************************
    */
 
-
-  checkSignedInStatus() {
-    if (blockstack.isUserSignedIn()) {
-      return true;
-    } else if (blockstack.isSignInPending()) {
-      blockstack.handlePendingSignIn().then(() => {
-        window.location = window.location.origin;
-      });
-    }
-    return false;
-  }
-
   extractItemKey = (item) => {
     return `${item.id}`
   }
 
-  onItemPressed = (item) => {
+  onItemPressed = (item, logEvent) => {
+    if (logEvent)
+      logEvent('Post Clicked')
     firebaseInstance.clickPost(item.id, firebaseInstance.getUserId())
     this.toggleArticleModal(item)
   }
 
-  handleLogin = () => {
+  handleLogin = (event, logEvent) => {
     if (this.state.isSignedIn) {
-      blockstack.signUserOut(window.location.href);
+      this.userSession.signUserOut(window.location.href);
     } else {
-      const origin = window.location.origin;
-      blockstack.redirectToSignIn(origin, `${origin}/manifest.json`, ['store_write', 'publish_data']);
+      event.preventDefault()
+      if (logEvent)
+        logEvent('Button Pressed')
+      this.userSession.redirectToSignIn();
     }
   }
 
@@ -443,6 +473,7 @@ export default class Feed extends Component {
 
       this.shareModelContent = {
           url:url,
+          id: aPost.id,
           twitterTitle: aPost.title,
           facebookQuote: aPost.title,
           emailSubject: aPost.title,
@@ -492,12 +523,17 @@ export default class Feed extends Component {
         const itemUrl = `${this.mediaUrlRoot}/${item.media.fileName}`
         if (item.media.type === C.MEDIA_TYPES.IMAGE) {
           image = (
-            <TouchableOpacity
-              delayPressIn={70}
-              activeOpacity={0.8}
-              onPress={() => this.onItemPressed(item)}>
-              <FitImage source={{uri: itemUrl}} />
-            </TouchableOpacity>)
+            <Amplitude eventProperties={{postId: item.id, userId: firebaseInstance.getUserId()}}>
+              {({ logEvent }) =>
+                <TouchableOpacity
+                  delayPressIn={70}
+                  activeOpacity={0.8}
+                  onPress={() => this.onItemPressed(item, logEvent)}>
+                  <FitImage source={{uri: itemUrl}} />
+                </TouchableOpacity>
+              }
+            </Amplitude>
+          )
         } else if (item.media.type === C.MEDIA_TYPES.VIDEO) {
           // const canPlayStr =
           //   `ReactPlayer.canPlay = ${ReactPlayer.canPlay(itemUrl)}`
@@ -609,24 +645,30 @@ export default class Feed extends Component {
         {firstCard}
         <View style={widthStyle}>
           <Card style={{flex: 0}}>
-            <CardItem bordered>
-              <Thumbnail source={fcData.avatarImg}/>
-              <Body style={{marginHorizontal:10}}>
-                <Text style={styles.postTitleText}>
-                  {(isMobile ? Feed.getTruncatedStr(item.title) : item.title)}
-                </Text>
-                <Text style={styles.postTimeText}>{timeStr}</Text>
-              </Body>
-              <Button
-                bordered style={{borderColor:'lightgray'}}
-                small
-                rounded
-                info
-                onPress={() => this.toggleShareModal(item)}
-              >
-                <Icon name='share-alt' />
-              </Button>
-            </CardItem>
+            <Amplitude eventProperties={{postId: item.id, userId: firebaseInstance.getUserId()}}>
+              {({ logEvent }) =>
+                <CardItem bordered>
+                  <Thumbnail source={fcData.avatarImg}/>
+                  <Body style={{marginHorizontal:10}}>
+                    <Text style={styles.postTitleText}>
+                      {(isMobile ? Feed.getTruncatedStr(item.title) : item.title)}
+                    </Text>
+                    <Text style={styles.postTimeText}>{timeStr}</Text>
+                  </Body>
+                  <Button
+                    bordered style={{borderColor:'lightgray'}}
+                    small
+                    rounded
+                    info
+                    onPress={() => {
+                      logEvent('Feed share button pressed')
+                      this.toggleShareModal(item)}}
+                  >
+                    <Icon name='share-alt' />
+                  </Button>
+                </CardItem>
+              }
+            </Amplitude>
             <CardItem>
               <Body>
                 {/* FitImage needs this view or it doesn't understand the width to size the image height to.' */}
@@ -650,6 +692,8 @@ export default class Feed extends Component {
               paymentFunction={() => this.togglePhoneModal()}
               likeFunction={() => this.handlePostLike(item.id)}
               likeCount={item.likes}
+              id={item.id}
+              origin={'feed'}
             />
             {editorControls}
           </Card>
@@ -670,16 +714,20 @@ export default class Feed extends Component {
     const icon = (isLogin) ?
       (this.state.isSignedIn) ? 'log-out' : 'log-in' : 'create'
     return (
-      <Button
-        small={isMobile}
-        success
-        iconLeft={!isMobile}
-        bordered
-        style={styles.feedButton}
-        onPress={() => handlerFn()}>
-        <Icon style={{marginLeft:0, marginRight:0}} name={icon}/>
-        {buttonText}
-      </Button>
+      <Amplitude eventProperties={{buttonAction: icon, isMobile, userId: firebaseInstance.getUserId()}}>
+        {({ logEvent }) =>
+          <Button
+            small={isMobile}
+            success
+            iconLeft={!isMobile}
+            bordered
+            style={styles.feedButton}
+            onPress={(event) => handlerFn(event, logEvent)}>
+            <Icon style={{marginLeft:0, marginRight:0}} name={icon}/>
+            {buttonText}
+          </Button>
+        }
+      </Amplitude>
     )
   }
 
@@ -713,18 +761,24 @@ export default class Feed extends Component {
 
     const buttonSizeSmall = (isMobile) ? true : (!medium)
     return (
-      <Button
-        bordered style={{borderColor:'lightgray', borderRadius:10}}
-        iconLeft
-        small={buttonSizeSmall}
-        medium={buttonSizeSmall}
-        info={info}
-        success={success}
-        danger={danger}
-        onPress={onPress}>
-        <Icon name={icon} />
-        {buttonText}
-      </Button>
+      <Amplitude eventProperties={{userId: firebaseInstance.getUserId()}}>
+        {({ logEvent }) =>
+          <Button
+            bordered style={{borderColor:'lightgray', borderRadius:10}}
+            iconLeft
+            small={buttonSizeSmall}
+            medium={buttonSizeSmall}
+            info={info}
+            success={success}
+            danger={danger}
+            onPress={() => {
+              logEvent(`${buttonName} pressed`)
+              onPress()}}>
+            <Icon name={icon} />
+            {buttonText}
+          </Button>
+        }
+      </Amplitude>
     )
   }
 
@@ -833,7 +887,7 @@ export default class Feed extends Component {
 
     try {
       const stringifiedPostData = JSON.stringify(postData)
-      await blockstack.putFile(
+      await this.userSession.putFile(
         postFileName, stringifiedPostData, { encrypt: false } )
     } catch (error) {
       console.log(`Error while writing ${postFileName}.\n${error}`)
@@ -896,7 +950,7 @@ export default class Feed extends Component {
     })
   }
 
-  handlePostLike = async (aPostId) => {
+  handlePostLike = async (aPostId, logEvent) => {
     const uid = firebaseInstance.getUserId()
     let updatedData = [ ...this.state.data ]
     for (const index in updatedData) {
@@ -1029,7 +1083,7 @@ export default class Feed extends Component {
     try {
       const emptyPostData = {}
       const sPostData = JSON.stringify(emptyPostData)
-      await blockstack.putFile(postFileName, sPostData, {encrypt: false})
+      await this.userSession.putFile(postFileName, sPostData, {encrypt: false})
     } catch (error) {
       console.log(`Unable to delete ${postFileName}.\n${error}`)
       this.setState({ saving: false })
@@ -1085,7 +1139,7 @@ export default class Feed extends Component {
       try {
         const fileNameToDel = deletedPostData.media.fileName
 
-        blockstack.putFile(fileNameToDel, JSON.stringify({}), {encrypt: false})
+        this.userSession.putFile(fileNameToDel, JSON.stringify({}), {encrypt: false})
         .then(() => {
           console.log(`Deleted ${fileNameToDel}.`)
         })
@@ -1173,7 +1227,7 @@ export default class Feed extends Component {
 
         const postMediaDataBuffer = reader.result
 
-        blockstack.putFile(
+        this.userSession.putFile(
           this.newPostMedia.fileName, postMediaDataBuffer, { encrypt: false })
         .then(() => {
           this.setState({mediaUploading: `Media file uploaded: ${this.newPostMedia.originalFileName}`})
@@ -1274,6 +1328,7 @@ export default class Feed extends Component {
 
     return (
       <Container>
+        <LogOnMount eventType="Campaign Viewed" eventProperties={{campaign: this.campaignName, userId: firebaseInstance.getUserId()}} />
         <ModalContainer
           component={<ShareBar content={this.shareModelContent}/>}
           showModal={this.state.showShareModal}

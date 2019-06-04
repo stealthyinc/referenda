@@ -16,12 +16,19 @@ class FirebaseWrapper {
     if (!firebase.apps.length) {
       firebase.initializeApp(firebaseConfig)
     }
+    this.loadUser()
   }
   setCampaignName(campaignName) {
-    this.campaignName = campaignName
+    var newCampaignName = campaignName.replace(/\./g, '_');
+    this.campaignName = newCampaignName
+  }
+  storeCampaignGaia(gaia, email) {
+    const path = '/global/webapp/gaiaMap/' + this.campaignName
+    return firebase.database().ref(path).set({url: gaia, email});
   }
   getUserId () {
-    return this.user.uid
+    if (this.user)
+      return this.user.uid
   }
   async loadUser () {
     this.user = undefined

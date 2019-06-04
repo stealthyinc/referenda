@@ -2,7 +2,7 @@ export const INDEX_FILE = 'index.json'
 
 // export const GAIA_MAP = {
 //   default: 'https://gaia.blockstack.org/hub/16BzKWyRz4MtxQAz4Z1jE4s1GJz2xL1d7z',   // default: https://core.blockstack.org/v1/users/braphaav.personal.id
-//   agatha: 'https://gaia.blockstack.org/hub/1GECbWbpaDhEfpUi2Q46TtuHgfUvDStd5W',   // agatha: https://core.blockstack.org/v1/users/stealthy.id
+//   agatha: 'https://gaia.blockstack.org/hub/1GECbWbpaDhEfpUi2Q46TtuHgfUvDStd5W',   // agatha: https://core.blockstack.org/v1/users/agathaforcongress.id.blockstack
 //   guaido: 'https://gaia.blockstack.org/hub/17xxKVFrjq1DAkphELyP2NVvhVwM81XSSs',   // guaido: https://core.blockstack.org/v1/users/pbj.id
 // }
 
@@ -17,7 +17,7 @@ export const FIRST_CARD_WORKAROUND = {
     positionStr: 'Your Political Campaign',
     followers: '3,432',
   },
-  'https://gaia.blockstack.org/hub/1GECbWbpaDhEfpUi2Q46TtuHgfUvDStd5W' : {    // agatha
+  'https://gaia.blockstack.org/hub/1MURn3uZbTy7mAZ9ShrhDeFkgG1AU8vRkP' : {    // agatha
     avatarImg: require('../data/img/avatars/agatha.png'),
     fcBackgroundImg: 'https://untamedskies.files.wordpress.com/2012/07/americanflags.jpg',
     nameStr: 'Agatha Bacelar',

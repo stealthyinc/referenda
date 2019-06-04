@@ -25,6 +25,10 @@ import { isMobile } from "react-device-detect";
 import FitImage from 'react-native-fit-image';
 import ReactPlayer from 'react-player'
 import Hyperlink from 'react-native-hyperlink'
+import {
+  Amplitude,
+} from "@amplitude/react-amplitude";
+const { firebaseInstance } = require('../utils/firebaseWrapper.js')
 const C = require('../utils/constants.js')
 
 const moment = require('moment')
@@ -53,6 +57,7 @@ export default class Article extends Component {
 
       this.shareModelContent = {
           url:url,
+          id:aPost.id,
           twitterTitle: aPost.title,
           facebookQuote: aPost.title,
           emailSubject: aPost.title,
@@ -110,40 +115,51 @@ export default class Article extends Component {
     return (
       <ScrollView style={{width:'100%', height:'100%'}}>
         <Card style={{flex: 0, marginLeft:(isMobile? 2 : 0), marginRight:(isMobile ? 2 : 0)}}>
-          <CardItem bordered>
-            <TouchableOpacity
-              delayPressIn={70}
-              activeOpacity={0.8}
-               onPress={() => toggleFn()}>
-              <Thumbnail source={fcData.avatarImg}/>
-            </TouchableOpacity>
-            <Body style={{marginHorizontal:10}}>
-              <TouchableOpacity
-                delayPressIn={70}
-                activeOpacity={0.8}
-                 onPress={() => toggleFn()}>
-                <Text style={styles.postTitleText}>
-                  {item.title}
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                delayPressIn={70}
-                activeOpacity={0.8}
-                 onPress={() => toggleFn()}>
-                <Text style={styles.postTimeText}>{timeStr}</Text>
-              </TouchableOpacity>
-            </Body>
+          <Amplitude eventProperties={{postId: item.id, userId: firebaseInstance.getUserId()}}>
+            {({ logEvent }) =>
+              <CardItem bordered>
+                <TouchableOpacity
+                  delayPressIn={70}
+                  activeOpacity={0.8}
+                   onPress={() => {
+                    // logEvent('Article avatar pressed')
+                    toggleFn()}}>
+                  <Thumbnail source={fcData.avatarImg}/>
+                </TouchableOpacity>
+                <Body style={{marginHorizontal:10}}>
+                  <TouchableOpacity
+                    delayPressIn={70}
+                    activeOpacity={0.8}
+                     onPress={() => {
+                    // logEvent('Article title text pressed')
+                    toggleFn()}}>
+                    <Text style={styles.postTitleText}>
+                      {item.title}
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    delayPressIn={70}
+                    activeOpacity={0.8}
+                     onPress={() =>  {
+                    // logEvent('Article text pressed')
+                    toggleFn()}}>
+                    <Text style={styles.postTimeText}>{timeStr}</Text>
+                  </TouchableOpacity>
+                </Body>
 
-            <Button
-              bordered style={{borderColor:'lightgray'}}
-              small
-              rounded
-              info
-              onPress={() => this.toggleShareModal(item)}>
-              <Icon name='share-alt' />
-            </Button>
-          </CardItem>
-
+                <Button
+                  bordered style={{borderColor:'lightgray'}}
+                  small
+                  rounded
+                  info
+                  onPress={() =>  {
+                    logEvent('Article share button pressed')
+                    this.toggleShareModal(item)}}>
+                  <Icon name='share-alt' />
+                </Button>
+              </CardItem>
+            }
+          </Amplitude>
           <CardItem>
             <Body>
               {/* FitImage needs this view or it doesn't understand the width to size the image height to.' */}
@@ -156,6 +172,8 @@ export default class Article extends Component {
                   paymentFunction={() => this.togglePhoneModal()}
                   likeFunction={() => this.props.handlePostLike(item.id)}
                   likeCount={item.likes}
+                  id={item.id}
+                  origin={'article'}
                 />
               </View>
               <View style={{padding:10, width:'100%'}}>
