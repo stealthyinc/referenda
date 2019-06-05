@@ -638,6 +638,8 @@ export default class Feed extends Component {
     const widthStyle = {}
     if (!isMobile) {
       widthStyle.width = 512
+    } else {
+      widthStyle.width = '100%'
     }
 
     return (
