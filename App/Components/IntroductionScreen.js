@@ -120,6 +120,7 @@ class IntroductionScreen extends Component {
 
   constructor (props) {
     super(props)
+    this.props.navigation.navigate('CanvasMenu');
   }
 
   state = {

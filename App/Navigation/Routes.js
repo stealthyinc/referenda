@@ -21,6 +21,12 @@ import DonatorOtherAmountScreen from '../Containers/DonatorOtherAmountScreen'
 import ChargeScreen from '../Containers/ChargeScreen'
 import DonationCompleteScreen from '../Containers/DonationCompleteScreen'
 import Settings from '../Containers/SettingScreen'
+import CanvasContacts from '../Containers/CanvasContacts'
+import CanvasConstituentSearch from '../Containers/CanvasConstituentSearch'
+import CanvasConstituentQuestionaire from '../Containers/CanvasConstituentQuestionaire'
+import CanvasConstituentContribution from '../Containers/CanvasConstituentContribution'
+
+
 
 export const MainRoutes = [
   {
@@ -157,6 +163,32 @@ export const MainRoutes = [
         screen: CampaignerProgressScreen,
         children: [],
       },
+    ],
+  },
+  {
+    id: 'CanvasMenu',
+    title: 'Canvasser',
+    icon: FontIcons.other,
+    screen: CanvasConstituentSearch,
+    children: [
+      {
+        id: 'Contact Search',
+        title: 'Contact Search',
+        screen: CanvasContacts,
+        children: [],
+      },
+      {
+        id: 'Constituent Questionaire',
+        title: 'Constituent Questionaire',
+        screen: CanvasConstituentQuestionaire,
+        children: [],
+      },
+      {
+        id: 'Constituent Contribution',
+        title: 'Constituent Contribution',
+        screen: CanvasConstituentContribution,
+        children: [],
+      }
     ],
   },
 ];

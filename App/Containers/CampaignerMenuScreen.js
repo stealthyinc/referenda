@@ -145,7 +145,7 @@ class CampaignerMenuScreen extends Component {
             style={{height: 30, width: 30, borderRadius: 15}}/>
         </TouchableOpacity>
       ),
-      headerTitle: 'CANVASSER'.toUpperCase(),
+      headerTitle: 'Donation'.toUpperCase(),
       headerBackTitle: 'Back',
       headerTintColor: 'black',
       gesturesEnabled: false,

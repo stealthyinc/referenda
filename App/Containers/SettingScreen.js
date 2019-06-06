@@ -69,7 +69,7 @@ class SettingScreen extends Component {
           <View style={styles.row}>
             <FindFriends
               color={RkTheme.current.colors.twitter}
-              text='Campaign Donation'
+              text='Collect Donations'
               icon={FontAwesome.dollar}
               selected={this.state.twitterEnabled}
               onPress={() => this.props.navigation.navigate('CampaignerMenu')}
@@ -78,7 +78,7 @@ class SettingScreen extends Component {
           <View style={styles.row}>
             <FindFriends
               color={RkTheme.current.colors.google}
-              text='Campaign News'
+              text='Campaign Feed'
               icon={FontIcons.newsPaper}
               selected={this.state.googleEnabled}
               onPress={() => this.props.navigation.navigate('SocialMenu')}
@@ -87,10 +87,10 @@ class SettingScreen extends Component {
           <View style={styles.row}>
             <FindFriends
               color={RkTheme.current.colors.facebook}
-              text='Register New Voter'
+              text='Social Canvass'
               icon={FontAwesome.register}
               selected={this.state.facebookEnabled}
-              onPress={() => alert('Work Pending')}
+              onPress={() => this.props.navigation.navigate('CanvasMenu')}
             />
           </View>
         </View>)}
