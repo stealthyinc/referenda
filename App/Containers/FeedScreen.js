@@ -274,7 +274,7 @@ class FeedScreen extends Component {
   }
 
   render() {
-    header = this.getHeader()
+    const header = this.getHeader()
     return (
       <View style={{width:'100%', flex:1}}>
         {header}

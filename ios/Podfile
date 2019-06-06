@@ -4,15 +4,10 @@ platform :ios, '11.0'
 target 'referenda' do
   # Uncomment the next line if you're using Swift or would like to use dynamic frameworks
   use_frameworks!
-
   # Pods for referenda
   pod 'Amplitude-iOS', '~> 4.3.1'
-  #pod 'Stripe'
-  pod "SquareInAppPaymentsSDK"
-  #pod 'ReactNativePayments', :path => '../node_modules/react-native-payments'
+  #pod "SquareInAppPaymentsSDK"
   #pod 'RNSquareInAppPayments', :path => '../node_modules/react-native-square-in-app-payments'
-  #pod 'react-native-camera', :path => '../node_modules/react-native-camera'
-  #pod 'RNBackgroundFetch', :path => '../node_modules/react-native-background-fetch'
 
   post_install do |installer|
     installer.pods_project.targets.each do |target|
@@ -21,10 +16,4 @@ target 'referenda' do
         end
     end
   end
-
-  #target 'referendaTests' do
-    #inherit! :search_paths
-    # Pods for testing
-  #end
-
 end

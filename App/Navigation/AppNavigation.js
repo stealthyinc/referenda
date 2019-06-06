@@ -19,6 +19,7 @@ import NameScreen from '../Containers/NameScreen'
 import LoginScreen from '../Containers/LoginScreen'
 import KeychainScreen from '../Containers/KeychainScreen'
 import IntroductionScreen from '../Components/IntroductionScreen'
+import ScratchScreen from '../Components/ScratchScreen'
 
 import styles from './Styles/NavigationStyles'
 import Settings from '../Containers/SettingScreen'
@@ -29,6 +30,9 @@ export default createAppContainer(
     First: {
       screen: SplashScreen
     },
+    // First: {
+    //   screen: ScratchScreen
+    // },
     LoginMenu: {
       screen: IntroductionScreen
     },

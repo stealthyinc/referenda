@@ -16,6 +16,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import {
+  Alert,
   StyleSheet,
   Text,
   View,
@@ -35,7 +36,6 @@ import {
 import {
   SQIPCardEntry,
   SQIPApplePay,
-  SQIPCore,
   SQIPGooglePay,
 } from 'react-native-square-in-app-payments';
 
@@ -88,6 +88,7 @@ class ChargeScreen extends Component {
     this.onShowDigitalWallet = this.onShowDigitalWallet.bind(this);
     this.showOrderScreen = this.showOrderScreen.bind(this);
     this.startCardEntry = this.startCardEntry.bind(this);
+    this.startDigitalWallet = this.startDigitalWallet.bind(this);
     this.closeOrderScreen = this.closeOrderScreen.bind(this);
 
     this.state = {
@@ -143,12 +144,29 @@ class ChargeScreen extends Component {
                nextProps.payLoad.hasOwnProperty('commandType') &&
                (nextProps.payLoad.commandType === this.state.waitingOnCommand)) {
       console.log(`ChargeScreen - ${nextProps.payLoad.commandType} completed.`)
-      this.props.navigation.navigate('Donation Complete')
+      if (nextProps.donationSuccess && nextProps.donationSuccess.errorMessage) {
+        Alert.alert(
+          'Credit Card Error',
+          nextProps.donationSuccess.errorMessage,
+          [
+            {
+              text: 'Close',
+              onPress: () => this.setState({ 
+                waitOnPayNowOperation: false,
+                waitingOnCommand: ''
+              }),
+              style: 'cancel',
+            },
+          ],
+        )
+      }
+      else {
+        this.props.navigation.navigate('Donation Complete')
+      }
     }
   }
 
   async componentDidMount() {
-    await SQIPCore.setSquareApplicationId(SQUARE_APP_ID);
     let digitalWalletEnabled = false;
     if (Platform.OS === 'ios') {
       await SQIPCardEntry.setIOSCardEntryTheme({
@@ -173,6 +191,7 @@ class ChargeScreen extends Component {
       try {
         await SQIPApplePay.initializeApplePay(APPLE_PAY_MERCHANT_ID);
         digitalWalletEnabled = await SQIPApplePay.canUseApplePay();
+        console.log("digitalWalletEnabled", digitalWalletEnabled)
       } catch (ex) {
         console.log(ex);
       }
@@ -285,7 +304,7 @@ class ChargeScreen extends Component {
   }
 
   onShowDigitalWallet() {
-    this.closeOrderScreen();
+    // this.closeOrderScreen();
     this.setState({ showingDigitalWallet: true });
   }
 
@@ -383,6 +402,7 @@ class ChargeScreen extends Component {
   onPayNowPressed = (nonce) => {
     this.setState({waitOnPayNowOperation: true})
     // TODO: PBJ call whatever starts the CC transaction here ...
+    console.log("GOING TO SAGAS WITH NONCE", nonce)
     this.props.chargeSquareRequest(nonce)
   }
 
@@ -418,7 +438,7 @@ class ChargeScreen extends Component {
     let under200Exception = false
     try {
       const amount = parseFloat(donationRecord.amount)
-      under200Exception = (amount < 200.00)
+      // under200Exception = (amount < 200.00)
     } catch (suppressedError) {
       // Sigh ...
     }
@@ -482,6 +502,11 @@ class ChargeScreen extends Component {
             text='Pay Now (Credit Card)'
             style={{marginVertical:9}}
             onPress={this.startCardEntry}/>
+          {/*<GradientButton
+            rkType='medium'
+            text={(Platform.OS === 'ios') ? 'Apple Pay' : 'Google Pay'}
+            style={{marginVertical:9}}
+            onPress={this.startDigitalWallet}/>*/}
           <GradientButton
             rkType='medium'
             text='Pay Later (Text a Link)'

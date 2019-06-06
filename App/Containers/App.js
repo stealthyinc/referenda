@@ -4,6 +4,8 @@ import React, { Component } from 'react'
 import { Provider } from 'react-redux'
 import RootContainer from './RootContainer'
 import createStore from '../Redux'
+import { SQIPCore } from 'react-native-square-in-app-payments';
+import Config from 'react-native-config'
 const { RefCrypto } = require('../Utils/RefCrypto')
 console.disableYellowBox = true;
 // create our store
@@ -18,6 +20,11 @@ const store = createStore()
  * We separate like this to play nice with React Native's hot reloading.
  */
 class App extends Component {
+  async componentDidMount() {
+    const SQUARE_APP_ID = Config.SQUARE_PRODUCTION_APPLICATION_ID
+    console.log("****************SQUARE_APP_ID****************", SQUARE_APP_ID)
+    await SQIPCore.setSquareApplicationId(SQUARE_APP_ID);
+  }
   render () {
     return (
       <Provider store={store}>
