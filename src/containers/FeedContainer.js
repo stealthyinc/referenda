@@ -1028,25 +1028,12 @@ export default class Feed extends Component {
     }
   }
   handleProfileEditorRequest = () => {
-    // Workaround for React virtual DOM that excludes this change
-    // from resulting in a call to renderItem.
-    // - This only affects campaigns, not the users/constituents.
-    // - At some point we should separate the first card out from
-    //   it being implicitly added in renderItem so this is not needed.
-    // - TODO: ^
-    const workaroundData = [ ...this.state.data ]
-    this.setState({ data: workaroundData, editingProfile: true })
+    this.profileEditorRequestSetup()
+    this.setState({ editingProfile: true })
   }
 
   handleProfileEditorCancel = () => {
-    // Workaround for React virtual DOM that excludes this change
-    // from resulting in a call to renderItem.
-    // - This only affects campaigns, not the users/constituents.
-    // - At some point we should separate the first card out from
-    //   it being implicitly added in renderItem so this is not needed.
-    // - TODO: ^
-    const workaroundData = [ ...this.state.data ]
-    this.setState({ data: workaroundData, editingProfile: false })
+    this.setState({ editingProfile: false })
   }
 
   handleProfileEditorSave = () => {
@@ -1055,14 +1042,8 @@ export default class Feed extends Component {
     //       replaced
     //
 
-    // Workaround for React virtual DOM that excludes this change
-    // from resulting in a call to renderItem.
-    // - This only affects campaigns, not the users/constituents.
-    // - At some point we should separate the first card out from
-    //   it being implicitly added in renderItem so this is not needed.
-    // - TODO: ^
-    const workaroundData = [ ...this.state.data ]
-    this.setState({ data: workaroundData, editingProfile: false })
+    const newData = [ ...this.state.data ]
+    this.setState({ data: newData, editingProfile: false })
   }
 
   postEditorRequestSetup = () => {
@@ -1145,7 +1126,7 @@ export default class Feed extends Component {
       const postId = updatedData[index].id
       if (postId === aPostId) {
         if (!firebaseInstance.userLikeExists(postId, uid)) {
-          // firebaseInstance.likePost(postId, uid)
+          firebaseInstance.likePost(postId, uid)
           const newLikeCount = updatedData[index].likes + 1
           updatedData[index].likes = newLikeCount
           await firebaseInstance.loadSnapshot()
@@ -1325,9 +1306,12 @@ export default class Feed extends Component {
       }
     }
 
+    const editingPost = this.state.editingPost || (updatedData.length <= 1)
+
     this.setState({
        saving: false,
-       data: updatedData
+       data: updatedData,
+       editingPost
      })
 
     // 4. Get the post & check for media files--if there are any, delete them
