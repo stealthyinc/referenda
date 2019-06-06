@@ -28,7 +28,7 @@ const SocialBar = ({ chatFunction, paymentFunction, likeFunction, likeCount, id,
           <Button bordered style={{borderColor:'lightgray'}} small rounded warning
           onPress={() => {
             logEvent('Bitcoin Button Pressed')
-            Linking.openURL('https://commerce.coinbase.com/checkout/fffca773-3645-4d23-a442-b97ec395d365')}}>
+            Linking.openURL('https://commerce.coinbase.com/checkout/48a93246-da81-47a6-a69d-878d7df1a982')}}>
             <Icon name='logo-bitcoin' />
           </Button>
           <View style={{width:5}} />
