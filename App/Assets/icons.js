@@ -10,6 +10,7 @@ export const FontIcons = {
   theme: '',
   card: '',
   addToCardForm: '',
+  newsPaper: '',
 };
 
 export const FontAwesome = {

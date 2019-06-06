@@ -144,7 +144,7 @@ class ChargeScreen extends Component {
                nextProps.payLoad.hasOwnProperty('commandType') &&
                (nextProps.payLoad.commandType === this.state.waitingOnCommand)) {
       console.log(`ChargeScreen - ${nextProps.payLoad.commandType} completed.`)
-      if (nextProps.donationSuccess.errorMessage) {
+      if (nextProps.donationSuccess && nextProps.donationSuccess.errorMessage) {
         Alert.alert(
           'Credit Card Error',
           nextProps.donationSuccess.errorMessage,

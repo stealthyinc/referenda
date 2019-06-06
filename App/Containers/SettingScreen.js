@@ -16,6 +16,7 @@ import {
   FindFriends,
 } from '../Components';
 import { FontAwesome } from '../Assets/icons';
+import { FontIcons } from '../Assets/icons';
 import { connect } from 'react-redux'
 import { SettingsSelectors } from '../Redux/SettingsRedux'
 const { userTypeInstance } = require('../Utils/UserType.js')
@@ -71,16 +72,16 @@ class SettingScreen extends Component {
               text='Campaign Donation'
               icon={FontAwesome.dollar}
               selected={this.state.twitterEnabled}
-              onPress={() => alert('Work Pending')}
+              onPress={() => this.props.navigation.navigate('CampaignerMenu')}
             />
           </View>
           <View style={styles.row}>
             <FindFriends
               color={RkTheme.current.colors.google}
-              text='Deputize Volunteer'
-              icon={FontAwesome.medal}
+              text='Campaign News'
+              icon={FontIcons.newsPaper}
               selected={this.state.googleEnabled}
-              onPress={() => alert('Work Pending')}
+              onPress={() => this.props.navigation.navigate('SocialMenu')}
             />
           </View>
           <View style={styles.row}>
