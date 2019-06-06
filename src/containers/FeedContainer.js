@@ -44,10 +44,11 @@ import Dropzone from 'react-dropzone'
 import { isMobile } from "react-device-detect";
 
 const moment = require('moment');
-const runes = require('runes')
 const { firebaseInstance } = require('../utils/firebaseWrapper.js')
 
 const C = require('../utils/constants.js')
+const U = require('../utils/utils.js')
+const { cloudIO } = require('../utils/cloudIO.js')
 
 export default class Feed extends Component {
   constructor(props) {
@@ -59,11 +60,15 @@ export default class Feed extends Component {
     const userData = isSignedIn && this.userSession.loadUserData();
     const person = (userData.username) ? new Person(userData.profile) : false;
 
+    cloudIO.setSignedIn(isSignedIn)
+    cloudIO.setUserSession(this.userSession)
+
     this.state = {
       userData,
       person,
       isSignedIn,
       data: [],
+      editingProfile: false,
       editingPost: false,
       initializing: true,
       saving: false,
@@ -76,6 +81,13 @@ export default class Feed extends Component {
     };
 
     this.indexFileData = undefined
+
+    this.newProfileData = {
+      avatarImg: '',
+      backgroundImg: '',
+      nameStr: '',
+      descriptionStr: '',
+    }
 
     this.newPostId = undefined
     this.newPostTitle = undefined
@@ -121,6 +133,7 @@ export default class Feed extends Component {
       const gaiaRoot = userData.gaiaHubConfig.url_prefix
       const appAddress = userData.gaiaHubConfig.address
       this.mediaUrlRoot = `${gaiaRoot}${appAddress}`
+      cloudIO.setMediaUrlRoot(this.mediaUrlRoot)
       firebaseInstance.setCampaignName(this.state.userData.username)
       firebaseInstance.storeCampaignGaia(this.mediaUrlRoot, this.state.userData.email)
 
@@ -139,6 +152,7 @@ export default class Feed extends Component {
       if (campaignName in GAIA_MAP) {
         firebaseInstance.setCampaignName(this.campaignName)
         this.mediaUrlRoot = GAIA_MAP[campaignName].url
+        cloudIO.setMediaUrlRoot(this.mediaUrlRoot)
 
         // We look for a link post id if the user is signed in or if the campaign link is
         // correct to navigate to the specified post.
@@ -158,6 +172,7 @@ export default class Feed extends Component {
         let campaignNameIsGaiaBucket = false
         if (this.campaignName) {
           this.mediaUrlRoot = `https://gaia.blockstack.org/hub/${this.campaignName}`
+          cloudIO.setMediaUrlRoot(this.mediaUrlRoot)
           try {
             const indexData = await this.readIndex()
             campaignNameIsGaiaBucket = true
@@ -168,6 +183,7 @@ export default class Feed extends Component {
         //
         if (!campaignNameIsGaiaBucket) {
           this.mediaUrlRoot = GAIA_MAP[unsignedInUserDefault]
+          cloudIO.setMediaUrlRoot(this.mediaUrlRoot)
         }
       }
     }
@@ -197,57 +213,19 @@ export default class Feed extends Component {
     return false;
   }
 
-  // getFile: abstraction above blockstack getFile that works if we're not
-  //          signed in for reading files for static site load
-  //
-  getFile = async(aFileName, theOptions={ decrypt:false }) => {
-    if (this.state.isSignedIn) {
-      return this.userSession.getFile(aFileName, theOptions)
-      .then((response) => {
-        try {
-          let result = undefined
-          if (response) {
-            result = JSON.parse(response)
-          }
-          return result
-        } catch (error) {
-          throw new Error(`Blockstack.getFile failed in getFile.\n${error}`)
-        }
-      })
-    } else {
-      const pathToRead = `${this.mediaUrlRoot}/${aFileName}`
-      return fetch(pathToRead)
-      .then((response) => {
-        if (response.ok) {
-          return response.json()
-        }
-        throw new Error(`Fetch failed in getFile with status ${response.status}.`)
-      })
+  static getNewProfile() {
+    return {
+      avatarImg: '',
+      backgroundImg: '',
+      nameStr: 'Your Name',
+      descriptionStr: 'Your Description',
+      followers: 0
     }
   }
-
-  static getPostFileName(aPostId) {
-    return `p${aPostId}.json`
-  }
-
-  static getPostMediaFileName(aPostId, theOriginalFileName) {
-    // Get the extension of the original file name and use that to
-    // set the media file name extension. (The reason for this is
-    // that ReactPlayer's canPlay functionality on mobile seems to
-    // match against the extension to determine if something is
-    // playable or not.)
-    const extensionRaw = Feed.getFileExtension(theOriginalFileName)
-
-    if (extensionRaw) {
-      return `p${aPostId}.${extensionRaw}`
-    } else {
-      return `p${aPostId}.media`
-    }
-  }
-
   // TODO: make index file data a class. Possibly tie it to a schema.
   getNewIndex = () => {
     return {
+      profile: Feed.getNewProfile(),
       pinnedPostId: '',
       descTimePostIds: [],
       version: '1.0',
@@ -257,7 +235,7 @@ export default class Feed extends Component {
 
   readIndex = async () => {
     // Note: rawData will be null if the file does not exist.
-    return await this.getFile(C.INDEX_FILE)
+    return await cloudIO.getFile(C.INDEX_FILE)
   }
 
   writeIndex = async () => {
@@ -265,7 +243,7 @@ export default class Feed extends Component {
 
     this.indexFileData.timeUtc = Date.now()
     const sIndexFileData = JSON.stringify(this.indexFileData)
-    await this.userSession.putFile(C.INDEX_FILE, sIndexFileData, {encrypt: false})
+    await cloudIO.putFile(C.INDEX_FILE, sIndexFileData)
   }
 
   // TODO: refactor this into something clean when and lightweight when it all
@@ -303,10 +281,45 @@ export default class Feed extends Component {
         })
         return
       }
+    } else if (this.indexFileData && !this.indexFileData.hasOwnProperty('profile')) {
+      // Code to handle existing accounts where we hardcoded the profile data
+      // downstream--now inject it into the index data.  If the account didn't
+      // have hardcoded profile data, set it up with the original default:
+      if (this.mediaUrlRoot in C.FIRST_CARD_WORKAROUND) {
+        const cProfileData = C.FIRST_CARD_WORKAROUND[this.mediaUrlRoot]
+        this.indexFileData.profile = {
+          avatarImg: cProfileData.avatarImg,
+          backgroundImg: cProfileData.fcBackgroundImg,
+          nameStr: cProfileData.nameStr,
+          descriptionStr: cProfileData.positionStr,
+          followers: cProfileData.followers
+        }
+      } else {
+        this.indexFileData.profile = {
+          avatarImg: '',
+          backgroundImg: '',
+          nameStr: 'Your Name',
+          descriptionStr: 'Your Description',
+          followers: 0
+        }
+      }
+
+      // Save the updated index
+      try {
+        await this.writeIndex()
+      } catch (error) {
+        console.error(`Error creating ${C.INDEX_FILE}.\n${error}`)
+      }
     }
 
     // 3. Load posts and initialize data.
     const data = []
+
+    // Insert an entry to cause the header to be rendered.
+    data.push({
+      id:this.getUniqueKey(),
+      header:true
+    })
 
     let orderedPosts = this.indexFileData.descTimePostIds
     if (this.indexFileData.pinnedPostId) {
@@ -319,9 +332,9 @@ export default class Feed extends Component {
     try {
       const readPromises = []
       for (const postId of orderedPosts) {
-        const postPath = Feed.getPostFileName(postId)
+        const postPath = U.getPostFileName(postId)
         readPromises.push(
-          this.getFile(postPath)
+          cloudIO.getFile(postPath)
           .catch((postReadError) => {
             console.error(`Unable to load post ${postPath}.\n${postReadError}`)
             return undefined
@@ -336,69 +349,28 @@ export default class Feed extends Component {
           //       post.
         } else {
           try {
-            // const postData = JSON.parse(rawPostData)
+            /* A map of data we store to PBJ data format:
+             *
+             * Store                  PBJ
+             * -------------------------------------------------
+             * !                      comments: []
+             * title                  header
+             * id                     id
+             * picture                photo
+             * video
+             * description            text
+             * time!                  time
+             * !                      type
+             * !                      user {firstName, lastName, photo}
+             *
+             */
             const postData = rawPostData
-
-/* A map of data we store to PBJ data format:
- *
- * Store                  PBJ
- * -------------------------------------------------
- * !                      comments: []
- * title                  header
- * id                     id
- * picture                photo
- * video
- * description            text
- * time!                  time
- * !                      type
- * !                      user {firstName, lastName, photo}
- *
- */
-
-            // const newDataElementArr = {
-            //   comments: [],
-            //   header: postData.title,
-            //   id: postData.id,
-            //   filename: '',
-            //   photo: undefined,
-            //   text: postData.description,
-            //   time: ((postData.time-Date.now()) / 1000),
-            //   type: 'article',
-            //   user: {
-            //     firstName: 'Todo',
-            //     lastName: 'Reallysoon',
-            //     photo: '/static/media/Image9.6ab96ea5.png'
-            //   }
-            // }
-
-            if (this.indexFileData.pinnedPostId &&
-                (this.indexFileData.pinnedPostId === postData.id)) {
-              postData.pinned = true
-            }
-
-            // TODO: un-hack this.
-            //       - probably best to tie it to blockstack profile data
-            //         or to our own profile settings page (b/c then we aren't
-            //         beholden to Blockstack's delays in storing/caching the
-            //         profile data--or their plug-in developer's side-effects.)
-            //
-            postData.comments = []
-            postData.type = 'article'
-            postData.user = {
-              firstName: 'Todo',
-              lastName: 'Reallysoon',
-              photo: '/static/media/Image9.6ab96ea5.png'
-            }
-            if (firebaseInstance.likesNumber(postData.id)) {
-              postData.likes = firebaseInstance.likesNumber(postData.id)
-            }
-            else {
-              postData.likes = 0
-            }
+            postData.pinned = (this.indexFileData.pinnedPostId &&
+                  (this.indexFileData.pinnedPostId === postData.id))
+            postData.likes = firebaseInstance.likesNumber(postData.id) ?
+              firebaseInstance.likesNumber(postData.id) : 0
 
             data.push(postData)
-
-            // Handle images if specified ()
           } catch (postInflateError) {
             console.error(`Unable to inflate post.\n${postInflateError}`)
           }
@@ -429,9 +401,27 @@ export default class Feed extends Component {
         showArticleModal: true
       })
     } else {
+      // If this user has no posts, show the post editor.
+      // Also, if they have no profile data, enable the profile editor.
+      const editingProfile = (this.state.isSignedIn &&
+                              !this.indexFileData.profile.avatarImg &&
+                              !this.indexFileData.profile.backgroundImg &&
+                              this.indexFileData.profile.nameStr === 'Your Name' &&
+                              this.indexFileData.profile.descriptionStr === 'Your Description')
+      if (editingProfile) {
+        this.profileEditorRequestSetup()
+      }
+
+      const editingPost = (this.state.isSignedIn && (data.length === 1))
+      if (editingPost) {
+        this.postEditorRequestSetup()
+      }
+
       this.setState({
         initializing: false,
-        data
+        data,
+        editingProfile,
+        editingPost,
       })
     }
   }
@@ -477,7 +467,7 @@ export default class Feed extends Component {
           twitterTitle: aPost.title,
           facebookQuote: aPost.title,
           emailSubject: aPost.title,
-          emailBody: Feed.getTruncatedStr(aPost.description, 255)
+          emailBody: U.getTruncatedStr(aPost.description, 255)
         }
     } else {
       this.shareModelContent = undefined
@@ -503,19 +493,228 @@ export default class Feed extends Component {
     this.setState({showMessageModal: !this.state.showMessageModal})
   }
 
-  // Safe on emoji / unicode
-  static getTruncatedStr(aString, aTruncatedLen=256) {
-    try {
-      if (Array.from(aString).length > aTruncatedLen) {
-        return `${runes.substr(aString, 0, aTruncatedLen)} ...`
-      }
-    } catch (suppressedError) {}
+  renderHeader = () => {
 
-    return aString
+    // Allow the user to edit the first card data.
+    let editButton = undefined
+    if (this.state.isSignedIn && !this.state.editingProfile) {
+      editButton = (
+        <Button small rounded success bordered style={styles.firstCardButtonStyle}
+          onPress={() => this.handleProfileEditorRequest()}>
+          <Icon name='create'/>
+        </Button>
+      )
+    }
+
+    let cancelButton = undefined
+    let saveButton = undefined
+    if (this.state.editingProfile) {
+      cancelButton = (
+        <Button small rounded danger bordered style={styles.firstCardButtonStyle}
+          onPress={() => this.handleProfileEditorCancel()}>
+          <Icon name='close-circle-outline'/>
+        </Button>
+      )
+      saveButton = (
+        <Button small rounded info bordered style={styles.firstCardButtonStyle}
+          onPress={() => this.handleProfileEditorCancel()}>
+          <Icon name='checkbox'/>
+        </Button>
+      )
+    }
+    const profileData = this.indexFileData.profile
+
+    let nameLine =
+      ( <Text style={styles.firstCardNameTextStyle}>{profileData.nameStr}</Text> )
+    if (this.state.editingProfile) {
+      nameLine = (
+        <Input
+          style={{
+            flex:0,
+            width:'50%',
+            paddingLeft:0,
+            paddingRight:0,
+            fontFamily:'arial',
+            fontStyle:'italic',
+            fontSize:(isMobile ? 16 : 21),
+            fontWeight:'bold',
+            color:'white',
+            placeholderTextColor: 'white',
+            borderBottomColor:'rgb(242, 242, 242)',
+            borderBottomWidth: 1,
+            borderBottomStyle: 'solid'}}
+          multiline={false}
+          onChangeText={(text) => {this.newProfileData.nameStr = text}}
+          placeholder={profileData.nameStr}
+          placeholderTextColor="rgb(242,242,242)"/>
+      )
+    }
+
+    let descriptionLine =
+      ( <Text style={styles.firstCardPositionTextStyle}>{profileData.descriptionStr}</Text> )
+    if (this.state.editingProfile) {
+      descriptionLine = (
+        <Input
+          style={{
+            flex:0,
+            width: (isMobile ? '100%' : '75%'),
+            paddingLeft:0,
+            paddingRight:0,
+            fontFamily:'arial',
+            fontStyle:'italic',
+            fontSize:(isMobile ? 14 : 16),
+            color:'white',
+            placeholderTextColor: 'white',
+            borderBottomColor:'rgb(242, 242, 242)',
+            borderBottomWidth: 1,
+            borderBottomStyle: 'solid'}}
+          multiline={false}
+          onChangeText={(text) => {this.newProfileData.descriptionStr = text}}
+          placeholder={profileData.descriptionStr}
+          placeholderTextColor="rgb(242,242,242)"/>
+      )
+    }
+
+    const spacer = ( <View style={{width:'100%', height:10}} /> )
+
+    let dzoneStyle = {
+      borderStyle:'dashed',
+      borderWidth: 2,
+      borderRadius: 10,
+      borderColor:'rgb(204,204,204)',
+      paddingHorizontal: 15,
+      minWidth: '50%',
+      flexDirection: 'column',
+      justifyContent: 'center'
+    }
+
+    let dzoneTextStyle = {
+      textAlign:'center',
+      marginVertical:3,
+      color:'white',
+      fontFamily:'arial',
+      fontSize:16
+    }
+
+    let backgroundDropZone = undefined
+    if (this.state.editingProfile) {
+      backgroundDropZone = (
+        <View style={dzoneStyle}>
+          <Dropzone>
+            {({getRootProps, getInputProps}) => (
+              <section>
+                <div {...getRootProps()}>
+                  <input {...getInputProps()} />
+                  <div style={dzoneTextStyle}>Drag 'n' drop</div>
+                  <div style={dzoneTextStyle}>or click here to</div>
+                  <div style={dzoneTextStyle}>set background</div>
+                </div>
+              </section>
+            )}
+          </Dropzone>
+        </View>
+      )
+    }
+
+    let profileDzoneStyle = {
+      borderStyle:'dashed',
+      borderWidth: 2,
+      borderRadius: 40,
+      borderColor:'rgb(204,204,204)',
+      height:80,
+      width:80,
+      flexDirection: 'column',
+      justifyContent: 'center',
+      marginLeft: 10
+    }
+
+    let profileDzoneTextStyle = {
+      textAlign:'center',
+      marginVertical:3,
+      color:'white',
+      fontFamily:'arial',
+      fontSize:12
+    }
+
+    let profileImgOrDropZone =
+      ( <Thumbnail large
+          style={{marginLeft:10,
+                  borderWidth:2,
+                  borderColor:'white',
+                  borderStyle:'solid'}}
+          source={profileData.avatarImg}/> )
+
+    if (this.state.editingProfile) {
+      profileImgOrDropZone = (
+        <View style={profileDzoneStyle}>
+          <Dropzone
+            onDrop={(acceptedFiles, resultObj) => this.handleSelectedImages(acceptedFiles, resultObj)}>
+            {({getRootProps, getInputProps}) => (
+              <section>
+                <div {...getRootProps()}>
+                  <input {...getInputProps()} />
+                  <div style={profileDzoneTextStyle}>Drag or</div>
+                  <div style={profileDzoneTextStyle}>click to</div>
+                  <div style={profileDzoneTextStyle}>set avatar</div>
+                </div>
+              </section>
+            )}
+          </Dropzone>
+        </View>
+      )
+    }
+
+    return (
+      <View style={{alignItems:'center'}}>
+        <ImageBackground
+          source={{uri: profileData.fcBackgroundImg}}
+          resizeMode='cover'
+          style={styles.firstCardStyle}>
+          <View style={{width:'100%', height:'100%', backgroundColor:'rgba(0,0,0,0.4)',
+                        flexDirection:'column', justifyContent:'flex-end',}}>
+            <View style={{flexDirection: 'row', width: '100%'}}>
+              {profileImgOrDropZone}
+              <View style={{flex: 1, flexDirection:'row', justifyContent:'center'}}>
+                {backgroundDropZone}
+              </View>
+            </View>
+            {spacer}
+            <View style={{paddingHorizontal: 10}}>{nameLine}</View>
+            {spacer}
+            <View style={{paddingHorizontal: 10, marginBottom:3}}>{descriptionLine}</View>
+            <View style={{flexDirection:'row', justifyContent: 'space-between'}}>
+              <Text style={styles.firstCardFolowersNumber}>{profileData.followers}
+                <Text style={styles.firstCardFollowersText}> Followers</Text>
+              </Text>
+              <View style={{flexDirection:'row', justifyContent:'flex-end'}}>
+                {cancelButton}
+                {saveButton}
+                {editButton}
+              </View>
+            </View>
+            {spacer}
+          </View>
+        </ImageBackground>
+      </View>
+    )
+  }
+
+  getUniqueKey() {
+    return Date.now()
   }
 
   renderItem = ({ item }) => {
-    const MAX_CARD_WIDTH = 512
+    console.log(`renderItem: editingProfile = ${this.state.editingProfile}`)
+
+    // Render the header.
+    if (item && item.hasOwnProperty('header') && item.header) {
+      console.log(`renderItem: rendering header call for item`, item)
+      return this.renderHeader()
+    }
+
+    if (item && item.hasOwnProperty('postEditor') && item.postEditor) {
+      return this.renderPostEditor()
+    }
 
     let image = undefined
     try {
@@ -570,90 +769,24 @@ export default class Feed extends Component {
     timeStr = (item.hasOwnProperty('pinned') && item.pinned) ?
       `pinned post - ${timeStr}` : timeStr
 
-    let fcData = {
-      avatarImg: undefined,
-      fcBackgroundImg: undefined,
-      nameStr: 'Your Name',
-      positionStr: 'Your Position',
-      followers: '0'
-    }
-    if (this.mediaUrlRoot in C.FIRST_CARD_WORKAROUND) {
-      fcData = C.FIRST_CARD_WORKAROUND[this.mediaUrlRoot]
+    const widthStyle = {
+      width: (isMobile ? '100%' : C.MAX_CARD_WIDTH)
     }
 
-    let firstCard = undefined
-    if ((this.state.data.length > 0) &&
-        item.id === this.state.data[0].id) {
-      const firstCardStyle = {
-        width: '100%',
-        height: '33vh'
-      }
-      if (!isMobile) {
-        firstCardStyle.maxWidth = 2*MAX_CARD_WIDTH
-      }
-
-      // Allow the user to edit the first card data.
-      let editButton = undefined
-      // TODO: finish this:
-      // if (this.state.isSignedIn) {
-      //   editButton = (
-      //     <Button
-      //       small
-      //       rounded
-      //       success
-      //       bordered
-      //       style={{borderColor:'lightgray', marginRight: 10}}
-      //       onPress={() => this.handleFirstCardEditorRequest()}>
-      //       <Icon name='create'/>
-      //     </Button>
-      //   )
-      // }
-
-      firstCard = (
-        <ImageBackground
-          source={{uri: fcData.fcBackgroundImg}}
-          resizeMode='cover'
-          style={firstCardStyle}>
-          <View style={{width:'100%', height:'100%', backgroundColor:'rgba(0,0,0,0.4)',
-                        flexDirection:'column', justifyContent:'flex-end',}}>
-            <View>
-              <Thumbnail large style={{marginLeft:10, borderWidth:2, borderColor:'white', borderStyle:'solid'}} source={fcData.avatarImg}/>
-            </View>
-            <View style={{width:'100%', height:10}} />
-            <Text style={styles.firstCardNameText}>{fcData.nameStr}</Text>
-            <View style={{width:'100%', height:10}} />
-            <Text style={styles.firstCardPositionText}>{fcData.positionStr}</Text>
-            <View style={{flexDirection:'row', justifyContent: 'space-between'}}>
-              <Text style={styles.firstCardFolowersNumber}>{fcData.followers}
-                <Text style={styles.firstCardFollowersText}> Followers</Text>
-              </Text>
-              {editButton}
-            </View>
-            <View style={{width:'100%', height:10}} />
-          </View>
-        </ImageBackground>
-      )
-    }
-
-    const widthStyle = {}
-    if (!isMobile) {
-      widthStyle.width = 512
-    } else {
-      widthStyle.width = '100%'
-    }
+    const profileImg = this.indexFileData.profile.avatarImg ?
+      ( <Thumbnail source={this.indexFileData.profile.avatarImg}/> ) : undefined
 
     return (
       <View style={{alignItems:'center'}}>
-        {firstCard}
         <View style={widthStyle}>
           <Card style={{flex: 0}}>
             <Amplitude eventProperties={{campaign: this.campaignName, postId: item.id, userId: firebaseInstance.getUserId()}}>
               {({ logEvent }) =>
                 <CardItem bordered>
-                  <Thumbnail source={fcData.avatarImg}/>
+                  {profileImg}
                   <Body style={{marginHorizontal:10}}>
                     <Text style={styles.postTitleText}>
-                      {(isMobile ? Feed.getTruncatedStr(item.title) : item.title)}
+                      {(isMobile ? U.getTruncatedStr(item.title) : item.title)}
                     </Text>
                     <Text style={styles.postTimeText}>{timeStr}</Text>
                   </Body>
@@ -683,7 +816,7 @@ export default class Feed extends Component {
                   onPress={() => this.onItemPressed(item)}>
                   <View style={{padding:10, width:'100%'}}>
                     <Text style={styles.postBodyText}>
-                      {(isMobile ? Feed.getTruncatedStr(item.description) : Feed.getTruncatedStr(item.description, 512))}
+                      {(isMobile ? U.getTruncatedStr(item.description) : U.getTruncatedStr(item.description, 512))}
                     </Text>
                   </View>
                 </TouchableOpacity>
@@ -705,32 +838,57 @@ export default class Feed extends Component {
     );
   }
 
-  getFeedButton = (aKey) => {
-    const isLogin = (aKey === 'LoginMenu')
-    const buttonName = (isLogin) ?
-      ( (this.state.isSignedIn) ? 'Log Out' : 'Log In' ) :
-      ( isMobile ? 'New Post' : 'New Post ...' )
+  /*
+   * Feed Button methods
+   */
+  getLogInFeedButton = () => {
+    const icon = this.state.isSignedIn ? 'log-out' : 'log-in'
+    const buttonName = this.state.isSignedIn ? 'Log Out' : 'Log In'
     const buttonText = (isMobile && (buttonName !== 'Log In')) ?
       undefined :
-      (<Text style={styles.feedButtonText} uppercase={false}>{buttonName}</Text>)
-    const handlerFn = (isLogin) ? this.handleLogin : this.handlePostEditorRequest
-    const icon = (isLogin) ?
-      (this.state.isSignedIn) ? 'log-out' : 'log-in' : 'create'
+      ( <Text style={styles.feedButtonText} uppercase={false}>
+          {buttonName}
+        </Text> )
+
     return (
       <Amplitude eventProperties={{campaign: this.campaignName, buttonAction: icon, isMobile, userId: firebaseInstance.getUserId()}}>
         {({ logEvent }) =>
-          <Button
-            small={isMobile}
-            success
-            iconLeft={!isMobile}
-            bordered
+          <Button success bordered small={isMobile} iconLeft={!isMobile}
             style={styles.feedButton}
-            onPress={(event) => handlerFn(event, logEvent)}>
+            onPress={(event) => this.handleLogin(event, logEvent)}>
             <Icon style={{marginLeft:0, marginRight:0}} name={icon}/>
             {buttonText}
           </Button>
         }
       </Amplitude>
+    )
+  }
+
+  getNewPostFeedButton = () => {
+    const icon = 'create'
+    const buttonText = !isMobile ?
+      ( <Text style={styles.feedButtonText} uppercase={false}>
+          New Post ...
+        </Text> ) :
+      undefined
+
+    return (
+      <Amplitude eventProperties={{campaign: this.campaignName, buttonAction: icon, isMobile, userId: firebaseInstance.getUserId()}}>
+        {({ logEvent }) =>
+          <Button success bordered small={isMobile} iconLeft={!isMobile}
+            style={styles.feedButton}
+            onPress={(event) => this.handlePostEditorRequest(event, logEvent)}>
+            <Icon style={{marginLeft:0, marginRight:0}} name={icon}/>
+            {buttonText}
+          </Button>
+        }
+      </Amplitude>
+    )
+  }
+
+  getContactUsFeedButton = () => {
+    return (
+      undefined
     )
   }
 
@@ -800,68 +958,122 @@ export default class Feed extends Component {
       ) :
       undefined
 
-    return (
-      <Content>
-        <Card style={{marginLeft:(isMobile? 2 : 0), marginRight:(isMobile ? 2 : 0)}}>
-          <CardItem header>
-            <Text style={styles.postTitleText}>New Post</Text>
-          </CardItem>
-          <CardItem bordered>
-            <View style={{flex: 1, flexDirection: 'column'}}>
-              <View
-                style={{
-                  borderStyle:'dashed',
-                  borderWidth: 2,
-                  borderRadius: 10,
-                  borderColor:'rgb(204,204,204)',
-                  marginHorizontal:15,
-                  marginVertical:15,
-                  flex:1}}>
-                <Dropzone onDrop={acceptedFiles => this.handleMediaUpload(acceptedFiles)}>
-                  {({getRootProps, getInputProps}) => (
-                    <section>
-                      <div {...getRootProps()}>
-                        <input {...getInputProps()} />
-                        <p style={{textAlign: 'center'}}>Drag 'n' drop an image here</p>
-                        <p style={{textAlign: 'center'}}>or</p>
-                        <p style={{textAlign: 'center'}}>click here to choose one.</p>
-                      </div>
-                    </section>
-                  )}
-                </Dropzone>
-              </View>
-              {uploadStatusView}
-            </View>
-          </CardItem>
+    const editorWidthStyle = {
+      width: (isMobile ? '100%' : C.MAX_CARD_WIDTH)
+    }
 
-          <CardItem>
-              {this.getPostEditorTextInput('Title ...', this.setNewPostTitle)}
-          </CardItem>
-          <CardItem bordered>
-              {this.getPostEditorTextInput('Description ...', this.setNewPostDescription)}
-          </CardItem>
-          <CardItem bordered>
-            <View style={{flexDirection:'row', justifyContent:'flex-end', flex:1}}>
-              {this.getPostEditorButton('Cancel', this.handlePostEditorCancel, "close-circle-outline")}
-              <View style={{width:5}} />
-              {this.getPostEditorButton('Post', this.handlePostEditorSubmit, "checkbox")}
-            </View>
-          </CardItem>
-        </Card>
-      </Content>
+    return (
+      <View style={{width:'100%', alignItems:'center'}} >
+        <View style={editorWidthStyle} >
+          <Content>
+            <Card style={{marginLeft:(isMobile? 2 : 0), marginRight:(isMobile ? 2 : 0)}}>
+              <CardItem header>
+                <Text style={styles.postTitleText}>New Post</Text>
+              </CardItem>
+              <CardItem bordered>
+                <View style={{flex: 1, flexDirection: 'column'}}>
+                  <View
+                    style={{
+                      borderStyle:'dashed',
+                      borderWidth: 2,
+                      borderRadius: 10,
+                      borderColor:'rgb(204,204,204)',
+                      marginHorizontal:15,
+                      marginVertical:15,
+                      flex:1}}>
+                    <Dropzone onDrop={acceptedFiles => this.handleMediaUpload(acceptedFiles)}>
+                      {({getRootProps, getInputProps}) => (
+                        <section>
+                          <div {...getRootProps()}>
+                            <input {...getInputProps()} />
+                            <p style={{textAlign: 'center'}}>Drag 'n' drop an image here</p>
+                            <p style={{textAlign: 'center'}}>or</p>
+                            <p style={{textAlign: 'center'}}>click here to choose one.</p>
+                          </div>
+                        </section>
+                      )}
+                    </Dropzone>
+                  </View>
+                  {uploadStatusView}
+                </View>
+              </CardItem>
+
+              <CardItem>
+                  {this.getPostEditorTextInput('Title ...', this.setNewPostTitle)}
+              </CardItem>
+              <CardItem bordered>
+                  {this.getPostEditorTextInput('Description ...', this.setNewPostDescription)}
+              </CardItem>
+              <CardItem bordered>
+                <View style={{flexDirection:'row', justifyContent:'flex-end', flex:1}}>
+                  {this.getPostEditorButton('Cancel', this.handlePostEditorCancel, "close-circle-outline")}
+                  <View style={{width:5}} />
+                  {this.getPostEditorButton('Post', this.handlePostEditorSubmit, "checkbox")}
+                </View>
+              </CardItem>
+            </Card>
+          </Content>
+        </View>
+      </View>
     )
   }
 
-  handleFirstCardEditorRequest = () => {
-
+  profileEditorRequestSetup = () => {
+    const profileData = this.indexFileData.profile
+    this.newProfileData = {
+      avatarImg: profileData.avatarImg,
+      backgroundImg: profileData.backgroundImg,
+      nameStr: profileData.nameStr,
+      descriptionStr: profileData.descriptionStr,
+    }
+  }
+  handleProfileEditorRequest = () => {
+    // Workaround for React virtual DOM that excludes this change
+    // from resulting in a call to renderItem.
+    // - This only affects campaigns, not the users/constituents.
+    // - At some point we should separate the first card out from
+    //   it being implicitly added in renderItem so this is not needed.
+    // - TODO: ^
+    const workaroundData = [ ...this.state.data ]
+    this.setState({ data: workaroundData, editingProfile: true })
   }
 
-  handlePostEditorRequest = () => {
+  handleProfileEditorCancel = () => {
+    // Workaround for React virtual DOM that excludes this change
+    // from resulting in a call to renderItem.
+    // - This only affects campaigns, not the users/constituents.
+    // - At some point we should separate the first card out from
+    //   it being implicitly added in renderItem so this is not needed.
+    // - TODO: ^
+    const workaroundData = [ ...this.state.data ]
+    this.setState({ data: workaroundData, editingProfile: false })
+  }
+
+  handleProfileEditorSave = () => {
+    // TODO: save the index and with updated data,
+    //       delete the existing images that were
+    //       replaced
+    //
+
+    // Workaround for React virtual DOM that excludes this change
+    // from resulting in a call to renderItem.
+    // - This only affects campaigns, not the users/constituents.
+    // - At some point we should separate the first card out from
+    //   it being implicitly added in renderItem so this is not needed.
+    // - TODO: ^
+    const workaroundData = [ ...this.state.data ]
+    this.setState({ data: workaroundData, editingProfile: false })
+  }
+
+  postEditorRequestSetup = () => {
     this.newPostId = Date.now()
     this.newPostTitle = undefined
     this.newPostDescription = undefined
     this.newPostMedia = undefined
+  }
 
+  handlePostEditorRequest = () => {
+    this.postEditorRequestSetup()
     this.setState({ editingPost: true })
   }
 
@@ -879,7 +1091,7 @@ export default class Feed extends Component {
 
     // 1. write a post file.
     //
-    const postFileName = Feed.getPostFileName(this.newPostId)
+    const postFileName = U.getPostFileName(this.newPostId)
     const postData = {
       title: this.newPostTitle,
       description: this.newPostDescription,
@@ -890,8 +1102,7 @@ export default class Feed extends Component {
 
     try {
       const stringifiedPostData = JSON.stringify(postData)
-      await this.userSession.putFile(
-        postFileName, stringifiedPostData, { encrypt: false } )
+      await cloudIO.putFile(postFileName, stringifiedPostData)
     } catch (error) {
       console.log(`Error while writing ${postFileName}.\n${error}`)
       this.setState({ saving: false })
@@ -912,38 +1123,12 @@ export default class Feed extends Component {
     }
 
     // 3. update the data for this view.
-    // const newDataElementArr = [{
-    //   comments: [],
-    //   header: this.newPostTitle,
-    //   id: this.newPostId,
-    //   filename: postFileName,
-    //   photo: undefined,
-    //   text: this.newPostDescription,
-    //   time: (this.newPostId-Date.now()),
-    //   type: 'article',
-    //   user: {
-    //     firstName: 'Todo',
-    //     lastName: 'Reallysoon',
-    //     photo: '/static/media/Image9.6ab96ea5.png'
-    //   }
-    // }]
-
-    // TODO: un-hack this.
-    //       - probably best to tie it to blockstack profile data
-    //         or to our own profile settings page (b/c then we aren't
-    //         beholden to Blockstack's delays in storing/caching the
-    //         profile data--or their plug-in developer's side-effects.)
     //
-    postData.comments = []
-    postData.type = 'article'
-    postData.user = {
-      firstName: 'Todo',
-      lastName: 'Reallysoon',
-      photo: '/static/media/Image9.6ab96ea5.png'
-    }
-
+    // new post index either starts at 1 if their is no pinned post or 2 if
+    // there is a pinned post b/c of the header which is the 0th post (0th index)
+    //
+    const newPostIndex = (this.indexFileData.pinnedPostId) ? 2 : 1
     const newData = [ ...this.state.data ]
-    const newPostIndex = (this.indexFileData.pinnedPostId) ? 1 : 0
     newData.splice(newPostIndex, 0, postData)
 
     this.setState({
@@ -1013,7 +1198,11 @@ export default class Feed extends Component {
 
       if (postToPin) {
         postToPin.pinned = true
-        updatedData.unshift(postToPin)
+        // Was an unshift, but now a splice to position 1 because of header post:
+        //
+        // updatedData.unshift(postToPin)
+        //
+        updatedData.splice(1, 0, postToPin)
       }
     } else { // unpinning
       // A. Find the post to unpin in the current render list and remove it:
@@ -1022,7 +1211,7 @@ export default class Feed extends Component {
       for (const index in updatedData) {
         const postId = updatedData[index].id
         if (postId === aPostId) {
-          if (index === 0) {
+          if (index === "1") {
             const postToUnpinArr = updatedData.splice(index, 1)
             if (postToUnpinArr) {
               postToUnpin = postToUnpinArr[0]
@@ -1043,12 +1232,19 @@ export default class Feed extends Component {
         // front of that. Special cases include: (1) front of the list.
         // (2) end of the list. (3) only item in the list.
         let inserted = false
+        debugger
         for (const index in updatedData) {
           const postId = updatedData[index].id
           if (aPostId > postId) {
-            if (index === 0) {
+            if (index === "1") {
               // Special case (1)
-              updatedData.unshift(postToUnpin)
+
+              // Was an unshift, but now a splice to position 1 because of header post:
+              //
+              // updatedData.unshift(postToUnpin)
+              //
+              updatedData.splice(1, 0, postToUnpin)
+
               console.log('Inserted at front of list ...')
             } else {
 
@@ -1082,11 +1278,11 @@ export default class Feed extends Component {
     this.setState({ saving: true })
 
     // 1. Delete the data in this post.
-    const postFileName = Feed.getPostFileName(aPostId)
+    const postFileName = U.getPostFileName(aPostId)
     try {
       const emptyPostData = {}
       const sPostData = JSON.stringify(emptyPostData)
-      await this.userSession.putFile(postFileName, sPostData, {encrypt: false})
+      await cloudIO.putFile(postFileName, sPostData)
     } catch (error) {
       console.log(`Unable to delete ${postFileName}.\n${error}`)
       this.setState({ saving: false })
@@ -1142,7 +1338,7 @@ export default class Feed extends Component {
       try {
         const fileNameToDel = deletedPostData.media.fileName
 
-        this.userSession.putFile(fileNameToDel, JSON.stringify({}), {encrypt: false})
+        cloudIO.putFile(fileNameToDel, JSON.stringify({}))
         .then(() => {
           console.log(`Deleted ${fileNameToDel}.`)
         })
@@ -1155,29 +1351,14 @@ export default class Feed extends Component {
     }
   }
 
-  static getFileExtension (aFileName) {
-    // See: https://stackoverflow.com/questions/680929/how-to-extract-extension-from-filename-string-in-javascript
-    const re = /(?:\.([^.]+))?$/
-    const extensionRaw = re.exec(aFileName)[1]
+  // handleSelectedImages:
+  //
+  //   Processes a list of accepted files from a drop zone, by reading and then
+  //   attempting to upload them to a cloud storage. The status and results of
+  //   this operation are stored in aResultObj, which is tied to the state of
+  //   this component to communicate with users.
+  handleSelectedImages = (acceptedFiles, aResultObj) => {
 
-    return extensionRaw
-  }
-
-  getFileType = (aFileName) => {
-    try {
-      const extensionRaw = Feed.getFileExtension(aFileName)
-
-      if (extensionRaw) {
-        const extensionLc = extensionRaw.toLowerCase()
-
-        if (C.IMAGE_EXTENSIONS.includes(extensionLc)) {
-          return C.MEDIA_TYPES.IMAGE
-        } else if (C.VIDEO_EXTENSIONS.includes(extensionLc)) {
-          return C.MEDIA_TYPES.VIDEO
-        }
-      }
-    } catch (suppressedError) {}
-    return C.MEDIA_TYPES.UNKNOWN
   }
 
   handleMediaUpload = async (acceptedFiles) => {
@@ -1223,15 +1404,14 @@ export default class Feed extends Component {
         // Now set newPostMedia values and upload the file:
         this.newPostMedia = {
           originalFileName: firstFile.name,
-          fileName: Feed.getPostMediaFileName(this.newPostId, firstFile.name),
+          fileName: U.getPostMediaFileName(this.newPostId, firstFile.name),
           size: firstFile.size,
-          type: this.getFileType(firstFile.name)
+          type: U.getFileType(firstFile.name)
         }
 
         const postMediaDataBuffer = reader.result
 
-        this.userSession.putFile(
-          this.newPostMedia.fileName, postMediaDataBuffer, { encrypt: false })
+        cloudIO.putFile(this.newPostMedia.fileName, postMediaDataBuffer)
         .then(() => {
           this.setState({mediaUploading: `Media file uploaded: ${this.newPostMedia.originalFileName}`})
         })
@@ -1250,7 +1430,7 @@ export default class Feed extends Component {
       }
       //
       // If the file is the wrong type, return and set state with a message.
-      if (!this.getFileType(firstFile.name)) {
+      if (!U.getFileType(firstFile.name)) {
         this.setState({mediaUploading: `${firstFile.name} is an unsupported type.\nSupported image types: ${C.IMAGE_EXTENSIONS.join()}\nSupported video types: ${C.VIDEO_EXTENSIONS.join()}`})
         return
       }
@@ -1275,37 +1455,26 @@ export default class Feed extends Component {
 
 
   render() {
+    console.log(`render: editingProfile = ${this.state.editingProfile}`)
+
     // console.log('In render, data:', this.state.data)
-    const postEditor = (this.state.editingPost) ?
-      this.renderPostEditor() : undefined
-    const loginButton = (!this.state.editingPost) ?
-      this.getFeedButton('LoginMenu') : undefined
-    const newPostOrLogo = (!this.state.editingPost && this.state.isSignedIn) ?
-      this.getFeedButton('ArticleMenu') :
-      undefined
+    // const postEditor = (this.state.editingPost) ?
+    //   this.renderPostEditor() : undefined
+    const loginButton = (!this.state.editingPost) ? this.getLogInFeedButton() : undefined
+    const newPostButton =
+      (!this.state.editingPost && this.state.isSignedIn) ? this.getNewPostFeedButton() : undefined
+    const contactUsButton = (!this.state.editingPost) ? this.getContactUsFeedButton() : undefined
 
     const leftHeaderContent =
       ( <Text style={styles.headerLogoText} onPress={()=>Linking.openURL('https://referenda.io')}>Referenda</Text> )
-
-    // const leftHeaderContent = (
-    //   <View style={{height:(isMobile ? 21 : 31), width:(isMobile ? 113 : 166)}}>
-    //     <TouchableOpacity
-    //       delayPressIn={70}
-    //       activeOpacity={0.8}
-    //       onPress={()=>Linking.openURL('https://referenda.io')}>
-    //       <Image style={{height:(isMobile ? 21 : 31), width:(isMobile ? 128 : 189)}} source={require('../data/img/logo.png')} />
-    //     </TouchableOpacity>
-    //   </View>)
 
     const rightHeaderContent = (
       <View style={{flexDirection:'row', justifyContent:'flex-end'}}>
         {loginButton}
         <View style={{width:5}} />
-        {newPostOrLogo}
+        {newPostButton}
       </View>
     )
-    // const leftHeaderContent = (this.state.isSignedIn) ? loginButton : newPostOrLogo
-    // const rightHeaderContent = (this.state.isSignedIn) ? newPostOrLogo : loginButton
 
     let activityIndicator = undefined
     if (this.state.initializing || this.state.saving) {
@@ -1327,6 +1496,20 @@ export default class Feed extends Component {
     }
     if (!isMobile) {
       headerContentStyle.maxWidth = 1024
+    }
+
+    const editorWidthStyle = {
+      width: (isMobile ? '100%' : C.MAX_CARD_WIDTH)
+    }
+
+    let feedData = [...this.state.data]   // shallow copy
+    if (this.state.editingPost) {
+      // Append a feed editor cue object for render items
+      feedData.splice(1, 0,
+        {
+          id: this.getUniqueKey(),
+          postEditor: true
+        })
     }
 
     return (
@@ -1376,13 +1559,15 @@ export default class Feed extends Component {
           </View>
         </Header>
 
-        <View style={{paddingHorizontal:(isMobile ? '0vh': '15vh')}} >
-          {postEditor}
-          {activityIndicator}
+        <View style={{width:'100%', alignItems:'center'}} >
+          <View style={editorWidthStyle} >
+            { /* postEditor */ }
+            {activityIndicator}
+          </View>
         </View>
         <Grid>
           <FlatList
-            data={this.state.data}
+            data={feedData}
             renderItem={this.renderItem}
             keyExtractor={this.extractItemKey}
             style={styles.container} />
@@ -1419,18 +1604,28 @@ const styles = StyleSheet.create({
     fontFamily:'arial',
     fontSize: (isMobile ? 14 : 21),
   },
-  firstCardNameText: {
-    paddingHorizontal: 10,
+  firstCardStyle: {
+    width: '100%',
+    height: '33vh',
+    minHeight: 200,
+    maxWidth: (isMobile ? '100%' : 2 * C.MAX_CARD_WIDTH)
+  },
+  firstCardButtonStyle: {
+    borderColor:'lightgray',
+    marginRight: 10
+  },
+  firstCardNameTextStyle: {
     fontFamily:'arial',
     fontSize: (isMobile ? 16 : 21),
     fontWeight:'bold',
     color:'white',
+    marginBottom:1,   // Accounts for line when editing
   },
-  firstCardPositionText: {
-    paddingHorizontal: 10,
+  firstCardPositionTextStyle: {
     fontFamily:'arial',
     fontSize: (isMobile ? 14 : 16),
     color:'white',
+    marginBottom:1, // Accountes for editing line
   },
   firstCardFollowersText: {
     fontFamily:'arial',

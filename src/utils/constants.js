@@ -43,3 +43,5 @@ export const FIRST_CARD_WORKAROUND = {
 export const MEDIA_TYPES = { UNKNOWN: 0, VIDEO: 1, IMAGE: 2}
 export const VIDEO_EXTENSIONS = ['mp4', 'mpeg', 'mpg', 'avi', 'mov']
 export const IMAGE_EXTENSIONS = ['png', 'jpg', 'jpeg', 'bmp', 'gif']
+
+export const MAX_CARD_WIDTH = 512
