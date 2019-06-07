@@ -1,4 +1,5 @@
 export const INDEX_FILE = 'index.json'
+export const CONFIG_FILE = 'config.json'
 
 // export const GAIA_MAP = {
 //   default: 'https://gaia.blockstack.org/hub/16BzKWyRz4MtxQAz4Z1jE4s1GJz2xL1d7z',   // default: https://core.blockstack.org/v1/users/braphaav.personal.id

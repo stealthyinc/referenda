@@ -86,6 +86,11 @@ export default class Article extends Component {
       return undefined
     }
 
+    let avatarImgUrl = undefined
+    try {
+      avatarImgUrl = `${this.props.mediaUrlRoot}/${this.props.avatarImg}`
+    } catch (suppressedError) {}
+
     let image = undefined
     try {
       if (item.media) {
@@ -124,7 +129,7 @@ export default class Article extends Component {
                    onPress={() => {
                     // logEvent('Article avatar pressed')
                     toggleFn()}}>
-                  <Thumbnail source={fcData.avatarImg}/>
+                  <Thumbnail source={avatarImgUrl}/>
                 </TouchableOpacity>
                 <Body style={{marginHorizontal:10}}>
                   <TouchableOpacity

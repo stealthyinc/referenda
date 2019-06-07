@@ -79,10 +79,12 @@ export default class Feed extends Component {
       showArticleModal: false,
       showMessageModal: false,
       profileImgUploading: undefined,
-      bgImgUploading: undefined
+      bgImgUploading: undefined,
+      showUrlBar: undefined,
     };
 
     this.indexFileData = undefined
+    this.configFileData = undefined
 
     this.newProfileData = {
       avatarImg: '',
@@ -189,7 +191,29 @@ export default class Feed extends Component {
         }
       }
     }
-    this.getIndexFileData()
+
+    await this.getIndexFileData()
+
+    // Load the config data to show signed in users the URL bar if needed (only
+    // for publishers though).
+    if (this.state.isSignedIn) {
+      try {
+        this.configFileData = await this.readConfig()
+        // Next line uncomment to test bar dismiss logic
+        // this.configFileData.dismissedUrlBar = false
+      } catch (suppressedError) {
+        this.configFileData = this.getNewConfig()
+        try {
+          this.writeConfig()
+        } catch (suppressedError2) {}
+      }
+
+      if (this.configFileData &&
+          !this.configFileData.dismissedUrlBar) {
+        this.setState({showUrlBar: true})
+      }
+    }
+
     // firebaseInstance.viewPost(firebaseInstance.getUserId())
   }
 
@@ -246,6 +270,23 @@ export default class Feed extends Component {
     this.indexFileData.timeUtc = Date.now()
     const sIndexFileData = JSON.stringify(this.indexFileData)
     await cloudIO.putFile(C.INDEX_FILE, sIndexFileData)
+  }
+
+  getNewConfig = () => {
+    return {
+      dismissedUrlBar: false
+    }
+  }
+
+  readConfig = async () => {
+    // Note: rawData will be null if the file does not exist.
+    return await cloudIO.getFile(C.CONFIG_FILE)
+  }
+
+  writeConfig = async () => {
+    this.configFileData.timeUtc = Date.now()
+    const sConfigFileData = JSON.stringify(this.configFileData)
+    await cloudIO.putFile(C.CONFIG_FILE, sConfigFileData)
   }
 
   // TODO: refactor this into something clean when and lightweight when it all
@@ -550,7 +591,7 @@ export default class Feed extends Component {
     let editButton = undefined
     if (this.state.isSignedIn && !this.state.editingProfile) {
       editButton = (
-        <Button small rounded success bordered style={styles.firstCardButtonStyle}
+        <Button small rounded success style={styles.firstCardButtonStyle}
           onPress={() => this.handleProfileEditorRequest()}>
           <Icon name='create'/>
         </Button>
@@ -561,13 +602,13 @@ export default class Feed extends Component {
     let saveButton = undefined
     if (this.state.editingProfile) {
       cancelButton = (
-        <Button small rounded danger bordered style={styles.firstCardButtonStyle}
+        <Button small rounded danger style={styles.firstCardButtonStyle}
           onPress={() => this.handleProfileEditorCancel()}>
           <Icon name='close-circle-outline'/>
         </Button>
       )
       saveButton = (
-        <Button small rounded info bordered style={styles.firstCardButtonStyle}
+        <Button small rounded info style={styles.firstCardButtonStyle}
           onPress={() => this.handleProfileEditorSave()}>
           <Icon name='checkbox'/>
         </Button>
@@ -733,8 +774,6 @@ export default class Feed extends Component {
   }
 
   renderItem = ({ item }) => {
-    console.log(`renderItem: editingProfile = ${this.state.editingProfile}`)
-
     // Render the header.
     if (item && item.hasOwnProperty('header') && item.header) {
       console.log(`renderItem: rendering header call for item`, item)
@@ -905,23 +944,82 @@ export default class Feed extends Component {
         </Text> ) :
       undefined
 
+    if (isMobile) {
+      return (
+        <View style={{
+          flexDirection:'row',
+          position: 'absolute',
+          bottom: 10,
+          right: 15}}>
+          <Amplitude eventProperties={{campaign: this.campaignName, buttonAction: icon, isMobile, userId: firebaseInstance.getUserId()}}>
+            {({ logEvent }) =>
+              <Button large
+                style={{
+                  backgroundColor: 'rgba(92, 184, 92, 0.75)',
+                  height:60,
+                  width:60,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: 30,
+                  borderStyle:'solid',
+                  borderTopWidth:1,
+                  borderBottomWidth:1,
+                  borderRightWidth:1,
+                  borderLeftWidth:1,
+                  borderColor:'gray'}}
+                onPress={(event) => this.handlePostEditorRequest(event, logEvent)}>
+                <Icon name={icon}/>
+                {buttonText}
+              </Button>
+            }
+          </Amplitude>
+        </View>
+      )
+    } else {
+      return (
+        <Amplitude eventProperties={{campaign: this.campaignName, buttonAction: icon, isMobile, userId: firebaseInstance.getUserId()}}>
+          {({ logEvent }) =>
+            <Button success bordered small={isMobile} iconLeft={!isMobile}
+              style={styles.feedButton}
+              onPress={(event) => this.handlePostEditorRequest(event, logEvent)}>
+              <Icon style={{marginLeft:0, marginRight:0}} name={icon}/>
+              {buttonText}
+            </Button>
+          }
+        </Amplitude>
+      )
+    }
+  }
+
+  getContactUsFeedButton = () => {
+    const icon = 'mail-open'
+
     return (
       <Amplitude eventProperties={{campaign: this.campaignName, buttonAction: icon, isMobile, userId: firebaseInstance.getUserId()}}>
         {({ logEvent }) =>
           <Button success bordered small={isMobile} iconLeft={!isMobile}
             style={styles.feedButton}
-            onPress={(event) => this.handlePostEditorRequest(event, logEvent)}>
+            onPress={(event) => {console.log('TODO: PBJ - MAKE THIS A MAILTO')}}>
             <Icon style={{marginLeft:0, marginRight:0}} name={icon}/>
-            {buttonText}
           </Button>
         }
       </Amplitude>
     )
   }
 
-  getContactUsFeedButton = () => {
+  getShareFeedButton = () => {
+    const icon = 'share-alt'
+
     return (
-      undefined
+      <Amplitude eventProperties={{campaign: this.campaignName, buttonAction: icon, isMobile, userId: firebaseInstance.getUserId()}}>
+        {({ logEvent }) =>
+          <Button success bordered small={isMobile} iconLeft={!isMobile}
+            style={styles.feedButton}
+            onPress={(event) => {this.setState({showUrlBar: true})}}>
+            <Icon style={{marginLeft:0, marginRight:0}} name={icon}/>
+          </Button>
+        }
+      </Amplitude>
     )
   }
 
@@ -1634,28 +1732,97 @@ export default class Feed extends Component {
     this.newPostDescription = theDescriptionText
   }
 
+  handleDismissUrlBar = () => {
+    this.setState({showUrlBar: false})
+
+    this.configFileData.dismissedUrlBar = true
+    this.writeConfig()
+  }
+
+  renderUrlBar = () => {
+    if (!this.state.isSignedIn) {
+      return undefined
+    }
+
+    if (!this.state.showUrlBar) {
+      return undefined
+    }
+
+    let cancelButton = (
+      <Button small rounded danger style={styles.urlBarCancelButtonStyle}
+        onPress={() => this.handleDismissUrlBar()}>
+        <Icon name='close-circle-outline'/>
+      </Button>
+    )
+
+    return (
+      <View style={{
+        width:'100%',
+        flexDirection: 'row',
+        justifyContent: 'center'
+      }}>
+        <View style={{
+          width:(isMobile ? '100%' : 2*C.MAX_CARD_WIDTH),
+          flexDirection:'row',
+          justifyContent: 'space-between',
+          backgroundColor: '#34bbed',
+          padding:15,
+          alignItems: 'center',
+        }}>
+          <Text style={{
+            fontFamily: 'arial',
+            fontSize: (!isMobile ? 24 : 16),
+            color: 'white',
+          }}>
+            Posts publically visible here: <Text style={{
+              fontFamily: 'arial',
+              fontSize: (!isMobile ? 24: 16),
+              color: 'white',
+              fontWeight:'bold'}}>{window.location.href}</Text>
+          </Text>
+          {cancelButton}
+        </View>
+      </View>
+    )
+  }
 
   render() {
-    console.log(`render: editingProfile = ${this.state.editingProfile}`)
-
     // console.log('In render, data:', this.state.data)
     // const postEditor = (this.state.editingPost) ?
     //   this.renderPostEditor() : undefined
     const loginButton = (!this.state.editingPost) ? this.getLogInFeedButton() : undefined
     const newPostButton =
       (!this.state.editingPost && this.state.isSignedIn) ? this.getNewPostFeedButton() : undefined
-    const contactUsButton = (!this.state.editingPost) ? this.getContactUsFeedButton() : undefined
+    const contactUsButton = this.getContactUsFeedButton()
+    const shareButton = this.getShareFeedButton()
+
+    const newPostButtonMobile = isMobile ? newPostButton : undefined
 
     const leftHeaderContent =
       ( <Text style={styles.headerLogoText} onPress={()=>Linking.openURL('https://referenda.io')}>Referenda</Text> )
 
-    const rightHeaderContent = (
-      <View style={{flexDirection:'row', justifyContent:'flex-end'}}>
-        {loginButton}
-        <View style={{width:5}} />
-        {newPostButton}
-      </View>
-    )
+    const buttonSpacer = (<View style={{width:5}} />)
+    const rightHeaderContent = isMobile ?
+      (
+        <View style={{flexDirection:'row', justifyContent:'flex-end'}}>
+          {shareButton}
+          {buttonSpacer}
+          {contactUsButton}
+          {buttonSpacer}
+          {loginButton}
+        </View>
+      ) :
+      (
+        <View style={{flexDirection:'row', justifyContent:'flex-end'}}>
+          {shareButton}
+          {buttonSpacer}
+          {contactUsButton}
+          {buttonSpacer}
+          {loginButton}
+          {buttonSpacer}
+          {newPostButton}
+        </View>
+      )
 
     let activityIndicator = undefined
     if (this.state.initializing || this.state.saving) {
@@ -1665,18 +1832,6 @@ export default class Feed extends Component {
             <ActivityIndicator size='large' color='black'/>
             <Text style={{fontFamily:'arial', fontSize:27, color:'rgba(242, 242, 242, 1)'}}> {aiText}</Text>
         </View> )
-    }
-
-    let headerContentStyle = {
-      width: '100%',
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      paddingLeft: (isMobile ? 5 : 0),
-      paddingRight: (isMobile ? 5 : 0),
-      alignItems: 'center'
-    }
-    if (!isMobile) {
-      headerContentStyle.maxWidth = 2*C.MAX_CARD_WIDTH
     }
 
     const headerWidthStyle = {
@@ -1721,6 +1876,11 @@ export default class Feed extends Component {
         })
     }
 
+    let avatarImg = undefined
+    try {
+      avatarImg = this.indexFileData.profile.avatarImg
+    } catch (suppressedError) {}
+
     return (
       <Container>
         <LogOnMount eventType="Campaign Viewed" eventProperties={{campaign: this.campaignName, userId: firebaseInstance.getUserId()}} />
@@ -1744,6 +1904,7 @@ export default class Feed extends Component {
         />
         <ModalContainer
           component={ <ArticleContainer
+                          avatarImg={avatarImg}
                           toggleModal={this.toggleArticleModal}
                           togglePhoneModal={this.togglePhoneModal}
                           item={this.articleModalItem}
@@ -1761,8 +1922,9 @@ export default class Feed extends Component {
           toggleModal={this.toggleMessageModal}
           modalHeader='App Sign Up'
         />
+        {this.renderUrlBar()}
         <Header transparent style={styles.headerStyle}>
-          <View style={headerContentStyle}>
+          <View style={styles.headerContentStyle}>
             {leftHeaderContent}
             {rightHeaderContent}
           </View>
@@ -1781,6 +1943,7 @@ export default class Feed extends Component {
             keyExtractor={this.extractItemKey}
             style={styles.container} />
         </Grid>
+        {newPostButtonMobile}
       </Container>
     )
   }
@@ -1795,6 +1958,15 @@ const styles = StyleSheet.create({
   headerStyle: {
     flexDirection: "row",
     alignItems: 'center',
+  },
+  headerContentStyle: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingLeft: (isMobile ? 5 : 0),
+    paddingRight: (isMobile ? 5 : 0),
+    alignItems: 'center',
+    maxWidth: (isMobile ? '100%' : 2*C.MAX_CARD_WIDTH)
   },
   feedButtonText: {
     fontFamily:'arial',
@@ -1825,7 +1997,16 @@ const styles = StyleSheet.create({
   },
   firstCardButtonStyle: {
     borderColor:'lightgray',
+    borderStyle:'solid',
+    borderTopWidth:1,
+    borderBottomWidth:1,
+    borderLeftWidth:1,
+    borderRightWidth:1,
     marginRight: 10
+  },
+  urlBarCancelButtonStyle: {
+    marginRight: 0,
+    marginLeft: 0,
   },
   firstCardNameTextStyle: {
     fontFamily:'arial',
