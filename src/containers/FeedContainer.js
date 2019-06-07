@@ -999,7 +999,7 @@ export default class Feed extends Component {
         {({ logEvent }) =>
           <Button success bordered small={isMobile} iconLeft={!isMobile}
             style={styles.feedButton}
-            onPress={(event) => {console.log('TODO: PBJ - MAKE THIS A MAILTO')}}>
+            onPress={(event) => {Linking.openURL('mailto:campaign@referenda.io?subject=help with campaign&body=')}}>
             <Icon style={{marginLeft:0, marginRight:0}} name={icon}/>
           </Button>
         }
