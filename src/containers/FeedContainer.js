@@ -78,6 +78,8 @@ export default class Feed extends Component {
       showPhoneModal: false,
       showArticleModal: false,
       showMessageModal: false,
+      profileImgUploading: undefined,
+      bgImgUploading: undefined
     };
 
     this.indexFileData = undefined
@@ -493,7 +495,56 @@ export default class Feed extends Component {
     this.setState({showMessageModal: !this.state.showMessageModal})
   }
 
-  renderHeader = () => {
+  renderHeader = (headerData) => {
+    let statusDisplay = undefined
+
+    if (headerData && headerData.editing) {
+
+      let avatarUploadActivity = undefined
+      let avatarStatus = undefined
+      if (headerData && headerData.profileImgUploading) {
+        if (headerData.profileImgUploading.uploading) {
+          avatarUploadActivity = ( <ActivityIndicator size='small' color='white' style={{marginRight:10}}/> )
+        }
+
+        if (headerData.profileImgUploading.status) {
+          avatarStatus = (<Text style={styles.profileHeaderStatusTextStyle}>{`Set avatar: ${headerData.profileImgUploading.status}`}</Text>)
+        }
+
+        if (headerData.profileImgUploading.hasOwnProperty('fileName')) {
+          this.newProfileData.avatarImg = headerData.profileImgUploading.fileName
+        }
+      }
+
+      let backgroundUploadActivity = undefined
+      let backgroundStatus = undefined
+      if (headerData && headerData.bgImgUploading) {
+        if (headerData.bgImgUploading.uploading) {
+          backgroundUploadActivity = ( <ActivityIndicator size='small' color='white' style={{marginRight:10}}/> )
+        }
+
+        if (headerData.bgImgUploading.status) {
+          backgroundStatus = (<Text style={styles.profileHeaderStatusTextStyle}>{`Set background: ${headerData.bgImgUploading.status}`}</Text>)
+        }
+
+        if (headerData.bgImgUploading.hasOwnProperty('fileName')) {
+          this.newProfileData.backgroundImg = headerData.bgImgUploading.fileName
+        }
+      }
+
+      statusDisplay = (
+        <View style={styles.profileStatusDisplayStyle}>
+          <View style={{flexDirection: 'row', justifyContent: 'flexStart'}}>
+            {avatarUploadActivity}
+            {avatarStatus}
+          </View>
+          <View style={{flexDirection: 'row', justifyContent: 'flexStart'}}>
+            {backgroundUploadActivity}
+            {backgroundStatus}
+          </View>
+        </View>
+      )
+    }
 
     // Allow the user to edit the first card data.
     let editButton = undefined
@@ -517,7 +568,7 @@ export default class Feed extends Component {
       )
       saveButton = (
         <Button small rounded info bordered style={styles.firstCardButtonStyle}
-          onPress={() => this.handleProfileEditorCancel()}>
+          onPress={() => this.handleProfileEditorSave()}>
           <Icon name='checkbox'/>
         </Button>
       )
@@ -529,20 +580,7 @@ export default class Feed extends Component {
     if (this.state.editingProfile) {
       nameLine = (
         <Input
-          style={{
-            flex:0,
-            width:'50%',
-            paddingLeft:0,
-            paddingRight:0,
-            fontFamily:'arial',
-            fontStyle:'italic',
-            fontSize:(isMobile ? 16 : 21),
-            fontWeight:'bold',
-            color:'white',
-            placeholderTextColor: 'white',
-            borderBottomColor:'rgb(242, 242, 242)',
-            borderBottomWidth: 1,
-            borderBottomStyle: 'solid'}}
+          style={styles.profileNameInputStyle}
           multiline={false}
           onChangeText={(text) => {this.newProfileData.nameStr = text}}
           placeholder={profileData.nameStr}
@@ -555,19 +593,7 @@ export default class Feed extends Component {
     if (this.state.editingProfile) {
       descriptionLine = (
         <Input
-          style={{
-            flex:0,
-            width: (isMobile ? '100%' : '75%'),
-            paddingLeft:0,
-            paddingRight:0,
-            fontFamily:'arial',
-            fontStyle:'italic',
-            fontSize:(isMobile ? 14 : 16),
-            color:'white',
-            placeholderTextColor: 'white',
-            borderBottomColor:'rgb(242, 242, 242)',
-            borderBottomWidth: 1,
-            borderBottomStyle: 'solid'}}
+          style={styles.profileDescriptionInputStyle}
           multiline={false}
           onChangeText={(text) => {this.newProfileData.descriptionStr = text}}
           placeholder={profileData.descriptionStr}
@@ -577,18 +603,14 @@ export default class Feed extends Component {
 
     const spacer = ( <View style={{width:'100%', height:10}} /> )
 
-    let dzoneStyle = {
-      borderStyle:'dashed',
-      borderWidth: 2,
-      borderRadius: 10,
-      borderColor:'rgb(204,204,204)',
-      paddingHorizontal: 15,
-      minWidth: '50%',
-      flexDirection: 'column',
-      justifyContent: 'center'
+    const bgImgStateVarName = 'bgImgUploading'
+    const fileFilterObj = {
+      maxSize:24500000,
+      fileTypes: [C.MEDIA_TYPES.IMAGE]
     }
 
-    let dzoneTextStyle = {
+    // Can't move this to react styles--causes error in translation
+    let profileBackgroundDropzoneTextStyle = {
       textAlign:'center',
       marginVertical:3,
       color:'white',
@@ -599,15 +621,17 @@ export default class Feed extends Component {
     let backgroundDropZone = undefined
     if (this.state.editingProfile) {
       backgroundDropZone = (
-        <View style={dzoneStyle}>
-          <Dropzone>
+        <View style={styles.profileBackgroundDropzoneStyle}>
+          <Dropzone onDrop={
+            (acceptedFiles) => this.handleUploadRequest(acceptedFiles, bgImgStateVarName, fileFilterObj)
+          }>
             {({getRootProps, getInputProps}) => (
               <section>
                 <div {...getRootProps()}>
                   <input {...getInputProps()} />
-                  <div style={dzoneTextStyle}>Drag 'n' drop</div>
-                  <div style={dzoneTextStyle}>or click here to</div>
-                  <div style={dzoneTextStyle}>set background</div>
+                  <div style={profileBackgroundDropzoneTextStyle}>Drag 'n' drop</div>
+                  <div style={profileBackgroundDropzoneTextStyle}>or click here to</div>
+                  <div style={profileBackgroundDropzoneTextStyle}>set background</div>
                 </div>
               </section>
             )}
@@ -616,62 +640,67 @@ export default class Feed extends Component {
       )
     }
 
-    let profileDzoneStyle = {
-      borderStyle:'dashed',
-      borderWidth: 2,
-      borderRadius: 40,
-      borderColor:'rgb(204,204,204)',
-      height:80,
-      width:80,
-      flexDirection: 'column',
-      justifyContent: 'center',
-      marginLeft: 10
-    }
-
-    let profileDzoneTextStyle = {
-      textAlign:'center',
-      marginVertical:3,
-      color:'white',
-      fontFamily:'arial',
-      fontSize:12
-    }
-
+    let avatarImgUrl = `${this.mediaUrlRoot}/${profileData.avatarImg}`
     let profileImgOrDropZone =
       ( <Thumbnail large
-          style={{marginLeft:10,
-                  borderWidth:2,
-                  borderColor:'white',
-                  borderStyle:'solid'}}
-          source={profileData.avatarImg}/> )
+          style={styles.profileAvatarStyle}
+          source={avatarImgUrl}/> )
 
+    const profileImgStateVarName = 'profileImgUploading'
     if (this.state.editingProfile) {
+
+      // Can't move this to react styles--causes error in translation
+      const profileAvatarDropzoneTextStyle = {
+        textAlign:'center',
+        marginVertical:3,
+        color:'white',
+        fontFamily:'arial',
+        fontSize:12
+      }
+
+      if (this.newProfileData && this.newProfileData.avatarImg &&
+          this.newProfileData.avatarImg !== this.indexFileData.profile.avatarImg) {
+        avatarImgUrl = `${this.mediaUrlRoot}/${this.newProfileData.avatarImg}`
+      }
+
       profileImgOrDropZone = (
-        <View style={profileDzoneStyle}>
-          <Dropzone
-            onDrop={(acceptedFiles, resultObj) => this.handleSelectedImages(acceptedFiles, resultObj)}>
+        <ImageBackground
+          source={{uri: avatarImgUrl}}
+          style={styles.profileAvatarDropzoneStyle}
+          imageStyle={styles.profileAvatarDropzoneImageStyle}>
+          <Dropzone onDrop={
+            (acceptedFiles) => this.handleUploadRequest(acceptedFiles, profileImgStateVarName, fileFilterObj)
+          }>
             {({getRootProps, getInputProps}) => (
               <section>
                 <div {...getRootProps()}>
                   <input {...getInputProps()} />
-                  <div style={profileDzoneTextStyle}>Drag or</div>
-                  <div style={profileDzoneTextStyle}>click to</div>
-                  <div style={profileDzoneTextStyle}>set avatar</div>
+                  <div style={profileAvatarDropzoneTextStyle}>Drag or</div>
+                  <div style={profileAvatarDropzoneTextStyle}>click to</div>
+                  <div style={profileAvatarDropzoneTextStyle}>set avatar</div>
                 </div>
               </section>
             )}
           </Dropzone>
-        </View>
+        </ImageBackground>
+
       )
     }
 
+    let bgImgUrl = `${this.mediaUrlRoot}/${profileData.backgroundImg}`
+    if (this.newProfileData && this.newProfileData.backgroundImg &&
+        this.newProfileData.backgroundImg !== this.indexFileData.profile.backgroundImg) {
+      bgImgUrl = `${this.mediaUrlRoot}/${this.newProfileData.backgroundImg}`
+    }
     return (
       <View style={{alignItems:'center'}}>
         <ImageBackground
-          source={{uri: profileData.fcBackgroundImg}}
+          source={{uri: bgImgUrl}}
           resizeMode='cover'
           style={styles.firstCardStyle}>
           <View style={{width:'100%', height:'100%', backgroundColor:'rgba(0,0,0,0.4)',
                         flexDirection:'column', justifyContent:'flex-end',}}>
+            {statusDisplay}
             <View style={{flexDirection: 'row', width: '100%'}}>
               {profileImgOrDropZone}
               <View style={{flex: 1, flexDirection:'row', justifyContent:'center'}}>
@@ -709,7 +738,7 @@ export default class Feed extends Component {
     // Render the header.
     if (item && item.hasOwnProperty('header') && item.header) {
       console.log(`renderItem: rendering header call for item`, item)
-      return this.renderHeader()
+      return this.renderHeader(item)
     }
 
     if (item && item.hasOwnProperty('postEditor') && item.postEditor) {
@@ -773,8 +802,12 @@ export default class Feed extends Component {
       width: (isMobile ? '100%' : C.MAX_CARD_WIDTH)
     }
 
-    const profileImg = this.indexFileData.profile.avatarImg ?
-      ( <Thumbnail source={this.indexFileData.profile.avatarImg}/> ) : undefined
+    let profileImg = undefined
+    if (this.indexFileData.profile.avatarImg) {
+      const profileImgUrl = `${this.mediaUrlRoot}/${this.indexFileData.profile.avatarImg}`
+      profileImg =
+        ( <Thumbnail source={profileImgUrl}/> )
+    }
 
     return (
       <View style={{alignItems:'center'}}>
@@ -1033,17 +1066,58 @@ export default class Feed extends Component {
   }
 
   handleProfileEditorCancel = () => {
-    this.setState({ editingProfile: false })
+    this.newProfileData = {
+      avatarImg: '',
+      backgroundImg: '',
+      nameStr: '',
+      descriptionStr: '',
+    }
+    this.setState({
+      profileImgUploading: undefined,
+      bgImgUploading: undefined,
+      editingProfile: false
+    })
   }
 
-  handleProfileEditorSave = () => {
-    // TODO: save the index and with updated data,
-    //       delete the existing images that were
-    //       replaced
+  handleProfileEditorSave = async () => {
     //
+    // 1. Compare the profile data to the existing and save any changes, storing
+    //    a list of replaced files to delete.
+    //
+    let saveRequired = false
+    const profileImagesToDelete = []
+    for (const property of ['avatarImg', 'backgroundImg', 'nameStr', 'descriptionStr']) {
+      if (this.indexFileData.profile[property] !== this.newProfileData[property]) {
+        saveRequired = true
+        if (property === 'avatarImg' || property === 'backgroundImg') {
+          if (this.indexFileData.profile[property]) {
+            profileImagesToDelete.push(this.indexFileData.profile[property])
+          }
+        }
 
+        this.indexFileData.profile[property] = this.newProfileData[property]
+      }
+    }
+    try {
+      // TODO: Present the user with status messaging in the header.
+      if (saveRequired) {
+        await this.writeIndex()
+      }
+    } catch (error) {
+      // TODO: Present the user with a message. Indicating the problem.
+      // We don't shut down the editor b/c they can still cancel out.
+      console.error(`Error saving ${C.INDEX_FILE}.\n${error}`)
+      return
+    }
+
+    //
+    // 2. Update the data that the user is viewing and close the editor.
+    //
     const newData = [ ...this.state.data ]
     this.setState({ data: newData, editingProfile: false })
+
+    // 3. Delete the replaced profile images (don't block on this)
+    //
   }
 
   postEditorRequestSetup = () => {
@@ -1213,7 +1287,6 @@ export default class Feed extends Component {
         // front of that. Special cases include: (1) front of the list.
         // (2) end of the list. (3) only item in the list.
         let inserted = false
-        debugger
         for (const index in updatedData) {
           const postId = updatedData[index].id
           if (aPostId > postId) {
@@ -1335,14 +1408,138 @@ export default class Feed extends Component {
     }
   }
 
-  // handleSelectedImages:
-  //
-  //   Processes a list of accepted files from a drop zone, by reading and then
-  //   attempting to upload them to a cloud storage. The status and results of
-  //   this operation are stored in aResultObj, which is tied to the state of
-  //   this component to communicate with users.
-  handleSelectedImages = (acceptedFiles, aResultObj) => {
+  /** handleUploadRequest:
+   *
+   *    Processes a list of accepted files from a drop zone, by reading and then
+   *    attempting to upload them to a cloud storage.
+   *
+   *  @param theAcceptedFiles is an array containing file handles to process.
+   *                          This method only processes the first file handle
+   *                          ignoring any others.
+   *  @param aStateObjVarName is a string that is the name of the state variable
+   *                          for an object instance storing whether the process
+   *                          is active, it's last status string and finally the
+   *                          results of this operation if successful:
+   *                          this.state.<aStateObjVarName>: {
+   *                            active: [true|false],
+   *                            status: 'a string'
+   *                            originalFileName: 'filename.ext',
+   *                            fileName: 'p<32084028930820493>.<ext>',
+   *                            size: <a number of bytes>,
+   *                            type: <a file type from constants, i.e. MEDIA_TYPES.IMAGE>,
+   *                            data: <the data uploaded / read from theAcceptedFiles>
+   *                          }
+   *  @param aFileFilterObj is an object containing the types of files accepted
+   *                        and the maximum file size permitted:
+   *                        {
+   *                          fileTypes: <An array of file types from constants, i.e. [MEDIA_TYPES.IMAGE]>
+   *                          maxSize: <a number of bytes>
+   *                        }
+   */
+  handleUploadRequest = (theAcceptedFiles,
+                         aStateObjVarName,
+                         aFileFilterObj={ maxSize:24500000, fileTypes:[] }) =>
+  {
+    if (!theAcceptedFiles || (theAcceptedFiles.length < 1) || !aStateObjVarName) {
+      return
+    }
 
+    const fileHandle = theAcceptedFiles[0]
+    const stateObj = {}
+    const reader = new FileReader()
+
+    reader.onabort = () => {
+      stateObj[aStateObjVarName] = {
+        active: false,
+        status: `Processing ${fileHandle.name} aborted.`
+      }
+      this.setState(stateObj)
+    }
+
+    reader.onerror = () => {
+      stateObj[aStateObjVarName] = {
+        active: false,
+        status: `Processing ${fileHandle.name} failed. ${reader.error}`
+      }
+      this.setState(stateObj)
+    }
+
+    reader.onload = () => {
+      stateObj[aStateObjVarName] = {
+        active: true,
+        status: `Uploading ${fileHandle.name}.`
+      }
+      this.setState(stateObj)
+
+      const uploadConfig = {
+        originalFileName: fileHandle.name,
+        fileName: U.getPostMediaFileName(Date.now(), fileHandle.name),
+        size: fileHandle.size,
+        type: U.getFileType(fileHandle.name),
+      }
+
+      cloudIO.putFile(uploadConfig.fileName, reader.result)
+      .then(() => {
+        stateObj[aStateObjVarName] = {
+          active: false,
+          status: `Uploaded ${fileHandle.name}.`,
+          originalFileName: uploadConfig.originalFileName,
+          fileName: uploadConfig.fileName,
+          size: uploadConfig.size,
+          type: uploadConfig.type
+        }
+        this.setState(stateObj)
+      })
+      .catch((error) => {
+        stateObj[aStateObjVarName] = {
+          active: false,
+          status: `Uploading ${fileHandle.name} failed. ${error}`
+        }
+        this.setState(stateObj)
+      })
+    }
+
+    if (aFileFilterObj) {
+      if (aFileFilterObj.hasOwnProperty('maxSize') &&
+        (fileHandle.size > aFileFilterObj.maxSize)) {
+        // TODO: format status to something a user would understand.
+        stateObj[aStateObjVarName] = {
+          active: false,
+          status: `${fileHandle.name} is too large. It must be less than ${aFileFilterObj.maxSize} bytes.`
+        }
+        this.setState(stateObj)
+        return
+      }
+
+      if (aFileFilterObj.hasOwnProperty('fileTypes') &&
+          aFileFilterObj.fileTypes) {
+        const fileType = U.getFileType(fileHandle.name)
+        if (!aFileFilterObj.fileTypes.includes(fileType)) {
+          let supportedTypes = ''
+          for (const filterType of aFileFilterObj.fileTypes) {
+            if (filterType === C.MEDIA_TYPES.VIDEO) {
+              supportedTypes += `Supported video types: ${C.VIDEO_EXTENSIONS.join()}. `
+            } else if (filterType === C.MEDIA_TYPES.IMAGE) {
+              supportedTypes += `Supported image types: ${C.IMAGE_EXTENSIONS.join()}. `
+            }
+          }
+
+          stateObj[aStateObjVarName] = {
+            active: false,
+            status: `${fileHandle.name} is an unsupported file type. ${supportedTypes}`
+          }
+          this.setState(stateObj)
+          return
+        }
+      }
+    }
+
+    stateObj[aStateObjVarName] = {
+      active: true,
+      status: `Reading ${fileHandle.name}.`
+    }
+    this.setState(stateObj)
+    reader.readAsArrayBuffer(fileHandle)
   }
 
   handleMediaUpload = async (acceptedFiles) => {
@@ -1479,14 +1676,42 @@ export default class Feed extends Component {
       alignItems: 'center'
     }
     if (!isMobile) {
-      headerContentStyle.maxWidth = 1024
+      headerContentStyle.maxWidth = 2*C.MAX_CARD_WIDTH
     }
 
-    const editorWidthStyle = {
-      width: (isMobile ? '100%' : C.MAX_CARD_WIDTH)
+    const headerWidthStyle = {
+      width: (isMobile ? '100%' : 2*C.MAX_CARD_WIDTH)
     }
 
     let feedData = [...this.state.data]   // shallow copy
+
+    // Logic to update the header
+    if (feedData && feedData.length > 0) {
+      const headerItem = feedData[0]
+      headerItem.editing = this.state.editingProfile
+
+      try { // DO NOT COMBINE TRY BLOCK WITH OTHERS
+        headerItem.profileImgUploading = {
+          uploading: this.state.profileImgUploading.active,
+          status: this.state.profileImgUploading.status,
+          // data: this.profileImgUploading.data,
+        }
+
+        headerItem.profileImgUploading.fileName = this.state.profileImgUploading.fileName
+        // headerItem.profileImgUploading.data = this.state.profileImgUploading.data
+      } catch (suppressedError) {}
+
+      try { // DO NOT COMBINE TRY BLOCK WITH OTHERS
+        headerItem.bgImgUploading = {
+          uploading: this.state.bgImgUploading.active,
+          status: this.state.bgImgUploading.status,
+        }
+
+        headerItem.bgImgUploading.fileName = this.state.bgImgUploading.fileName
+        // headerItem.bgImgUploading.data = this.state.bgImgUploading.data
+      } catch (suppressedError) {}
+    }
+
     if (this.state.editingPost) {
       // Append a feed editor cue object for render items
       feedData.splice(1, 0,
@@ -1544,7 +1769,7 @@ export default class Feed extends Component {
         </Header>
 
         <View style={{width:'100%', alignItems:'center'}} >
-          <View style={editorWidthStyle} >
+          <View style={headerWidthStyle} >
             { /* postEditor */ }
             {activityIndicator}
           </View>
@@ -1566,6 +1791,10 @@ const styles = StyleSheet.create({
     fontFamily:'arial',
     fontSize: (isMobile ? 27 : 40),
     color:'gray'
+  },
+  headerStyle: {
+    flexDirection: "row",
+    alignItems: 'center',
   },
   feedButtonText: {
     fontFamily:'arial',
@@ -1636,14 +1865,80 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     paddingHorizontal:0
   },
-  headerStyle: {
-    flexDirection: "row",
-    // justifyContent: "space-between",
-    alignItems: 'center',
-    // paddingLeft: (isMobile ? 5 : '15vh'),
-    // paddingRight: (isMobile ? 5 : '15vh')
-  },
   icon: {
     margin: 5,
   },
+  profileHeaderStatusTextStyle: {
+    fontFamily:'arial',
+    fontSize: (isMobile ? 14 : 16),
+    color: 'white',
+    marginBottom: 3,
+  },
+  profileStatusDisplayStyle: {
+    width:'100%',
+    flex:1,
+    paddingHorizontal:10,
+    marginBottom:3,
+    flexDirection: 'column',
+    justifyContent:'center'
+  },
+  profileNameInputStyle: {
+    flex:0,
+    width:'50%',
+    paddingLeft:0,
+    paddingRight:0,
+    fontFamily:'arial',
+    fontStyle:'italic',
+    fontSize:(isMobile ? 16 : 21),
+    fontWeight:'bold',
+    color:'white',
+    placeholderTextColor: 'white',
+    borderBottomColor:'rgb(242, 242, 242)',
+    borderBottomWidth: 1,
+    borderBottomStyle: 'solid'
+  },
+  profileDescriptionInputStyle: {
+    flex:0,
+    width: (isMobile ? '100%' : '75%'),
+    paddingLeft:0,
+    paddingRight:0,
+    fontFamily:'arial',
+    fontStyle:'italic',
+    fontSize:(isMobile ? 14 : 16),
+    color:'white',
+    placeholderTextColor: 'white',
+    borderBottomColor:'rgb(242, 242, 242)',
+    borderBottomWidth: 1,
+    borderBottomStyle: 'solid'
+  },
+  profileBackgroundDropzoneStyle: {
+    borderStyle:'dashed',
+    borderWidth: 2,
+    borderRadius: 10,
+    borderColor:'rgb(204,204,204)',
+    paddingHorizontal: 15,
+    minWidth: '50%',
+    flexDirection: 'column',
+    justifyContent: 'center'
+  },
+  profileAvatarDropzoneStyle: {
+    borderStyle:'dashed',
+    borderWidth: 2,
+    borderRadius: 40,
+    borderColor:'rgb(204,204,204)',
+    height:80,
+    width:80,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    marginLeft: 10
+  },
+  profileAvatarDropzoneImageStyle: {
+    borderRadius: 40,
+  },
+  profileAvatarStyle: {
+    marginLeft:10,
+    borderWidth:2,
+    borderColor:'white',
+    borderStyle:'solid'
+  }
 });
