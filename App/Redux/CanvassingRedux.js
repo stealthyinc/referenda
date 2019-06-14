@@ -29,7 +29,7 @@ export const CanvasSelectors = {
 
 // request the data from an api
 export const request = (state, { data }) => {
-  state.merge({ data })
+  return state.merge({ data })
 }
 
 

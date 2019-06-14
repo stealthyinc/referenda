@@ -1,91 +1,83 @@
-import React, { Component } from 'react'
-import { ScrollView, Text, TouchableOpacity, Image } from 'react-native'
+import { Component } from 'react'
 import { connect } from 'react-redux'
-// Add Actions - replace 'Your' with whatever your reducer is called :)
-// import YourActions from '../Redux/YourRedux'
-
-// Styles
-import styles from './Styles/CanvasConstituentSearchStyle'
-import NavigationType from '../Navigation/propTypes';
 import CanvasActions, { CanvasSelectors } from '../Redux/CanvassingRedux'
-
-const avatarArr = {
-  0: require('../Data/img/avatars/Image0.png'),
-  1: require('../Data/img/avatars/Image1.png'),
-  2: require('../Data/img/avatars/Image2.png'),
-  3: require('../Data/img/avatars/Image3.png'),
-  4: require('../Data/img/avatars/Image4.png'),
-  5: require('../Data/img/avatars/Image5.png'),
-  6: require('../Data/img/avatars/Image6.png'),
-  7: require('../Data/img/avatars/Image7.png'),
-  8: require('../Data/img/avatars/Image8.png'),
-  9: require('../Data/img/avatars/Image9.png'),
- 10: require('../Data/img/avatars/Image10.png'),
- 11: require('../Data/img/avatars/Image11.png'),
-}
 
 import { Metrics } from '../Themes/'
 import { FontAwesome } from '../Assets/icons'
 const UIF = require('../Utils/UIFactory.js')
-
-const { userTypeInstance } = require('../Utils/UserType.js')
-const randomAvatar = (userTypeInstance.getUserType()) ? avatarArr[Math.floor(Math.random() * Math.floor(12))] : require('../Data/img/avatars/agatha.png')
+const C = require('../Utils/constants.js')
+const NUIF = require('../Utils/NavUIFactory.js')
 
 class CanvasConstituentSearch extends Component {
-  static propTypes = {
-    navigation: NavigationType.isRequired,
-  };
-
-  static navigationOptions = ({ navigation }) => {
-    const params = navigation.state.params || {}
-    return {
-      headerLeft: (
-        <TouchableOpacity onPress={() => navigation.toggleDrawer()} style={{marginLeft: 10}}>
-          <Image
-            source={randomAvatar}
-            style={{height: 30, width: 30, borderRadius: 15}}/>
-        </TouchableOpacity>
-      ),
-      headerTitle: 'Canvasser'.toUpperCase(),
-      headerBackTitle: 'Back',
-      headerTintColor: 'black',
-      gesturesEnabled: false,
-    }
-  };
+  static propTypes = NUIF.requireNavBar
+  static navigationOptions = NUIF.getNavOptions('Canvasser')
 
   constructor (props) {
     super(props)
 
-    this.firstName = undefined
-    this.lastName = undefined
-    this.streetAddress = undefined
-    this.city = undefined
-    this.zip = undefined
-    this.phone = undefined
+    this.search =
+    {
+      firstName: undefined,
+      lastName: undefined,
+      streetAddress: undefined,
+      city: undefined,
+      zip: undefined,
+    }
+    this.results = []
+
+    this.updateRedux()    // Clear redux storage for this page
 
     this.state = {
+      updateTime: Date.now(),
       showAI:false
     }
   }
 
-  handleTextChange = (theText, theProperty) => {
-    this[theProperty] = theText
+  updateRedux = () => {
+    const reduxData = {
+      CanvasConstituentSearch: {
+        search: this.search,
+        results: this.results
+      }
+    }
+    this.props.storeReduxData(reduxData)
+  }
+
+  handleSearchTextChange = (theText, theProperty) => {
+    this.search[theProperty] = theText
   }
 
   handleSearchPressed = () => {
+    // Push the search data to redux to prevent re-rendering of old data:
+    this.updateRedux()
     this.setState({showAI: true})
 
-    const delayInSeconds = 2.5
-    const ms_per_s = 1000
+    const delayInSeconds = 1.5 * 1000
     setTimeout(
       () => {
         this.setState({showAI: false})
+
+        // TODO: insert search results into spoofed data and replace this delay etc. and
+        //       the fetch from demoVoters with a search in voters.js
+        this.results = C.demoVoters
+        this.updateRedux()
+
         this.props.navigation.navigate('Constituent Search Results')
       },
-      delayInSeconds * ms_per_s )
+      delayInSeconds)
   }
 
   render () {
+    const rd = this.props.fetchReduxData
+    if (rd &&
+        rd.hasOwnProperty('CanvasConstituentSearch') &&
+        rd.CanvasConstituentSearch.hasOwnProperty('search')) {
+
+      try {
+        this.search = JSON.parse(JSON.stringify(rd.CanvasConstituentSearch.search))
+      } catch (suppressedError) {}
+    }
+
     const uiElements = []
 
     if (this.state.showAI) {
@@ -94,12 +86,12 @@ class CanvasConstituentSearch extends Component {
 
     const headingSize = 'h4'
     uiElements.push(UIF.getHeading('Search for registered voters by name:', headingSize))
-    uiElements.push(UIF.getTextInput('First Name', 'firstName', this.handleTextChange))
-    uiElements.push(UIF.getTextInput('Last Name', 'lastName', this.handleTextChange))
+    uiElements.push(UIF.getTextInput('First Name', 'firstName', this.handleSearchTextChange, this.search.firstName))
+    uiElements.push(UIF.getTextInput('Last Name', 'lastName', this.handleSearchTextChange, this.search.lastName))
     uiElements.push(UIF.getHeading('or address:', headingSize))
-    uiElements.push(UIF.getTextInput('Street Address', 'streetAddress', this.handleTextChange))
-    uiElements.push(UIF.getTextInput('City', 'city', this.handleTextChange))
-    uiElements.push(UIF.getTextInput('Zip', 'zip', this.handleTextChange))
+    uiElements.push(UIF.getTextInput('Street Address', 'streetAddress', this.handleSearchTextChange, this.search.streetAddress))
+    uiElements.push(UIF.getTextInput('City', 'city', this.handleSearchTextChange, this.search.city))
+    uiElements.push(UIF.getTextInput('Zip', 'zip', this.handleSearchTextChange, this.search.zip))
     uiElements.push(UIF.getVerticalSpacer(Metrics.doubleBaseMargin))
     uiElements.push(UIF.getButton('Search', FontAwesome.search, this.handleSearchPressed))
 
@@ -109,11 +101,13 @@ class CanvasConstituentSearch extends Component {
 
 const mapStateToProps = (state) => {
   return {
+    fetchReduxData: CanvasSelectors.fetchData(state),
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    storeReduxData: (data) => dispatch(CanvasActions.storeData(data)),
   }
 }
 

@@ -28,7 +28,7 @@ class CanvasConstituentQuestionaire extends Component {
   // }
 
   render () {
-    console.log("ACREDUX", this.props.canvasPayload)
+    console.log("ACREDUX", this.props.fetchReduxData)
     return (
       <ScrollView style={styles.container}>
         <TouchableOpacity onPress={() => this.props.navigation.navigate('Constituent Contribution')} style={{marginLeft: 10}}>
@@ -41,7 +41,7 @@ class CanvasConstituentQuestionaire extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    canvasPayload: CanvasSelectors.fetchData(state),
+    fetchReduxData: CanvasSelectors.fetchData(state),
   }
 }
 

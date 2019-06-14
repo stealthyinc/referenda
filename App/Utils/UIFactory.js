@@ -58,7 +58,8 @@ export const getText = (theText) =>
 export const getTextInput = (
   thePlaceHolderText,
   thePropertyName,
-  theTextChangeHandlerFun) =>
+  theTextChangeHandlerFun,
+  theInitialValue=undefined) =>
 {
   return (
     <TextInput
@@ -66,6 +67,7 @@ export const getTextInput = (
       style={styles.textInput}
       placeholder={thePlaceHolderText}
       placeholderTextColor={Colors.lightText}
+      defaultValue={theInitialValue}
       onChangeText={(theText) => theTextChangeHandlerFun(theText, thePropertyName)}/>
   )
 }
@@ -123,7 +125,7 @@ export const getListButton = (
   theBorderColor='black') =>
 {
   return (
-    <View key={getUniqueKey} style={styles.listButtonOuterContainer}>
+    <View key={getUniqueKey()} style={styles.listButtonOuterContainer}>
       <TouchableOpacity
         onPress={() => theSelectHandlerFn(theIndex)}
         style={{
