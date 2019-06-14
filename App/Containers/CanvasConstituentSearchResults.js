@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 
 // Styles
 import NavigationType from '../Navigation/propTypes';
-import CanvasActions, { CanvasSelectors } from '../Redux/CanvasRedux'
+import CanvasActions, { CanvasSelectors } from '../Redux/CanvassingRedux'
 
 import { Metrics } from '../Themes/'
 import { FontAwesome } from '../Assets/icons'
@@ -153,7 +153,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    storeData: (data) => dispatch(CanvasActions.canvasRequest(data)),
+    storeData: (data) => dispatch(CanvasActions.storeData(data)),
   }
 }
 

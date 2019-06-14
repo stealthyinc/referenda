@@ -7,7 +7,7 @@ import { connect } from 'react-redux'
 // Styles
 import styles from './Styles/CanvasConstituentQuestionaireStyle'
 import NavigationType from '../Navigation/propTypes';
-import CanvasActions, { CanvasSelectors } from '../Redux/CanvasRedux'
+import CanvasActions, { CanvasSelectors } from '../Redux/CanvassingRedux'
 
 class CanvasConstituentQuestionaire extends Component {
   static propTypes = {
@@ -41,7 +41,7 @@ class CanvasConstituentQuestionaire extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    canvasPayload: CanvasSelectors.getData(state),
+    canvasPayload: CanvasSelectors.fetchData(state),
   }
 }
 

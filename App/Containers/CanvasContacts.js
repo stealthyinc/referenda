@@ -7,7 +7,7 @@ import { connect } from 'react-redux'
 // Styles
 import styles from './Styles/CanvasContactsStyle'
 import NavigationType from '../Navigation/propTypes';
-import CanvasActions, { CanvasSelectors } from '../Redux/CanvasRedux'
+import CanvasActions, { CanvasSelectors } from '../Redux/CanvassingRedux'
 
 const avatarArr = {
   0: require('../Data/img/avatars/Image0.png'),

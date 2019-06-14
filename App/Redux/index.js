@@ -12,7 +12,7 @@ export const reducers = combineReducers({
   nav: require('./NavigationRedux').reducer,
   settings: require('./SettingsRedux').reducer,
   donation: require('./DonationRedux').reducer,
-  canvas: require('./CanvasRedux').reducer,
+  canvas: require('./CanvassingRedux').reducer,
 })
 
 export default () => {
