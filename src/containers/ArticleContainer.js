@@ -52,7 +52,7 @@ export default class Article extends Component {
       // The 2nd variant of this conditional isn't done yet, but will be when we
       // release publically.
       const url = (this.props.campaignName) ?
-        `https://www.referenda.io/${this.props.campaignName}/${aPost.id}` :
+        `https://www.app.referenda.io/${this.props.campaignName}/${aPost.id}` :
         `${this.props.mediaUrlRoot}/${aPost.id}`
 
       this.shareModelContent = {
@@ -61,7 +61,8 @@ export default class Article extends Component {
           twitterTitle: aPost.title,
           facebookQuote: aPost.title,
           emailSubject: aPost.title,
-          emailBody: Feed.getTruncatedStr(aPost.description, 255)
+          emailBody: ''
+          // emailBody: Feed.getTruncatedStr(aPost.description, 255)
         }
     } else {
       this.shareModelContent = undefined

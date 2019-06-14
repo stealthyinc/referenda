@@ -11,11 +11,11 @@ export const CONFIG_FILE = 'config.json'
 //  - require is needed here b/c these it is elaborated at build time and
 //    passing in a string dynamically fails...
 export const FIRST_CARD_WORKAROUND = {
-  'https://gaia.blockstack.org/hub/16BzKWyRz4MtxQAz4Z1jE4s1GJz2xL1d7z' : {    // agatha
+  'https://gaia.blockstack.org/hub/16BzKWyRz4MtxQAz4Z1jE4s1GJz2xL1d7z' : {    // default
     avatarImg: require('../data/img/avatars/default.png'),
     fcBackgroundImg: require('../data/img/democracy_wall.jpg'),
-    nameStr: 'Default Politician',
-    positionStr: 'Your Political Campaign',
+    nameStr: 'Default Campaign',
+    positionStr: 'Your Campaign',
     followers: '3,432',
   },
   'https://gaia.blockstack.org/hub/1MURn3uZbTy7mAZ9ShrhDeFkgG1AU8vRkP' : {    // agatha

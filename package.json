@@ -31,7 +31,8 @@
     "react-share": "^3.0.0",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
-    "runes": "^0.4.3"
+    "runes": "^0.4.3",
+    "victory-native": "^32.0.2"
   },
   "scripts": {
     "start": "react-app-rewired start",
@@ -52,5 +53,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "webpack-dashboard": "^3.0.7"
   }
 }

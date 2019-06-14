@@ -21,7 +21,7 @@ const { firebaseInstance } = require('../utils/firebaseWrapper.js')
 class ShareBar extends Component {
   render() {
     let content = {
-      url:'https://www.referenda.io',
+      url:'https://www.app.referenda.io',
       twitterTitle:'Article on Referenda',
       facebookQuote:'Content from Referenda',
       emailSubject:'Referenda Articles',

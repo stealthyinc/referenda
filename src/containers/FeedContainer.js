@@ -53,7 +53,7 @@ const { cloudIO } = require('../utils/cloudIO.js')
 export default class Feed extends Component {
   constructor(props) {
     super(props);
-    const origin = window.location.origin;
+    // const origin = window.location.origin;
     const appConfig = new AppConfig(['store_write', 'publish_data', 'email'])
     this.userSession = new UserSession({ appConfig })
     const isSignedIn = this.checkSignedInStatus();
@@ -487,7 +487,8 @@ export default class Feed extends Component {
 
   handleLogin = (event, logEvent) => {
     if (this.state.isSignedIn) {
-      this.userSession.signUserOut(window.location.href);
+      // this.userSession.signUserOut(window.location.href);
+      this.userSession.signUserOut('/');
     } else {
       event.preventDefault()
       if (logEvent)
@@ -501,7 +502,7 @@ export default class Feed extends Component {
       // The 2nd variant of this conditional isn't done yet, but will be when we
       // release publically.
       const url = (this.campaignName) ?
-        `https://www.referenda.io/${this.campaignName}/${aPost.id}` :
+        `https://www.app.referenda.io/${this.campaignName}/${aPost.id}` :
         `${this.mediaUrlRoot}/${aPost.id}`
 
       this.shareModelContent = {
@@ -1734,9 +1735,10 @@ export default class Feed extends Component {
 
   handleDismissUrlBar = () => {
     this.setState({showUrlBar: false})
-
-    this.configFileData.dismissedUrlBar = true
-    this.writeConfig()
+    try {
+      this.configFileData.dismissedUrlBar = true
+      this.writeConfig()
+    } catch (suppressedError) {}
   }
 
   renderUrlBar = () => {
@@ -1794,7 +1796,7 @@ export default class Feed extends Component {
     const newPostButton =
       (!this.state.editingPost && this.state.isSignedIn) ? this.getNewPostFeedButton() : undefined
     const contactUsButton = this.getContactUsFeedButton()
-    const shareButton = this.getShareFeedButton()
+    const shareButton = (this.state.isSignedIn) ? this.getShareFeedButton() : undefined
 
     const newPostButtonMobile = isMobile ? newPostButton : undefined
 

@@ -14,6 +14,7 @@ module.exports = override(
   babelInclude([
     path.resolve('src'),
     path.resolve('node_modules/native-base-shoutem-theme'),
+    path.resolve('node_modules/victory-native'),
     path.resolve('node_modules/react-navigation'),
     path.resolve('node_modules/react-native-easy-grid'),
     path.resolve('node_modules/react-native-drawer'),

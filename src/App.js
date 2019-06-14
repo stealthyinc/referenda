@@ -3,6 +3,7 @@ import { View } from 'react-native'
 import WebRoutesGenerator from './config/navigation/webRouteWrapper'
 import FeedContainer from './containers/FeedContainer'
 import ArticleContainer from './containers/ArticleContainer'
+import SurveyContainer from './containers/SurveyContainer'
 import amplitude from "amplitude-js";
 import {
   AmplitudeProvider,
@@ -12,14 +13,18 @@ const { firebaseInstance } = require('./utils/firebaseWrapper.js')
 
 export const WebRoutes = {
   Home: {
-    component: FeedContainer,
+    component: SurveyContainer,
     path: ["/", "/:campaignName/", "/:campaignName/:postId"],
     exact: true
   },
   Article: {
     component: ArticleContainer,
     path: "/article"
-  }
+  },
+  Survey: {
+    component: SurveyContainer,
+    path: "/survey"
+  },
 }
 
 export default class App extends React.Component {
