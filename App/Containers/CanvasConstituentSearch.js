@@ -62,6 +62,10 @@ class CanvasConstituentSearch extends Component {
     this.city = undefined
     this.zip = undefined
     this.phone = undefined
+
+    this.state = {
+      showAI:false
+    }
   }
 
   handleTextChange = (theText, theProperty) => {
@@ -69,25 +73,37 @@ class CanvasConstituentSearch extends Component {
   }
 
   handleSearchPressed = () => {
+    this.setState({showAI: true})
 
+    const delayInSeconds = 2.5
+    const ms_per_s = 1000
+    setTimeout(
+      () => {
+        this.setState({showAI: false})
+        this.props.navigation.navigate('Constituent Search Results')
+      },
+      delayInSeconds * ms_per_s )
   }
 
   render () {
     const uiElements = []
-    uiElements.push(UIF.getHeading('Search for registered voters by name:', 'h5'))
+
+    if (this.state.showAI) {
+      uiElements.push(UIF.getActivityIndicator('Searching registered voters ...'))
+    }
+
+    const headingSize = 'h4'
+    uiElements.push(UIF.getHeading('Search for registered voters by name:', headingSize))
     uiElements.push(UIF.getTextInput('First Name', 'firstName', this.handleTextChange))
     uiElements.push(UIF.getTextInput('Last Name', 'lastName', this.handleTextChange))
-    uiElements.push(UIF.getHeading('or address:', 'h5'))
+    uiElements.push(UIF.getHeading('or address:', headingSize))
     uiElements.push(UIF.getTextInput('Street Address', 'streetAddress', this.handleTextChange))
     uiElements.push(UIF.getTextInput('City', 'city', this.handleTextChange))
     uiElements.push(UIF.getTextInput('Zip', 'zip', this.handleTextChange))
-    uiElements.push(UIF.getHeading('or phone:', 'h5'))
-    uiElements.push(UIF.getTextInput('(###) ###-####', 'phone', this.handleTextChange))
     uiElements.push(UIF.getVerticalSpacer(Metrics.doubleBaseMargin))
-    uiElements.push(UIF.getButton('Search', FontAwesome.search))
+    uiElements.push(UIF.getButton('Search', FontAwesome.search, this.handleSearchPressed))
 
-
-    return (UIF.getContainer(uiElements))
+    return (UIF.getScrollingContainer(uiElements))
   }
 }
 

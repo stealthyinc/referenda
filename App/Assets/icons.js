@@ -13,7 +13,14 @@ export const FontIcons = {
   newsPaper: '',
 };
 
+// To populate this list:
+// 1. find the character you want here and click on it: https://fontawesome.com/icons
+// 2. copy the unicode glyph by clicking on it
+// 3. paste the glyph into the first edit box here: https://www.branah.com/unicode-converter
+// 4. copy the bottom (decimal) value and put it in below.
+
 export const FontAwesome = {
+  ellipses_h: String.fromCharCode(61761),
   heart: String.fromCharCode(61444),
   comment: String.fromCharCode(61669),
   user: String.fromCharCode(62144),

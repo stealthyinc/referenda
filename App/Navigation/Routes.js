@@ -23,6 +23,7 @@ import DonationCompleteScreen from '../Containers/DonationCompleteScreen'
 import Settings from '../Containers/SettingScreen'
 import CanvasContacts from '../Containers/CanvasContacts'
 import CanvasConstituentSearch from '../Containers/CanvasConstituentSearch'
+import CanvasConstituentSearchResults from '../Containers/CanvasConstituentSearchResults'
 import CanvasConstituentQuestionaire from '../Containers/CanvasConstituentQuestionaire'
 import CanvasConstituentContribution from '../Containers/CanvasConstituentContribution'
 
@@ -172,9 +173,9 @@ export const MainRoutes = [
     screen: CanvasConstituentSearch,
     children: [
       {
-        id: 'Contact Search',
-        title: 'Contact Search',
-        screen: CanvasContacts,
+        id: 'Constituent Search Results',
+        title: 'Constituent Search Results',
+        screen: CanvasConstituentSearchResults,
         children: [],
       },
       {
@@ -188,7 +189,14 @@ export const MainRoutes = [
         title: 'Constituent Contribution',
         screen: CanvasConstituentContribution,
         children: [],
-      }
+      },
+      // TODO: find out what PBJ was thinking here
+      {
+        id: 'Contact Search',
+        title: 'Contact Search',
+        screen: CanvasContacts,
+        children: [],
+      },
     ],
   },
 ];
