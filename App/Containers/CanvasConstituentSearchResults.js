@@ -35,6 +35,7 @@ class CanvasConstituentSearchResults extends Component {
   }
 
   handleSearchResultSelection = (aSelectionIndex) => {
+    this.props.storeData({'toronto': 'canada', 'new york': 'usa'})
     this.props.navigation.navigate('Constituent Questionaire')
   }
 
@@ -152,6 +153,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    storeData: (data) => dispatch(CanvasActions.canvasRequest(data)),
   }
 }
 

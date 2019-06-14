@@ -24,7 +24,7 @@ export const INITIAL_STATE = Immutable({
 /* ------------- Selectors ------------- */
 
 export const CanvasSelectors = {
-  getData: state => state.data
+  getData: state => state.canvas.data
 }
 
 /* ------------- Reducers ------------- */
