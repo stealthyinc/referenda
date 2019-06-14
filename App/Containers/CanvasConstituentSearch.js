@@ -14,14 +14,15 @@ class CanvasConstituentSearch extends Component {
 
   constructor (props) {
     super(props)
+    console.log('CanvasConstituentSearch::CONSTRUCTOR')
 
     this.search =
     {
-      firstName: undefined,
-      lastName: undefined,
-      streetAddress: undefined,
-      city: undefined,
-      zip: undefined,
+      firstName: '',
+      lastName: '',
+      streetAddress: '',
+      city: '',
+      zip: '',
     }
     this.results = []
 
@@ -33,13 +34,14 @@ class CanvasConstituentSearch extends Component {
     }
   }
 
-  updateRedux = () => {
+  updateRedux = (context='') => {
     const reduxData = {
       CanvasConstituentSearch: {
         search: this.search,
         results: this.results
       }
     }
+
     this.props.storeReduxData(reduxData)
   }
 
@@ -48,8 +50,8 @@ class CanvasConstituentSearch extends Component {
   }
 
   handleSearchPressed = () => {
-    // Push the search data to redux to prevent re-rendering of old data:
-    this.updateRedux()
+    // // Push the search data to redux to prevent re-rendering of old data:
+    // this.updateRedux('handleSearchPressed')
     this.setState({showAI: true})
 
     const delayInSeconds = 1.5 * 1000
@@ -60,7 +62,7 @@ class CanvasConstituentSearch extends Component {
         // TODO: insert search results into spoofed data and replace this delay etc. and
         //       the fetch from demoVoters with a search in voters.js
         this.results = C.demoVoters
-        this.updateRedux()
+        this.updateRedux('handleSearchPressed after timeout')
 
         this.props.navigation.navigate('Constituent Search Results')
       },
@@ -68,14 +70,25 @@ class CanvasConstituentSearch extends Component {
   }
 
   render () {
-    const rd = this.props.fetchReduxData
-    if (rd &&
-        rd.hasOwnProperty('CanvasConstituentSearch') &&
-        rd.CanvasConstituentSearch.hasOwnProperty('search')) {
+    if (this.search.firstName === undefined &&
+        this.search.lastName === undefined &&
+        this.search.streetAddress === undefined &&
+        this.search.city === undefined &&
+        this.search.zip === undefined) {
+      // Check redux state for values to set the UI to. Prevents redux from
+      // clearing existing values in the text input UI.
+      // TODO: probably a better way to do this, but the new react lifecycle is
+      //       less clear right now with the deprecation of componentWillReceiveProps.
+      //
+      const rd = this.props.fetchReduxData
+      if (rd &&
+          rd.hasOwnProperty('CanvasConstituentSearch') &&
+          rd.CanvasConstituentSearch.hasOwnProperty('search')) {
 
-      try {
-        this.search = JSON.parse(JSON.stringify(rd.CanvasConstituentSearch.search))
-      } catch (suppressedError) {}
+        try {
+          this.search = JSON.parse(JSON.stringify(rd.CanvasConstituentSearch.search))
+        } catch (suppressedError) {}
+      }
     }
 
     const uiElements = []

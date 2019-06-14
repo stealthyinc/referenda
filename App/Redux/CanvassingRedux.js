@@ -27,9 +27,9 @@ export const CanvasSelectors = {
 
 /* ------------- Reducers ------------- */
 
-// request the data from an api
 export const request = (state, { data }) => {
-  return state.merge({ data })
+  let newState = {...state.data, ...data}
+  return state.merge({data:newState})
 }
 
 

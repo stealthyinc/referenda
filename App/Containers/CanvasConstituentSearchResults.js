@@ -14,18 +14,33 @@ class CanvasConstituentSearchResults extends Component {
 
   constructor (props) {
     super(props)
-    this.redux = this.props.fetchReduxData
+
+    this.selectionIndex = undefined
+
     this.state = {
       searchFilterModal:false
     }
   }
+
+  updateRedux = () => {
+    const reduxData = {
+      CanvasConstituentSearchResults: {
+        selectionIndex: this.selectionIndex
+      }
+    }
+
+    this.props.storeReduxData(reduxData)
+  }
+
 
   handleSearchFilterSort = () => {
     this.setState({searchFilterModal:!this.state.searchFilterModal})
   }
 
   handleSearchResultSelection = (aSelectionIndex) => {
-    // this.props.storeReduxData({'toronto': 'canada', 'new york': 'usa'})
+    this.selectionIndex = aSelectionIndex
+    this.updateRedux()
+
     this.props.navigation.navigate('Constituent Questionaire')
   }
 
@@ -40,10 +55,13 @@ class CanvasConstituentSearchResults extends Component {
       rootContainerElements.push(UIF.getOptionsModal(modalElements))
     }
 
-    const voters = (this.redux &&
-                    this.redux.hasOwnProperty('CanvasConstituentSearch') &&
-                    this.redux.CanvasConstituentSearch.hasOwnProperty('results')) ?
-                    this.redux.CanvasConstituentSearch.results : []
+    const rd = this.props.fetchReduxData
+    const voters = (rd &&
+                    rd.hasOwnProperty('CanvasConstituentSearch') &&
+                    rd.CanvasConstituentSearch.hasOwnProperty('results')) ?
+                    rd.CanvasConstituentSearch.results : []
+    console.log('CanvasConstituentSearchResults::render, rd:')
+    console.log(rd)
 
     const uiRowElements = []
     uiRowElements.push(UIF.getText(`${voters.length} matching voters:`))

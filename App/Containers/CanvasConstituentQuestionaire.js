@@ -8,20 +8,13 @@ import { connect } from 'react-redux'
 import styles from './Styles/CanvasConstituentQuestionaireStyle'
 import NavigationType from '../Navigation/propTypes';
 import CanvasActions, { CanvasSelectors } from '../Redux/CanvassingRedux'
+const NUIF = require('../Utils/NavUIFactory.js')
 
 class CanvasConstituentQuestionaire extends Component {
-  static propTypes = {
-    navigation: NavigationType.isRequired,
-  };
+  static propTypes = NUIF.requireNavBar
+  static navigationOptions = NUIF.getNavOptions(
+    'Questionaire',  false /* omit left header avatar */ )
 
-  static navigationOptions = ({ navigation }) => {
-    const params = navigation.state.params || {}
-    return {
-      headerTitle: 'Questionaire'.toUpperCase(),
-      headerBackTitle: 'Back',
-      gesturesEnabled: false,
-    }
-  };
   // constructor (props) {
   //   super(props)
   //   this.state = {}
