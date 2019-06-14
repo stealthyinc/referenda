@@ -24,6 +24,10 @@ const avatarArr = {
  11: require('../Data/img/avatars/Image11.png'),
 }
 
+import { Metrics } from '../Themes/'
+import { FontAwesome } from '../Assets/icons'
+const UIF = require('../Utils/UIFactory.js')
+
 const { userTypeInstance } = require('../Utils/UserType.js')
 const randomAvatar = (userTypeInstance.getUserType()) ? avatarArr[Math.floor(Math.random() * Math.floor(12))] : require('../Data/img/avatars/agatha.png')
 
@@ -48,19 +52,58 @@ class CanvasConstituentSearch extends Component {
       gesturesEnabled: false,
     }
   };
-  // constructor (props) {
-  //   super(props)
-  //   this.state = {}
-  // }
+
+  constructor (props) {
+    super(props)
+
+    this.firstName = undefined
+    this.lastName = undefined
+    this.streetAddress = undefined
+    this.city = undefined
+    this.zip = undefined
+    this.phone = undefined
+
+    this.state = {
+      showAI:false
+    }
+  }
+
+  handleTextChange = (theText, theProperty) => {
+    this[theProperty] = theText
+  }
+
+  handleSearchPressed = () => {
+    this.setState({showAI: true})
+
+    const delayInSeconds = 2.5
+    const ms_per_s = 1000
+    setTimeout(
+      () => {
+        this.setState({showAI: false})
+        this.props.navigation.navigate('Constituent Search Results')
+      },
+      delayInSeconds * ms_per_s )
+  }
 
   render () {
-    return (
-      <ScrollView style={styles.container}>
-        <TouchableOpacity onPress={() => this.props.navigation.navigate('Constituent Questionaire')} style={{marginLeft: 10}}>
-          <Text>Click here to Goto Questionaire Container</Text>
-        </TouchableOpacity>
-      </ScrollView>
-    )
+    const uiElements = []
+
+    if (this.state.showAI) {
+      uiElements.push(UIF.getActivityIndicator('Searching registered voters ...'))
+    }
+
+    const headingSize = 'h4'
+    uiElements.push(UIF.getHeading('Search for registered voters by name:', headingSize))
+    uiElements.push(UIF.getTextInput('First Name', 'firstName', this.handleTextChange))
+    uiElements.push(UIF.getTextInput('Last Name', 'lastName', this.handleTextChange))
+    uiElements.push(UIF.getHeading('or address:', headingSize))
+    uiElements.push(UIF.getTextInput('Street Address', 'streetAddress', this.handleTextChange))
+    uiElements.push(UIF.getTextInput('City', 'city', this.handleTextChange))
+    uiElements.push(UIF.getTextInput('Zip', 'zip', this.handleTextChange))
+    uiElements.push(UIF.getVerticalSpacer(Metrics.doubleBaseMargin))
+    uiElements.push(UIF.getButton('Search', FontAwesome.search, this.handleSearchPressed))
+
+    return (UIF.getScrollingContainer(uiElements))
   }
 }
 

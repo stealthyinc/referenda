@@ -98,7 +98,7 @@
     "timers-browserify": "^1.4.2",
     "url": "^0.10.3",
     "util": "^0.10.4",
-    "victory-native": "^31.0.0"
+    "victory-native": "^32.0.2"
   },
   "devDependencies": {
     "@storybook/addon-storyshots": "^3.4.0",
