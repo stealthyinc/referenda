@@ -170,7 +170,8 @@ export const MainRoutes = [
     id: 'CanvasMenu',
     title: 'Canvasser',
     icon: FontIcons.other,
-    screen: CanvasConstituentSearch,
+    // screen: CanvasConstituentSearch,
+    screen: CanvasConstituentQuestionaire,
     children: [
       {
         id: 'Constituent Search Results',

@@ -1,22 +1,16 @@
 import React from 'react'
-import {
-  ActivityIndicator,
-  Modal,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View } from 'react-native'
-import {
-  Colors,
-  Fonts,
-  Metrics } from '../Themes/'
-import {
-  FontAwesome } from '../Assets/icons';
-// RkText to display icons easily. (Could also switch to Oblador's FontAwesome RN component if removeing rk)
-import {
-  RkText} from 'react-native-ui-kitten';
+import { ActivityIndicator,
+         Modal,
+         ScrollView,
+         StyleSheet,
+         Text,
+         TextInput,
+         TouchableOpacity,
+         View } from 'react-native'
+import { Colors, Fonts, Metrics } from '../Themes/'
+import { FontAwesome } from '../Assets/icons';
+import { RkText } from 'react-native-ui-kitten';  // RkText to display icons easily. (Could also switch to Oblador's FontAwesome RN component if removeing rk)
+import LinearGradient from 'react-native-linear-gradient';
 
 let key = 0
 function getUniqueKey()
@@ -143,6 +137,29 @@ export const getListButton = (
   )
 }
 
+export const getQuestionButton = (
+  theButtonText=undefined,
+  theQuestionId=undefined,
+  thisButtonValue=undefined,
+  theClickHandlerFn=() => {},
+  theButtonColor='gray',
+  theSelectionColor='undefined') =>
+{
+  return (
+      <View key={getUniqueKey()} style={styles.questionButtonOuterContainer}>
+        <TouchableOpacity
+          onPress={() => theClickHandlerFn(theQuestionId, thisButtonValue)}
+          style={{backgroundColor:theSelectionColor, borderColor:theButtonColor, ...styles.questionButtonInnerContainer}}>
+          <Text
+            key={getUniqueKey()}
+            style={styles.descriptionText}>
+            {theButtonText}
+          </Text>
+        </TouchableOpacity>
+      </View>
+  )
+}
+
 export const getActivityIndicator = (
   theActivityMessage=undefined,
   theCloseHandlerFn=() => {}) => {
@@ -200,6 +217,69 @@ export const getRow = (theRowElements) => {
       {theRowElements}
     </View>
   )
+}
+
+export const getRangeQuestion = (
+  theQuestionData,
+  theSelection,
+  theSelectionHandlerFn=() => {} ) =>
+{
+  const buttonBar = []
+  let questionWidget = undefined
+
+  try {
+    const labels = []
+    const gradientColors = []
+
+    for (const property of ['min', 'middle', 'max']) {
+      if (theQuestionData.hasOwnProperty(property)) {
+        const qProperty = theQuestionData[property]
+        if (qProperty.hasOwnProperty('label')) {
+          labels.push(
+            <Text key={getUniqueKey()} style={styles.descriptionText}>
+              {qProperty['label']}
+            </Text> )
+        }
+
+        if (qProperty.hasOwnProperty('color')) {
+          gradientColors.push(qProperty['color'])
+        }
+      }
+    }
+
+    let gradient = undefined
+    if (gradientColors.length > 0) {
+      gradient = (
+        <LinearGradient
+          colors={gradientColors}
+          start={{x: 0, y: 0}} end={{x: 1, y: 0}}
+          style={{height:5, borderRadius:2}} >
+        </LinearGradient>
+      )
+    }
+
+    const id = theQuestionData.id
+
+    const buttons = []
+    for (let index = 1; index <= theQuestionData.steps; index++) {
+      if (index === theSelection) {
+        buttons.push(getQuestionButton(index, id, index, theSelectionHandlerFn, 'green', '#d3f8d3' /* 90% green */))
+      } else {
+        buttons.push(getQuestionButton(index, id, index, theSelectionHandlerFn))
+      }
+    }
+
+    questionWidget = (
+      <View key={getUniqueKey()} style={{marginTop:10, borderColor:'lightgray', borderStyle:'solid', borderWidth:1, borderRadius:5, padding:4}}>
+        {getRow(getText(theQuestionData.question))}
+        {getRow(labels)}
+        {gradient}
+        {getRow(buttons)}
+      </View>
+    )
+  } catch (suppressedError) {}
+
+  return questionWidget
 }
 
 export const getScrollingContainer = (theUIElements, noMargin=false) =>
@@ -282,6 +362,22 @@ export const styles = StyleSheet.create({
     borderRadius:10,
     paddingHorizontal:10,
     paddingVertical:5
+  },
+  questionButtonOuterContainer: {
+    flex:1,
+    flexDirection:'row',
+    justifyContent:'center'
+  },
+  questionButtonInnerContainer: {
+    flex:1,
+    flexDirection:'row',
+    borderStyle:'solid',
+    borderWidth:1,
+    borderRadius:5,
+    alignItems:'center',
+    justifyContent:'center',
+    marginHorizontal:1,
+    paddingVertical:10
   },
   ActivityIndicatorModal: {
     height:'100%',

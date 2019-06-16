@@ -1391,7 +1391,7 @@
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				E8451F5EE9324D2580B168CF /* [CP] Embed Pods Frameworks */,
 				75D0E84A229496F500BFAB5C /* Embed Frameworks */,
-				75D0E84B229496FE00BFAB5C /* ShellScript */,
+				79D63C6C22B5669E00C3DCFD /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -2220,7 +2220,7 @@
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
 		};
-		75D0E84B229496FE00BFAB5C /* ShellScript */ = {
+		79D63C6C22B5669E00C3DCFD /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -2235,7 +2235,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nFRAMEWORKS=\"${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}\"\n\"${FRAMEWORKS}/SquareInAppPaymentsSDK.framework/setup\"\n";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nFRAMEWORKS=\"${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}\"\n\"${FRAMEWORKS}/SquareInAppPaymentsSDK.framework/setup\"\n\n";
 		};
 		A5DE4943ACA4BFDB3B3F4BA8 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;

@@ -9,6 +9,11 @@ target 'referenda' do
   #pod "SquareInAppPaymentsSDK"
   #pod 'RNSquareInAppPayments', :path => '../node_modules/react-native-square-in-app-payments'
 
+  # Used in questionaire for range questions (UIFactory.js)
+  # See: https://github.com/react-native-community/react-native-linear-gradient
+  #
+#  pod 'BVLinearGradient', :path => '../node_modules/react-native-linear-gradient'
+
   post_install do |installer|
     installer.pods_project.targets.each do |target|
         target.build_configurations.each do |config|
