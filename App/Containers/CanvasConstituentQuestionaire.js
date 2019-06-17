@@ -2,7 +2,11 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import CanvasActions, { CanvasSelectors } from '../Redux/CanvassingRedux'
 import { RangeQuestion,
-         ChoiceQuestion } from '../Utils/QuestionaireWidgets'
+         ChoiceQuestion,
+         TextQuestion,
+         ValueQuestion } from '../Utils/QuestionaireWidgets'
+import { Metrics } from '../Themes/'
+import { FontAwesome } from '../Assets/icons'
 
 const C = require('../Utils/constants.js')
 const UIF = require('../Utils/UIFactory.js')
@@ -34,53 +38,56 @@ class CanvasConstituentQuestionaire extends Component {
     }
   }
 
-  render () {
-    // console.log("ACREDUX", this.props.fetchReduxData)
+  handleDoneButtonPressed = () => {
+    // TODO: push our data up to firebase for:
+    //        - the Questionaire
+    //        - the volunteer score
+    this.props.navigation.navigate('Constituent Contribution')
+  }
 
+  render () {
     const uiElements = []
     for (const questionIndex in this.questionaire) {
       const question = this.questionaire[questionIndex]
 
       switch (question.type) {
         case C.QUESTION_TYPE.RANGE:
-          console.log(`processing question: ${question.id} (${question.question})`)
           uiElements.push(
             <RangeQuestion
               key={UIF.getUniqueKey()}
               questionData={question}
               selectionHandlerFn={this.handleQuestionResponse} /> )
-          // uiElements.push(UIF.getRangeQuestion(question, question.response, this.handleQuestionResponse))
           break;
         case C.QUESTION_TYPE.CHOICE:
-          console.log(`processing question: ${question.id} (${question.question})`)
           uiElements.push(
             <ChoiceQuestion
               key={UIF.getUniqueKey()}
               questionData={question}
               selectionHandlerFn={this.handleQuestionResponse} /> )
-          // uiElements.push(UIF.getChoiceQuestion(question))
           break;
         case C.QUESTION_TYPE.TEXT:
-          // uiElements.push(UIF.getTextQuestion(question))
+          uiElements.push(
+            <TextQuestion
+              key={UIF.getUniqueKey()}
+              questionData={question}
+              selectionHandlerFn={this.handleQuestionResponse} /> )
           break;
         case C.QUESTION_TYPE.VALUE:
-          // uiElements.push(UIF.getValueQuestion(question))
+        uiElements.push(
+          <ValueQuestion
+            key={UIF.getUniqueKey()}
+            questionData={question}
+            selectionHandlerFn={this.handleQuestionResponse} /> )
           break;
         default:
           console.error(`Malformed question at index ${questionIndex}`)
       }
     }
 
-    return (UIF.getScrollingContainer(uiElements))
+    uiElements.push(UIF.getVerticalSpacer(Metrics.doubleBaseMargin))
+    uiElements.push(UIF.getButton('Done', FontAwesome.chevronRight, this.handleDoneButtonPressed))
 
-    // return (
-    //   <ScrollView style={styles.container}>
-    //     {UIF.getRangeQuestion(undefined)}
-    //     <TouchableOpacity onPress={() => this.props.navigation.navigate('Constituent Contribution')} style={{marginLeft: 10}}>
-    //       <Text>Click here to Goto Contribution Container</Text>
-    //     </TouchableOpacity>
-    //   </ScrollView>
-    // )
+    return (UIF.getScrollingContainer(uiElements))
   }
 }
 

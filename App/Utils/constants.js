@@ -90,66 +90,66 @@ function getUniqueQuestionId() {
 
 
 export const questionaire = [
-  // {
-  //   type: QUESTION_TYPE.RANGE,
-  //   id: getUniqueQuestionId(),
-  //   question: 'Which political party best represents your interests and ideas presently?',
-  //   min: {
-  //     label: 'Democrat',
-  //     color: 'blue'
-  //   },
-  //   middle: {             // optional
-  //     label: 'Neither',
-  //     color: 'gray'
-  //   },
-  //   max: {
-  //     label: 'Republican',
-  //     color: 'red'
-  //   },
-  //   steps: 10,
-  //   response: ''
-  // },
-  // {
-  //   type: QUESTION_TYPE.RANGE,
-  //   id: getUniqueQuestionId(),
-  //   question: 'Which political party best are you a member of?',
-  //   min: {
-  //     label: 'Democrat',
-  //     color: 'blue'
-  //   },
-  //   middle: {             // optional
-  //     label: 'Green',
-  //     color: 'green'
-  //   },
-  //   max: {
-  //     label: 'Republican',
-  //     color: 'red'
-  //   },
-  //   steps: 3,
-  //   response: ''
-  // },
-  // {
-  //   type: QUESTION_TYPE.RANGE,
-  //   id: getUniqueQuestionId(),
-  //   question: 'How concerned are you about climate change?',
-  //   min: {
-  //     label: 'Unconcerned',
-  //     color: 'white'
-  //   },
-  //   max: {
-  //     label: 'Concerned',
-  //     color: 'red'
-  //   },
-  //   steps: 5,
-  //   response: ''
-  // },
-  // {
-  //   type: QUESTION_TYPE.RANGE,
-  //   id: getUniqueQuestionId(),
-  //   question: 'How many people are in your household?',
-  //   steps: 10,
-  //   response: ''
-  // },
+  {
+    type: QUESTION_TYPE.RANGE,
+    id: getUniqueQuestionId(),
+    question: 'Which political party best represents your interests and ideas presently?',
+    min: {
+      label: 'Democrat',
+      color: 'blue'
+    },
+    middle: {             // optional
+      label: 'Neither',
+      color: 'gray'
+    },
+    max: {
+      label: 'Republican',
+      color: 'red'
+    },
+    steps: 10,
+    response: ''
+  },
+  {
+    type: QUESTION_TYPE.RANGE,
+    id: getUniqueQuestionId(),
+    question: 'Which political party best are you a member of?',
+    min: {
+      label: 'Democrat',
+      color: 'blue'
+    },
+    middle: {             // optional
+      label: 'Green',
+      color: 'green'
+    },
+    max: {
+      label: 'Republican',
+      color: 'red'
+    },
+    steps: 3,
+    response: ''
+  },
+  {
+    type: QUESTION_TYPE.RANGE,
+    id: getUniqueQuestionId(),
+    question: 'How concerned are you about climate change?',
+    min: {
+      label: 'Unconcerned',
+      color: 'white'
+    },
+    max: {
+      label: 'Concerned',
+      color: 'red'
+    },
+    steps: 5,
+    response: ''
+  },
+  {
+    type: QUESTION_TYPE.RANGE,
+    id: getUniqueQuestionId(),
+    question: 'How many people are in your household?',
+    steps: 10,
+    response: ''
+  },
   {
     type: QUESTION_TYPE.CHOICE,
     id: getUniqueQuestionId(),
@@ -196,6 +196,26 @@ export const questionaire = [
       {
         value: 'No',
         color: 'red'
+      }
+    ],
+    response: ''
+  },
+  {
+    type: QUESTION_TYPE.CHOICE,
+    id: getUniqueQuestionId(),
+    question: 'Are you happy with the current congressional representative for this district?',
+    choices: [
+      {
+        value: 'Yes',
+        color: 'lightblue',
+      },
+      {
+        value: 'Undecided?',
+        color: 'gray',
+      },
+      {
+        value: 'No',
+        color: 'lightblue'
       }
     ],
     response: ''

@@ -5,8 +5,7 @@ import LinearGradient from 'react-native-linear-gradient';
 
 const UIF = require('./UIFactory.js')
 
-
-class RangeQuestion extends Component {
+class QuestionComponent extends Component {
   constructor(props) {
     super(props)
 
@@ -35,8 +34,26 @@ class RangeQuestion extends Component {
     }
   }
 
+  handleValueChange = (aQuestionId, aValue) => {
+    console.log(`handleValueChange: ${aQuestionId} = ${aValue}`)
+
+    if (aQuestionId === this.questionData.id) {
+      this.questionData.response = aValue
+
+      if (this.hasOwnProperty('selectionHandlerFn') && this.selectionHandlerFn) {
+        this.selectionHandlerFn(aQuestionId, aValue)
+      }
+    }
+  }
+}
+
+
+class RangeQuestion extends QuestionComponent {
+  constructor(props) {
+    super(props)
+  }
+
   render() {
-    const buttonBar = []
     let questionWidget = undefined
 
     try {
@@ -98,15 +115,9 @@ class RangeQuestion extends Component {
 
 const MAX_LEN_FOR_ROW_LAYOUT = 9    // characters
 
-class ChoiceQuestion extends Component {
+class ChoiceQuestion extends QuestionComponent {
   constructor(props) {
     super(props)
-
-    // TODO: these are common to all of these, probably move them to a superclass
-    this.questionData = props.questionData
-    this.selectionHandlerFn =
-      (props.hasOwnProperty('selectionHandlerFn') &&
-       props.selectionHandlerFn) ? props.selectionHandlerFn : undefined
 
     this.useRowLayout = (this.questionData.choices.length <= 3)
     for (const choice of this.questionData.choices) {
@@ -114,29 +125,9 @@ class ChoiceQuestion extends Component {
         this.useRowLayout = false
       }
     }
-
-    this.state = {
-      response: this.questionData.response
-    }
-  }
-
-  handleSelectionChange = (aQuestionId, aValue) => {
-    console.log(`handleSelectionChange: ${aQuestionId} = ${aValue}`)
-
-    if (aQuestionId === this.questionData.id) {
-      this.questionData.response =
-        (this.questionData.response === aValue) ? '' : aValue
-
-      if (this.hasOwnProperty('selectionHandlerFn') && this.selectionHandlerFn) {
-        this.selectionHandlerFn(aQuestionId, aValue)
-      }
-
-      this.setState({response: this.questionData.response})
-    }
   }
 
   render() {
-    const buttonBar = []
     let questionWidget = undefined
 
     try {
@@ -168,4 +159,65 @@ class ChoiceQuestion extends Component {
   }
 }
 
-module.exports = { RangeQuestion, ChoiceQuestion }
+class TextQuestion extends QuestionComponent {
+  constructor(props) {
+    super(props)
+
+    // TODO: may need to set this / pass it in on re-entry.
+    this.initialValue = undefined
+  }
+
+  handleTextChange = (theText, theQuestionId) => {
+    this.handleValueChange(theQuestionId, theText, false)
+  }
+
+  render() {
+    let questionWidget = undefined
+
+    try {
+      const id = this.questionData.id
+
+      questionWidget = (
+        <View key={UIF.getUniqueKey()} style={{marginTop:10, borderColor:'lightgray', borderStyle:'solid', borderWidth:1, borderRadius:5, padding:4}}>
+          {UIF.getRow(UIF.getText(this.questionData.question))}
+          {UIF.getTextInput('Your answer ...', id, this.handleTextChange, this.initialValue)}
+        </View>
+      )
+    } catch (suppressedError) {}
+
+    return questionWidget
+  }
+}
+
+class ValueQuestion extends QuestionComponent {
+  constructor(props) {
+    super(props)
+
+    // TODO: may need to set this / pass it in on re-entry.
+    // TODO: only allow numerical values. Do a parse validation etc.
+    this.initialValue = undefined
+  }
+
+  handleTextChange = (theText, theQuestionId) => {
+    this.handleValueChange(theQuestionId, theText, false)
+  }
+
+  render() {
+    let questionWidget = undefined
+
+    try {
+      const id = this.questionData.id
+
+      questionWidget = (
+        <View key={UIF.getUniqueKey()} style={{marginTop:10, borderColor:'lightgray', borderStyle:'solid', borderWidth:1, borderRadius:5, padding:4}}>
+          {UIF.getRow(UIF.getText(this.questionData.question))}
+          {UIF.getTextInput('An amount...', id, this.handleTextChange, this.initialValue)}
+        </View>
+      )
+    } catch (suppressedError) {}
+
+    return questionWidget
+  }
+}
+
+module.exports = { RangeQuestion, ChoiceQuestion, TextQuestion, ValueQuestion }
