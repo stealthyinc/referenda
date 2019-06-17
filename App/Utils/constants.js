@@ -248,3 +248,20 @@ export const questionaire = [
     response: ''
   }
 ]
+
+export const contributionQuestion = {
+  type: QUESTION_TYPE.CHOICE,
+  id: getUniqueQuestionId(),
+  question: 'How will you contribute to the campaign?',
+  multipleResponses: true,
+  choices: [
+    { value: 'Tell Your Friends' },
+    { value: 'Door to Door Canvassing' },
+    { value: 'Phone Banking' },
+    { value: 'Texing' },
+    { value: 'Donations' },
+    { value: 'Merchandise Purchase' },
+    { value: 'Give Feedback to the Campaign' }
+  ],
+  response: ''
+}

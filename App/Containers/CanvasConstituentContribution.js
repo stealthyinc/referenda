@@ -1,40 +1,50 @@
 import React, { Component } from 'react'
 import { ScrollView, Text, TouchableOpacity, Image } from 'react-native'
 import { connect } from 'react-redux'
-// Add Actions - replace 'Your' with whatever your reducer is called :)
-// import YourActions from '../Redux/YourRedux'
 
-// Styles
-import styles from './Styles/CanvasConstituentContributionStyle'
-import NavigationType from '../Navigation/propTypes';
+import { ChoiceQuestion } from '../Utils/QuestionaireWidgets'
+
+import { Metrics } from '../Themes/'
+import { FontAwesome } from '../Assets/icons'
+const C = require('../Utils/constants.js')
+const UIF = require('../Utils/UIFactory.js')
+const NUIF = require('../Utils/NavUIFactory.js')
+
 import CanvasActions, { CanvasSelectors } from '../Redux/CanvassingRedux'
 
-class CanvasConstituentContribution extends Component {
-  static propTypes = {
-    navigation: NavigationType.isRequired,
-  };
 
-  static navigationOptions = ({ navigation }) => {
-    const params = navigation.state.params || {}
-    return {
-      headerTitle: 'Contribution'.toUpperCase(),
-      headerBackTitle: 'Back',
-      gesturesEnabled: false,
-    }
-  };
-  // constructor (props) {
-  //   super(props)
-  //   this.state = {}
-  // }
+class CanvasConstituentContribution extends Component {
+  static propTypes = NUIF.requireNavBar
+  static navigationOptions = NUIF.getNavOptions(
+    'Contribution',  false /* omit left header avatar */ )
+
+  constructor (props) {
+    super(props)
+    this.state = {}
+    this.contributionQuestion = C.contributionQuestion
+  }
+
+  handleQuestionResponse = (aQuestionId, aValue) => {
+
+  }
+
+  handleDoneButtonPressed = () => {
+    // TODO: push our data up to firebase for:
+    //        - the Questionaire
+    //        - the volunteer score
+    this.props.navigation.navigate('Contact Search')
+  }
 
   render () {
-    return (
-      <ScrollView style={styles.container}>
-        <TouchableOpacity onPress={() => this.props.navigation.navigate('Contact Search')} style={{marginLeft: 10}}>
-          <Text>Click here to Goto Contacts Import</Text>
-        </TouchableOpacity>
-      </ScrollView>
-    )
+    const uiElements = []
+    uiElements.push(<ChoiceQuestion
+                      key={UIF.getUniqueKey()}
+                      questionData={this.contributionQuestion}
+                      selectionHandlerFn={this.handleQuestionResponse} />)
+    uiElements.push(UIF.getVerticalSpacer(Metrics.doubleBaseMargin))
+    uiElements.push(UIF.getButton('Done', FontAwesome.chevronRight, this.handleDoneButtonPressed))
+
+    return UIF.getScrollingContainer(uiElements)
   }
 }
 
