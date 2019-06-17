@@ -10,10 +10,9 @@ import { ActivityIndicator,
 import { Colors, Fonts, Metrics } from '../Themes/'
 import { FontAwesome } from '../Assets/icons';
 import { RkText } from 'react-native-ui-kitten';  // RkText to display icons easily. (Could also switch to Oblador's FontAwesome RN component if removeing rk)
-import LinearGradient from 'react-native-linear-gradient';
 
 let key = 0
-function getUniqueKey()
+export function getUniqueKey()
 {
   return key++
 }
@@ -211,10 +210,18 @@ export const getHorizontalSpacer = (theDimension=Metrics.baseMargin) =>
   )
 }
 
-export const getRow = (theRowElements) => {
+export const getRow = (theElements) => {
   return (
     <View key={getUniqueKey()} style={styles.row}>
-      {theRowElements}
+      {theElements}
+    </View>
+  )
+}
+
+export const getColumn = (theElements) => {
+  return (
+    <View key={getUniqueKey()} style={styles.column}>
+      {theElements}
     </View>
   )
 }
@@ -377,6 +384,7 @@ export const styles = StyleSheet.create({
     alignItems:'center',
     justifyContent:'center',
     marginHorizontal:1,
+    marginVertical:1,
     paddingVertical:10
   },
   ActivityIndicatorModal: {
@@ -388,6 +396,12 @@ export const styles = StyleSheet.create({
   },
   row: {
     flexDirection:'row',
+    justifyContent:'space-between',
+    alignItems:'center',
+    paddingVertical:5
+  },
+  column: {
+    flexDirection:'column',
     justifyContent:'space-between',
     alignItems:'center',
     paddingVertical:5

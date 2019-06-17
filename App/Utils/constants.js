@@ -5,6 +5,7 @@ export const LEANING =  {
   unknown:'#ffffe6'         // 95% light yellow: https://www.w3schools.com/colors/colors_picker.asp?colorhex=FFFF00
 }
 
+
 // TODO: use the voters.js in raw data after regenerating it with leaning data and
 //       same house permutations
 export const demoVoters = [
@@ -71,4 +72,159 @@ export const demoVoters = [
     zip: '94501',
     leaning: LEANING.left
   },
+]
+
+
+export const QUESTION_TYPE = {
+  RANGE: 0,
+  CHOICE: 1,
+  TEXT: 2,
+  VALUE: 3
+}
+
+
+let qid = 0
+function getUniqueQuestionId() {
+  return qid++
+}
+
+
+export const questionaire = [
+  // {
+  //   type: QUESTION_TYPE.RANGE,
+  //   id: getUniqueQuestionId(),
+  //   question: 'Which political party best represents your interests and ideas presently?',
+  //   min: {
+  //     label: 'Democrat',
+  //     color: 'blue'
+  //   },
+  //   middle: {             // optional
+  //     label: 'Neither',
+  //     color: 'gray'
+  //   },
+  //   max: {
+  //     label: 'Republican',
+  //     color: 'red'
+  //   },
+  //   steps: 10,
+  //   response: ''
+  // },
+  // {
+  //   type: QUESTION_TYPE.RANGE,
+  //   id: getUniqueQuestionId(),
+  //   question: 'Which political party best are you a member of?',
+  //   min: {
+  //     label: 'Democrat',
+  //     color: 'blue'
+  //   },
+  //   middle: {             // optional
+  //     label: 'Green',
+  //     color: 'green'
+  //   },
+  //   max: {
+  //     label: 'Republican',
+  //     color: 'red'
+  //   },
+  //   steps: 3,
+  //   response: ''
+  // },
+  // {
+  //   type: QUESTION_TYPE.RANGE,
+  //   id: getUniqueQuestionId(),
+  //   question: 'How concerned are you about climate change?',
+  //   min: {
+  //     label: 'Unconcerned',
+  //     color: 'white'
+  //   },
+  //   max: {
+  //     label: 'Concerned',
+  //     color: 'red'
+  //   },
+  //   steps: 5,
+  //   response: ''
+  // },
+  // {
+  //   type: QUESTION_TYPE.RANGE,
+  //   id: getUniqueQuestionId(),
+  //   question: 'How many people are in your household?',
+  //   steps: 10,
+  //   response: ''
+  // },
+  {
+    type: QUESTION_TYPE.CHOICE,
+    id: getUniqueQuestionId(),
+    question: 'Have you heard of <candidate> prior to this conversation?',
+    choices: [
+      {
+        value: 'Yes',
+        color: 'green',
+      },
+      {
+        value: 'No',
+        color: 'red'
+      }
+    ],
+    response: ''
+  },
+  {
+    type: QUESTION_TYPE.CHOICE,
+    id: getUniqueQuestionId(),
+    question: 'Do you plan to vote this election?',
+    choices: [
+      {
+        value: 'Yes'
+      },
+      {
+        value: 'No'
+      }
+    ],
+    response: ''
+  },
+  {
+    type: QUESTION_TYPE.CHOICE,
+    id: getUniqueQuestionId(),
+    question: 'Are you happy with the current congressional representative for this district?',
+    choices: [
+      {
+        value: 'Yes',
+        color: 'green',
+      },
+      {
+        value: 'Undecided',
+        color: 'grey',
+      },
+      {
+        value: 'No',
+        color: 'red'
+      }
+    ],
+    response: ''
+  },
+  {
+    type: QUESTION_TYPE.CHOICE,
+    id: getUniqueQuestionId(),
+    question: 'What is your favorite type of cheese?',
+    choices: [
+      { value: 'cheddar' },
+      { value: 'mozarella' },
+      { value: 'provolone' },
+      { value: 'moterey jack' },
+      { value: 'pepper jack' },
+      { value: 'muenster' },
+      { value: 'I hate cheese' }
+    ],
+    response: ''
+  },
+  {
+    type: QUESTION_TYPE.TEXT,
+    id: getUniqueQuestionId(),
+    question: 'Do you have anything you would like to ask <candidate>?',
+    response: ''
+  },
+  {
+    type: QUESTION_TYPE.VALUE,
+    id: getUniqueQuestionId(),
+    question: 'How much student debt do you have?',
+    response: ''
+  }
 ]
