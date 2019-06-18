@@ -70,11 +70,15 @@ class CanvasConstituentSearchResults extends Component {
 
     const scrollingContainerElements = []
     for (const voterIndex in voters) {
-      const voter = voters[voterIndex]
-      const voterText = `${voter.name}`
-      const addressText = `${voter.street}\n${voter.city}, ${voter.zip}`
-
-      const buttonColor = voter.leaning
+      const voter = voters[voterIndex].voter
+      const voterText = `${voter.firstName} ${voter.lastName}`
+      const addressText = `${voter.streetAddress}\n${voter.city} ${voter.state}\n${voter.zipCode}`
+      const gray90pct = '#e6e6e6'
+      const buttonColor = gray90pct
+      // const voterText = `${voter.name}`
+      // const addressText = `${voter.street}\n${voter.city}, ${voter.zip}`
+      //
+      // const buttonColor = voter.leaning
       scrollingContainerElements.push(UIF.getListButton(voterText, addressText, voterIndex, this.handleSearchResultSelection, buttonColor))
     }
 

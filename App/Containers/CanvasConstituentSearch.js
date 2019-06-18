@@ -8,6 +8,10 @@ const UIF = require('../Utils/UIFactory.js')
 const C = require('../Utils/constants.js')
 const NUIF = require('../Utils/NavUIFactory.js')
 
+const Levenshtein = require('fast-levenshtein');
+
+import { Voters } from '../Data/raw/sandiegovoters'
+
 class CanvasConstituentSearch extends Component {
   static propTypes = NUIF.requireNavBar
   static navigationOptions = NUIF.getNavOptions('Canvasser')
@@ -49,19 +53,60 @@ class CanvasConstituentSearch extends Component {
     this.search[theProperty] = theText
   }
 
+  compareVoterResults = (a, b) => {
+    if (a.hasOwnProperty('firstNameLevDist') && b.hasOwnProperty('firstNameLevDist')) {
+      return a.firstNameLevDist - b.firstNameLevDist
+    }
+  }
+
   handleSearchPressed = () => {
     // // Push the search data to redux to prevent re-rendering of old data:
     // this.updateRedux('handleSearchPressed')
     this.setState({showAI: true})
 
-    const delayInSeconds = 1.5 * 1000
+    // Search spoof:
+    // Start by searching last name, then see about narrowing by first name.
+    // If empty, search by address, then see about narrowing by city / zip.
+    this.results = []
+    for (const voter of Voters) {
+
+      if (this.search.lastName) {
+        const lastNameLevDist = Levenshtein.get(this.search.lastName, voter.lastName)
+        if (lastNameLevDist < 2) {
+          if (this.search.firstName) {
+            const firstNameLevDist = Levenshtein.get(this.search.firstName, voter.firstName)
+            if (firstNameLevDist < 3) {
+              this.results.push({
+                firstNameLevDist,
+                lastNameLevDist,
+                voter
+              })
+            }
+          } else {
+            this.results.push({
+              lastNameLevDist,
+              voter
+            })
+          }
+        }
+      } else if (this.search.streetAddress !== '') {
+        if (levDist < 3) {
+          this.results.push({
+            levDist,
+            voter
+          })
+        }
+      }
+    }
+
+    this.results.sort(this.compareVoterResults)
+
+    const delayInSeconds = 0.5 * 1000
     setTimeout(
       () => {
         this.setState({showAI: false})
 
-        // TODO: insert search results into spoofed data and replace this delay etc. and
-        //       the fetch from demoVoters with a search in voters.js
-        this.results = C.demoVoters
+        // this.results = C.demoVoters
         this.updateRedux('handleSearchPressed after timeout')
 
         this.props.navigation.navigate('Constituent Search Results')

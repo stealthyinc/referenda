@@ -34,6 +34,7 @@
     "buffer-reverse": "^1.0.1",
     "dns.js": "^1.0.1",
     "events": "^1.1.1",
+    "fast-levenshtein": "^2.0.6",
     "form-data": "^2.3.3",
     "format-json": "^1.0.3",
     "gun": "^0.9.9999991",

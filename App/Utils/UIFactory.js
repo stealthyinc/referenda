@@ -226,69 +226,6 @@ export const getColumn = (theElements) => {
   )
 }
 
-export const getRangeQuestion = (
-  theQuestionData,
-  theSelection,
-  theSelectionHandlerFn=() => {} ) =>
-{
-  const buttonBar = []
-  let questionWidget = undefined
-
-  try {
-    const labels = []
-    const gradientColors = []
-
-    for (const property of ['min', 'middle', 'max']) {
-      if (theQuestionData.hasOwnProperty(property)) {
-        const qProperty = theQuestionData[property]
-        if (qProperty.hasOwnProperty('label')) {
-          labels.push(
-            <Text key={getUniqueKey()} style={styles.descriptionText}>
-              {qProperty['label']}
-            </Text> )
-        }
-
-        if (qProperty.hasOwnProperty('color')) {
-          gradientColors.push(qProperty['color'])
-        }
-      }
-    }
-
-    let gradient = undefined
-    if (gradientColors.length > 0) {
-      gradient = (
-        <LinearGradient
-          colors={gradientColors}
-          start={{x: 0, y: 0}} end={{x: 1, y: 0}}
-          style={{height:5, borderRadius:2}} >
-        </LinearGradient>
-      )
-    }
-
-    const id = theQuestionData.id
-
-    const buttons = []
-    for (let index = 1; index <= theQuestionData.steps; index++) {
-      if (index === theSelection) {
-        buttons.push(getQuestionButton(index, id, index, theSelectionHandlerFn, 'green', '#d3f8d3' /* 90% green */))
-      } else {
-        buttons.push(getQuestionButton(index, id, index, theSelectionHandlerFn))
-      }
-    }
-
-    questionWidget = (
-      <View key={getUniqueKey()} style={{marginTop:10, borderColor:'lightgray', borderStyle:'solid', borderWidth:1, borderRadius:5, padding:4}}>
-        {getRow(getText(theQuestionData.question))}
-        {getRow(labels)}
-        {gradient}
-        {getRow(buttons)}
-      </View>
-    )
-  } catch (suppressedError) {}
-
-  return questionWidget
-}
-
 export const getScrollingContainer = (theUIElements, noMargin=false) =>
 {
   const containerStyle = (noMargin) ?
@@ -408,7 +345,7 @@ export const styles = StyleSheet.create({
   },
   modalContainer: {
     height:'100%',
-    backgroundColor:'rgba(255,255,255,0.85)',
+    backgroundColor:'rgba(255,255,255,0.90)',
     flexDirection:'column',
     justifyContent:'center',
     alignItems:'center',
