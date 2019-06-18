@@ -13,7 +13,7 @@ const { firebaseInstance } = require('./utils/firebaseWrapper.js')
 
 export const WebRoutes = {
   Home: {
-    component: SurveyContainer,
+    component: FeedContainer,
     path: ["/", "/:campaignName/", "/:campaignName/:postId"],
     exact: true
   },

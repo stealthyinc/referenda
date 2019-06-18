@@ -34,7 +34,7 @@ import ArticleContainer from './ArticleContainer'
 import AppSignUp from '../components/AppSignUp'
 import PhoneNumber from '../components/PhoneNumber'
 import ShareBar from '../components/ShareBar'
-
+import queryString from 'query-string'
 // TODO: how do we rip this out / disable it for mobile web and the app (use
 //       the photo chooser / picker for the app).
 import FitImage from 'react-native-fit-image';
@@ -81,6 +81,7 @@ export default class Feed extends Component {
       profileImgUploading: undefined,
       bgImgUploading: undefined,
       showUrlBar: undefined,
+      isWebView: false
     };
 
     this.indexFileData = undefined
@@ -114,6 +115,10 @@ export default class Feed extends Component {
         this.setState({userData, person})
       })
     }
+    // set webview from here, so mobile app news feed functionality is changed
+    const parsed = queryString.parse(window.location.search);
+    if (parsed)
+      this.setState({isWebView: parsed.wv})
   }
 
   componentDidMount = async () => {
@@ -903,6 +908,7 @@ export default class Feed extends Component {
               id={item.id}
               origin={'feed'}
               campaignName={this.props.campaignName}
+              webview={this.state.isWebView}
             />
             {editorControls}
           </Card>
@@ -1925,12 +1931,12 @@ export default class Feed extends Component {
           modalHeader='App Sign Up'
         />
         {this.renderUrlBar()}
-        <Header transparent style={styles.headerStyle}>
+        {(!this.state.isWebView) ? (<Header transparent style={styles.headerStyle}>
           <View style={styles.headerContentStyle}>
             {leftHeaderContent}
             {rightHeaderContent}
           </View>
-        </Header>
+        </Header>) : null }
 
         <View style={{width:'100%', alignItems:'center'}} >
           <View style={headerWidthStyle} >

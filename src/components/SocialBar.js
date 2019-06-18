@@ -1,20 +1,20 @@
 import React from 'react'
 import {
   View,
-  Linking,
 } from 'react-native';
 import {
   CardItem,
   Button,
   Icon,
-  Text
+  Text,
+  Linking
 } from 'native-base'
 import {
   Amplitude,
 } from "@amplitude/react-amplitude";
 const { firebaseInstance } = require('../utils/firebaseWrapper.js')
 
-const SocialBar = ({ chatFunction, paymentFunction, likeFunction, likeCount, id, origin, campaignName }) => (
+const SocialBar = ({ chatFunction, paymentFunction, likeFunction, likeCount, id, origin, campaignName, webview }) => (
   <Amplitude eventProperties={{campaign: campaignName, postId: id, origin, userId: firebaseInstance.getUserId()}}>
     {({ logEvent }) =>
       <CardItem bordered>
@@ -25,12 +25,20 @@ const SocialBar = ({ chatFunction, paymentFunction, likeFunction, likeCount, id,
             <Icon name='chatbubbles' />
           </Button>
           <View style={{width:5}} />
-          <Button bordered style={{borderColor:'lightgray'}} small rounded warning
-          onPress={() => {
-            logEvent('Bitcoin Button Pressed')
-            Linking.openURL('https://commerce.coinbase.com/checkout/48a93246-da81-47a6-a69d-878d7df1a982')}}>
-            <Icon name='logo-bitcoin' />
-          </Button>
+          {(!webview) ? (<a href='https://checkout.opennode.co/p/55769f7d-ebcd-4543-8bbc-bedbe8c9dbe0' target='_blank'>
+            <Button bordered style={{borderColor:'lightgray'}} small rounded warning
+              onPress={() => {
+              logEvent('Bitcoin Button Pressed')}}>
+              <Icon name='logo-bitcoin' />
+            </Button>
+          </a>) : (
+            <Button bordered style={{borderColor:'lightgray'}} small rounded warning
+              onPress={() => {
+              logEvent('Bitcoin Button Pressed')
+              Linking.openURL('https://checkout.opennode.co/p/55769f7d-ebcd-4543-8bbc-bedbe8c9dbe0')}}>
+              <Icon name='logo-bitcoin' />
+            </Button>
+          )}
           <View style={{width:5}} />
           <Button bordered style={{borderColor:'lightgray'}} small rounded success onPress={() => {
             logEvent('Donation Button Pressed')

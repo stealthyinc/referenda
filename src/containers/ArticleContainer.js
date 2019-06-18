@@ -28,6 +28,7 @@ import Hyperlink from 'react-native-hyperlink'
 import {
   Amplitude,
 } from "@amplitude/react-amplitude";
+import queryString from 'query-string'
 const { firebaseInstance } = require('../utils/firebaseWrapper.js')
 const C = require('../utils/constants.js')
 
@@ -44,7 +45,15 @@ export default class Article extends Component {
       showShareModal: false,
       showPhoneModal: false,
       showMessageModal: false,
+      isWebView: false
     }
+  }
+
+  componentWillMount = async () => {
+    // set webview from here, so mobile app news feed functionality is changed
+    const parsed = queryString.parse(window.location.search);
+    if (parsed)
+      this.setState({isWebView: parsed.wv})
   }
 
   toggleShareModal = (aPost=undefined) => {
@@ -181,6 +190,7 @@ export default class Article extends Component {
                   id={item.id}
                   origin={'article'}
                   campaignName={this.props.campaignName}
+                  webview={this.state.isWebView}
                 />
               </View>
               <View style={{padding:10, width:'100%'}}>
