@@ -32,11 +32,11 @@ class CanvasConstituentContribution extends Component {
   handleQuestionResponse = (aQuestionId, aValue) => {
   }
 
-  handleDoneButtonPressed = () => {
+  handleBackButtonPressed = () => {
     // TODO: push our data up to firebase for:
     //        - the Questionaire
     //        - the volunteer score
-    this.props.navigation.navigate('Constituent Questionaire')
+    this.props.navigation.navigate('Constituent Contribution')
   }
 
   handleFacebookToggle = () => {
@@ -119,7 +119,7 @@ class CanvasConstituentContribution extends Component {
                       questionData={this.contributionQuestion}
                       selectionHandlerFn={this.handleQuestionResponse} />)
     uiElements.push(UIF.getVerticalSpacer(Metrics.doubleBaseMargin))
-    uiElements.push(UIF.getButton('Done', FontAwesome.chevronRight, this.handleDoneButtonPressed))
+    uiElements.push(UIF.getButton('Back', FontAwesome.chevronRight, this.handleBackButtonPressed))
 
     return UIF.getScrollingContainer(uiElements, true /* no margin */)
   }
