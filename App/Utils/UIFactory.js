@@ -67,6 +67,7 @@ export const getTextInput = (
     <TextInput
       key={getUniqueKey()}
       style={textInputStyle}
+      allowFontScaling={false}
       placeholder={thePlaceHolderText}
       placeholderTextColor={Colors.lightText}
       defaultValue={theInitialValue}
