@@ -142,7 +142,7 @@ class CanvasConstituentSearch extends Component {
       uiElements.push(UIF.getActivityIndicator('Searching registered voters ...'))
     }
 
-    const headingSize = 'h4'
+    const headingSize = 'h5'
     uiElements.push(UIF.getHeading('Search for registered voters by name:', headingSize))
     uiElements.push(UIF.getTextInput('First Name', 'firstName', this.handleSearchTextChange, this.search.firstName))
     uiElements.push(UIF.getTextInput('Last Name', 'lastName', this.handleSearchTextChange, this.search.lastName))

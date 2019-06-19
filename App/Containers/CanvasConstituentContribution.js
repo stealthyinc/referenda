@@ -30,7 +30,6 @@ class CanvasConstituentContribution extends Component {
   }
 
   handleQuestionResponse = (aQuestionId, aValue) => {
-
   }
 
   handleDoneButtonPressed = () => {
