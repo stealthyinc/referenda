@@ -33,8 +33,9 @@ class Grid extends Component {
   renderItems = () => MainRoutes.map(route => (
     <RkButton
       rkType='square shadow'
-      style={{ ...this.itemSize }}
+      style={{ ...this.itemSize, color: (route.level > this.props.level) ? '#CDCDCD' }}
       key={route.id}
+      disabled={route.level > this.props.level}
       onPress={() => this.onItemPressed(route)}>
       <RkText style={styles.icon} rkType='primary moon menuIcon'>
         {route.icon}

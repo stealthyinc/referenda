@@ -33,6 +33,7 @@ import CanvasConstituentContribution from '../Containers/CanvasConstituentContri
 export const MainRoutes = [
   {
     id: 'LeaderScreen',
+    level: 2,
     title: 'Leader Board',
     icon: FontIcons.dashboard,
     screen: LeaderScreen,
@@ -40,6 +41,7 @@ export const MainRoutes = [
   },
   {
     id: 'CampaignerMenu',
+    level: 1,
     title: 'Fundraising',
     icon: FontIcons.card,
     screen: CampaignerMenuScreen,
@@ -90,6 +92,7 @@ export const MainRoutes = [
   },
   {
     id: 'CanvasMenu',
+    level: 1,
     title: 'Canvassing',
     icon: FontIcons.profile,
     screen: CanvasConstituentSearch,
@@ -124,6 +127,7 @@ export const MainRoutes = [
   },
   {
     id: 'SocialMenu',
+    level: 0,
     title: 'Campaign News',
     icon: FontIcons.article,
     screen: FeedScreen,

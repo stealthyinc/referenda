@@ -46,7 +46,7 @@ export const FontAwesome = {
   organize: String.fromCharCode(61672),
   wallet: String.fromCharCode(62805),
   hashtag: String.fromCharCode(62098),
-  compass: String.fromCharCode(61774)
+  compass: String.fromCharCode(61774),
   angle_down: String.fromCharCode(61703),
   angle_up: String.fromCharCode(61702),
   users: String.fromCharCode(61632),
