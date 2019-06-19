@@ -42,7 +42,10 @@ class CanvasConstituentQuestionaire extends Component {
     // TODO: push our data up to firebase for:
     //        - the Questionaire
     //        - the volunteer score
-    this.props.navigation.navigate('Constituent Contribution')
+    //
+    // TODO: we'll need to push the next destination up to redux and get it for here and
+    //       modify the button so that users go back to the discussion screen.
+    this.props.navigation.navigate('CanvasMenu')
   }
 
   render () {

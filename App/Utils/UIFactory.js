@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Component } from 'react'
 import { ActivityIndicator,
          Modal,
          ScrollView,
@@ -9,7 +9,10 @@ import { ActivityIndicator,
          View } from 'react-native'
 import { Colors, Fonts, Metrics } from '../Themes/'
 import { FontAwesome } from '../Assets/icons';
-import { RkText } from 'react-native-ui-kitten';  // RkText to display icons easily. (Could also switch to Oblador's FontAwesome RN component if removeing rk)
+
+import {
+  RkAvoidKeyboard,
+  RkText } from 'react-native-ui-kitten';  // RkText to display icons easily. (Could also switch to Oblador's FontAwesome RN component if removeing rk)
 
 let key = 0
 export function getUniqueKey()
@@ -41,10 +44,10 @@ export const getHeading = (theHeading, headingStyle='h1') =>
     </Text> )
 }
 
-export const getText = (theText) =>
+export const getText = (theText, style=styles.text) =>
 {
   return (
-    <Text key={getUniqueKey()} style={styles.text}>{theText}</Text>
+    <Text key={getUniqueKey()} style={style}>{theText}</Text>
   )
 }
 
@@ -52,12 +55,18 @@ export const getTextInput = (
   thePlaceHolderText,
   thePropertyName,
   theTextChangeHandlerFun,
-  theInitialValue=undefined) =>
+  theInitialValue=undefined,
+  styleModifer={}) =>
 {
+  let textInputStyle = styles.textInput
+  if (styleModifer) {
+    textInputStyle = {...styles.textInput, ...styleModifer}
+  }
+
   return (
     <TextInput
       key={getUniqueKey()}
-      style={styles.textInput}
+      style={textInputStyle}
       placeholder={thePlaceHolderText}
       placeholderTextColor={Colors.lightText}
       defaultValue={theInitialValue}
@@ -72,7 +81,9 @@ export const getButton = (
   theButtonText=undefined,
   theButtonIcon=undefined,
   theClickHandlerFn=() => {},
-  theButtonColor='black') =>
+  theButtonColor='black',
+  hasBorder=true,
+  hasPadding=true) =>
 {
   const uiElements = []
   if (theButtonIcon) {
@@ -98,11 +109,18 @@ export const getButton = (
     )
   }
 
+  let buttonStyle = (hasBorder) ?
+    styles.buttonInnerContainer :
+    {...styles.buttonInnerContainer, borderWidth:0}
+
+  buttonStyle = (hasPadding) ?
+    buttonStyle : {...buttonStyle, paddingVertical:0}
+
   return (
       <View key={getUniqueKey()} style={styles.buttonOuterContainer}>
         <TouchableOpacity
           onPress={() => theClickHandlerFn()}
-          style={{color:theButtonColor, ...styles.buttonInnerContainer}}>
+          style={{color:theButtonColor, ...buttonStyle}}>
           {uiElements}
         </TouchableOpacity>
       </View>
@@ -115,7 +133,7 @@ export const getListButton = (
   theIndex,
   theSelectHandlerFn,
   theButtonColor='black',
-  theBorderColor='black') =>
+  theBorderColor=Colors.listBottomBorderColor) =>
 {
   return (
     <View key={getUniqueKey()} style={styles.listButtonOuterContainer}>
@@ -125,7 +143,7 @@ export const getListButton = (
           borderColor:theBorderColor,
           backgroundColor:theButtonColor,
           ...styles.listButtonInnerContainer}}>
-        <Text style={styles.text}>
+        <Text style={{...styles.text, color:Colors.listEmphasisText}}>
           {theEmphasisButtonText}
         </Text>
         <Text style={styles.descriptionText}>
@@ -210,12 +228,81 @@ export const getHorizontalSpacer = (theDimension=Metrics.baseMargin) =>
   )
 }
 
-export const getRow = (theElements) => {
+export const getRow = (theElements, paddingHorizontal=0) => {
+  const rowStyle = { ...styles.row, paddingHorizontal:paddingHorizontal }
   return (
-    <View key={getUniqueKey()} style={styles.row}>
+    <View key={getUniqueKey()} style={rowStyle}>
       {theElements}
     </View>
   )
+}
+
+export const getKeyValueTextRow = (
+  theKey,
+  theValue,
+  options={}) =>
+{
+  const fnOptions = {
+    theKeyTextStyle: styles.descriptionText,
+    theValueTextStyle: styles.text,
+    ...options
+  }
+
+  const rowElements = []
+  rowElements.push(getText(theKey, fnOptions.theKeyTextStyle))
+  rowElements.push(getText(theValue, fnOptions.theValueTextStyle))
+
+  return getRow(rowElements)
+}
+
+export const getKeyValueTextInputRow = (
+  theKey,
+  theTextInputInitialValue,
+  options={}) =>
+{
+  const fnOptions = {
+    theKeyTextStyle: styles.descriptionText,
+    theTextInputPlaceHolderText: theKey,
+    theTextInputPropertyName: undefined,
+    theTextInputChangeHandlerFn: () => {},
+    theTextInputStyle: {
+      width:'auto',
+      marginTop:0,
+      marginBottom:0,
+      textAlign:'right'
+    },
+    ...options
+  }
+
+  const rowElements = []
+  rowElements.push(getText(theKey, fnOptions.theKeyTextStyle))
+  rowElements.push(getTextInput(
+    fnOptions.theTextInputPlaceHolderText,
+    fnOptions.theTextInputPropertyName,
+    fnOptions.theTextInputChangeHandlerFn,
+    theTextInputInitialValue,
+    fnOptions.theTextInputStyle))
+
+  return getRow(rowElements)
+}
+
+export const getKeyButtonsRow = (theKey, theButtons, options={}) =>
+{
+  const fnOptions = {
+    theKeyTextStyle: styles.descriptionText,
+    theValueTextStyle: styles.text,
+    ...options
+  }
+
+  const rowElements = []
+  rowElements.push(getText(theKey, fnOptions.theKeyTextStyle))
+  rowElements.push(
+    <View style={{flexDirection:'row'}}>
+      {theButtons}
+    </View>
+  )
+
+  return getRow(rowElements)
 }
 
 export const getColumn = (theElements) => {
@@ -226,74 +313,48 @@ export const getColumn = (theElements) => {
   )
 }
 
-export const getRangeQuestion = (
-  theQuestionData,
-  theSelection,
-  theSelectionHandlerFn=() => {} ) =>
-{
-  const buttonBar = []
-  let questionWidget = undefined
+class FoldingSection extends Component {
+  constructor(props) {
+    super(props)
 
-  try {
-    const labels = []
-    const gradientColors = []
-
-    for (const property of ['min', 'middle', 'max']) {
-      if (theQuestionData.hasOwnProperty(property)) {
-        const qProperty = theQuestionData[property]
-        if (qProperty.hasOwnProperty('label')) {
-          labels.push(
-            <Text key={getUniqueKey()} style={styles.descriptionText}>
-              {qProperty['label']}
-            </Text> )
-        }
-
-        if (qProperty.hasOwnProperty('color')) {
-          gradientColors.push(qProperty['color'])
-        }
-      }
+    this.heading = props.hasOwnProperty('heading') ? props.heading : ''
+    this.elements = props.hasOwnProperty('elements') ? props.elements : ''
+    this.state = {
+      showElements: true
     }
+  }
 
-    let gradient = undefined
-    if (gradientColors.length > 0) {
-      gradient = (
-        <LinearGradient
-          colors={gradientColors}
-          start={{x: 0, y: 0}} end={{x: 1, y: 0}}
-          style={{height:5, borderRadius:2}} >
-        </LinearGradient>
-      )
-    }
+  handleShowElementsToggle = () => {
+    this.setState({showElements: !this.state.showElements})
+  }
 
-    const id = theQuestionData.id
+  render() {
+    const buttonIcon = (this.state.showElements) ? FontAwesome.angle_up : FontAwesome.angle_down
+    const elements = (this.state.showElements) ? this.elements : undefined
 
-    const buttons = []
-    for (let index = 1; index <= theQuestionData.steps; index++) {
-      if (index === theSelection) {
-        buttons.push(getQuestionButton(index, id, index, theSelectionHandlerFn, 'green', '#d3f8d3' /* 90% green */))
-      } else {
-        buttons.push(getQuestionButton(index, id, index, theSelectionHandlerFn))
-      }
-    }
-
-    questionWidget = (
-      <View key={getUniqueKey()} style={{marginTop:10, borderColor:'lightgray', borderStyle:'solid', borderWidth:1, borderRadius:5, padding:4}}>
-        {getRow(getText(theQuestionData.question))}
-        {getRow(labels)}
-        {gradient}
-        {getRow(buttons)}
+    return (
+      <View style={styles.questionViewContainer}>
+        {getRow([getText(this.heading, {...styles.text, fontWeight: 'bold'}), getButton(undefined, buttonIcon, this.handleShowElementsToggle, 'black', false)])}
+        {elements}
       </View>
     )
-  } catch (suppressedError) {}
+  }
+}
 
-  return questionWidget
+export const getFoldingSection = (theSectionHeading, theElements) => {
+  return (
+    <FoldingSection
+      key={getUniqueKey()}
+      heading={theSectionHeading}
+      elements={theElements} />
+  )
 }
 
 export const getScrollingContainer = (theUIElements, noMargin=false) =>
 {
   const containerStyle = (noMargin) ?
-  { ...styles.container, marginHorizontal:0, marginVertical:0} :
-  styles.container
+    { ...styles.container, marginHorizontal:0, marginVertical:0} :
+    styles.container
 
   return (
     <ScrollView key={getUniqueKey()} style={containerStyle}>
@@ -351,7 +412,7 @@ export const styles = StyleSheet.create({
     flexDirection:'row',
     borderStyle:'solid',
     borderWidth:2,
-    borderRadius:15,
+    borderRadius:12,
     alignItems:'center',
     paddingHorizontal:10,
     paddingVertical:5
@@ -363,12 +424,12 @@ export const styles = StyleSheet.create({
   listButtonInnerContainer: {
     width: '100%',
     flexDirection:'column',
-    borderStyle:'solid',
     marginTop: 5,
-    borderWidth:1,
-    borderRadius:10,
-    paddingHorizontal:10,
-    paddingVertical:5
+    borderStyle:'solid',
+    borderBottomWidth:1,
+    paddingVertical:5,
+    paddingLeft: 15,
+    paddingRight: 5
   },
   questionButtonOuterContainer: {
     flex:1,
@@ -386,6 +447,19 @@ export const styles = StyleSheet.create({
     marginHorizontal:1,
     marginVertical:1,
     paddingVertical:10
+  },
+  questionViewContainer: {
+    marginTop:10,
+    borderColor:Colors.listBottomBorderColor,
+    borderBottomWidth:1,
+    borderStyle:'solid',
+    paddingHorizontal:5,
+    paddingVertical:5,
+    // borderColor:'lightgray',
+    // borderStyle:'solid',
+    // borderWidth:1,
+    // borderRadius:5,
+    // padding:4
   },
   ActivityIndicatorModal: {
     height:'100%',
@@ -408,12 +482,12 @@ export const styles = StyleSheet.create({
   },
   modalContainer: {
     height:'100%',
-    backgroundColor:'rgba(255,255,255,0.85)',
+    backgroundColor:'rgba(255,255,255,0.95)',
     flexDirection:'column',
     justifyContent:'center',
     alignItems:'center',
-    marginHorizontal: Metrics.marginHorizontal,
-    marginVertical: Metrics.marginVertical,
+    // marginHorizontal: Metrics.marginHorizontal,
+    // marginVertical: Metrics.marginVertical,
   },
   container: {
     flex: 1,

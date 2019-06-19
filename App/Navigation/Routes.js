@@ -102,15 +102,15 @@ export const MainRoutes = [
         children: [],
       },
       {
-        id: 'Constituent Questionaire',
-        title: 'Constituent Questionaire',
-        screen: CanvasConstituentQuestionaire,
-        children: [],
-      },
-      {
         id: 'Constituent Contribution',
         title: 'Constituent Contribution',
         screen: CanvasConstituentContribution,
+        children: [],
+      },
+      {
+        id: 'Constituent Questionaire',
+        title: 'Constituent Questionaire',
+        screen: CanvasConstituentQuestionaire,
         children: [],
       },
       // TODO: find out what PBJ was thinking here
