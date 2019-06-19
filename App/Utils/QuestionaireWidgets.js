@@ -92,14 +92,14 @@ class RangeQuestion extends QuestionComponent {
       const buttons = []
       for (let index = 1; index <= this.questionData.steps; index++) {
         if (index === this.state.response) {
-          buttons.push(UIF.getQuestionButton(index, id, index, this.handleSelectionChange, 'green', '#d3f8d3' /* 90% green */))
+          buttons.push(UIF.getQuestionButton(index, id, index, this.handleSelectionChange, 'gray', '#d9d9d9' /* 85% gray */))
         } else {
           buttons.push(UIF.getQuestionButton(index, id, index, this.handleSelectionChange))
         }
       }
 
       questionWidget = (
-        <View key={UIF.getUniqueKey()} style={{marginTop:10, borderColor:'lightgray', borderStyle:'solid', borderWidth:1, borderRadius:5, padding:4}}>
+        <View key={UIF.getUniqueKey()} style={UIF.styles.questionViewContainer}>
           {UIF.getRow(UIF.getText(this.questionData.question))}
           {UIF.getRow(labels)}
           {gradient}
@@ -137,7 +137,7 @@ class ChoiceQuestion extends QuestionComponent {
       const buttons = []
       for (const choice of this.questionData.choices) {
         if (index === this.state.response) {
-          buttons.push(UIF.getQuestionButton(choice.value, id, index, this.handleSelectionChange, 'green', '#d3f8d3' /* 90% green */))
+          buttons.push(UIF.getQuestionButton(choice.value, id, index, this.handleSelectionChange, choice.color, '#d9d9d9' /* 85% gray */))
         } else {
           buttons.push(UIF.getQuestionButton(choice.value, id, index, this.handleSelectionChange, choice.color))
         }
@@ -148,7 +148,7 @@ class ChoiceQuestion extends QuestionComponent {
         UIF.getRow(buttons) : UIF.getColumn(buttons)
 
       questionWidget = (
-        <View key={UIF.getUniqueKey()} style={{marginTop:10, borderColor:'lightgray', borderStyle:'solid', borderWidth:1, borderRadius:5, padding:4}}>
+        <View key={UIF.getUniqueKey()} style={UIF.styles.questionViewContainer}>
           {UIF.getRow(UIF.getText(this.questionData.question))}
           {buttonContainer}
         </View>
@@ -178,7 +178,7 @@ class TextQuestion extends QuestionComponent {
       const id = this.questionData.id
 
       questionWidget = (
-        <View key={UIF.getUniqueKey()} style={{marginTop:10, borderColor:'lightgray', borderStyle:'solid', borderWidth:1, borderRadius:5, padding:4}}>
+        <View key={UIF.getUniqueKey()} style={UIF.styles.questionViewContainer}>
           {UIF.getRow(UIF.getText(this.questionData.question))}
           {UIF.getTextInput('Your answer ...', id, this.handleTextChange, this.initialValue)}
         </View>
@@ -209,7 +209,7 @@ class ValueQuestion extends QuestionComponent {
       const id = this.questionData.id
 
       questionWidget = (
-        <View key={UIF.getUniqueKey()} style={{marginTop:10, borderColor:'lightgray', borderStyle:'solid', borderWidth:1, borderRadius:5, padding:4}}>
+        <View key={UIF.getUniqueKey()} style={UIF.styles.questionViewContainer}>
           {UIF.getRow(UIF.getText(this.questionData.question))}
           {UIF.getTextInput('An amount...', id, this.handleTextChange, this.initialValue)}
         </View>

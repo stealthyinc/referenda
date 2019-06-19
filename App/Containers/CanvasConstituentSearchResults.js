@@ -16,6 +16,7 @@ class CanvasConstituentSearchResults extends Component {
     super(props)
 
     this.selectionIndex = undefined
+    this.voters = []
 
     this.state = {
       searchFilterModal:false
@@ -23,13 +24,15 @@ class CanvasConstituentSearchResults extends Component {
   }
 
   updateRedux = () => {
-    const reduxData = {
-      CanvasConstituentSearchResults: {
-        selectionIndex: this.selectionIndex
+    if (this.voters && this.selectionIndex) {
+      const reduxData = {
+        CanvasConstituentSearchResults: {
+          selectedVoter: this.voters[this.selectionIndex].voter
+        }
       }
-    }
 
-    this.props.storeReduxData(reduxData)
+      this.props.storeReduxData(reduxData)
+    }
   }
 
 
@@ -41,7 +44,7 @@ class CanvasConstituentSearchResults extends Component {
     this.selectionIndex = aSelectionIndex
     this.updateRedux()
 
-    this.props.navigation.navigate('Constituent Questionaire')
+    this.props.navigation.navigate('Constituent Contribution')
   }
 
   render () {
@@ -56,25 +59,24 @@ class CanvasConstituentSearchResults extends Component {
     }
 
     const rd = this.props.fetchReduxData
-    const voters = (rd &&
-                    rd.hasOwnProperty('CanvasConstituentSearch') &&
-                    rd.CanvasConstituentSearch.hasOwnProperty('results')) ?
-                    rd.CanvasConstituentSearch.results : []
+    this.voters = (rd &&
+                   rd.hasOwnProperty('CanvasConstituentSearch') &&
+                   rd.CanvasConstituentSearch.hasOwnProperty('results')) ?
+                   rd.CanvasConstituentSearch.results : []
     console.log('CanvasConstituentSearchResults::render, rd:')
     console.log(rd)
 
     const uiRowElements = []
-    uiRowElements.push(UIF.getText(`${voters.length} matching voters:`))
-    uiRowElements.push(UIF.getButton(undefined, FontAwesome.ellipses_h, this.handleSearchFilterSort))
-    rootContainerElements.push(UIF.getRow(uiRowElements))
+    uiRowElements.push(UIF.getText(`${this.voters.length} matching voters:`))
+    uiRowElements.push(UIF.getButton(undefined, FontAwesome.ellipses_h, this.handleSearchFilterSort, 'black', false /* no border */))
+    rootContainerElements.push(UIF.getRow(uiRowElements, 5 /* h-padding */))
 
     const scrollingContainerElements = []
-    for (const voterIndex in voters) {
-      const voter = voters[voterIndex].voter
+    for (const voterIndex in this.voters) {
+      const voter = this.voters[voterIndex].voter
       const voterText = `${voter.firstName} ${voter.lastName}`
-      const addressText = `${voter.streetAddress}\n${voter.city} ${voter.state}\n${voter.zipCode}`
-      const gray90pct = '#e6e6e6'
-      const buttonColor = gray90pct
+      const addressText = `${voter.streetAddress}, ${voter.zipCode}`
+      const buttonColor = 'white'
       // const voterText = `${voter.name}`
       // const addressText = `${voter.street}\n${voter.city}, ${voter.zip}`
       //
@@ -85,7 +87,7 @@ class CanvasConstituentSearchResults extends Component {
     const noMargin=true
     rootContainerElements.push(UIF.getScrollingContainer(scrollingContainerElements, noMargin))
 
-    return (UIF.getContainer(rootContainerElements))
+    return (UIF.getContainer(rootContainerElements, noMargin))
   }
 }
 

@@ -22,7 +22,9 @@ const colors = {
   border: '#483F53',
   banner: '#5F3E63',
   text: 'black',
-  lightText: 'gray'
+  lightText: 'gray',
+  listEmphasisText: '#0080ff',   // 50% blue
+  listBottomBorderColor: '#e6e6e6'    // 90% gray
 }
 
 export default colors

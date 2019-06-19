@@ -101,7 +101,7 @@ class CanvasConstituentSearch extends Component {
 
     this.results.sort(this.compareVoterResults)
 
-    const delayInSeconds = 0.5 * 1000
+    const delayInSeconds = 0.25 * 1000
     setTimeout(
       () => {
         this.setState({showAI: false})
