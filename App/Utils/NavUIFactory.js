@@ -28,9 +28,17 @@ export const getNavOptions = (pageName='', leftHeader=true) => {
   return (
     ({navigation}) => {
       const params = navigation.state.params || {}
+      let headerTitle = pageName
+
+      if (pageName === 'Contribution') {
+        // See if we set the state to change it to the voter's name:
+        try {
+          headerTitle = navigation.state.params.contributionHeaderTitle || pageName
+        } catch (suppressedError) {}
+      }
 
       const navBar = {
-        headerTitle: pageName.toUpperCase(),
+        headerTitle: headerTitle.toUpperCase(),
         headerBackTitle: 'Back',
         headerTintColor: 'black',
         gesturesEnabled: false,

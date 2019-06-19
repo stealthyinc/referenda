@@ -45,7 +45,7 @@ class CanvasConstituentQuestionaire extends Component {
     //
     // TODO: we'll need to push the next destination up to redux and get it for here and
     //       modify the button so that users go back to the discussion screen.
-    this.props.navigation.navigate('CanvasMenu')
+    this.props.navigation.navigate('Constituent Contribution')
   }
 
   render () {
@@ -88,7 +88,7 @@ class CanvasConstituentQuestionaire extends Component {
     }
 
     uiElements.push(UIF.getVerticalSpacer(Metrics.doubleBaseMargin))
-    uiElements.push(UIF.getButton('Done', FontAwesome.chevronRight, this.handleDoneButtonPressed))
+    uiElements.push(UIF.getButton('Back', FontAwesome.chevronLeft, this.handleDoneButtonPressed))
 
     return (UIF.getScrollingContainer(uiElements))
   }

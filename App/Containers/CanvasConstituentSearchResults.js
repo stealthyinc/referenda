@@ -44,7 +44,16 @@ class CanvasConstituentSearchResults extends Component {
     this.selectionIndex = aSelectionIndex
     this.updateRedux()
 
-    this.props.navigation.navigate('Constituent Contribution')
+
+    // Update the headerTitle state var for navigating to the Constituent Contribution page:
+    let voterName = ''
+    try {
+      const selectedVoter = this.voters[this.selectionIndex].voter
+      voterName = `${selectedVoter.firstName} ${selectedVoter.lastName}`
+    } catch (suppressedError) {}
+
+    this.props.navigation.navigate(
+      'Constituent Contribution', { contributionHeaderTitle: voterName })
   }
 
   render () {

@@ -50,4 +50,5 @@ export const FontAwesome = {
   angle_down: String.fromCharCode(61703),
   angle_up: String.fromCharCode(61702),
   users: String.fromCharCode(61632),
+  check_square: String.fromCharCode(61770),
 };

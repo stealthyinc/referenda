@@ -95,31 +95,31 @@ class CombinedScreen extends Component {
       <Text style={{
         fontSize: 20,
         marginBottom: 12,
-      }}>Change Levels 🏅</Text>
+      }}>Change Level 🏅</Text>
       <View style={{width: '100%', flexDirection: 'row', justifyContent: 'center'}}>
         <Button
           block
           light
-          style={{padding:5}}
+          style={{marginHorizontal:5, padding:5}}
           onPress={() => this.setState({ visibleModal: false, level: 0 })}
         >
-          <Text>Level 0</Text>
+          <Text>Follower</Text>
         </Button>
         <Button
           block
           success
-          style={{padding:5}}
+          style={{marginHorizontal:5, padding:5}}
           onPress={() => this.setState({ visibleModal: false, level: 1 })}
         >
-          <Text color='white'>Level 1</Text>
+          <Text color='white'>Constituent</Text>
         </Button>
         <Button
           block
           danger
-          style={{padding:5}}
+          style={{marginHorizontal:5, padding:5}}
           onPress={() => this.setState({ visibleModal: false, level: 2 })}
         >
-          <Text color='white'>Level 2</Text>
+          <Text color='white'>Volunteer</Text>
         </Button>
       </View>
     </View>

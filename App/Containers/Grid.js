@@ -11,6 +11,7 @@ import {
   RkText,
 } from 'react-native-ui-kitten';
 import { MainRoutes } from '../Navigation/Routes';
+import { Colors } from '../Themes/'
 
 const paddingValue = 8;
 // Add Actions - replace 'Your' with whatever your reducer is called :)
@@ -33,7 +34,7 @@ class Grid extends Component {
   renderItems = () => MainRoutes.map(
     (route) => {
       const iconStyle = (route.level > this.props.level) ?
-        {...styles.icon, color: '#a6a6a6'} : styles.icon
+        {...styles.icon, color: '#a6a6a6'} : {...styles.icon, color: Colors.iconBlue}
       return (
     <RkButton
       rkType='square shadow'

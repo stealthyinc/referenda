@@ -10,9 +10,7 @@ import { ActivityIndicator,
 import { Colors, Fonts, Metrics } from '../Themes/'
 import { FontAwesome } from '../Assets/icons';
 
-import {
-  RkAvoidKeyboard,
-  RkText } from 'react-native-ui-kitten';  // RkText to display icons easily. (Could also switch to Oblador's FontAwesome RN component if removeing rk)
+import { RkText } from 'react-native-ui-kitten';  // RkText to display icons easily. (Could also switch to Oblador's FontAwesome RN component if removeing rk)
 
 let key = 0
 export function getUniqueKey()
@@ -84,7 +82,8 @@ export const getButton = (
   theClickHandlerFn=() => {},
   theButtonColor='black',
   hasBorder=true,
-  hasPadding=true) =>
+  hasPadding=true,
+  iconSize=Fonts.size.regular) =>
 {
   const uiElements = []
   if (theButtonIcon) {
@@ -92,7 +91,7 @@ export const getButton = (
       <RkText
         key={getUniqueKey()}
         rkType='awesome'
-        style={styles.icon}>
+        style={{...styles.icon, fontSize:iconSize, color:theButtonColor}}>
         {theButtonIcon}
       </RkText>
     )

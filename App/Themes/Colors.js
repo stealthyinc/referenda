@@ -2,6 +2,7 @@ const colors = {
   background: 'white',
   clear: 'rgba(0,0,0,0)',
   facebook: '#3b5998',
+  twitterLogoBlue: '#00aced',
   transparent: 'rgba(0,0,0,0)',
   silver: '#F7F7F7',
   steel: '#CCCCCC',
@@ -24,7 +25,8 @@ const colors = {
   text: 'black',
   lightText: 'gray',
   listEmphasisText: '#0080ff',   // 50% blue
-  listBottomBorderColor: '#e6e6e6'    // 90% gray
+  listBottomBorderColor: '#e6e6e6',    // 90% gray
+  iconBlue: '#1E90FF'
 }
 
 export default colors

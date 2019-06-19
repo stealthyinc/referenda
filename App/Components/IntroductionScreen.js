@@ -36,6 +36,8 @@ import * as Keychain from 'react-native-keychain';
 import EngineActions from '../Redux/EngineRedux'
 import {EngineCommand} from '../Engine/commands/engineCommand'
 
+import LinearGradient from 'react-native-linear-gradient';
+
 const { userTypeInstance } = require('../Utils/UserType.js')
 // const { firebaseInstance } = require('../Utils/firebaseWrapper.js')
 const { Analytics } = require('../Utils/Analytics.js')
@@ -179,18 +181,23 @@ class IntroductionScreen extends Component {
     return (
       <ImageBackground
         style={{ flex: 1,
-                 alignItems: 'center',
-                 justifyContent: 'space-between',
-                 ...ifIphoneX({
-                   paddingTop: '15%',
-                 }, {
-                   paddingTop: '10%',
-                 }),
-                 paddingBottom: '5%',
-                 paddingHorizontal: '6%',
+
                  width: props.width,
                  height: props.height }}
         source={props.image} >
+        <LinearGradient
+          colors={['rgba(0,0,0,0.6)', 'rgba(0,0,0,0.0)', 'rgba(0,0,0,0.6)', 'rgba(0,0,0,0.7)']}
+          start={{x:0, y:0}} end={{x:0, y:1}}
+          style={{flex:1,
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  ...ifIphoneX({
+                    paddingTop: '15%',
+                  }, {
+                    paddingTop: '10%',
+                  }),
+                  paddingBottom: '5%',
+                  paddingHorizontal: '6%'}}>
 
         <View style={{width: '100%', flex:0.3, flexDirection:'column', justifyContent:'flex-start'}}>
           <View style={{width:'100%', flexDirection:'row', justifyContent: 'flex-start'}}>
@@ -224,6 +231,7 @@ class IntroductionScreen extends Component {
             />
           </View>
         </View>
+      </LinearGradient>
       </ImageBackground>
     );
   }

@@ -5,8 +5,11 @@ import CanvasActions, { CanvasSelectors } from '../Redux/CanvassingRedux'
 
 import { ChoiceQuestion } from '../Utils/QuestionaireWidgets'
 
-import { Metrics } from '../Themes/'
+import { Colors, Fonts, Metrics } from '../Themes/'
 import { FontAwesome } from '../Assets/icons'
+
+import qrCode from '../Assets/images/campa-qr-code.png'
+
 const C = require('../Utils/constants.js')
 const UIF = require('../Utils/UIFactory.js')
 const NUIF = require('../Utils/NavUIFactory.js')
@@ -21,22 +24,61 @@ class CanvasConstituentContribution extends Component {
   constructor (props) {
     super(props)
 
+    this.selectedVoter = this.getSelectedVoter()
+
     this.contributionQuestion = C.contributionQuestion
     this.householdVoters = Math.floor(Math.random()*5)
+    this.modalTitle = ''
     this.state = {
       showTwitter: false,
-      showFacebook: false
+      showFacebook: false,
+      showQR: false,
+      showOther: false,
     }
   }
 
-  handleQuestionResponse = (aQuestionId, aValue) => {
+  getSelectedVoter = () => {
+    selectedVoter = {}
+    try {
+      const rd = this.props.fetchReduxData
+      selectedVoter = rd.CanvasConstituentSearchResults.selectedVoter
+    } catch (suppressedError) {}
+
+    return selectedVoter
   }
 
-  handleBackButtonPressed = () => {
-    // TODO: push our data up to firebase for:
+  handleQuestionResponse = (aQuestionId, aValue) => {
+    // Hard coded for demo:
+    switch (aValue) {
+      case 1:   // Follow the Campaign
+        this.setState({showQR: !this.state.showQR})
+        break;
+      case 2:   // Answer a Questionaire
+        // TODO: some selection-y stuff
+        this.props.navigation.navigate('Constituent Questionaire')
+        break;
+      case 3:   // Make a Donation
+        // TODO: some selection-y stuff
+        this.props.navigation.navigate('CampaignerMenu')
+        break;
+      default:
+        // TODO: pop a modal with a title and 'future home of ...'
+        let index = 0
+        for (const choice of this.contributionQuestion.choices) {
+          index++
+          if (index === aValue) {
+            this.modalTitle = choice.value
+            break;
+          }
+        }
+        this.setState({showOther: !this.state.showOther})
+    }
+  }
+
+  handleDoneButtonPressed = () => {  // TODO: pushuser_check to firebase for:
     //        - the Questionaire
     //        - the volunteer score
-    this.props.navigation.navigate('Constituent Contribution')
+    this.props.navigation.navigate('CanvasMenu')
   }
 
   handleFacebookToggle = () => {
@@ -47,17 +89,33 @@ class CanvasConstituentContribution extends Component {
     this.setState({showTwitter: !this.state.showTwitter})
   }
 
+  handleQRText = () => {
+    // TODO: Launch a text message Saga ...
+    // If possible show an AI and when done make the modal disappear...
+    this.setState({showQR: !this.state.showQR})
+  }
+
+  handleQRToggle = () => {
+    this.setState({showQR: !this.state.showQR})
+  }
+
+  handleOtherToggle = () => {
+    this.modalTitle = ''
+    this.setState({showOther: !this.state.showOther})
+  }
+
   render () {
     const uiElements = []
 
-    const uiVoterElements = []
-    let uiFoldingSection = undefined
-    const rd = this.props.fetchReduxData
-    if (rd &&
-        rd.hasOwnProperty('CanvasConstituentSearchResults') &&
-        rd.CanvasConstituentSearchResults.hasOwnProperty('selectedVoter')) {
-      selectedVoter = rd.CanvasConstituentSearchResults.selectedVoter
-      const voterName = `${selectedVoter.firstName} ${selectedVoter.lastName}`
+    const uiPersonalDataEle = []
+    const uiSocialDataEle = []
+
+    // if (!this.selectedVoter) {
+    //   this.selectedVoter = this.getSelectedVoter()
+    // }
+
+    if (this.selectedVoter) {
+      const voterName = `${this.selectedVoter.firstName} ${this.selectedVoter.lastName}`
 
       // Modal Action Hero:
       if (this.state.showFacebook || this.state.showTwitter) {
@@ -79,7 +137,7 @@ class CanvasConstituentContribution extends Component {
           modalElements.push(
             UIF.getText(
               someText,
-              {...UIF.styles.descriptionText, width:'100%', paddingHorizontal:10, alignText:'left'}
+              {...UIF.styles.descriptionText, width:'100%', paddingHorizontal:10}
             )
           )
           modalElements.push(UIF.getVerticalSpacer())
@@ -87,39 +145,62 @@ class CanvasConstituentContribution extends Component {
 
 
         modalElements.push(UIF.getVerticalSpacer())
-        modalElements.push(UIF.getButton('Back', undefined, toggleFn))
+        modalElements.push(UIF.getButton('Back', FontAwesome.chevronLeft, toggleFn))
+        uiElements.push(UIF.getOptionsModal(modalElements))
+      }
+
+      if (this.state.showQR) {
+        const modalElements = []
+        modalElements.push(UIF.getHeading(`Follow the Campaign`, 'h4'))
+        modalElements.push(UIF.getHeading('Scan this QR Code:', 'h5'))
+        const imageDim = Math.ceil(Metrics.screenWidth * 0.85)
+        modalElements.push(<Image source={qrCode} style={{width:imageDim, height:imageDim}}/> )
+        modalElements.push(UIF.getHeading(`Or Text ${voterName}:`, 'h5'))
+        modalElements.push(UIF.getButton(`Text a link to ${this.selectedVoter.phoneNumber}`, undefined, this.handleQRText))
+        modalElements.push(UIF.getVerticalSpacer(Metrics.screenHeight/20))
+        modalElements.push(UIF.getButton('Back', FontAwesome.chevronLeft, this.handleQRToggle))
+        
+        uiElements.push(UIF.getOptionsModal(modalElements))
+      }
+
+      if (this.state.showOther) {
+        const modalElements = []
+        modalElements.push(UIF.getHeading(this.modalTitle, 'h4'))
+        modalElements.push(UIF.getVerticalSpacer(Metrics.screenHeight/2))
+        modalElements.push(UIF.getButton('Back', FontAwesome.chevronLeft, this.handleOtherToggle))
+
         uiElements.push(UIF.getOptionsModal(modalElements))
       }
       // End Modal Action Hero
 
-      const voterAge = moment(selectedVoter.birthDate, "MM/DD/YYYY").fromNow(true /* no suffix */);
-      uiVoterElements.push(UIF.getKeyValueTextRow('Age', `${voterAge}`))
-      uiVoterElements.push(UIF.getKeyValueTextRow('Party Affiliation:', selectedVoter.politicalParty))
+      const voterAge = moment(this.selectedVoter.birthDate, "MM/DD/YYYY").fromNow(true /* no suffix */);
+      uiPersonalDataEle.push(UIF.getKeyValueTextRow('Age', `${voterAge}`))
 
-      uiVoterElements.push(UIF.getKeyValueTextInputRow('Email', selectedVoter.email))
-      uiVoterElements.push(UIF.getKeyValueTextInputRow('Phone', selectedVoter.phoneNumber))
+      uiPersonalDataEle.push(UIF.getKeyValueTextInputRow('Email', this.selectedVoter.email))
+      uiPersonalDataEle.push(UIF.getKeyValueTextInputRow('Phone', this.selectedVoter.phoneNumber))
 
-      const householdVotersButton = UIF.getButton(`${this.householdVoters}`, FontAwesome.users, ()=>{}, 'black', false)
-      uiVoterElements.push(UIF.getKeyButtonsRow('Voters in household:', [householdVotersButton]))
+      uiSocialDataEle.push(UIF.getKeyValueTextRow('Party Affiliation:', this.selectedVoter.politicalParty))
+      const householdVotersButton = UIF.getButton(`${this.householdVoters}`, FontAwesome.users, ()=>{}, 'green', false, true, Fonts.size.h4)
+      uiSocialDataEle.push(UIF.getKeyButtonsRow('Voters in household:', [householdVotersButton]))
 
       const socialMediaButtons = [
-        UIF.getButton(undefined, FontAwesome.twitter, this.handleTwitterToggle, 'black', false, false),
-        UIF.getButton(undefined, FontAwesome.facebook, this.handleFacebookToggle, 'black', false, false),
+        UIF.getButton(undefined, FontAwesome.twitter, this.handleTwitterToggle, Colors.twitterLogoBlue, false, false, Fonts.size.h4),
+        UIF.getButton(undefined, FontAwesome.facebook, this.handleFacebookToggle, Colors.facebook, false, false, Fonts.size.h4),
       ]
-      uiVoterElements.push(UIF.getKeyButtonsRow('Social Media:', socialMediaButtons))
-
-
-      uiFoldingSection = UIF.getFoldingSection(voterName, uiVoterElements)
+      uiSocialDataEle.push(UIF.getKeyButtonsRow('Social Media:', socialMediaButtons))
     }
 
-    uiElements.push(uiFoldingSection)
+    uiElements.push(UIF.getFoldingSection('Personal Data', uiPersonalDataEle))
+    uiElements.push(UIF.getFoldingSection('Social Data', uiSocialDataEle))
 
     uiElements.push(<ChoiceQuestion
                       key={UIF.getUniqueKey()}
                       questionData={this.contributionQuestion}
                       selectionHandlerFn={this.handleQuestionResponse} />)
     uiElements.push(UIF.getVerticalSpacer(Metrics.doubleBaseMargin))
-    uiElements.push(UIF.getButton('Back', FontAwesome.chevronRight, this.handleBackButtonPressed))
+    uiElements.push(UIF.getButton('Done', FontAwesome.check_square, this.handleDoneButtonPressed))
+
+    uiElements.push(UIF.getVerticalSpacer(Metrics.screenHeight/3))
 
     return UIF.getScrollingContainer(uiElements, true /* no margin */)
   }
