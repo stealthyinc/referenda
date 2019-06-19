@@ -72,10 +72,11 @@ class KeychainScreen extends Component {
       if (this.state.waitingOnCommand === nextProps.payLoad.commandType) {
         console.log(`${this.state.waitingOnCommand} finished executing. Advancing navigation...`)
 
-        if (userTypeInstance.getUserType())
-          this.props.navigation.navigate('CampaignerMenu');
-        else
-          this.props.navigation.navigate('SocialMenu');
+        // if (userTypeInstance.getUserType())
+        //   this.props.navigation.navigate('CampaignerMenu');
+        // else
+        //   this.props.navigation.navigate('SocialMenu');
+        this.props.navigation.navigate('Start')
       }
     }
   }

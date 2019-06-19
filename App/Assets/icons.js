@@ -11,6 +11,7 @@ export const FontIcons = {
   card: '',
   addToCardForm: '',
   newsPaper: '',
+  bitcoin: ''
 };
 
 // To populate this list:
@@ -42,4 +43,8 @@ export const FontAwesome = {
   medal: String.fromCharCode(62133),
   register: String.fromCharCode(62045),
   token: String.fromCharCode(62139),
+  organize: String.fromCharCode(61672),
+  wallet: String.fromCharCode(62805),
+  hashtag: String.fromCharCode(62098),
+  compass: String.fromCharCode(61774)
 };

@@ -5,6 +5,7 @@ import {
   View,
   TouchableOpacity,
   StyleSheet,
+  Linking
 } from 'react-native';
 import {
   RkText,
@@ -61,80 +62,49 @@ class SettingScreen extends Component {
 
   render = () => (
     <ScrollView style={styles.container}>
-      <View style={styles.section}>
+      {/*<View style={styles.section}>
         {(!userTypeInstance.getUserType()) ? (null) : (<View style={styles.section}>
           <View style={[styles.row, styles.heading]}>
-            <RkText rkType='primary header6'>CAMPAIGN FEATURES</RkText>
+            <RkText rkType='primary header6'>FEATURES</RkText>
           </View>
           <View style={styles.row}>
             <FindFriends
-              color={RkTheme.current.colors.twitter}
-              text='Collect Donations'
-              icon={FontAwesome.dollar}
-              selected={this.state.twitterEnabled}
-              onPress={() => this.props.navigation.navigate('CampaignerMenu')}
+              text='Main Menu'
+              color={RkTheme.current.colors.facebook}
+              icon={FontAwesome.compass}
+              selected={true}
+              onPress={() => this.props.navigation.navigate('Start')}
             />
           </View>
           <View style={styles.row}>
             <FindFriends
               color={RkTheme.current.colors.google}
-              text='Campaign Feed'
-              icon={FontIcons.newsPaper}
+              text='Social Feed'
+              icon={FontAwesome.hashtag}
               selected={this.state.googleEnabled}
               onPress={() => this.props.navigation.navigate('SocialMenu')}
             />
           </View>
           <View style={styles.row}>
             <FindFriends
+              color={RkTheme.current.colors.twitter}
+              text='Collect Donations'
+              icon={FontAwesome.bitcoin}
+              selected={this.state.twitterEnabled}
+              onPress={() => this.props.navigation.navigate('CampaignerMenu')}
+            />
+          </View>
+          <View style={styles.row}>
+            <FindFriends
               color={RkTheme.current.colors.facebook}
-              text='Social Canvass'
-              icon={FontAwesome.register}
+              text='Organize Campaign'
+              icon={FontAwesome.organize}
               selected={this.state.facebookEnabled}
               onPress={() => this.props.navigation.navigate('CanvasMenu')}
             />
           </View>
         </View>)}
-        <View style={[styles.row, styles.heading]}>
-          <RkText rkType='primary header6'>PROFILE SETTINGS</RkText>
-        </View>
-        <View style={styles.row}>
-          <TouchableOpacity style={styles.rowButton}>
-            <RkText rkType='header6'>Edit Profile</RkText>
-          </TouchableOpacity>
-        </View>
-        {(!userTypeInstance.getUserType()) ? (<View style={styles.row}>
-          <FindFriends
-            color={RkTheme.current.colors.google}
-            text='Political Memberships'
-            icon={FontAwesome.token}
-            selected={this.state.googleEnabled}
-            onPress={() => this.props.navigation.navigate('Cards')}
-          />
-        </View>) : null}
-        {/*<View style={styles.row}>
-          <TouchableOpacity style={styles.rowButton}>
-            <RkText rkType='header6'>Change Password</RkText>
-          </TouchableOpacity>
-        </View>*/}
-        <View style={styles.row}>
-          <RkText rkType='header6'>Send Push Notifications</RkText>
-          <RkSwitch
-            style={styles.switch}
-            value={this.state.sendPush}
-            name="Push"
-            onValueChange={this.onPushNotificationsSettingChanged}
-          />
-        </View>
-        {/*<View style={styles.row}>
-          <RkText rkType='header6'>Refresh Automatically</RkText>
-          <RkSwitch
-            style={styles.switch}
-            value={this.state.shouldRefresh}
-            name="Refresh"
-            onValueChange={this.onRefreshAutomaticallySettingChanged}
-          />
-        </View>*/}
-      </View>
+      </View>*/}
       {(!userTypeInstance.getUserType()) ? (<View style={styles.section}>
         <View style={[styles.row, styles.heading]}>
           <RkText rkType='primary header6'>SOCIAL INTEGRATIONS</RkText>
@@ -148,15 +118,6 @@ class SettingScreen extends Component {
             onPress={this.onFindFriendsTwitterButtonPressed}
           />
         </View>
-        {/*<View style={styles.row}>
-          <FindFriends
-            color={RkTheme.current.colors.google}
-            text='Find friends on Google'
-            icon={FontAwesome.google}
-            selected={this.state.googleEnabled}
-            onPress={this.onFindFriendsGoogleButtonPressed}
-          />
-        </View>*/}
         <View style={styles.row}>
           <FindFriends
             color={RkTheme.current.colors.facebook}
@@ -172,17 +133,26 @@ class SettingScreen extends Component {
           <RkText rkType='primary header6'>SUPPORT</RkText>
         </View>
         <View style={styles.row}>
-          <TouchableOpacity style={styles.rowButton}>
-            <RkText rkType='header6'>Help</RkText>
+          <TouchableOpacity
+            style={styles.rowButton}
+            onPress={(event) => {Linking.openURL('mailto:campaign@referenda.io?subject=help with campaign&body=')}}
+          >
+            <RkText rkType='header6'>Contact Developers</RkText>
           </TouchableOpacity>
         </View>
         <View style={styles.row}>
-          <TouchableOpacity style={styles.rowButton}>
+          <TouchableOpacity
+            style={styles.rowButton}
+            onPress={(event) => {Linking.openURL('https://termsfeed.com/privacy-policy/997ddbd8f78bb8bd5e99dbcfa730ef09')}}
+          >
             <RkText rkType='header6'>Privacy Policy</RkText>
           </TouchableOpacity>
         </View>
         <View style={styles.row}>
-          <TouchableOpacity style={styles.rowButton}>
+          <TouchableOpacity
+            style={styles.rowButton}
+            onPress={(event) => {Linking.openURL('https://termsfeed.com/terms-conditions/8368d309d9e9f77e5a591212a88f6bbf')}}
+          >
             <RkText rkType='header6'>Terms & Conditions</RkText>
           </TouchableOpacity>
         </View>

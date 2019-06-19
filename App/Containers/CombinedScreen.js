@@ -3,59 +3,22 @@ import { Alert, View, ScrollView, Text, TouchableOpacity, Image, StyleSheet, Lin
 import { connect } from 'react-redux'
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
-import FeedScreen from '../Containers/FeedScreen'
+// import FeedScreen from '../Containers/FeedScreen'
 // import CampaignerScreen from '../Containers/CampaignerScreen'
-import CampaignerMenuScreen from '../Containers/CampaignerMenuScreen'
+// import CampaignerMenuScreen from '../Containers/CampaignerMenuScreen'
+import Grid from '../Containers/Grid'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import DeviceInfo from 'react-native-device-info';
 import Dialog from "react-native-dialog";
+import NavigationType from '../Navigation/propTypes';
+const NUIF = require('../Utils/NavUIFactory.js')
 
-// Styles
-// import styles from './Styles/CombinedScreenStyle'
-const { userTypeInstance } = require('../Utils/UserType.js')
 const { firebaseInstance } = require('../Utils/firebaseWrapper.js')
 
-const avatarArr = {
-  0: require('../Data/img/avatars/Image0.png'),
-  1: require('../Data/img/avatars/Image1.png'),
-  2: require('../Data/img/avatars/Image2.png'),
-  3: require('../Data/img/avatars/Image3.png'),
-  4: require('../Data/img/avatars/Image4.png'),
-  5: require('../Data/img/avatars/Image5.png'),
-  6: require('../Data/img/avatars/Image6.png'),
-  7: require('../Data/img/avatars/Image7.png'),
-  8: require('../Data/img/avatars/Image8.png'),
-  9: require('../Data/img/avatars/Image9.png'),
- 10: require('../Data/img/avatars/Image10.png'),
- 11: require('../Data/img/avatars/Image11.png'),
-}
-
 class CombinedScreen extends Component {
-  static navigationOptions = {
-    header: null
-  }
-  // static navigationOptions = ({ navigation }) => {
-  //   const params = navigation.state.params || {}
-  //   const randomAvatar = (!userTypeInstance.getUserType()) ? avatarArr[Math.floor(Math.random() * Math.floor(12))] : require('../Data/img/avatars/agatha.png')
-  //   return {
-  //     header: null,
-      // headerLeft: (
-      //   <TouchableOpacity onPress={() => navigation.toggleDrawer()} style={{marginLeft: 10}}>
-      //     <Image
-      //       source={randomAvatar}
-      //       style={{height: 30, width: 30, borderRadius: 15}}/>
-      //   </TouchableOpacity>
-      // ),
-      // headerRight: (userTypeInstance.getUserType()) ? (
-      //   <TouchableOpacity onPress={() => navigation.navigate('Create')} style={{marginRight: 10}}>
-      //     <Ionicons name='ios-paper-plane' size={30} color='gray' />
-      //   </TouchableOpacity>
-      // ) : null,
-      // headerTitle: 'Home'.toUpperCase(),
-      // headerBackTitle: 'Back',
-      // headerTintColor: 'black',
-  //   }
-  // }
+  static propTypes = NUIF.requireNavBar
+  static navigationOptions = NUIF.getNavOptions('Main Menu')
+
   constructor() {
     super();
     this.state = {
@@ -85,7 +48,7 @@ class CombinedScreen extends Component {
   render () {
     return (
       <View>
-        {(userTypeInstance.getUserType()) ? <CampaignerMenuScreen navigation={this.props.navigation} /> : <FeedScreen navigation={this.props.navigation} />}
+        <Grid navigation={this.props.navigation}/>
         <Dialog.Container visible={this.state.showBuildVersionModal}>
           <Dialog.Title>New App Version</Dialog.Title>
           <Dialog.Description>

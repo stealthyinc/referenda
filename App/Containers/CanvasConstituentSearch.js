@@ -10,7 +10,7 @@ const NUIF = require('../Utils/NavUIFactory.js')
 
 class CanvasConstituentSearch extends Component {
   static propTypes = NUIF.requireNavBar
-  static navigationOptions = NUIF.getNavOptions('Canvasser')
+  static navigationOptions = NUIF.getNavOptions('Canvassing', false)
 
   constructor (props) {
     super(props)

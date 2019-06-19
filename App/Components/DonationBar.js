@@ -39,7 +39,7 @@ const DETAILS = {
     detail: 'Required for campaign finance accounting' // `detail` is specific to React Native Payments
   }],
   total: {
-    label: `Agatha Bacelar - 2020 Campaign`,
+    label: `Ammar Campa-Najjar - 2020 Campaign`,
     amount: { currency: 'USD', value: '1.00' }
   }
 };
@@ -76,16 +76,16 @@ export default class DonationBar extends RkComponent {
     return (
       <View style={container}>
         <View style={section}>
-          <RkButton 
-            rkType='clear' 
+          <RkButton
+            rkType='clear'
             onPress={() => paymentRequest.show()}
           >
             <RkText rkType='awesome success' style={icon}>{FontAwesome.card}</RkText>
           </RkButton>
         </View>
         <View style={section}>
-          <RkButton 
-            rkType='clear' 
+          <RkButton
+            rkType='clear'
             onPress={() => Linking.openURL('https://commerce.coinbase.com/checkout/fffca773-3645-4d23-a442-b97ec395d365')}
           >
             <RkText rkType='awesome warning' style={icon}>{FontAwesome.bitcoin}</RkText>

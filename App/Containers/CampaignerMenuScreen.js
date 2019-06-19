@@ -36,7 +36,7 @@ import NavigationType from '../Navigation/propTypes';
 import { GradientButton } from '../Components/gradientButton'
 import DonationActions, { DonationSelectors } from '../Redux/DonationRedux'
 
-import candidate from '../Assets/avatars/agatha2.png'
+import candidate from '../Assets/avatars/campa.jpg'
 import { ifIphoneX } from 'react-native-iphone-x-helper'
 
 // Styles
@@ -112,24 +112,6 @@ const styles = RkStyleSheet.create(theme => ({
     },
   }));
 
-const avatarArr = {
-  0: require('../Data/img/avatars/Image0.png'),
-  1: require('../Data/img/avatars/Image1.png'),
-  2: require('../Data/img/avatars/Image2.png'),
-  3: require('../Data/img/avatars/Image3.png'),
-  4: require('../Data/img/avatars/Image4.png'),
-  5: require('../Data/img/avatars/Image5.png'),
-  6: require('../Data/img/avatars/Image6.png'),
-  7: require('../Data/img/avatars/Image7.png'),
-  8: require('../Data/img/avatars/Image8.png'),
-  9: require('../Data/img/avatars/Image9.png'),
- 10: require('../Data/img/avatars/Image10.png'),
- 11: require('../Data/img/avatars/Image11.png'),
-}
-
-const { userTypeInstance } = require('../Utils/UserType.js')
-const randomAvatar = (userTypeInstance.getUserType()) ? avatarArr[Math.floor(Math.random() * Math.floor(12))] : require('../Data/img/avatars/agatha.png')
-
 class CampaignerMenuScreen extends Component {
   static propTypes = {
     navigation: NavigationType.isRequired,
@@ -138,14 +120,14 @@ class CampaignerMenuScreen extends Component {
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
     return {
-      headerLeft: (
-        <TouchableOpacity onPress={() => navigation.toggleDrawer()} style={{marginLeft: 10}}>
-          <Image
-            source={randomAvatar}
-            style={{height: 30, width: 30, borderRadius: 15}}/>
-        </TouchableOpacity>
-      ),
-      headerTitle: 'Donation'.toUpperCase(),
+      // headerLeft: (
+      //   <TouchableOpacity onPress={() => navigation.toggleDrawer()} style={{marginLeft: 10}}>
+      //     <Image
+      //       source={randomAvatar}
+      //       style={{height: 30, width: 30, borderRadius: 15}}/>
+      //   </TouchableOpacity>
+      // ),
+      headerTitle: 'Fundraising'.toUpperCase(),
       headerBackTitle: 'Back',
       headerTintColor: 'black',
       gesturesEnabled: false,
@@ -191,7 +173,7 @@ class CampaignerMenuScreen extends Component {
                 resizeMode: 'contain'}}/>
             <RkText
               rkType='large'
-              style={{color:'#ffffff', marginTop:9}}>Agatha Bacelar for Congress 🇺🇸</RkText>
+              style={{color:'#ffffff', marginTop:9}}>Ammar for Congress 🇺🇸</RkText>
           </View>
 
           <GradientButton

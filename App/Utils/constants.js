@@ -226,7 +226,7 @@ export const questionaire = [
     question: 'What is your favorite type of cheese?',
     choices: [
       { value: 'cheddar' },
-      { value: 'mozarella' },
+      { value: 'mozarella', color: 'red' },
       { value: 'provolone' },
       { value: 'moterey jack' },
       { value: 'pepper jack' },
@@ -256,12 +256,11 @@ export const contributionQuestion = {
   multipleResponses: true,
   choices: [
     { value: 'Tell Your Friends' },
+    { value: 'Give Feedback to the Campaign' },
     { value: 'Door to Door Canvassing' },
     { value: 'Phone Banking' },
-    { value: 'Texing' },
     { value: 'Donations' },
-    { value: 'Merchandise Purchase' },
-    { value: 'Give Feedback to the Campaign' }
+    { value: 'Merchandise Purchase' }
   ],
   response: ''
 }

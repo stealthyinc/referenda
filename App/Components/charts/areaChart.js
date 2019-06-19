@@ -63,7 +63,7 @@ export class AreaChart extends RkComponent {
   }
 
   render = () => (
-    <View>
+    <View style={{marginTop: 10, marginBottom: 10}}>
       <RkText rkType='header4'>REAL TIME VISITORS</RkText>
       <VictoryChart
         padding={{

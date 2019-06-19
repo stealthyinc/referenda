@@ -59,11 +59,11 @@ export function * sendSquareCharge (action) {
   const message = "Thank you for your donation to Agatha's Campaign. We will notify you when the Referenda App is ready!"
   const locationId = '0WNJSXGSXWG89'
   const body = {
-    card_nonce: data, 
-    locationId, 
-    donationAmount, 
-    feeAmount, 
-    phoneNumber, 
+    card_nonce: data,
+    locationId,
+    donationAmount,
+    feeAmount,
+    phoneNumber,
     message
   }
   console.log("BODY", body)
@@ -86,8 +86,8 @@ export function * sendSquareInvoice () {
   const donationAmount = amounts.proceedsCents
   const shippingFlag = amounts.totalCents <= 2000
   console.log('DONATION(cents: total, fee, proceeds):', amounts.totalCents, feeAmount, donationAmount)
-  const message = `Thank you for your donation to Agatha's Campaign. Here's a helpful link for you to donate. We will notify you when the Referenda App is ready!`
-  const campaign_message = "Donation to Agatha Bacelar's Campaign"
+  const message = `Thank you for your donation to Ammar Campa-Najjar's Campaign. Here's a helpful link for you to donate. We will notify you when the Referenda App is ready!`
+  const campaign_message = "Donation to Ammar Campa-Najjar's Campaign"
   const locationId = '0WNJSXGSXWG89'
   const pre_populate_shipping_address = {
     "first_name": firstName,

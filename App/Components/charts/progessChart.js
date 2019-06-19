@@ -48,8 +48,8 @@ export class ProgressChart extends RkComponent {
   };
 
   render = () => (
-    <View>
-      <RkText rkType='header4'>FOLLOWERS</RkText>
+    <View style={{marginTop: 10, marginBottom: 10}}>
+      <RkText rkType='header4'>VOTERS REACHED</RkText>
       <View style={styles.chartContainer}>
         <Svg width={scale(this.size)} height={scale(this.size)}>
           <VictoryPie
@@ -76,9 +76,7 @@ export class ProgressChart extends RkComponent {
             {`${this.state.percents}%`}
           </SvgText>
         </Svg>
-        <View>
-          <RkText rkType='header4'>REACH</RkText>
-          <RkText rkType='header2'>1 500 356</RkText>
+        <View style={{marginLeft: 20}}>
           <RkText rkType='secondary2'>+6 per day in average</RkText>
         </View>
       </View>
