@@ -297,7 +297,7 @@ export const getKeyButtonsRow = (theKey, theButtons, options={}) =>
   const rowElements = []
   rowElements.push(getText(theKey, fnOptions.theKeyTextStyle))
   rowElements.push(
-    <View style={{flexDirection:'row'}}>
+    <View key={getUniqueKey()} style={{flexDirection:'row'}}>
       {theButtons}
     </View>
   )
@@ -333,7 +333,7 @@ class FoldingSection extends Component {
     const elements = (this.state.showElements) ? this.elements : undefined
 
     return (
-      <View style={styles.questionViewContainer}>
+      <View key={getUniqueKey()} style={styles.questionViewContainer}>
         {getRow([getText(this.heading, {...styles.text, fontWeight: 'bold'}), getButton(undefined, buttonIcon, this.handleShowElementsToggle, 'black', false)])}
         {elements}
       </View>
