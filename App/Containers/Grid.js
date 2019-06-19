@@ -30,19 +30,26 @@ class Grid extends Component {
     this.props.navigation.navigate(item.id);
   };
 
-  renderItems = () => MainRoutes.map(route => (
+  renderItems = () => MainRoutes.map(
+    (route) => {
+      const iconStyle = (route.level > this.props.level) ?
+        {...styles.icon, color: '#a6a6a6'} : styles.icon
+      return (
     <RkButton
       rkType='square shadow'
-      style={{ ...this.itemSize, color: (route.level > this.props.level) ? '#CDCDCD' }}
+      style={{ ...this.itemSize}}
       key={route.id}
       disabled={route.level > this.props.level}
       onPress={() => this.onItemPressed(route)}>
-      <RkText style={styles.icon} rkType='primary moon menuIcon'>
+      <RkText
+        style={iconStyle}
+        rkType='primary moon menuIcon'>
         {route.icon}
       </RkText>
       <RkText>{route.title}</RkText>
     </RkButton>
-  ));
+    )}
+);
 
   render = () => (
     <ScrollView

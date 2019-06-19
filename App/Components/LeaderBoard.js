@@ -125,6 +125,8 @@ export default class LeaderBoard extends Component {
   componentWillReceiveProps = nextProps => {
     if (this.props.data !== nextProps.data) {
       this.setState({ sortedData: this._sort(nextProps.data) });
+    } else if (this.props.sortBy !== nextProps.sortBy) {
+      this.setState({ sortedData: this._sort(nextProps.data) });
     }
   };
 
