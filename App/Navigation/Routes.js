@@ -1,10 +1,11 @@
 import _ from 'lodash';
-import { FontIcons } from '../Assets/icons';
+import { FontIcons, FontAwesome } from '../Assets/icons';
 import * as Screens from '../Screens/index';
 import CameraRollScreen from '../Containers/CameraRollScreen'
 import ArticleInputScreen from '../Containers/ArticleInputScreen'
 import ChatScreen from '../Containers/ChatScreen'
 import FeedScreen from '../Containers/FeedScreen'
+import LeaderScreen from '../Containers/LeaderScreen'
 import CameraScreen from '../Containers/CameraScreen'
 import CardsScreen from '../Containers/CardsScreen'
 // import CampaignerScreen from '../Containers/CampaignerScreen'
@@ -31,15 +32,100 @@ import CanvasConstituentContribution from '../Containers/CanvasConstituentContri
 
 export const MainRoutes = [
   {
-    id: 'Start',
-    title: 'Start',
-    screen: CombinedScreen,
-    children: [],
+    id: 'LeaderScreen',
+    title: 'Leader Board',
+    icon: FontIcons.dashboard,
+    screen: LeaderScreen,
+    children: []
+  },
+  {
+    id: 'CampaignerMenu',
+    title: 'Fundraising',
+    icon: FontIcons.card,
+    screen: CampaignerMenuScreen,
+    children: [
+      {
+        id: 'Donator Amount',
+        title: 'Donator Amount',
+        screen: DonatorAmountScreen,
+        children: [],
+      },
+      {
+        id: 'Donator Other Amount',
+        title: 'Donator Other Amount',
+        screen: DonatorOtherAmountScreen,
+        children: [],
+      },
+      {
+        id: 'Donator Info',
+        title: 'Donator Info',
+        screen: DonatorInfoScreen,
+        children: [],
+      },
+      {
+        id: 'Donator Name',
+        title: 'Donator Name',
+        screen: DonatorNameScreen,
+        children: [],
+      },
+      {
+        id: 'Donation',
+        title: 'Donation',
+        screen: ChargeScreen,
+        children: [],
+      },
+      {
+        id: 'Donation Complete',
+        title: 'Donation Complete',
+        screen: DonationCompleteScreen,
+        children: [],
+      },
+      {
+        id: 'Campaign Progress',
+        title: 'Campaign Progress',
+        screen: CampaignerProgressScreen,
+        children: [],
+      },
+    ],
+  },
+  {
+    id: 'CanvasMenu',
+    title: 'Canvassing',
+    icon: FontIcons.profile,
+    screen: CanvasConstituentSearch,
+    // screen: CanvasConstituentContribution,
+    children: [
+      {
+        id: 'Constituent Search Results',
+        title: 'Constituent Search Results',
+        screen: CanvasConstituentSearchResults,
+        children: [],
+      },
+      {
+        id: 'Constituent Contribution',
+        title: 'Constituent Contribution',
+        screen: CanvasConstituentContribution,
+        children: [],
+      },
+      {
+        id: 'Constituent Questionaire',
+        title: 'Constituent Questionaire',
+        screen: CanvasConstituentQuestionaire,
+        children: [],
+      },
+      // TODO: find out what PBJ was thinking here
+      {
+        id: 'Contact Search',
+        title: 'Contact Search',
+        screen: CanvasContacts,
+        children: [],
+      },
+    ],
   },
   {
     id: 'SocialMenu',
-    title: 'Social',
-    icon: FontIcons.profile,
+    title: 'Campaign News',
+    icon: FontIcons.article,
     screen: FeedScreen,
     children: [
       {
@@ -116,90 +202,14 @@ export const MainRoutes = [
       },
     ],
   },
-  {
-    id: 'CampaignerMenu',
-    title: 'Campaigner',
-    icon: FontIcons.other,
-    screen: CampaignerMenuScreen,
-    children: [
-      {
-        id: 'Donator Amount',
-        title: 'Donator Amount',
-        screen: DonatorAmountScreen,
-        children: [],
-      },
-      {
-        id: 'Donator Other Amount',
-        title: 'Donator Other Amount',
-        screen: DonatorOtherAmountScreen,
-        children: [],
-      },
-      {
-        id: 'Donator Info',
-        title: 'Donator Info',
-        screen: DonatorInfoScreen,
-        children: [],
-      },
-      {
-        id: 'Donator Name',
-        title: 'Donator Name',
-        screen: DonatorNameScreen,
-        children: [],
-      },
-      {
-        id: 'Donation',
-        title: 'Donation',
-        screen: ChargeScreen,
-        children: [],
-      },
-      {
-        id: 'Donation Complete',
-        title: 'Donation Complete',
-        screen: DonationCompleteScreen,
-        children: [],
-      },
-      {
-        id: 'Campaign Progress',
-        title: 'Campaign Progress',
-        screen: CampaignerProgressScreen,
-        children: [],
-      },
-    ],
-  },
-  {
-    id: 'CanvasMenu',
-    title: 'Canvasser',
-    icon: FontIcons.other,
-    screen: CanvasConstituentSearch,
-    // screen: CanvasConstituentContribution,
-    children: [
-      {
-        id: 'Constituent Search Results',
-        title: 'Constituent Search Results',
-        screen: CanvasConstituentSearchResults,
-        children: [],
-      },
-      {
-        id: 'Constituent Contribution',
-        title: 'Constituent Contribution',
-        screen: CanvasConstituentContribution,
-        children: [],
-      },
-      {
-        id: 'Constituent Questionaire',
-        title: 'Constituent Questionaire',
-        screen: CanvasConstituentQuestionaire,
-        children: [],
-      },
-      // TODO: find out what PBJ was thinking here
-      {
-        id: 'Contact Search',
-        title: 'Contact Search',
-        screen: CanvasContacts,
-        children: [],
-      },
-    ],
-  },
 ];
 
-export const MenuRoutes = MainRoutes;
+let menuRoutes = _.cloneDeep(MainRoutes);
+menuRoutes.unshift({
+  id: 'Start',
+  title: 'Start',
+  screen: CombinedScreen,
+  children: []
+},);
+
+export const MenuRoutes = menuRoutes;

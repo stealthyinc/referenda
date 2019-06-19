@@ -226,7 +226,7 @@ export const questionaire = [
     question: 'What is your favorite type of cheese?',
     choices: [
       { value: 'cheddar' },
-      { value: 'mozarella' },
+      { value: 'mozarella', color: 'red' },
       { value: 'provolone' },
       { value: 'moterey jack' },
       { value: 'pepper jack' },

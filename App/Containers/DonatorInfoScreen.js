@@ -35,7 +35,7 @@ import {
 import { GradientButton } from '../Components/gradientButton'
 import DonationActions, { DonationSelectors } from '../Redux/DonationRedux'
 
-import candidate from '../Assets/avatars/agatha2.png'
+import candidate from '../Assets/avatars/campa.jpg'
 
 class DonatorInfoScreen extends Component {
   static navigationOptions = {

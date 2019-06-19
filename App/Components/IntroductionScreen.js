@@ -17,7 +17,8 @@ import AppIntroSlider from 'react-native-app-intro-slider';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import folder from '../Assets/images/folder.png'
 // import security from '../Assets/images/molecular.png'
-import candidate from '../Assets/images/launch0-candidate.jpg'
+// import candidate from '../Assets/images/launch0-candidate.jpg'
+import candidate from '../Assets/images/launch2-candidate.jpg'
 // import candidate from '../Assets/images/launch1-candidate.jpg'
 // import censor from '../Assets/images/censor.png'
 // From: https://www.pexels.com/photo/man-wearing-gray-coat-standing-in-the-middle-of-the-road-936142/
@@ -72,8 +73,8 @@ const slides = [
   //       the campaign.
   {
     key: 'donation0',
-    title: 'Agatha Bacelar for Congress 🇺🇸',
-    text: 'You\'ve been invited to help Agatha\'s campaign for the 117th US congress seat representing California district 12!',
+    title: 'Ammar Campa-Najjar for Congress 🇺🇸',
+    text: 'Referenda makes your voice heard by your political leaders for actionable change.',
     image: candidate,
     imageStyle: styles.image,
     colors: ['#63E2FF', '#B066FE'],
@@ -120,7 +121,7 @@ class IntroductionScreen extends Component {
 
   constructor (props) {
     super(props)
-    this.props.navigation.navigate('CanvasMenu');
+    this.props.navigation.navigate('Start')
   }
 
   state = {
@@ -162,10 +163,11 @@ class IntroductionScreen extends Component {
   }
 
   onLoginButtonPressed = () => {
-    if (userTypeInstance.getUserType())
-      this.props.navigation.navigate('CampaignerMenu');
-    else
-      this.props.navigation.navigate('SocialMenu');
+    // if (userTypeInstance.getUserType())
+    //   this.props.navigation.navigate('CampaignerMenu');
+    // else
+    //   this.props.navigation.navigate('SocialMenu');
+    this.props.navigation.navigate('Start')
   };
 
 

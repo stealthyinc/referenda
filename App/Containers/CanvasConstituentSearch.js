@@ -14,7 +14,7 @@ import { Voters } from '../Data/raw/sandiegovoters'
 
 class CanvasConstituentSearch extends Component {
   static propTypes = NUIF.requireNavBar
-  static navigationOptions = NUIF.getNavOptions('Canvasser')
+  static navigationOptions = NUIF.getNavOptions('Canvassing', false)
 
   constructor (props) {
     super(props)

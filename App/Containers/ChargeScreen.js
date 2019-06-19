@@ -67,7 +67,7 @@ const applePayStatus = {
   succeeded: 1,
   nonceNotCharged: 2,
 };
-import candidate from '../Assets/avatars/agatha2.png'
+import candidate from '../Assets/avatars/campa.jpg'
 
 class ChargeScreen extends Component {
   static navigationOptions = {

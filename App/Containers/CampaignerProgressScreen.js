@@ -37,7 +37,7 @@ import DonationActions, { DonationSelectors } from '../Redux/DonationRedux'
 import EngineActions, { EngineSelectors } from '../Redux/EngineRedux'
 import {EngineCommand} from '../Engine/commands/engineCommand'
 
-import candidate from '../Assets/avatars/agatha2.png'
+import candidate from '../Assets/avatars/campa.jpg'
 
 class CampaignerProgressScreen extends Component {
   static navigationOptions = {
