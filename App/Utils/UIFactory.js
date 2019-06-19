@@ -10,7 +10,9 @@ import { ActivityIndicator,
 import { Colors, Fonts, Metrics } from '../Themes/'
 import { FontAwesome } from '../Assets/icons';
 
-import { RkText } from 'react-native-ui-kitten';  // RkText to display icons easily. (Could also switch to Oblador's FontAwesome RN component if removeing rk)
+import {
+  RkAvoidKeyboard,
+  RkText } from 'react-native-ui-kitten';  // RkText to display icons easily. (Could also switch to Oblador's FontAwesome RN component if removeing rk)
 
 let key = 0
 export function getUniqueKey()
@@ -80,7 +82,8 @@ export const getButton = (
   theButtonIcon=undefined,
   theClickHandlerFn=() => {},
   theButtonColor='black',
-  hasBorder='true') =>
+  hasBorder=true,
+  hasPadding=true) =>
 {
   const uiElements = []
   if (theButtonIcon) {
@@ -106,9 +109,12 @@ export const getButton = (
     )
   }
 
-  const buttonStyle = (hasBorder) ?
+  let buttonStyle = (hasBorder) ?
     styles.buttonInnerContainer :
     {...styles.buttonInnerContainer, borderWidth:0}
+
+  buttonStyle = (hasPadding) ?
+    buttonStyle : {...buttonStyle, paddingVertical:0}
 
   return (
       <View key={getUniqueKey()} style={styles.buttonOuterContainer}>
@@ -229,6 +235,74 @@ export const getRow = (theElements, paddingHorizontal=0) => {
       {theElements}
     </View>
   )
+}
+
+export const getKeyValueTextRow = (
+  theKey,
+  theValue,
+  options={}) =>
+{
+  const fnOptions = {
+    theKeyTextStyle: styles.descriptionText,
+    theValueTextStyle: styles.text,
+    ...options
+  }
+
+  const rowElements = []
+  rowElements.push(getText(theKey, fnOptions.theKeyTextStyle))
+  rowElements.push(getText(theValue, fnOptions.theValueTextStyle))
+
+  return getRow(rowElements)
+}
+
+export const getKeyValueTextInputRow = (
+  theKey,
+  theTextInputInitialValue,
+  options={}) =>
+{
+  const fnOptions = {
+    theKeyTextStyle: styles.descriptionText,
+    theTextInputPlaceHolderText: theKey,
+    theTextInputPropertyName: undefined,
+    theTextInputChangeHandlerFn: () => {},
+    theTextInputStyle: {
+      width:'auto',
+      marginTop:0,
+      marginBottom:0,
+      textAlign:'right'
+    },
+    ...options
+  }
+
+  const rowElements = []
+  rowElements.push(getText(theKey, fnOptions.theKeyTextStyle))
+  rowElements.push(getTextInput(
+    fnOptions.theTextInputPlaceHolderText,
+    fnOptions.theTextInputPropertyName,
+    fnOptions.theTextInputChangeHandlerFn,
+    theTextInputInitialValue,
+    fnOptions.theTextInputStyle))
+
+  return getRow(rowElements)
+}
+
+export const getKeyButtonsRow = (theKey, theButtons, options={}) =>
+{
+  const fnOptions = {
+    theKeyTextStyle: styles.descriptionText,
+    theValueTextStyle: styles.text,
+    ...options
+  }
+
+  const rowElements = []
+  rowElements.push(getText(theKey, fnOptions.theKeyTextStyle))
+  rowElements.push(
+    <View style={{flexDirection:'row'}}>
+      {theButtons}
+    </View>
+  )
+
+  return getRow(rowElements)
 }
 
 export const getColumn = (theElements) => {
@@ -408,7 +482,7 @@ export const styles = StyleSheet.create({
   },
   modalContainer: {
     height:'100%',
-    backgroundColor:'rgba(255,255,255,0.90)',
+    backgroundColor:'rgba(255,255,255,0.95)',
     flexDirection:'column',
     justifyContent:'center',
     alignItems:'center',

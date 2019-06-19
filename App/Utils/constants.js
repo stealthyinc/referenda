@@ -255,13 +255,14 @@ export const contributionQuestion = {
   question: 'How will you contribute to the campaign?',
   multipleResponses: true,
   choices: [
-    { value: 'Tell Your Friends' },
+    { value: 'Share Your Thoughts' },     // --> Campaign Questionaire
+    { value: 'Get a Sticker' },
+    { value: 'Placing a Yard Sign' },
+    { value: 'Tell Your Friends' },       // --> Share a link to Referenda Social Campaigning App via email / SMS
+    { value: 'Calling People' },
     { value: 'Door to Door Canvassing' },
-    { value: 'Phone Banking' },
-    { value: 'Texing' },
-    { value: 'Donations' },
-    { value: 'Merchandise Purchase' },
-    { value: 'Give Feedback to the Campaign' }
+    { value: 'Purchase Merchandise' },
+    { value: 'Make a Donation' },
   ],
   response: ''
 }

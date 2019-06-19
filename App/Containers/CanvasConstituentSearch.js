@@ -152,6 +152,7 @@ class CanvasConstituentSearch extends Component {
     uiElements.push(UIF.getTextInput('Zip', 'zip', this.handleSearchTextChange, this.search.zip))
     uiElements.push(UIF.getVerticalSpacer(Metrics.doubleBaseMargin))
     uiElements.push(UIF.getButton('Search', FontAwesome.search, this.handleSearchPressed))
+    uiElements.push(UIF.getVerticalSpacer(Metrics.screenHeight/3))
 
     return (UIF.getScrollingContainer(uiElements))
   }
