@@ -11,6 +11,8 @@ import {
   shareOnTwitter,
 } from 'react-native-social-share';
 
+const { candidateData } = require('../../Data/CandidateData.js')
+
 const METHOD_DATA = [{
   supportedMethods: ['apple-pay'],
   paymentMethodTokenizationParameters: {
@@ -43,7 +45,7 @@ const DETAILS = {
     detail: 'Required for campaign finance accounting' // `detail` is specific to React Native Payments
   }],
   total: {
-    label: `Ammar Campa-Najjar - 2020 Campaign`,
+    label: candidateData.getFundraisingLabel(),
     amount: { currency: 'USD', value: '1.00' }
   }
 };
@@ -104,8 +106,8 @@ export class SocialBar extends RkComponent {
       shares: this.state.shares === defaultCount ? this.state.shares + 1 : defaultCount,
     });
     shareOnTwitter({
-        'text':'Agatha Campaign Information',
-        'link':'https://google.com/',
+        'text':candidateData.getCampaignTitle(),
+        'link':candidateData.getCampaignLink(),
       },
       (results) => {
         console.log(results);
@@ -135,7 +137,7 @@ export class SocialBar extends RkComponent {
         <View style={section}>
           <RkButton
             rkType='clear'
-            onPress={() => Linking.openURL('https://commerce.coinbase.com/checkout/fffca773-3645-4d23-a442-b97ec395d365')}
+            onPress={() => Linking.openURL(candidateData.getFundraisingBitcoinUrl())}
           >
             <RkText rkType='awesome warning' style={icon}>{FontAwesome.bitcoin}</RkText>
           </RkButton>

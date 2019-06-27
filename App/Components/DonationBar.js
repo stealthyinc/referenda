@@ -7,6 +7,8 @@ import {
 } from 'react-native-ui-kitten';
 import { FontAwesome } from '../Assets/icons';
 
+const { candidateData } = require('../Data/CandidateData.js')
+
 const METHOD_DATA = [{
   supportedMethods: ['apple-pay'],
   paymentMethodTokenizationParameters: {
@@ -39,7 +41,7 @@ const DETAILS = {
     detail: 'Required for campaign finance accounting' // `detail` is specific to React Native Payments
   }],
   total: {
-    label: `Ammar Campa-Najjar - 2020 Campaign`,
+    label: candidateData.getFundraisingLabel(),
     amount: { currency: 'USD', value: '1.00' }
   }
 };

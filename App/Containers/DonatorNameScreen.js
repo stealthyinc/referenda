@@ -34,7 +34,8 @@ import {
 import { GradientButton } from '../Components/gradientButton'
 import DonationActions, { DonationSelectors } from '../Redux/DonationRedux'
 
-import candidate from '../Assets/avatars/campa.jpg'
+// import candidate from '../Assets/avatars/campa.jpg'
+const { candidateData } = require('../Data/CandidateData.js')
 
 class DonatorNameScreen extends Component {
   static navigationOptions = {
@@ -189,7 +190,7 @@ class DonatorNameScreen extends Component {
 
         <View style={{width: '100%', flex: 1, alignItems:'center', justifyContent:'center'}}>
           <Image
-            source={candidate}
+            source={candidateData.getFundraisingPhoto()}
             style={{
               height: imageDimension,
               width: imageDimension,

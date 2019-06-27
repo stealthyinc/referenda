@@ -42,6 +42,8 @@ const { userTypeInstance } = require('../Utils/UserType.js')
 // const { firebaseInstance } = require('../Utils/firebaseWrapper.js')
 const { Analytics } = require('../Utils/Analytics.js')
 
+const { candidateData } = require('../Data/CandidateData.js')
+
 const styles = StyleSheet.create({
   mainContent: {
     flex: 1,
@@ -75,9 +77,9 @@ const slides = [
   //       the campaign.
   {
     key: 'donation0',
-    title: 'Ammar Campa-Najjar for Congress 🇺🇸',
-    text: 'Referenda makes your voice heard by your political leaders for actionable change.',
-    image: candidate,
+    title: candidateData.getLoginTitle(),
+    text: candidateData.getLoginDescription(),
+    image: candidateData.getLoginPhoto(),
     imageStyle: styles.image,
     colors: ['#63E2FF', '#B066FE'],
   },

@@ -19,6 +19,8 @@ import {
 import Config from 'react-native-config'
 import API from '../Services/Api'
 
+const { candidateData } = require('../Data/CandidateData.js')
+
 /**
  * getAmountInCentsFromDonation - converts a string in USD, aDonationStrUSD to
  *                                an integer in cents, rounded down. Then
@@ -56,7 +58,7 @@ export function * sendSquareCharge (action) {
   const feeAmount = amounts.feeCents
   const donationAmount = amounts.proceedsCents
   console.log('DONATION(cents: total, fee, proceeds):', amounts.totalCents, feeAmount, donationAmount)
-  const message = "Thank you for your donation to Agatha's Campaign. We will notify you when the Referenda App is ready!"
+  const message = candidateData.getFundraisingReceiptMessage()
   const locationId = '0WNJSXGSXWG89'
   const body = {
     card_nonce: data,
@@ -86,8 +88,8 @@ export function * sendSquareInvoice () {
   const donationAmount = amounts.proceedsCents
   const shippingFlag = amounts.totalCents <= 2000
   console.log('DONATION(cents: total, fee, proceeds):', amounts.totalCents, feeAmount, donationAmount)
-  const message = `Thank you for your donation to Ammar Campa-Najjar's Campaign. Here's a helpful link for you to donate. We will notify you when the Referenda App is ready!`
-  const campaign_message = "Donation to Ammar Campa-Najjar's Campaign"
+  const message = candidateData.getFundraisingReceiptMessageWeb()
+  const campaign_message = candidateData.getFundraisingCampaignMessage()
   const locationId = '0WNJSXGSXWG89'
   const pre_populate_shipping_address = {
     "first_name": firstName,

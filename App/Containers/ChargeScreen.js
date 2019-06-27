@@ -67,7 +67,8 @@ const applePayStatus = {
   succeeded: 1,
   nonceNotCharged: 2,
 };
-import candidate from '../Assets/avatars/campa.jpg'
+// import candidate from '../Assets/avatars/campa.jpg'
+const { candidateData } = require('../Data/CandidateData.js')
 
 class ChargeScreen extends Component {
   static navigationOptions = {
@@ -151,7 +152,7 @@ class ChargeScreen extends Component {
           [
             {
               text: 'Close',
-              onPress: () => this.setState({ 
+              onPress: () => this.setState({
                 waitOnPayNowOperation: false,
                 waitingOnCommand: ''
               }),
@@ -480,7 +481,7 @@ class ChargeScreen extends Component {
           <View style={{width: '100%', flex: 1, alignItems:'center', justifyContent:'center'}}>
             { /*<Image source={candidate} style={{height: '25%', borderRadius: 150}}/> */}
             <Image
-              source={candidate}
+              source={candidateData.getFundraisingPhoto()}
               style={{
                 height: imageDimension,
                 width: imageDimension,

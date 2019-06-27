@@ -39,6 +39,8 @@ import DonationActions, { DonationSelectors } from '../Redux/DonationRedux'
 import candidate from '../Assets/avatars/campa.jpg'
 import { ifIphoneX } from 'react-native-iphone-x-helper'
 
+const { candidateData } = require('../Data/CandidateData.js')
+
 // Styles
 const styles = RkStyleSheet.create(theme => ({
     headerPanelView: {
@@ -163,7 +165,7 @@ class CampaignerMenuScreen extends Component {
         <View style={{width: '100%', height: '100%', flexDirection:'column', alignItems:'center', justifyContent:'flex-end'}}>
           <View style={{width: '100%', flex: 1, alignItems:'center', justifyContent:'center'}}>
             <Image
-              source={candidate}
+              source={candidateData.getFundraisingPhoto()}
               style={{
                 height: imageDimension,
                 width: imageDimension,
@@ -173,7 +175,7 @@ class CampaignerMenuScreen extends Component {
                 resizeMode: 'contain'}}/>
             <RkText
               rkType='large'
-              style={{color:'#ffffff', marginTop:9}}>Ammar for Congress 🇺🇸</RkText>
+              style={{color:'#ffffff', marginTop:9}}>{candidateData.getFundraisingTitle()}</RkText>
           </View>
 
           <GradientButton
