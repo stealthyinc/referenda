@@ -6,7 +6,7 @@ const candidates = [
     districtType: undefined,
     campaign: {
       title: 'You for Congress 🇺🇸',
-      link: 'app.referenda.io',
+      link: 'https://www.app.referenda.io/?wv=1',
     },
     loginPage: {                                        // IntroductionScreen.js
       title: 'You for Congress 🇺🇸',
@@ -32,7 +32,7 @@ const candidates = [
     districtType: 'Congress',
     campaign: {
       title: 'Ammar Campa-Najjar for Congress 🇺🇸',
-      link: 'app.referenda.io',
+      link: 'https://www.app.referenda.io/campacampa.id.blockstack/?wv=1',
     },
     loginPage: {                                            // IntroductionScreen.js
       title: 'Ammar Campa-Najjar for Congress 🇺🇸',
@@ -58,7 +58,7 @@ const candidates = [
     districtType: 'Congress',
     campaign: {
       title: 'Russell Cirincione for Congress 🇺🇸',
-      link: 'app.referenda.io',
+      link: 'https://www.app.referenda.io/russcirincione.id.blockstack/?wv=1',
     },
     loginPage: {                                            // IntroductionScreen.js
       title: 'Russell Cirincione for Congress 🇺🇸',
@@ -84,7 +84,7 @@ const candidates = [
     districtType: 'Congress',
     campaign: {
       title: 'Agatha Bacelar for Congress 🇺🇸',
-      link: 'app.referenda.io/agatha',
+      link: 'https://www.app.referenda.io/agatha.id.blockstack/?wv=1',
     },
     loginPage: {                                            // IntroductionScreen.js
       title: 'Agatha Bacelar for Congress 🇺🇸',
@@ -177,4 +177,4 @@ class Candidate {
   }
 }
 
-export var candidateData = new Candidate(2)
+export var candidateData = new Candidate(1)

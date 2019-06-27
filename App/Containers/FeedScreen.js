@@ -5,12 +5,14 @@ import {
 } from 'react-native';
 const NUIF = require('../Utils/NavUIFactory.js')
 
+const { candidateData } = require('../Data/CandidateData.js')
+
 class FeedScreen extends Component {
   static propTypes = NUIF.requireNavBar
   static navigationOptions = NUIF.getNavOptions('Campaign News', false)
   render = () => (
     <WebView
-      source={{uri: 'https://www.app.referenda.io/campacampa.id.blockstack/?wv=1'}}
+      source={{uri: candidateData.getCampaignLink()}}
     />
   )
 }
