@@ -2,7 +2,10 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import {
   WebView
-} from 'react-native';
+} from 'react-native-webview';
+import {
+  ActivityIndicator,
+} from 'react-native'
 const NUIF = require('../Utils/NavUIFactory.js')
 
 const { candidateData } = require('../Data/CandidateData.js')
@@ -13,6 +16,8 @@ class FeedScreen extends Component {
   render = () => (
     <WebView
       source={{uri: candidateData.getCampaignLink()}}
+      cacheEnabled={true}
+      startInLoadingState={true}
     />
   )
 }

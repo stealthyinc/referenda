@@ -3,6 +3,7 @@ package com.referenda;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.reactnativecommunity.webview.RNCWebViewPackage;
 import com.transistorsoft.rnbackgroundfetch.RNBackgroundFetchPackage;
 import io.invertase.firebase.RNFirebasePackage;
 import sqip.react.SquareInAppPaymentsPackage;
@@ -45,6 +46,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNCWebViewPackage(),
             new RNBackgroundFetchPackage(),
             new RNFirebasePackage(),
             new SquareInAppPaymentsPackage(),

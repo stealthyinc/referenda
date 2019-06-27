@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { ScrollView, Text, TouchableOpacity, Image } from 'react-native'
 import { connect } from 'react-redux'
+import DonationActions from '../Redux/DonationRedux'
 import CanvasActions, { CanvasSelectors } from '../Redux/CanvassingRedux'
 
 import { ChoiceQuestion } from '../Utils/QuestionaireWidgets'
@@ -9,12 +10,12 @@ import { Colors, Fonts, Metrics } from '../Themes/'
 import { FontAwesome } from '../Assets/icons'
 
 import qrCode from '../Assets/images/campa-qr-code.png'
+import Config from 'react-native-config'
 
 const C = require('../Utils/constants.js')
 const UIF = require('../Utils/UIFactory.js')
 const NUIF = require('../Utils/NavUIFactory.js')
 const moment = require('moment');
-
 
 class CanvasConstituentContribution extends Component {
   static propTypes = NUIF.requireNavBar
@@ -92,6 +93,27 @@ class CanvasConstituentContribution extends Component {
   handleQRText = () => {
     // TODO: Launch a text message Saga ...
     // If possible show an AI and when done make the modal disappear...
+    debugger
+    const message = `Hi Alex, Prabhaav has invited you to learn more about Ammar's campaign.\
+    You can interact, donate, and even chat with the campaign here: https://www.app.referenda.io/campacampa.id.blockstack`
+    fetch(Config.TWILIO_URL, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        to: '5044606946',
+        message
+      }),
+    })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      console.log("TWILIO GOOD", responseJson)
+    })
+    .catch((error) =>{
+      console.error(error);
+    });
     this.setState({showQR: !this.state.showQR})
   }
 
@@ -159,7 +181,7 @@ class CanvasConstituentContribution extends Component {
         modalElements.push(UIF.getButton(`Text a link to ${this.selectedVoter.phoneNumber}`, undefined, this.handleQRText))
         modalElements.push(UIF.getVerticalSpacer(Metrics.screenHeight/20))
         modalElements.push(UIF.getButton('Back', FontAwesome.chevronLeft, this.handleQRToggle))
-        
+
         uiElements.push(UIF.getOptionsModal(modalElements))
       }
 
@@ -215,6 +237,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     storeReduxData: (data) => dispatch(CanvasActions.storeData(data)),
+    sendPlatformText: (data) => dispatch(DonationActions.twilioRequest(data)),
   }
 }
 
