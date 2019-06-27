@@ -111,7 +111,7 @@ class CombinedScreen extends Component {
           style={{marginHorizontal:5, padding:5}}
           onPress={() => this.setState({ visibleModal: false, level: 1 })}
         >
-          <Text color='white'>Constituent</Text>
+          <Text color='white'>Volunteer</Text>
         </Button>
         <Button
           block
@@ -119,7 +119,7 @@ class CombinedScreen extends Component {
           style={{marginHorizontal:5, padding:5}}
           onPress={() => this.setState({ visibleModal: false, level: 2 })}
         >
-          <Text color='white'>Volunteer</Text>
+          <Text color='white'>Campaign</Text>
         </Button>
       </View>
     </View>

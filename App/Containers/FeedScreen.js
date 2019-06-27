@@ -2,7 +2,10 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import {
   WebView
-} from 'react-native';
+} from 'react-native-webview';
+import {
+  ActivityIndicator,
+} from 'react-native'
 const NUIF = require('../Utils/NavUIFactory.js')
 
 class FeedScreen extends Component {
@@ -11,6 +14,8 @@ class FeedScreen extends Component {
   render = () => (
     <WebView
       source={{uri: 'https://www.app.referenda.io/campacampa.id.blockstack/?wv=1'}}
+      cacheEnabled={true}
+      startInLoadingState={true}
     />
   )
 }
