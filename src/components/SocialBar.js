@@ -25,7 +25,7 @@ const SocialBar = ({ chatFunction, paymentFunction, likeFunction, likeCount, id,
             <Icon name='chatbubbles' />
           </Button>
           <View style={{width:5}} />
-          {(!webview) ? (<a href='https://checkout.opennode.co/p/55769f7d-ebcd-4543-8bbc-bedbe8c9dbe0' target='_blank'>
+          {(!webview) ? (<a href='https://checkout.opennode.co/p/55769f7d-ebcd-4543-8bbc-bedbe8c9dbe0' style={{textDecoration: 'none'}} target='_blank'>
             <Button bordered style={{borderColor:'lightgray'}} small rounded warning
               onPress={() => {
               logEvent('Bitcoin Button Pressed')}}>
