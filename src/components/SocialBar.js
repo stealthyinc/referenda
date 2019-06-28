@@ -1,13 +1,13 @@
 import React from 'react'
 import {
   View,
+  Linking
 } from 'react-native';
 import {
   CardItem,
   Button,
   Icon,
-  Text,
-  Linking
+  Text
 } from 'native-base'
 import {
   Amplitude,
