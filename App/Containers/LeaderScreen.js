@@ -25,7 +25,6 @@ import {
   AreaSmoothedChart,
   DebtProgressChart,
 } from '../Components/charts'
-import Modal from 'react-native-modal';
 
 class LeaderScreen extends Component {
   static navigationOptions = ({ navigation }) => {
@@ -60,43 +59,21 @@ class LeaderScreen extends Component {
       { cancelable: false }
     )
   }
-  toggleModal = () => {
-    this.setState({ isModalVisible: !this.state.isModalVisible });
-  };
-  renderModalContent = () => (
-    <View style={{
-      backgroundColor: 'white',
-      padding: 22,
-      justifyContent: 'center',
-      alignItems: 'center',
-      borderRadius: 4,
-      borderColor: 'rgba(0, 0, 0, 0.1)',
-    }}>
-      <Text style={{
-        fontSize: 20,
-        marginBottom: 12,
-      }}>Sort Options 🧮</Text>
-      <View style={{width: '100%', flexDirection: 'row', justifyContent: 'center'}}>
-      <Button
-        style={{marginHorizontal:20}}
-        onPress={() => this.setState({ isModalVisible: false, sortBy: 'score' })}
-      >
-        <Text>By Score</Text>
-      </Button>
-      <Button
-        success
-        style={{marginHorizontal:20}}
-        onPress={() => this.setState({ isModalVisible: false, sortBy: 'level' })}
-      >
-        <Text>By Level</Text>
-      </Button>
-      </View>
-    </View>
-  );
   render() {
-    const props = {
+    const props1 = {
        labelBy: 'name',
-       sortBy: this.state.sortBy,
+       sortBy: 'score',
+       data: this.state.data,
+       icon: 'iconUrl',
+       onRowPress: (item, index) => {
+         this._alert(item.name + " clicked",
+           item.score + " points: will show history in the future!")
+       },
+       evenRowColor: '#F4F4F4',
+    }
+    const props2 = {
+       labelBy: 'name',
+       sortBy: 'level',
        data: this.state.data,
        icon: 'iconUrl',
        onRowPress: (item, index) => {
@@ -107,12 +84,6 @@ class LeaderScreen extends Component {
     }
     return (
       <Container style={{ backgroundColor: "#fff" }}>
-        <Modal
-          isVisible={this.state.isModalVisible === true}
-          onBackdropPress={() => this.setState({ isModalVisible: false })}
-        >
-          {this.renderModalContent()}
-        </Modal>
         <Header hasTabs>
           <Left>
             <Button transparent onPress={() => this.props.navigation.goBack()}>
@@ -122,22 +93,14 @@ class LeaderScreen extends Component {
           <Body>
             <Title>Leader Board</Title>
           </Body>
-          <Right>
-            <Button transparent onPress={() => this.toggleModal()}>
-              <Icon name="options" />
-            </Button>
-          </Right>
+          <Right />
         </Header>
         <Tabs renderTabBar={() => <ScrollableTab />}>
           <Tab heading={ <TabHeading><Icon name="trophy" /><Text>Rankings</Text></TabHeading>}>
-            <LeaderBoard {...props} />
+            <LeaderBoard {...props1} />
           </Tab>
-          <Tab style={{flex: 1}} heading={ <TabHeading><Icon name="stats" /><Text>Statistics</Text></TabHeading>}>
-            <ScrollView contentContainerStyle={{alignItems: 'center'}}>
-              <ProgressChart />
-              <AreaChart />
-              <DoughnutChart />
-            </ScrollView>
+          <Tab style={{flex: 1}} heading={ <TabHeading><Icon name="stats" /><Text>Levels</Text></TabHeading>}>
+            <LeaderBoard {...props2} />
           </Tab>
         </Tabs>
       </Container>
