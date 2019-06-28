@@ -32,7 +32,7 @@ export const FIRST_CARD_WORKAROUND = {
     positionStr: 'President of the National Assembly of Venezuela',
     followers: '17,234,020',
   },
-  'https://gaia.blockstack.org/hub/1AWEUPLVhMZkke6qUnkw7T9g6tqBGnpKnv' : {    // guaido
+  'https://gaia.blockstack.org/hub/1AWEUPLVhMZkke6qUnkw7T9g6tqBGnpKnv' : {    // nabilah
     avatarImg: require('../data/img/avatars/nabilah.jpg'),
     fcBackgroundImg: require('../data/img/nabilahBack.jpeg'),
     nameStr: 'Nabilah Islam',

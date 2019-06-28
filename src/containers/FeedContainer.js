@@ -270,11 +270,13 @@ export default class Feed extends Component {
   }
 
   writeIndex = async () => {
-    console.log('indexFileData:\n', this.indexFileData)
+    if (this.state.isSignedIn) {
+      console.log('indexFileData:\n', this.indexFileData)
 
-    this.indexFileData.timeUtc = Date.now()
-    const sIndexFileData = JSON.stringify(this.indexFileData)
-    await cloudIO.putFile(C.INDEX_FILE, sIndexFileData)
+      this.indexFileData.timeUtc = Date.now()
+      const sIndexFileData = JSON.stringify(this.indexFileData)
+      await cloudIO.putFile(C.INDEX_FILE, sIndexFileData)
+    }
   }
 
   getNewConfig = () => {
@@ -688,6 +690,11 @@ export default class Feed extends Component {
     }
 
     let avatarImgUrl = `${this.mediaUrlRoot}/${profileData.avatarImg}`
+    if (profileData.avatarImg &&
+        (profileData.avatarImg.startsWith('/static/') ||
+         profileData.avatarImg.startsWith('http'))) {
+      avatarImgUrl = profileData.avatarImg
+    }
     let profileImgOrDropZone =
       ( <Thumbnail large
           style={styles.profileAvatarStyle}
@@ -735,6 +742,11 @@ export default class Feed extends Component {
     }
 
     let bgImgUrl = `${this.mediaUrlRoot}/${profileData.backgroundImg}`
+    if (profileData.backgroundImg &&
+        (profileData.backgroundImg.startsWith('/static/') ||
+         profileData.backgroundImg.startsWith('http'))) {
+      bgImgUrl = profileData.backgroundImg
+    }
     if (this.newProfileData && this.newProfileData.backgroundImg &&
         this.newProfileData.backgroundImg !== this.indexFileData.profile.backgroundImg) {
       bgImgUrl = `${this.mediaUrlRoot}/${this.newProfileData.backgroundImg}`
