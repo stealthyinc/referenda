@@ -18,6 +18,7 @@ import TelephoneScreen from '../Containers/TelephoneScreen'
 import NameScreen from '../Containers/NameScreen'
 import LoginScreen from '../Containers/LoginScreen'
 import KeychainScreen from '../Containers/KeychainScreen'
+// import CampaignChoiceScreen from '../Components/CampaignChoiceScreen'
 import IntroductionScreen from '../Components/IntroductionScreen'
 import ScratchScreen from '../Components/ScratchScreen'
 
@@ -32,6 +33,9 @@ export default createAppContainer(
     },
     // First: {
     //   screen: ScratchScreen
+    // },
+    // CampaignChoice: {
+    //   screen: CampaignChoiceScreen
     // },
     LoginMenu: {
       screen: IntroductionScreen

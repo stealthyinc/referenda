@@ -11,7 +11,8 @@ export const FontIcons = {
   card: '',
   addToCardForm: '',
   newsPaper: '',
-  bitcoin: ''
+  bitcoin: '',
+  address: '',
 };
 
 // To populate this list:
