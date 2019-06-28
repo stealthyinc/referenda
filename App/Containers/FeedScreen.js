@@ -13,7 +13,7 @@ class FeedScreen extends Component {
   static navigationOptions = NUIF.getNavOptions('Campaign News', false)
   render = () => (
     <WebView
-      source={{uri: 'https://www.app.referenda.io/campacampa.id.blockstack/?wv=1'}}
+      source={{uri: 'https://www.app.referenda.io/russcirincione.id.blockstack/?wv=1'}}
       cacheEnabled={true}
       startInLoadingState={true}
     />
