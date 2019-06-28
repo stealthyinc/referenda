@@ -47,7 +47,7 @@ class Grid extends Component {
         rkType='primary moon menuIcon'>
         {route.icon}
       </RkText>
-      <RkText>{route.title}</RkText>
+      <RkText style={{textAlign:'center'}}>{route.title}</RkText>
     </RkButton>
     )}
 );

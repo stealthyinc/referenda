@@ -93,7 +93,7 @@ export const MainRoutes = [
   {
     id: 'CanvasMenu',
     level: 1,
-    title: 'Canvassing',
+    title: 'Street Canvassing',
     icon: FontIcons.profile,
     screen: CanvasConstituentSearch,
     // screen: CanvasConstituentContribution,
@@ -124,6 +124,14 @@ export const MainRoutes = [
         children: [],
       },
     ],
+  },
+  {
+    id: 'SocialCanvasMenu',
+    level: 1,
+    title: 'Social Canvassing',
+    icon: FontIcons.address,
+    screen: CanvasConstituentSearch,
+    children: [],
   },
   {
     id: 'SocialMenu',
