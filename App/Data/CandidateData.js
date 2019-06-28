@@ -120,6 +120,10 @@ class Candidate {
     return this.data.name
   }
 
+  getDistrict() {
+    return this.data.district
+  }
+
   getCampaignTitle() {
     return this.data.campaign.title
   }

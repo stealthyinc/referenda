@@ -467,6 +467,7 @@ export const styles = StyleSheet.create({
     flexDirection:'column',
     justifyContent:'center',
     alignItems:'center',
+    paddingHorizontal:5
   },
   row: {
     flexDirection:'row',

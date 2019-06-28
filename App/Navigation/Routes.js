@@ -29,8 +29,8 @@ import CanvasConstituentSearchResults from '../Containers/CanvasConstituentSearc
 import CanvasConstituentQuestionaire from '../Containers/CanvasConstituentQuestionaire'
 import CanvasConstituentContribution from '../Containers/CanvasConstituentContribution'
 
-// import SocialCanvasContactImport from '../Containers/SocialCanvasContactImport'
-// import SocialCanvasContactResults from '../Containers/SocialCanvasContactResults'
+import SocialCanvasContactImport from '../Containers/SocialCanvasContactImport'
+import SocialCanvasContactResults from '../Containers/SocialCanvasContactResults'
 
 export const MainRoutes = [
   {
@@ -53,16 +53,15 @@ export const MainRoutes = [
     id: 'SocialCanvasMenu',
     level: 1,
     title: 'Social Canvassing',
-    icon: FontIcons.address,
-        screen: CanvasConstituentSearch,
-    // screen: SocialCanvasContactImport,
+    icon: FontIcons.profile,
+    screen: SocialCanvasContactImport,
     children: [
-      // {
-      //   id: '',
-      //   title: '',
-      //   screen: SocialCanvasContactResults,
-      //   children: [],
-      // }
+      {
+        id: 'SocialCanvasResults',
+        title: 'Canvas Contacts',
+        screen: SocialCanvasContactResults,
+        children: [],
+      }
     ],
   },
   {
