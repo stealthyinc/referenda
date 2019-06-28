@@ -12,7 +12,8 @@ export const FontIcons = {
   addToCardForm: '',
   newsPaper: '',
   bitcoin: '',
-  address: '',
+  layer: '',
+  cubes: ''
 };
 
 // To populate this list:
@@ -52,4 +53,5 @@ export const FontAwesome = {
   angle_up: String.fromCharCode(61702),
   users: String.fromCharCode(61632),
   check_square: String.fromCharCode(61770),
+  cubes: String.fromCharCode(61875)
 };

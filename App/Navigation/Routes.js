@@ -6,6 +6,7 @@ import ArticleInputScreen from '../Containers/ArticleInputScreen'
 import ChatScreen from '../Containers/ChatScreen'
 import FeedScreen from '../Containers/FeedScreen'
 import LeaderScreen from '../Containers/LeaderScreen'
+import AnalyticsScreen from '../Containers/AnalyticsScreen'
 import CameraScreen from '../Containers/CameraScreen'
 import CardsScreen from '../Containers/CardsScreen'
 // import CampaignerScreen from '../Containers/CampaignerScreen'
@@ -32,16 +33,67 @@ import CanvasConstituentContribution from '../Containers/CanvasConstituentContri
 
 export const MainRoutes = [
   {
+    id: 'Analytics',
+    level: 2,
+    title: 'Analytics',
+    icon: FontIcons.dashboard,
+    screen: AnalyticsScreen,
+    children: []
+  },
+  {
     id: 'LeaderScreen',
     level: 2,
     title: 'Leader Board',
-    icon: FontIcons.dashboard,
+    icon: FontIcons.addToCardForm,
     screen: LeaderScreen,
     children: []
   },
   {
-    id: 'CampaignerMenu',
+    id: 'SocialCanvasMenu',
     level: 1,
+    title: 'Social Canvassing',
+    icon: FontIcons.profile,
+    screen: CanvasConstituentSearch,
+    children: [],
+  },
+  {
+    id: 'CanvasMenu',
+    level: 1,
+    title: 'Street Canvassing',
+    icon: FontIcons.navigation,
+    screen: CanvasConstituentSearch,
+    // screen: CanvasConstituentContribution,
+    children: [
+      {
+        id: 'Constituent Search Results',
+        title: 'Constituent Search Results',
+        screen: CanvasConstituentSearchResults,
+        children: [],
+      },
+      {
+        id: 'Constituent Contribution',
+        title: 'Constituent Contribution',
+        screen: CanvasConstituentContribution,
+        children: [],
+      },
+      {
+        id: 'Constituent Questionaire',
+        title: 'Constituent Questionaire',
+        screen: CanvasConstituentQuestionaire,
+        children: [],
+      },
+      // TODO: find out what PBJ was thinking here
+      {
+        id: 'Contact Search',
+        title: 'Contact Search',
+        screen: CanvasContacts,
+        children: [],
+      },
+    ],
+  },
+  {
+    id: 'CampaignerMenu',
+    level: 0,
     title: 'Fundraising',
     icon: FontIcons.card,
     screen: CampaignerMenuScreen,
@@ -89,49 +141,6 @@ export const MainRoutes = [
         children: [],
       },
     ],
-  },
-  {
-    id: 'CanvasMenu',
-    level: 1,
-    title: 'Street Canvassing',
-    icon: FontIcons.profile,
-    screen: CanvasConstituentSearch,
-    // screen: CanvasConstituentContribution,
-    children: [
-      {
-        id: 'Constituent Search Results',
-        title: 'Constituent Search Results',
-        screen: CanvasConstituentSearchResults,
-        children: [],
-      },
-      {
-        id: 'Constituent Contribution',
-        title: 'Constituent Contribution',
-        screen: CanvasConstituentContribution,
-        children: [],
-      },
-      {
-        id: 'Constituent Questionaire',
-        title: 'Constituent Questionaire',
-        screen: CanvasConstituentQuestionaire,
-        children: [],
-      },
-      // TODO: find out what PBJ was thinking here
-      {
-        id: 'Contact Search',
-        title: 'Contact Search',
-        screen: CanvasContacts,
-        children: [],
-      },
-    ],
-  },
-  {
-    id: 'SocialCanvasMenu',
-    level: 1,
-    title: 'Social Canvassing',
-    icon: FontIcons.address,
-    screen: CanvasConstituentSearch,
-    children: [],
   },
   {
     id: 'SocialMenu',
