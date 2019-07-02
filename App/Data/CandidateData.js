@@ -1,9 +1,9 @@
 const candidates = [
   {
-    name: 'Your Name',
+    name: 'Example Campaign',
     id: undefined,
-    district: undefined,
-    districtType: undefined,
+    district: 'NWR-0',
+    districtType: 'Congress',
     campaign: {
       title: 'You for Congress 🇺🇸',
       link: 'https://www.app.referenda.io/?wv=1',
@@ -11,13 +11,13 @@ const candidates = [
     loginPage: {                                        // IntroductionScreen.js
       title: 'You for Congress 🇺🇸',
       description: 'Referenda makes your voice heard by your political leaders for actionable change.',
-      photoUrl: '../Assets/images/launch2-candidate.jpg',
-      photo: require('../Assets/images/launch2-candidate.jpg'),
+      photoUrl: '../Assets/images/launch1-your-voice.jpg',
+      photo: require('../Assets/images/launch1-your-voice.jpg'),
     },
     fundraising: {
       title: 'You for Congress 🇺🇸',                     // CampaignerMenuScreen.js
-      photoUrl: '../Assets/avatars/campa.jpg',         // CampaignerMenuScreen.js
-      photo: require('../Assets/avatars/campa.jpg'),
+      photoUrl: '../Assets/avatars/you.jpg',         // CampaignerMenuScreen.js
+      photo: require('../Assets/avatars/you.jpg'),
       label: 'Your - 2020 Campaign',                    // DonationBar.js, SocialBar
       campaignMessage: 'Donation to Your Campaign',     // DonationSagas.js
       receiptMessageWeb: 'Thank you for your donation to this campaign. Here\'s a helpful link for you to donate. We will notify you when the Referenda App is ready!',
@@ -89,13 +89,13 @@ const candidates = [
     loginPage: {                                            // IntroductionScreen.js
       title: 'Agatha Bacelar for Congress 🇺🇸',
       description: 'Referenda makes your voice heard by your political leaders for actionable change.',
-      photoUrl: '../Assets/images/launch2-candidate.jpg',
-      photo: require('../Assets/images/launch2-candidate.jpg'),
+      photoUrl: '../Assets/images/launch0-candidate.jpg',
+      photo: require('../Assets/images/launch0-candidate.jpg'),
     },
     fundraising: {
       title: 'Agatha for Congress 🇺🇸',                      // CampaignerMenuScreen.js
-      photoUrl: '../Assets/avatars/campa.jpg',             // CampaignerMenuScreen.js
-      photo: require('../Assets/avatars/campa.jpg'),
+      photoUrl: '../Assets/avatars/agatha2.png',             // CampaignerMenuScreen.js
+      photo: require('../Assets/avatars/agatha2.png'),
       label: 'Agatha Bacelar - 2020 Campaign',              // DonationBar.js, SocialBar
       campaignMessage: 'Donation to Agatha Bacelar\'s Campaign',    // DonationSagas.js
       receiptMessageWeb: 'Thank you for your donation to Agatha Bacelar\'s Campaign. Here\'s a helpful link for you to donate. We will notify you when the Referenda App is ready!',
@@ -109,6 +109,20 @@ const candidates = [
 class Candidate {
   constructor(anIndex=0) {
     this.setCandidateIndex(anIndex)
+  }
+
+  getIndexCandidateMap() {
+    const indexCandidateMap = []
+    let index = 0
+    for (const candidate of candidates) {
+      indexCandidateMap.push({
+        index: index,
+        candidate: `${candidate.name} (${candidate.district} ${candidate.districtType})`
+      })
+      index++
+    }
+
+    return indexCandidateMap
   }
 
   setCandidateIndex(anIndex=0) {
@@ -181,4 +195,4 @@ class Candidate {
   }
 }
 
-export var candidateData = new Candidate(1)
+export var candidateData = new Candidate(0)

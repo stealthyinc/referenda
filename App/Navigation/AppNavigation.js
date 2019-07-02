@@ -20,7 +20,6 @@ import LoginScreen from '../Containers/LoginScreen'
 import KeychainScreen from '../Containers/KeychainScreen'
 // import CampaignChoiceScreen from '../Components/CampaignChoiceScreen'
 import IntroductionScreen from '../Components/IntroductionScreen'
-import ScratchScreen from '../Components/ScratchScreen'
 
 import styles from './Styles/NavigationStyles'
 import Settings from '../Containers/SettingScreen'
@@ -31,9 +30,6 @@ export default createAppContainer(
     First: {
       screen: SplashScreen
     },
-    // First: {
-    //   screen: ScratchScreen
-    // },
     // CampaignChoice: {
     //   screen: CampaignChoiceScreen
     // },

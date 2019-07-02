@@ -70,7 +70,6 @@ export const MainRoutes = [
     title: 'Street Canvassing',
     icon: FontIcons.navigation,
     screen: CanvasConstituentSearch,
-    // screen: CanvasConstituentContribution,
     children: [
       {
         id: 'Constituent Search Results',

@@ -24,6 +24,17 @@ export const requireNavBar = { navigation: NavigationType.isRequired }
 const { userTypeInstance } = require('../Utils/UserType.js')
 const randomAvatar = (userTypeInstance.getUserType()) ? avatarArr[Math.floor(Math.random() * Math.floor(12))] : require('../Data/img/avatars/agatha.png')
 
+export const getNoHeaderNavOptions = () => {
+  return (
+    ({navigation}) => {
+      return {
+        header: null,
+        gesturesEnabled: false
+      }
+    }
+  )
+}
+
 export const getNavOptions = (pageName='', leftHeader=true) => {
   return (
     ({navigation}) => {

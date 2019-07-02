@@ -51,6 +51,29 @@ class SocialCanvasContactResults extends Component {
     this.setState({lastRender: Date.now()})
   }
 
+  handlePhoneRequest(anIndex, aPhoneNumber, aName) {
+    this.voterStatus[anIndex] = true
+
+    // From: https://github.com/anarchicknight/react-native-communications
+    //
+    //   phonecall(phoneNumber, prompt):
+    //
+    //   If prompt is true it uses the undocumented telprompt: url scheme. This
+    //   triggers an alert asking user to confirm if they want to dial the
+    //   number. There are conflicting reports around the internet about whether
+    //   Apple will allow apps using this scheme to be submitted to the App
+    //   store (some have had success and others have had rejections).
+    //   ... (more on site)
+    //
+    try {
+      Communications.phonecall(aPhoneNumber, true)
+    } catch (suppressedError) {
+      console.log(`Suppressed Error(handlePhoneRequest): ${suppressedError}`)
+    }
+
+    this.setState({lastRender: Date.now()})
+  }
+
   render () {
     const uiElements = []
 
@@ -66,10 +89,10 @@ class SocialCanvasContactResults extends Component {
         `${voter.firstName} ${voter.lastName}`
 
 
-      // const voterPhoneButton = (voter.phoneNumber) ?
-      //   UIF.getButton('', FontAwesome.phone, undefined, 'black', false) :
-      //   UIF.getButton('', FontAwesome.phone, undefined, 'white', false)
-      const voterPhoneButton = undefined
+      const voterPhoneButton = (voter.phoneNumber) ?
+        UIF.getButton('', FontAwesome.phone, () => this.handlePhoneRequest(voterIndex, voter.phoneNumber, candidateData.getName()), 'black', false) :
+        UIF.getButton('', FontAwesome.phone, undefined, 'white', false)
+      // const voterPhoneButton = undefined
 
       const voterTextButton = (voter.phoneNumber) ?
         UIF.getButton('', FontAwesome.comments, () => this.handleTextRequest(voterIndex, voter.phoneNumber, message), 'black', false) :

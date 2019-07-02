@@ -69,7 +69,7 @@ export class SplashScreen extends React.Component {
       <View id='top-spacer' style={{flex: 4}}/>
 
       <View style={styles.text}>
-        <RkText rkType='basic' style={[styles.appName, {color:'black'}]}>Referenda</RkText>
+        <RkText rkType='basic' style={[styles.appName, {color:'white'}]}>Referenda</RkText>
       </View>
 
       <View id='mid-spacer' style={{alignItems: 'center', flex: 14}}>
@@ -80,7 +80,7 @@ export class SplashScreen extends React.Component {
       </View>
 
       <View style={styles.text}>
-        <RkText rkType='light' style={[styles.hero, {color:'black'}]}>Stealthy Inc.</RkText>
+        <RkText rkType='light' style={[styles.hero, {color:'white'}]}>Stealthy Inc.</RkText>
       </View>
 
       <View id='bottom-spacer-1' style={{flex: 1}}/>
@@ -98,7 +98,8 @@ export class SplashScreen extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor:RkTheme.current.colors.screen.scroll,
+    backgroundColor:'black',
+    // backgroundColor:RkTheme.current.colors.screen.scroll,
     justifyContent: 'space-between',
     flex: 1,
   },
