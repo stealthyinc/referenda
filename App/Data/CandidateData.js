@@ -22,7 +22,7 @@ const candidates = [
       campaignMessage: 'Donation to Your Campaign',     // DonationSagas.js
       receiptMessageWeb: 'Thank you for your donation to this campaign. Here\'s a helpful link for you to donate. We will notify you when the Referenda App is ready!',
       receiptMessage: 'Thank you for your donation to this campaign. We will notify you when the Referenda App is ready!',
-      bitcoinUrl: 'https://commerce.coinbase.com',
+      bitcoinUrl: 'https://checkout.opennode.co/p/55769f7d-ebcd-4543-8bbc-bedbe8c9dbe0',
     },
   },
   {
@@ -48,13 +48,39 @@ const candidates = [
       campaignMessage: 'Donation to Ammar Campa-Najjar\'s Campaign',    // DonationSagas.js
       receiptMessageWeb: 'Thank you for your donation to Ammar Campa-Najjar\'s Campaign. Here\'s a helpful link for you to donate. We will notify you when the Referenda App is ready!',
       receiptMessage: 'Thank you for your donation to Ammar\'s Campaign. We will notify you when the Referenda App is ready!',
-      bitcoinUrl: 'https://commerce.coinbase.com',
+      bitcoinUrl: 'https://checkout.opennode.co/p/55769f7d-ebcd-4543-8bbc-bedbe8c9dbe0',
+    },
+  },
+  {
+    name: 'Nabilah Islam',
+    id: undefined,
+    district: 'GA-07',
+    districtType: 'Congress',
+    campaign: {
+      title: 'Nabilah Islam for Congress 🇺🇸',
+      link: 'https://www.app.referenda.io/nabilah/?wv=1',
+    },
+    loginPage: {                                            // IntroductionScreen.js
+      title: 'Nabilah Islam for Congress 🇺🇸',
+      description: 'Referenda makes your voice heard by your political leaders for actionable change.',
+      photoUrl: '../Assets/images/launch4-candidate.jpg',
+      photo: require('../Assets/images/launch4-candidate.jpg'),
+    },
+    fundraising: {
+      title: 'Nabilah for Congress 🇺🇸',                        // CampaignerMenuScreen.js
+      photoUrl: '../Assets/avatars/nabilah0.jpg',             // CampaignerMenuScreen.js
+      photo: require('../Assets/avatars/nabilah0.jpg'),
+      label: 'Nabilah Islam - 2020 Campaign',             // DonationBar.js, SocialBar
+      campaignMessage: 'Donation to Nabilah Islam\'s Campaign',    // DonationSagas.js
+      receiptMessageWeb: 'Thank you for your donation to Nabilah Islam\'s Campaign. Here\'s a helpful link for you to donate. We will notify you when the Referenda App is ready!',
+      receiptMessage: 'Thank you for your donation to Nabilah\'s Campaign. We will notify you when the Referenda App is ready!',
+      bitcoinUrl: 'https://checkout.opennode.co/p/55769f7d-ebcd-4543-8bbc-bedbe8c9dbe0',
     },
   },
   {
     name: 'Russell Cirincione',
     id: undefined,
-    district: 'NJ-6',
+    district: 'NJ-06',
     districtType: 'Congress',
     campaign: {
       title: 'Russell Cirincione for Congress 🇺🇸',
@@ -74,7 +100,7 @@ const candidates = [
       campaignMessage: 'Donation to Russ Cirincione\'s Campaign',    // DonationSagas.js
       receiptMessageWeb: 'Thank you for your donation to Russell Cirincione\'s Campaign. Here\'s a helpful link for you to donate. We will notify you when the Referenda App is ready!',
       receiptMessage: 'Thank you for your donation to Russell\'s Campaign. We will notify you when the Referenda App is ready!',
-      bitcoinUrl: 'https://commerce.coinbase.com',
+      bitcoinUrl: 'https://checkout.opennode.co/p/55769f7d-ebcd-4543-8bbc-bedbe8c9dbe0',
     },
   },
   {
@@ -84,7 +110,7 @@ const candidates = [
     districtType: 'Congress',
     campaign: {
       title: 'Agatha Bacelar for Congress 🇺🇸',
-      link: 'https://www.app.referenda.io/agatha.id.blockstack/?wv=1',
+      link: 'https://www.app.referenda.io/agatha/?wv=1',
     },
     loginPage: {                                            // IntroductionScreen.js
       title: 'Agatha Bacelar for Congress 🇺🇸',
@@ -100,7 +126,7 @@ const candidates = [
       campaignMessage: 'Donation to Agatha Bacelar\'s Campaign',    // DonationSagas.js
       receiptMessageWeb: 'Thank you for your donation to Agatha Bacelar\'s Campaign. Here\'s a helpful link for you to donate. We will notify you when the Referenda App is ready!',
       receiptMessage: 'Thank you for your donation to Agatha\'s Campaign. We will notify you when the Referenda App is ready!',
-      bitcoinUrl: 'https://commerce.coinbase.com/checkout/fffca773-3645-4d23-a442-b97ec395d365',
+      bitcoinUrl: 'https://checkout.opennode.co/p/55769f7d-ebcd-4543-8bbc-bedbe8c9dbe0',
     },
   },
 ]
