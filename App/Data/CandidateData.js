@@ -58,13 +58,13 @@ const candidates = [
     districtType: 'Congress',
     campaign: {
       title: 'Nabilah Islam for Congress 🇺🇸',
-      link: 'https://www.app.referenda.io/nabilah/?wv=1',
+      link: 'https://www.app.referenda.io/nabilahislam.id.blockstack/?wv=1',
     },
     loginPage: {                                            // IntroductionScreen.js
       title: 'Nabilah Islam for Congress 🇺🇸',
       description: 'Referenda makes your voice heard by your political leaders for actionable change.',
       photoUrl: '../Assets/images/launch4-candidate.jpg',
-      photo: require('../Assets/images/launch4-candidate.jpg'),
+      photo: require('../Assets/images/launch4-candidate.png'),
     },
     fundraising: {
       title: 'Nabilah for Congress 🇺🇸',                        // CampaignerMenuScreen.js
@@ -126,6 +126,32 @@ const candidates = [
       campaignMessage: 'Donation to Agatha Bacelar\'s Campaign',    // DonationSagas.js
       receiptMessageWeb: 'Thank you for your donation to Agatha Bacelar\'s Campaign. Here\'s a helpful link for you to donate. We will notify you when the Referenda App is ready!',
       receiptMessage: 'Thank you for your donation to Agatha\'s Campaign. We will notify you when the Referenda App is ready!',
+      bitcoinUrl: 'https://checkout.opennode.co/p/55769f7d-ebcd-4543-8bbc-bedbe8c9dbe0',
+    },
+  },
+  {
+    name: 'Jon Hoadley',
+    id: undefined,
+    district: 'MI-06',
+    districtType: 'Congress',
+    campaign: {
+      title: 'Jon Hoadley for Congress 🇺🇸',
+      link: 'https://www.app.referenda.io/relay.stealthy.id/?wv=1',
+    },
+    loginPage: {                                            // IntroductionScreen.js
+      title: 'Jon Hoadley for Congress 🇺🇸',
+      description: 'Referenda makes your voice heard by your political leaders for actionable change.',
+      photoUrl: '../Assets/images/launch5-candidate.png',
+      photo: require('../Assets/images/launch5-candidate.png'),
+    },
+    fundraising: {
+      title: 'Jon Hoadley for Congress 🇺🇸',                      // CampaignerMenuScreen.js
+      photoUrl: '../Assets/avatars/hoadley.png',             // CampaignerMenuScreen.js
+      photo: require('../Assets/avatars/hoadley.png'),
+      label: 'Jon Hoadley - 2020 Campaign',              // DonationBar.js, SocialBar
+      campaignMessage: 'Donation to Jon Hoadley\'s Campaign',    // DonationSagas.js
+      receiptMessageWeb: 'Thank you for your donation to Jon Hoadley\'s Campaign. Here\'s a helpful link for you to donate. We will notify you when the Referenda App is ready!',
+      receiptMessage: 'Thank you for your donation to Jon Hoadley\'s Campaign. We will notify you when the Referenda App is ready!',
       bitcoinUrl: 'https://checkout.opennode.co/p/55769f7d-ebcd-4543-8bbc-bedbe8c9dbe0',
     },
   },
