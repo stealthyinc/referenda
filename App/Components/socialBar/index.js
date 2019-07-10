@@ -58,9 +58,9 @@ const OPTIONS = {
 };
 
 // global.PaymentRequest = require('react-native-payments').PaymentRequest
-const PaymentRequest = require('react-native-payments').PaymentRequest
+// const PaymentRequest = require('react-native-payments').PaymentRequest
 // import { PaymentRequest } from 'react-native-payments'
-const paymentRequest = new PaymentRequest(METHOD_DATA, DETAILS, OPTIONS);
+// const paymentRequest = new PaymentRequest(METHOD_DATA, DETAILS, OPTIONS);
 
 export class SocialBar extends RkComponent {
   componentName = 'SocialBar';
@@ -129,7 +129,8 @@ export class SocialBar extends RkComponent {
         <View style={section}>
           <RkButton
             rkType='clear'
-            onPress={() => paymentRequest.show()}
+            onPress={() => console.log('payment method')}
+            // onPress={() => paymentRequest.show()}
           >
             <RkText rkType='awesome success' style={icon}>{FontAwesome.card}</RkText>
           </RkButton>

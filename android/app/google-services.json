@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "912408303464",
+    "firebase_url": "https://referenda-d2929.firebaseio.com",
+    "project_id": "referenda-d2929",
+    "storage_bucket": "referenda-d2929.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:912408303464:android:1b0b49d7df0e243b",
+        "android_client_info": {
+          "package_name": "com.referenda"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "912408303464-qb67gi6jmsbo5d23f8uv0p3eumlqdrfi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDfWnRV3C6eI-5xuH46yW9Gq8Xuqct8GPE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "912408303464-qb67gi6jmsbo5d23f8uv0p3eumlqdrfi.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "912408303464-kuicvodfc9lip616u0c8d3uluihafgcm.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "referenda"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

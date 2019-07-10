@@ -6,9 +6,9 @@ import com.facebook.react.ReactApplication;
 import com.reactnativecommunity.webview.RNCWebViewPackage;
 import com.transistorsoft.rnbackgroundfetch.RNBackgroundFetchPackage;
 import io.invertase.firebase.RNFirebasePackage;
+import io.invertase.firebase.auth.RNFirebaseAuthPackage;
 import sqip.react.SquareInAppPaymentsPackage;
 import com.reactnativepayments.ReactNativePaymentsPackage;
-import com.wix.autogrowtextinput.AutoGrowTextInputPackage;
 import com.barefootcoders.android.react.KDSocialShare.KDSocialShare;
 import com.rt2zz.reactnativecontacts.ReactNativeContacts;
 import com.tradle.react.UdpSocketsModule;
@@ -17,8 +17,6 @@ import com.peel.react.rnos.RNOSModule;
 import com.oblador.keychain.KeychainPackage;
 import com.sudoplz.reactnativeamplitudeanalytics.RNAmplitudeSDKPackage;
 import com.bitgo.randombytes.RandomBytesPackage;
-import org.reactnative.camera.RNCameraPackage;
-import com.brentvatne.react.ReactVideoPackage;
 import com.horcrux.svg.SvgPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
@@ -49,19 +47,17 @@ public class MainApplication extends Application implements ReactApplication {
             new RNCWebViewPackage(),
             new RNBackgroundFetchPackage(),
             new RNFirebasePackage(),
+            new RNFirebaseAuthPackage(),
             new SquareInAppPaymentsPackage(),
             new ReactNativePaymentsPackage(),
-            new AutoGrowTextInputPackage(),
             new KDSocialShare(),
             new ReactNativeContacts(),
             new UdpSocketsModule(),
             new TcpSocketsModule(),
             new RNOSModule(),
             new KeychainPackage(),
-            new RNAmplitudeSDKPackage(),
+            new RNAmplitudeSDKPackage(MainApplication.this),
             new RandomBytesPackage(),
-            new RNCameraPackage(),
-            new ReactVideoPackage(),
             new SvgPackage(),
             new LinearGradientPackage(),
             new RNDeviceInfo(),

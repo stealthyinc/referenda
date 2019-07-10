@@ -13,3 +13,4 @@ rm -rf Podfile.lock
 react-native link
 pod cache clean --all
 pod install
+yarn run ./scripts/fix-androidx.sh

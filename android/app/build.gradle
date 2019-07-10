@@ -142,7 +142,6 @@ dependencies {
     compile project(':react-native-firebase')
     compile project(':react-native-square-in-app-payments')
     compile project(':react-native-payments')
-    compile project(':react-native-autogrow-textinput')
     compile project(':react-native-social-share')
     compile project(':react-native-contacts')
     compile project(':react-native-udp')
@@ -151,8 +150,6 @@ dependencies {
     compile project(':react-native-keychain')
     compile project(':react-native-amplitude-analytics')
     compile project(':react-native-randombytes')
-    compile project(':react-native-camera')
-    compile project(':react-native-video')
     compile project(':react-native-svg')
     compile project(':react-native-linear-gradient')
     compile project(':react-native-device-info')
@@ -163,6 +160,9 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
     implementation "com.facebook.react:react-native:+"  // From node_modules
+    implementation "com.google.android.gms:play-services-base:16.1.0"
+    implementation "com.google.firebase:firebase-core:16.0.9"
+
 }
 
 // Run this once to be able to run the application with BUCK
@@ -171,3 +171,7 @@ task copyDownloadableDepsToLibs(type: Copy) {
     from configurations.compile
     into 'libs'
 }
+
+com.google.gms.googleservices.GoogleServicesPlugin.config.disableVersionCheck = true
+
+apply plugin: 'com.google.gms.google-services'
