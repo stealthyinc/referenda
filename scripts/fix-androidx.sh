@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# This script is required after a `yarn clean` to migrate all of our dependecy packages 
+# This script is required after a `yarn clean` to migrate all of our dependecy packages
 # to androidx required by Android on June 17th (https://developers.google.com/android/guides/releases#june_17_2019).
 #
 # We should keep running this until all our dependencies are properly updated to an androidx supported version.
@@ -18,3 +18,6 @@ sed -i -r 's/import android\.support\.annotation\.\*;/import androidx\.annotatio
 sed -i -r 's/import android\.support\.annotation\.\*;/import androidx\.annotation\.\*;/g' ./node_modules/react-native-navigation/lib/android/app/src/main/java/com/reactnativenavigation/views/SideMenu.java
 sed -i -r 's/import android\.support\.v4\.widget\.\*;/import androidx\.drawerlayout\.widget\.DrawerLayout;/g' ./node_modules/react-native-navigation/lib/android/app/src/main/java/com/reactnativenavigation/views/SideMenu.java
 sed -i -r 's/import android\.support\.v4\.content\.\*;/import androidx\.core\.content\.ContextCompat;/g' ./node_modules/react-native-navigation/lib/android/app/src/main/java/com/reactnativenavigation/presentation/BottomTabPresenter.java
+sed -i -r 's/import android\.support\.v4\.content\.\*;/import androidx\.core\.content\.ContextCompat;/g' ./node_modules/react-native-contacts/android/src/main/java/com/rt2zz/reactnativecontacts/ReactNativeContacts.java
+sed -i -r 's/import android\.support\.v4\.content\.\*;/import androidx\.core\.content\.ContextCompat;/g' ./node_modules/react-native-contacts/android/src/main/java/com/rt2zz/reactnativecontacts/ContactsManager.java
+sed -i -r 's/import android\.support\.v4\.content\.\*;/import androidx\.core\.content\.ContextCompat;/g' ./node_modules/react-native-contacts/android/src/main/java/com/rt2zz/reactnativecontacts/ContactsProvider.java
