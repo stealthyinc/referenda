@@ -14,7 +14,7 @@ target 'referenda' do
   #
 #  pod 'BVLinearGradient', :path => '../node_modules/react-native-linear-gradient'
 
-  pod 'react-native-webview', :path => '../node_modules/react-native-webview'
+#  pod 'react-native-webview', :path => '../node_modules/react-native-webview'
 
   post_install do |installer|
     installer.pods_project.targets.each do |target|
