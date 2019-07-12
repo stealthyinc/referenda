@@ -101,10 +101,10 @@ android {
         applicationId "com.referenda"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
+        versionCode 2
         versionName "1.0"
         ndk {
-            abiFilters "armeabi-v7a", "x86"
+            abiFilters 'armeabi-v7a','arm64-v8a','x86','x86_64'
         }
     }
     splits {
@@ -158,11 +158,12 @@ dependencies {
     compile project(':react-native-vector-icons')
     compile project(':react-native-gesture-handler')
     implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation 'com.android.support:design:28.0.0'
+    implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation "com.facebook.react:react-native:+"  // From node_modules
     implementation "com.google.android.gms:play-services-base:16.1.0"
     implementation "com.google.firebase:firebase-core:16.0.9"
-    implementation 'com.android.support:design:28.0.0'
-    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation "com.google.firebase:firebase-auth:17.0.0"
 
 }
 
@@ -174,5 +175,7 @@ task copyDownloadableDepsToLibs(type: Copy) {
 }
 
 com.google.gms.googleservices.GoogleServicesPlugin.config.disableVersionCheck = true
+
+apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
 
 apply plugin: 'com.google.gms.google-services'

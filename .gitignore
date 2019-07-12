@@ -30,6 +30,7 @@ ios/GoogleService-Info.plist
 yarn.lock
 .firebaserc
 PBJ*
+android/app/google-services.json
 
 # Android/IntelliJ
 #
