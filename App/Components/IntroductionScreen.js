@@ -19,19 +19,7 @@ import {Picker} from 'native-base';
 import AppIntroSlider from 'react-native-app-intro-slider';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import folder from '../Assets/images/folder.png'
-// import security from '../Assets/images/molecular.png'
-// import candidate from '../Assets/images/launch0-candidate.jpg'
 import candidate from '../Assets/images/launch2-candidate.jpg'
-// import candidate from '../Assets/images/launch1-candidate.jpg'
-// import censor from '../Assets/images/censor.png'
-// From: https://www.pexels.com/photo/man-wearing-gray-coat-standing-in-the-middle-of-the-road-936142/
-import chat from '../Assets/images/launch1-your-voice.jpg'
-// From: https://www.pexels.com/photo/dark-fire-time-paper-33930/
-// import security from '../Assets/images/launch2-your-time.jpg'
-// From: https://www.pexels.com/photo/clear-glass-with-red-sand-grainer-39396/
-import security from '../Assets/images/launch2c-your-time.jpg'
-// From: https://www.pexels.com/photo/boy-holding-sparkler-1565521/
-import blockchain from '../Assets/images/launch3b-your-community.jpg'
 import verified from '../Assets/images/verified.png'
 import { GradientButton } from './gradientButton'
 import { ifIphoneX } from 'react-native-iphone-x-helper'
@@ -42,7 +30,6 @@ import {EngineCommand} from '../Engine/commands/engineCommand'
 import LinearGradient from 'react-native-linear-gradient';
 
 const { userTypeInstance } = require('../Utils/UserType.js')
-// const { firebaseInstance } = require('../Utils/firebaseWrapper.js')
 const { Analytics } = require('../Utils/Analytics.js')
 
 import { Metrics } from '../Themes/'
@@ -74,51 +61,6 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   }
 });
-
-// const slides = [
-//   // TODO: make this appear the first time--after sign-in, have something else.
-//   // TODO: make this a bundle that is fetched online (to support multiple
-//   //       campaigns)--or alternately a pointer to a site specific to the
-//   //       the campaign.
-//   {
-//     key: 'donation0',
-//     title: candidateData.getLoginTitle(),
-//     text: candidateData.getLoginDescription(),
-//     image: candidateData.getLoginPhoto(),
-//     imageStyle: styles.image,
-//     colors: ['#63E2FF', '#B066FE'],
-//   },
-//   // {
-//   //   key: 'somethun0',
-//   //   title: 'Agatha Bacelar for Congress 🇺🇸',
-//   //   text: 'You\'ve been invited by Agatha\'s campaign to join the discussion on Referenda for California district 12s 117th congressional campaign.',
-//   //   image: candidate,
-//   //   imageStyle: styles.image,
-//   //   colors: ['#63E2FF', '#B066FE'],
-//   // },
-//   // {
-//   //   key: 'somethun',
-//   //   title: 'Your voice matters.',
-//   //   text: 'Referenda makes your voice heard by your political leaders for actionable change.',
-//   //   image: chat,
-//   //   imageStyle: styles.image,
-//   //   colors: ['#63E2FF', '#B066FE'],
-//   // },
-//   // {
-//   //   key: 'somethun1',
-//   //   title: 'Your time is important.',
-//   //   text: 'Interact with your representatives on Referenda, instead of sending form emails and making scripted calls that get ignored.',
-//   //   image: security,
-//   //   colors: ['#A3A1FF', '#3A3897'],
-//   // },
-//   // {
-//   //   key: 'somethun2',
-//   //   title: 'Make a difference.',
-//   //   text: 'It\'s easy to participate and even lead initiatives in your community with Referenda. Regardless of your partisanship.',
-//   //   image: blockchain,
-//   //   colors: ['#29ABE2', '#4F00BC'],
-//   // },
-// ];
 
 const INDEX_KEY = '@referendaStore:campaignIndex'
 
@@ -264,14 +206,6 @@ class IntroductionScreen extends Component {
           justifyContent: 'space-between',
           backgroundColor: 'black'}}>
 
-          { /*
-          <View style={{width:'100%', flexDirection:'row', justifyContent: 'flex-start'}}>
-            <Image
-              id='splash-screen-img'
-              style={{height:'100%', marginRight:5, width:'10%', resizeMode: 'contain'}}
-              source={verified}/>
-            <Text style={{fontSize:32, textAlign:'left', color:titleColor}}>Referenda</Text>
-          </View> */ }
 
           <View id='top-spacer' style={{flex: 4}} />
 
@@ -367,33 +301,6 @@ class IntroductionScreen extends Component {
         }
       )
     )
-
-  //   const slides = [
-  //     // TODO: make this appear the first time--after sign-in, have something else.
-  //     // TODO: make this a bundle that is fetched online (to support multiple
-  //     //       campaigns)--or alternately a pointer to a site specific to the
-  //     //       the campaign.
-  //     {
-  //       key: 'donation0',
-  //       title: candidateData.getLoginTitle(),
-  //       text: candidateData.getLoginDescription(),
-  //       image: candidateData.getLoginPhoto(),
-  //       imageStyle: styles.image,
-  //       colors: ['#63E2FF', '#B066FE'],
-  //     },
-  //   ]
-  //   return (
-  //     <AppIntroSlider
-  //       slides={slides}
-  //       renderItem={this._renderItem}
-  //       hideNextButton
-  //       hideDoneButton
-  //       buttonStyle={{borderRadius:15, backgroundColor:'#FF8C00'}}
-  //       onDone={() => this.props.navigation.navigate('Login')}
-  //       dotStyle={{backgroundColor: 'white'}}
-  //       activeDotStyle={{backgroundColor: 'green'}}
-  //     />
-  //   );
   }
 }
 

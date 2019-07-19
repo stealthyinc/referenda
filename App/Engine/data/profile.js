@@ -67,6 +67,7 @@ class Profile extends BaseData {
    * @param aPrivateKey  A string containing a private key for identity.
    */
   setIdentityKeyPair(aPublicKey, aPrivateKey) {
+    console.log("IKE PAIR", aPublicKey, aPrivateKey)
     this.data.keys.identity.public = aPublicKey
     this.data.keys.identity.private = aPrivateKey
     super.setModified()

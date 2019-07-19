@@ -34,17 +34,17 @@ import SocialCanvasContactResults from '../Containers/SocialCanvasContactResults
 
 export const MainRoutes = [
   {
-    id: 'Analytics',
+    id: 'Dashboard',
     level: 2,
-    title: 'Analytics',
+    title: 'Dashboard',
     icon: FontIcons.dashboard,
     screen: AnalyticsScreen,
     children: []
   },
   {
-    id: 'LeaderScreen',
-    level: 2,
-    title: 'Leader Board',
+    id: 'Leaderboard',
+    level: 0,
+    title: 'Leaderboard',
     icon: FontIcons.addToCardForm,
     screen: LeaderScreen,
     children: []

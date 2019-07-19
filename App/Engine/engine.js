@@ -360,13 +360,13 @@ export class ReferendaEngine extends EventEmitterAdapter {
       donationRecord['type'] = 'cc'
 
       try {
-        if (theArguments.hasOwnProperty('resultData')) {          
+        if (theArguments.hasOwnProperty('resultData')) {
             donationRecord['resultData'] = JSON.stringify(theArguments.resultData)
         }
       } catch (suppressedError) {
         // ...
       }
-      
+
       // TODO: should probably stringify these before setting them in firebase
 
       // const data = {}

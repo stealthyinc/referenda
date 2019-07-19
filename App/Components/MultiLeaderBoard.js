@@ -9,12 +9,14 @@ import {
   TouchableOpacity,
   StyleSheet
 } from "react-native";
+import { Col, Row, Grid } from 'react-native-easy-grid';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 const oddRowColor = "white";
 const evenRowColor = "#f2f5f7";
 
-export default class LeaderBoard extends Component {
+export default class MultiLeaderBoard extends Component {
   state = {
     sortedData: []
   };
@@ -74,19 +76,11 @@ export default class LeaderBoard extends Component {
     const oddColor = this.props.oddRowColor || oddRowColor;
 
     const rowColor = index % 2 === 0 ? evenColor : oddColor;
+    console.log("INDEX", index)
 
-    const rowJSx = (
+    const rowJSx = (index > 0) ? (
       <View style={[styles.row, { backgroundColor: rowColor }]} key={index}>
-        <View style={styles.left}>
-          {/*<Text
-            style={[
-              styles.rank,
-              this.props.rankStyle,
-              index < 9 ? styles.singleDidget : styles.doubleDidget
-            ]}
-          >
-            {parseInt(index) + 1}.)
-          </Text>*/}
+        <Col size={70} style={styles.left}>
           {this.props.icon && (
             <Image
               source={{ uri: item[this.props.icon] }}
@@ -96,10 +90,45 @@ export default class LeaderBoard extends Component {
           <Text style={[styles.label, this.props.labelStyle]} numberOfLines={1}>
             {item[this.props.labelBy]}
           </Text>
-        </View>
-        <Text style={[styles.score, this.props.scoreStyle]}>
-          {item[sortBy] || 0}
-        </Text>
+        </Col>
+        <Col size={10} style={styles.left}>
+          <Text style={[styles.score, this.props.scoreStyle]}>
+            {item[sortBy] || 0}
+          </Text>
+        </Col>
+        <Col size={10} style={styles.left}>
+          <Text style={[styles.score, this.props.scoreStyle]}>
+            {item[sortBy] || 0}
+          </Text>
+        </Col>
+        <Col size={10} style={styles.left}>
+          <Text style={[styles.score, this.props.scoreStyle]}>
+            {item[sortBy] || 0}
+          </Text>
+        </Col>
+      </View>
+    ) : (
+      <View style={[styles.row, { backgroundColor: rowColor }]} key={index}>
+        <Col size={70} style={styles.left}>
+          <Text style={[styles.topLabel, this.props.labelStyle]} numberOfLines={1}>
+            Volunteer
+          </Text>
+        </Col>
+        <Col size={10} style={styles.left}>
+          <Text style={[styles.score, this.props.scoreStyle]}>
+            <Icon name="money" size={20} color="grey" />
+          </Text>
+        </Col>
+        <Col size={10} style={styles.left}>
+          <Text style={[styles.score, this.props.scoreStyle]}>
+            <Icon name="comment" size={20} color="grey" />
+          </Text>
+        </Col>
+        <Col size={10} style={styles.left}>
+          <Text style={[styles.score, this.props.scoreStyle]}>
+            <Icon name="envelope" size={20} color="grey" />
+          </Text>
+        </Col>
       </View>
     );
 
@@ -179,8 +208,15 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingRight: 80
   },
+  topLabel: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginLeft: 10,
+    flex: 1,
+    paddingRight: 80
+  },
   score: {
-    fontSize: 20,
+    fontSize: 14,
     fontWeight: "bold",
     position: "absolute",
     right: 15,

@@ -10,6 +10,16 @@ const { RefCrypto } = require('../Utils/RefCrypto')
 console.disableYellowBox = true;
 // create our store
 const store = createStore()
+
+const createECDH = require('create-ecdh')
+
+const clientTransmitKeys = createECDH('secp256k1')
+clientTransmitKeys.generateKeys()
+const clientPrivateKey = clientTransmitKeys.getPrivateKey('hex').toString()
+const clientPublicKey = clientTransmitKeys.getPublicKey('hex', 'compressed').toString()
+
+console.log("CLIENT PUBLIC KEY: ", clientPublicKey)
+console.log("CLIENT PRIVATE KEY: ", clientPrivateKey)
 /**
  * Provides an entry point into our application.  Both index.ios.js and index.android.js
  * call this component first.
