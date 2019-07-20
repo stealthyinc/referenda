@@ -8,7 +8,7 @@ import { ActivityIndicator,
          TouchableOpacity,
          View } from 'react-native'
 import { Colors, Fonts, Metrics } from '../Themes/'
-import { FontAwesome } from '../Assets/icons';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 import { RkText } from 'react-native-ui-kitten';  // RkText to display icons easily. (Could also switch to Oblador's FontAwesome RN component if removeing rk)
 
@@ -86,13 +86,14 @@ export const getButton = (
   iconSize=Fonts.size.regular) =>
 {
   const uiElements = []
+  console.log("ICON ", theButtonIcon)
   if (theButtonIcon) {
     uiElements.push(
       <RkText
         key={getUniqueKey()}
         rkType='awesome'
         style={{...styles.icon, fontSize:iconSize, color:theButtonColor}}>
-        {theButtonIcon}
+        <Icon name={theButtonIcon} size={Fonts.size.regular}/>
       </RkText>
     )
   }
@@ -329,7 +330,7 @@ class FoldingSection extends Component {
   }
 
   render() {
-    const buttonIcon = (this.state.showElements) ? FontAwesome.angle_up : FontAwesome.angle_down
+    const buttonIcon = (this.state.showElements) ? 'angle-up' : 'angle-down'
     const elements = (this.state.showElements) ? this.elements : undefined
 
     return (

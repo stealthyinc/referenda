@@ -43,7 +43,7 @@ export const MainRoutes = [
   },
   {
     id: 'Leaderboard',
-    level: 0,
+    level: 1,
     title: 'Leaderboard',
     icon: FontIcons.addToCardForm,
     screen: LeaderScreen,

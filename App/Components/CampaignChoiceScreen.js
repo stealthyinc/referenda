@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import CanvasActions, { CanvasSelectors } from '../Redux/CanvassingRedux'
 
 import { Metrics } from '../Themes/'
-import { FontAwesome } from '../Assets/icons'
 const UIF = require('../Utils/UIFactory.js')
 const C = require('../Utils/constants.js')
 const NUIF = require('../Utils/NavUIFactory.js')

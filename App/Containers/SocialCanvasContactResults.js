@@ -4,7 +4,6 @@ import { connect } from 'react-redux'
 import CanvasActions, { CanvasSelectors } from '../Redux/CanvassingRedux'
 
 import { Metrics } from '../Themes/'
-import { FontAwesome } from '../Assets/icons'
 const UIF = require('../Utils/UIFactory.js')
 const C = require('../Utils/constants.js')
 const NUIF = require('../Utils/NavUIFactory.js')
@@ -90,17 +89,17 @@ class SocialCanvasContactResults extends Component {
 
 
       const voterPhoneButton = (voter.phoneNumber) ?
-        UIF.getButton('', FontAwesome.phone, () => this.handlePhoneRequest(voterIndex, voter.phoneNumber, candidateData.getName()), 'black', false) :
-        UIF.getButton('', FontAwesome.phone, undefined, 'white', false)
+        UIF.getButton('', 'phone', () => this.handlePhoneRequest(voterIndex, voter.phoneNumber, candidateData.getName()), 'black', false) :
+        UIF.getButton('', 'phone', undefined, 'white', false)
       // const voterPhoneButton = undefined
 
       const voterTextButton = (voter.phoneNumber) ?
-        UIF.getButton('', FontAwesome.comments, () => this.handleTextRequest(voterIndex, voter.phoneNumber, message), 'black', false) :
-        UIF.getButton('', FontAwesome.comments, undefined, 'white', false)
+        UIF.getButton('', 'comments', () => this.handleTextRequest(voterIndex, voter.phoneNumber, message), 'black', false) :
+        UIF.getButton('', 'comments', undefined, 'white', false)
 
       const voterEmailButton = (voter.email) ?
-        UIF.getButton('', FontAwesome.envelope,  () => this.handleEmailRequest(voterIndex, voter.email, message), 'black', false) :
-        UIF.getButton('', FontAwesome.envelope, undefined, 'white', false)
+        UIF.getButton('', 'envelope',  () => this.handleEmailRequest(voterIndex, voter.email, message), 'black', false) :
+        UIF.getButton('', 'envelope', undefined, 'white', false)
 
       uiElements.push(
         <View key={UIF.getUniqueKey()}

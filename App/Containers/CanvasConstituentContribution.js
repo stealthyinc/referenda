@@ -7,7 +7,6 @@ import CanvasActions, { CanvasSelectors } from '../Redux/CanvassingRedux'
 import { ChoiceQuestion } from '../Utils/QuestionaireWidgets'
 
 import { Colors, Fonts, Metrics } from '../Themes/'
-import { FontAwesome } from '../Assets/icons'
 
 import qrCode from '../Assets/images/campa-qr-code.png'
 import Config from 'react-native-config'
@@ -167,7 +166,7 @@ class CanvasConstituentContribution extends Component {
 
 
         modalElements.push(UIF.getVerticalSpacer())
-        modalElements.push(UIF.getButton('Back', FontAwesome.chevronLeft, toggleFn))
+        modalElements.push(UIF.getButton('Back', 'chevronLeft', toggleFn))
         uiElements.push(UIF.getOptionsModal(modalElements))
       }
 
@@ -180,7 +179,7 @@ class CanvasConstituentContribution extends Component {
         modalElements.push(UIF.getHeading(`Or Text ${voterName}:`, 'h5'))
         modalElements.push(UIF.getButton(`Text a link to ${this.selectedVoter.phoneNumber}`, undefined, this.handleQRText))
         modalElements.push(UIF.getVerticalSpacer(Metrics.screenHeight/20))
-        modalElements.push(UIF.getButton('Back', FontAwesome.chevronLeft, this.handleQRToggle))
+        modalElements.push(UIF.getButton('Back', 'chevronLeft', this.handleQRToggle))
 
         uiElements.push(UIF.getOptionsModal(modalElements))
       }
@@ -189,7 +188,7 @@ class CanvasConstituentContribution extends Component {
         const modalElements = []
         modalElements.push(UIF.getHeading(this.modalTitle, 'h4'))
         modalElements.push(UIF.getVerticalSpacer(Metrics.screenHeight/2))
-        modalElements.push(UIF.getButton('Back', FontAwesome.chevronLeft, this.handleOtherToggle))
+        modalElements.push(UIF.getButton('Back', 'chevronLeft', this.handleOtherToggle))
 
         uiElements.push(UIF.getOptionsModal(modalElements))
       }
@@ -202,12 +201,12 @@ class CanvasConstituentContribution extends Component {
       uiPersonalDataEle.push(UIF.getKeyValueTextInputRow('Phone', this.selectedVoter.phoneNumber))
 
       uiSocialDataEle.push(UIF.getKeyValueTextRow('Party Affiliation:', this.selectedVoter.politicalParty))
-      const householdVotersButton = UIF.getButton(`${this.householdVoters}`, FontAwesome.users, ()=>{}, 'green', false, true, Fonts.size.h4)
+      const householdVotersButton = UIF.getButton(`${this.householdVoters}`, 'users', ()=>{}, 'green', false, true, Fonts.size.h4)
       uiSocialDataEle.push(UIF.getKeyButtonsRow('Voters in household:', [householdVotersButton]))
 
       const socialMediaButtons = [
-        UIF.getButton(undefined, FontAwesome.twitter, this.handleTwitterToggle, Colors.twitterLogoBlue, false, false, Fonts.size.h4),
-        UIF.getButton(undefined, FontAwesome.facebook, this.handleFacebookToggle, Colors.facebook, false, false, Fonts.size.h4),
+        UIF.getButton(undefined, 'twitter', this.handleTwitterToggle, Colors.twitterLogoBlue, false, false, Fonts.size.h4),
+        UIF.getButton(undefined, 'facebook', this.handleFacebookToggle, Colors.facebook, false, false, Fonts.size.h4),
       ]
       uiSocialDataEle.push(UIF.getKeyButtonsRow('Social Media:', socialMediaButtons))
     }
@@ -220,7 +219,7 @@ class CanvasConstituentContribution extends Component {
                       questionData={this.contributionQuestion}
                       selectionHandlerFn={this.handleQuestionResponse} />)
     uiElements.push(UIF.getVerticalSpacer(Metrics.doubleBaseMargin))
-    uiElements.push(UIF.getButton('Done', FontAwesome.check_square, this.handleDoneButtonPressed))
+    uiElements.push(UIF.getButton('Done', 'check-square', this.handleDoneButtonPressed))
 
     uiElements.push(UIF.getVerticalSpacer(Metrics.screenHeight/3))
 

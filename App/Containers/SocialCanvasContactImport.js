@@ -49,7 +49,7 @@ class SocialCanvasContactImport extends Component {
     uiElements.push(UIF.getHeading(`Grow ${candidateData.getName()}'s campaign quickly by messaging some of your contacts?`, headingSize))
 
     const uiBottomColElements = []
-    uiBottomColElements.push(UIF.getButton('Access Contacts*', FontAwesome.addressBook, this.handleSearchPressed))
+    uiBottomColElements.push(UIF.getButton('Access Contacts*', 'address-book', this.handleSearchPressed))
     uiBottomColElements.push(UIF.getVerticalSpacer(Metrics.doubleBaseMargin))
     uiBottomColElements.push(UIF.getText('* Contacts are not stored by Referenda. They are searched to find those in the campaign district for you to message.', UIF.styles.descriptionText))
     uiElements.push(UIF.getColumn(uiBottomColElements))

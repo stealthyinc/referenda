@@ -77,7 +77,7 @@ class CanvasConstituentSearchResults extends Component {
 
     const uiRowElements = []
     uiRowElements.push(UIF.getText(`${this.voters.length} matching voters:`))
-    uiRowElements.push(UIF.getButton(undefined, FontAwesome.ellipses_h, this.handleSearchFilterSort, 'black', false /* no border */))
+    uiRowElements.push(UIF.getButton(undefined, 'ellipsis-h', this.handleSearchFilterSort, 'black', false /* no border */))
     rootContainerElements.push(UIF.getRow(uiRowElements, 5 /* h-padding */))
 
     const scrollingContainerElements = []
