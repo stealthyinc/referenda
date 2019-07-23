@@ -53,6 +53,10 @@ class CanvasConstituentSearch extends Component {
     this.search[theProperty] = theText
   }
 
+  handleRegVoterPressed = () => {
+    this.props.navigation.navigate('Constituent Register')
+  }
+
   compareVoterResults = (a, b) => {
     if (a.hasOwnProperty('firstNameLevDist') && b.hasOwnProperty('firstNameLevDist')) {
       return a.firstNameLevDist - b.firstNameLevDist
@@ -143,15 +147,24 @@ class CanvasConstituentSearch extends Component {
     }
 
     const headingSize = 'h5'
+    // uiElements.push(UIF.getButton('Register Voter', undefined, this.handleRegVoterPressed))
     uiElements.push(UIF.getHeading('Search for registered voters by name:', headingSize))
     uiElements.push(UIF.getTextInput('First Name', 'firstName', this.handleSearchTextChange, this.search.firstName))
-    uiElements.push(UIF.getTextInput('Last Name', 'lastName', this.handleSearchTextChange, this.search.lastName))
+    uiElements.push(UIF.getTextInput('Last Name', 'lastName', this.handleSearchTextChange, this.search.lastName, this.handleSearchPressed))
     uiElements.push(UIF.getHeading('or address:', headingSize))
     uiElements.push(UIF.getTextInput('Street Address', 'streetAddress', this.handleSearchTextChange, this.search.streetAddress))
-    uiElements.push(UIF.getTextInput('City', 'city', this.handleSearchTextChange, this.search.city))
-    uiElements.push(UIF.getTextInput('Zip', 'zip', this.handleSearchTextChange, this.search.zip))
+    uiElements.push(UIF.getTextInput('Zip', 'zip', this.handleSearchTextChange, this.search.zip, this.handleSearchPressed))
     uiElements.push(UIF.getVerticalSpacer(Metrics.doubleBaseMargin))
-    uiElements.push(UIF.getButton('Search', 'search', this.handleSearchPressed))
+    uiElements.push(
+      UIF.getRow([
+        UIF.getButton('Register Voter', 'user', this.handleRegVoterPressed),
+        //
+        // KEEP THE SEARCH BUTTON (It's not obvious to a user who goes back to change
+        // a search (i.e. the first name which happened to me) that they need to then
+        // edit the last name and hit 'return')
+        UIF.getButton('Search', 'search', this.handleSearchPressed)
+      ])
+    )
     uiElements.push(UIF.getVerticalSpacer(Metrics.screenHeight/3))
 
     return (UIF.getScrollingContainer(uiElements))

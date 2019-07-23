@@ -2474,6 +2474,7 @@
 				INFOPLIST_FILE = referenda/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				NODE_OPTIONS = "--max_old_space_size=4096";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -2531,6 +2532,7 @@
 				INFOPLIST_FILE = referenda/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				NODE_OPTIONS = "--max_old_space_size=4096";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

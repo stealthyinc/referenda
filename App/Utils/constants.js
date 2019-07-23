@@ -255,16 +255,22 @@ export const contributionQuestion = {
   question: 'How will you contribute to the campaign?',
   multipleResponses: true,
   choices: [
-    { value: 'Follow the Campaign'},      // --> Modal w/ hard coded twilio text (add qr image pointing to campacampaign.id.blockstack)
-    { value: 'Answer a Questionaire' },     // --> Campaign Questionaire
-    { value: 'Make a Donation' },           // Nav to donation screen
-    { value: 'Get a Sticker' },
-    { value: 'Placing a Yard Sign' },
-    { value: 'Tell Your Friends' },       // --> Share a link to Referenda Social Campaigning App via email / SMS
-    { value: 'Calling People' },
-    { value: 'Door to Door Canvassing' },
-    { value: 'Purchase Merchandise' },
-
+    { value: 'Follow the campaign'},        // --> Modal w/ hard coded twilio text (add qr image pointing to campacampaign.id.blockstack)
+    { value: 'Share your thoughts' },     // --> Campaign Questionaire
+    { value: 'Purchase merchandise' },      // Nav to donation screen
+    { value: 'Donate' },      // Nav to donation screen
+    { value: 'Volunteer' },
   ],
+  // choices: [
+  //   { value: 'Follow the Campaign'},      // --> Modal w/ hard coded twilio text (add qr image pointing to campacampaign.id.blockstack)
+  //   { value: 'Answer a Questionaire' },     // --> Campaign Questionaire
+  //   { value: 'Make a Donation' },           // Nav to donation screen
+  //   { value: 'Get a Sticker' },
+  //   { value: 'Placing a Yard Sign' },
+  //   { value: 'Tell Your Friends' },       // --> Share a link to Referenda Social Campaigning App via email / SMS
+  //   { value: 'Calling People' },
+  //   { value: 'Door to Door Canvassing' },
+  //   { value: 'Purchase Merchandise' },
+  // ],
   response: ''
 }

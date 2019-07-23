@@ -33,6 +33,8 @@ class CanvasConstituentContribution extends Component {
       showTwitter: false,
       showFacebook: false,
       showQR: false,
+      showPurchases: false,
+      showVolunteering: false,
       showOther: false,
     }
   }
@@ -53,25 +55,30 @@ class CanvasConstituentContribution extends Component {
       case 1:   // Follow the Campaign
         this.setState({showQR: !this.state.showQR})
         break;
-      case 2:   // Answer a Questionaire
+      case 2:   // Share your thoughts
         // TODO: some selection-y stuff
         this.props.navigation.navigate('Constituent Questionaire')
         break;
-      case 3:   // Make a Donation
-        // TODO: some selection-y stuff
+      case 3:   // Purchase Merchandise
+        this.setState({showPurchases: !this.state.showPurchases})
+        break;
+      case 4:   // Donation
         this.props.navigation.navigate('CampaignerMenu')
         break;
-      default:
-        // TODO: pop a modal with a title and 'future home of ...'
-        let index = 0
-        for (const choice of this.contributionQuestion.choices) {
-          index++
-          if (index === aValue) {
-            this.modalTitle = choice.value
-            break;
-          }
-        }
-        this.setState({showOther: !this.state.showOther})
+      case 5:   // Volunteer
+      default:  // Campaign Outreach
+        this.setState({showVolunteering: !this.state.showVolunteering})
+        break;
+        // // TODO: pop a modal with a title and 'future home of ...'
+        // let index = 0
+        // for (const choice of this.contributionQuestion.choices) {
+        //   index++
+        //   if (index === aValue) {
+        //     this.modalTitle = choice.value
+        //     break;
+        //   }
+        // }
+        // this.setState({showOther: !this.state.showOther})
     }
   }
 
@@ -116,13 +123,12 @@ class CanvasConstituentContribution extends Component {
     this.setState({showQR: !this.state.showQR})
   }
 
-  handleQRToggle = () => {
-    this.setState({showQR: !this.state.showQR})
-  }
-
-  handleOtherToggle = () => {
-    this.modalTitle = ''
-    this.setState({showOther: !this.state.showOther})
+  handleToggle = (aToggleStateVarName) => {
+    try {
+      const obj = {}
+      obj[aToggleStateVarName] = !this.state[aToggleStateVarName]
+      this.setState(obj)
+    } catch (suppressedError) {}
   }
 
   render () {
@@ -166,20 +172,40 @@ class CanvasConstituentContribution extends Component {
 
 
         modalElements.push(UIF.getVerticalSpacer())
-        modalElements.push(UIF.getButton('Back', 'chevronLeft', toggleFn))
+        modalElements.push(UIF.getButton('Back', 'chevron-left', toggleFn))
         uiElements.push(UIF.getOptionsModal(modalElements))
       }
 
       if (this.state.showQR) {
         const modalElements = []
         modalElements.push(UIF.getHeading(`Follow the Campaign`, 'h4'))
-        modalElements.push(UIF.getHeading('Scan this QR Code:', 'h5'))
-        const imageDim = Math.ceil(Metrics.screenWidth * 0.85)
+        modalElements.push(UIF.getHeading('Scan this QR Code:', 'h6'))
+        const imageDim = Math.ceil(Metrics.screenWidth * 0.80)
         modalElements.push(<Image source={qrCode} style={{width:imageDim, height:imageDim}}/> )
-        modalElements.push(UIF.getHeading(`Or Text ${voterName}:`, 'h5'))
+        modalElements.push(UIF.getHeading(`Or text ${voterName}:`, 'h6'))
         modalElements.push(UIF.getButton(`Text a link to ${this.selectedVoter.phoneNumber}`, undefined, this.handleQRText))
-        modalElements.push(UIF.getVerticalSpacer(Metrics.screenHeight/20))
-        modalElements.push(UIF.getButton('Back', 'chevronLeft', this.handleQRToggle))
+        modalElements.push(UIF.getVerticalSpacer(Metrics.screenHeight/30))
+        modalElements.push(UIF.getButton('Back', 'chevron-left', () => {this.handleToggle('showQR')} ))
+
+        uiElements.push(UIF.getOptionsModal(modalElements))
+      }
+
+      if (this.state.showPurchases) {
+        const modalElements = []
+        modalElements.push(UIF.getHeading(`Campaign Merchandise`, 'h4'))
+
+        modalElements.push(UIF.getVerticalSpacer(Metrics.screenHeight/30))
+        modalElements.push(UIF.getButton('Back', 'chevron-left', () => {this.handleToggle('showPurchases')} ))
+
+        uiElements.push(UIF.getOptionsModal(modalElements))
+      }
+
+      if (this.state.showVolunteering) {
+        const modalElements = []
+        modalElements.push(UIF.getHeading(`Volunteering Options`, 'h4'))
+
+        modalElements.push(UIF.getVerticalSpacer(Metrics.screenHeight/30))
+        modalElements.push(UIF.getButton('Back', 'chevron-left', () => {this.handleToggle('showVolunteering')} ))
 
         uiElements.push(UIF.getOptionsModal(modalElements))
       }
@@ -188,12 +214,14 @@ class CanvasConstituentContribution extends Component {
         const modalElements = []
         modalElements.push(UIF.getHeading(this.modalTitle, 'h4'))
         modalElements.push(UIF.getVerticalSpacer(Metrics.screenHeight/2))
-        modalElements.push(UIF.getButton('Back', 'chevronLeft', this.handleOtherToggle))
+        modalElements.push(UIF.getButton('Back', 'chevron-left', () => {this.handleToggle('showOther')} ))
 
         uiElements.push(UIF.getOptionsModal(modalElements))
       }
       // End Modal Action Hero
 
+      // Round numbers down for age (otherwise people get surprised)!
+      moment.relativeTimeRounding(Math.floor);
       const voterAge = moment(this.selectedVoter.birthDate, "MM/DD/YYYY").fromNow(true /* no suffix */);
       uiPersonalDataEle.push(UIF.getKeyValueTextRow('Age', `${voterAge}`))
 

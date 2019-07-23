@@ -28,6 +28,7 @@ import CanvasConstituentSearch from '../Containers/CanvasConstituentSearch'
 import CanvasConstituentSearchResults from '../Containers/CanvasConstituentSearchResults'
 import CanvasConstituentQuestionaire from '../Containers/CanvasConstituentQuestionaire'
 import CanvasConstituentContribution from '../Containers/CanvasConstituentContribution'
+import CanvasConstituentRegister from '../Containers/CanvasConstituentRegister'
 
 import SocialCanvasContactImport from '../Containers/SocialCanvasContactImport'
 import SocialCanvasContactResults from '../Containers/SocialCanvasContactResults'
@@ -89,11 +90,16 @@ export const MainRoutes = [
         screen: CanvasConstituentQuestionaire,
         children: [],
       },
-      // TODO: find out what PBJ was thinking here
       {
         id: 'Contact Search',
         title: 'Contact Search',
         screen: CanvasContacts,
+        children: [],
+      },
+      {
+        id: 'Constituent Register',
+        title: 'Register Voter',
+        screen: CanvasConstituentRegister,
         children: [],
       },
     ],

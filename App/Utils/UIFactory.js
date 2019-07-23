@@ -27,10 +27,36 @@ export const getHeading = (theHeading, headingStyle='h1') =>
     throw `getHeading called with unsupported headingStyle ${headingStyle}. Supported headingStyles: ${headingStyles.join()}`
   }
 
+  let headingLayoutStyle = {}
+  switch (headingStyle) {
+    case 'h1':
+      headingLayoutStyle = {
+        marginTop: Metrics.tripleBaseMargin,
+        marginBottom: Metrics.baseMargin,
+        color: Colors.text
+      }
+      break;
+    case 'h2':
+    case 'h3':
+      headingLayoutStyle = {
+        marginTop: Metrics.doubleBaseMargin,
+        marginBottom: Metrics.baseMargin,
+        color: Colors.text
+      }
+      break;
+    default:  // h4 and below ...
+      headingLayoutStyle = {
+        marginTop: Metrics.baseMargin,
+        marginBottom: Metrics.baseMargin,
+        color: Colors.text
+      }
+  }
+
   // headingStyle must be one of the styles from Fonts.js:
   //
   const style = {
-    ...styles.heading,
+    // ... styles.heading,
+    ... headingLayoutStyle,
     ... Fonts.style[headingStyle]
   }
 
@@ -54,6 +80,7 @@ export const getTextInput = (
   thePropertyName,
   theTextChangeHandlerFun,
   theInitialValue=undefined,
+  theOnBlurHandlerFun=()=>{},
   styleModifer={}) =>
 {
   let textInputStyle = styles.textInput
@@ -65,11 +92,13 @@ export const getTextInput = (
     <TextInput
       key={getUniqueKey()}
       style={textInputStyle}
+      autoCorrect={false}
       allowFontScaling={false}
       placeholder={thePlaceHolderText}
       placeholderTextColor={Colors.lightText}
       defaultValue={theInitialValue}
-      onChangeText={(theText) => theTextChangeHandlerFun(theText, thePropertyName)}/>
+      onChangeText={(theText) => theTextChangeHandlerFun(theText, thePropertyName)}
+      onBlur={() =>theOnBlurHandlerFun()}/>
   )
 }
 
@@ -266,6 +295,7 @@ export const getKeyValueTextInputRow = (
     theTextInputPlaceHolderText: theKey,
     theTextInputPropertyName: undefined,
     theTextInputChangeHandlerFn: () => {},
+    theTextInputOnBlurHandlerFn: () => {},
     theTextInputStyle: {
       width:'auto',
       marginTop:0,
@@ -282,6 +312,7 @@ export const getKeyValueTextInputRow = (
     fnOptions.theTextInputPropertyName,
     fnOptions.theTextInputChangeHandlerFn,
     theTextInputInitialValue,
+    fnOptions.theTextInputOnBlurHandlerFn,
     fnOptions.theTextInputStyle))
 
   return getRow(rowElements)

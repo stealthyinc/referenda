@@ -105,7 +105,8 @@
     "url": "^0.10.3",
     "util": "^0.10.4",
     "victory-native": "^32.0.2",
-    "vm-browserify": "0.0.4"
+    "vm-browserify": "0.0.4",
+    "zipcodes": "^8.0.0"
   },
   "devDependencies": {
     "@storybook/addon-storyshots": "^3.4.0",
