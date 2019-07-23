@@ -155,6 +155,32 @@ const candidates = [
       bitcoinUrl: 'https://checkout.opennode.co/p/55769f7d-ebcd-4543-8bbc-bedbe8c9dbe0',
     },
   },
+  {
+    name: 'Kim Olson',
+    id: undefined,
+    district: 'TX-24',
+    districtType: 'Congress',
+    campaign: {
+      title: 'Kim Olson for Congress 🇺🇸',
+      link: 'https://www.app.referenda.io/kimolson.id.blockstack/?wv=1',
+    },
+    loginPage: {                                            // IntroductionScreen.js
+      title: 'Kim Olson for Congress 🇺🇸',
+      description: 'Referenda makes your voice heard by your political leaders for actionable change.',
+      photoUrl: '../Assets/images/launch7-candidate.jpg',
+      photo: require('../Assets/images/launch7-candidate.jpg'),
+    },
+    fundraising: {
+      title: 'Kim Olson for Congress 🇺🇸',                      // CampaignerMenuScreen.js
+      photoUrl: '../Assets/avatars/kim.jpg',             // CampaignerMenuScreen.js
+      photo: require('../Assets/avatars/kim.jpg'),
+      label: 'Kim Olson - 2020 Campaign',              // DonationBar.js, SocialBar
+      campaignMessage: 'Donation to Kim Olson\'s Campaign',    // DonationSagas.js
+      receiptMessageWeb: 'Thank you for your donation to Kim Olson\'s Campaign. Here\'s a helpful link for you to donate. We will notify you when the Referenda App is ready!',
+      receiptMessage: 'Thank you for your donation to Kim Olson\'s Campaign. We will notify you when the Referenda App is ready!',
+      bitcoinUrl: 'https://checkout.opennode.co/p/55769f7d-ebcd-4543-8bbc-bedbe8c9dbe0',
+    },
+  },
 ]
 
 
