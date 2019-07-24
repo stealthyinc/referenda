@@ -27,15 +27,14 @@ class CanvasConstituentContribution extends Component {
     this.selectedVoter = this.getSelectedVoter()
 
     this.contributionQuestion = C.contributionQuestion
+    this.contributionQuestionTracking = {}
+
     this.householdVoters = Math.floor(Math.random()*5)
     this.modalTitle = ''
     this.state = {
       showTwitter: false,
       showFacebook: false,
-      showQR: false,
-      showPurchases: false,
-      showVolunteering: false,
-      showOther: false,
+      showTextModal: false,
     }
   }
 
@@ -50,36 +49,23 @@ class CanvasConstituentContribution extends Component {
   }
 
   handleQuestionResponse = (aQuestionId, aValue) => {
+    this.contributionQuestionTracking[aValue]=true
     // Hard coded for demo:
     switch (aValue) {
-      case 1:   // Follow the Campaign
-        this.setState({showQR: !this.state.showQR})
-        break;
-      case 2:   // Share your thoughts
-        // TODO: some selection-y stuff
+      case 1:   // Questionaire
         this.props.navigation.navigate('Constituent Questionaire')
         break;
-      case 3:   // Purchase Merchandise
-        this.setState({showPurchases: !this.state.showPurchases})
-        break;
-      case 4:   // Donation
+      case 2:   // Donate
         this.props.navigation.navigate('CampaignerMenu')
         break;
-      case 5:   // Volunteer
-      default:  // Campaign Outreach
-        this.setState({showVolunteering: !this.state.showVolunteering})
+      case 3:   // Text More Information
+      default:
+        this.setState({showTextModal: !this.state.showTextModal})
         break;
-        // // TODO: pop a modal with a title and 'future home of ...'
-        // let index = 0
-        // for (const choice of this.contributionQuestion.choices) {
-        //   index++
-        //   if (index === aValue) {
-        //     this.modalTitle = choice.value
-        //     break;
-        //   }
-        // }
-        // this.setState({showOther: !this.state.showOther})
     }
+  }
+
+  handleCampaignLinkQuestionResponses = (aQuestionId, aValue) => {
   }
 
   handleDoneButtonPressed = () => {  // TODO: pushuser_check to firebase for:
@@ -96,7 +82,7 @@ class CanvasConstituentContribution extends Component {
     this.setState({showTwitter: !this.state.showTwitter})
   }
 
-  handleQRText = () => {
+  handleTextButton = () => {
     // TODO: Launch a text message Saga ...
     // If possible show an AI and when done make the modal disappear...
     debugger
@@ -120,7 +106,7 @@ class CanvasConstituentContribution extends Component {
     .catch((error) =>{
       console.error(error);
     });
-    this.setState({showQR: !this.state.showQR})
+    this.setState({showTextModal: !this.state.showTextModal})
   }
 
   handleToggle = (aToggleStateVarName) => {
@@ -136,6 +122,7 @@ class CanvasConstituentContribution extends Component {
 
     const uiPersonalDataEle = []
     const uiSocialDataEle = []
+    const uiConversationEle = []
 
     // if (!this.selectedVoter) {
     //   this.selectedVoter = this.getSelectedVoter()
@@ -176,49 +163,31 @@ class CanvasConstituentContribution extends Component {
         uiElements.push(UIF.getOptionsModal(modalElements))
       }
 
-      if (this.state.showQR) {
+      if (this.state.showTextModal) {
         const modalElements = []
-        modalElements.push(UIF.getHeading(`Follow the Campaign`, 'h4'))
-        modalElements.push(UIF.getHeading('Scan this QR Code:', 'h6'))
-        const imageDim = Math.ceil(Metrics.screenWidth * 0.80)
-        modalElements.push(<Image source={qrCode} style={{width:imageDim, height:imageDim}}/> )
-        modalElements.push(UIF.getHeading(`Or text ${voterName}:`, 'h6'))
-        modalElements.push(UIF.getButton(`Text a link to ${this.selectedVoter.phoneNumber}`, undefined, this.handleQRText))
-        modalElements.push(UIF.getVerticalSpacer(Metrics.screenHeight/30))
-        modalElements.push(UIF.getButton('Back', 'chevron-left', () => {this.handleToggle('showQR')} ))
+        modalElements.push(UIF.getHeading(`Text campaign links to ${voterName}, ${this.selectedVoter.phoneNumber}:`, 'h5'))
+        modalElements.push(UIF.getScrollingContainer(<ChoiceQuestion
+                              key={UIF.getUniqueKey()}
+                              style={{flex:1}}
+                              questionData={C.campaignLinkQuestion}
+                              selectionHandlerFn={this.handleCampaignLinkQuestionResponses} />))
+
+        // modalElements.push(UIF.getVerticalSpacer(Metrics.screenHeight/4))
+
+        // modalElements.push(UIF.getHeading(`Follow the Campaign`, 'h4'))
+        // modalElements.push(UIF.getHeading('Scan this QR Code:', 'h6'))
+        // const imageDim = Math.ceil(Metrics.screenWidth * 0.80)
+        // modalElements.push(<Image source={qrCode} style={{width:imageDim, height:imageDim}}/> )
+        // modalElements.push(UIF.getHeading(`Or text ${voterName}:`, 'h6'))
+        modalElements.push(
+          UIF.getRow([
+            UIF.getButton(`Text ${this.selectedVoter.phoneNumber}`, undefined, this.handleTextButton),
+            UIF.getButton('Back', 'chevron-left', () => {this.handleToggle('showTextModal')} )
+          ]))
 
         uiElements.push(UIF.getOptionsModal(modalElements))
       }
 
-      if (this.state.showPurchases) {
-        const modalElements = []
-        modalElements.push(UIF.getHeading(`Campaign Merchandise`, 'h4'))
-
-        modalElements.push(UIF.getVerticalSpacer(Metrics.screenHeight/30))
-        modalElements.push(UIF.getButton('Back', 'chevron-left', () => {this.handleToggle('showPurchases')} ))
-
-        uiElements.push(UIF.getOptionsModal(modalElements))
-      }
-
-      if (this.state.showVolunteering) {
-        const modalElements = []
-        modalElements.push(UIF.getHeading(`Volunteering Options`, 'h4'))
-
-        modalElements.push(UIF.getVerticalSpacer(Metrics.screenHeight/30))
-        modalElements.push(UIF.getButton('Back', 'chevron-left', () => {this.handleToggle('showVolunteering')} ))
-
-        uiElements.push(UIF.getOptionsModal(modalElements))
-      }
-
-      if (this.state.showOther) {
-        const modalElements = []
-        modalElements.push(UIF.getHeading(this.modalTitle, 'h4'))
-        modalElements.push(UIF.getVerticalSpacer(Metrics.screenHeight/2))
-        modalElements.push(UIF.getButton('Back', 'chevron-left', () => {this.handleToggle('showOther')} ))
-
-        uiElements.push(UIF.getOptionsModal(modalElements))
-      }
-      // End Modal Action Hero
 
       // Round numbers down for age (otherwise people get surprised)!
       moment.relativeTimeRounding(Math.floor);
@@ -237,15 +206,18 @@ class CanvasConstituentContribution extends Component {
         UIF.getButton(undefined, 'facebook', this.handleFacebookToggle, Colors.facebook, false, false, Fonts.size.h4),
       ]
       uiSocialDataEle.push(UIF.getKeyButtonsRow('Social Media:', socialMediaButtons))
+
+      uiConversationEle.push(<ChoiceQuestion
+                                key={UIF.getUniqueKey()}
+                                questionData={this.contributionQuestion}
+                                selectionTrackingDict={this.contributionQuestionTracking}
+                                selectionHandlerFn={this.handleQuestionResponse} />)
     }
 
     uiElements.push(UIF.getFoldingSection('Personal Data', uiPersonalDataEle))
     uiElements.push(UIF.getFoldingSection('Social Data', uiSocialDataEle))
+    uiElements.push(UIF.getFoldingSection('Conversation Activities', uiConversationEle))
 
-    uiElements.push(<ChoiceQuestion
-                      key={UIF.getUniqueKey()}
-                      questionData={this.contributionQuestion}
-                      selectionHandlerFn={this.handleQuestionResponse} />)
     uiElements.push(UIF.getVerticalSpacer(Metrics.doubleBaseMargin))
     uiElements.push(UIF.getButton('Done', 'check-square', this.handleDoneButtonPressed))
 

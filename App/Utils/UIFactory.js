@@ -477,7 +477,7 @@ export const styles = StyleSheet.create({
     alignItems:'center',
     justifyContent:'center',
     marginHorizontal:1,
-    marginVertical:1,
+    marginVertical:2,
     paddingVertical:10
   },
   questionViewContainer: {
@@ -514,11 +514,14 @@ export const styles = StyleSheet.create({
     paddingVertical:5
   },
   modalContainer: {
-    height:'100%',
+    flex:1,
+    paddingHorizontal: Metrics.marginHorizontal,
+    paddingVertical: Metrics.marginVertical,
     backgroundColor:'rgba(255,255,255,0.95)',
-    flexDirection:'column',
-    justifyContent:'center',
-    alignItems:'center',
+    // height:'100%',
+    // flexDirection:'column',
+    // justifyContent:'center',
+    // alignItems:'center',
     // marginHorizontal: Metrics.marginHorizontal,
     // marginVertical: Metrics.marginVertical,
   },

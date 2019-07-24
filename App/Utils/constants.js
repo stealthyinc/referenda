@@ -252,14 +252,12 @@ export const questionaire = [
 export const contributionQuestion = {
   type: QUESTION_TYPE.CHOICE,
   id: getUniqueQuestionId(),
-  question: 'How will you contribute to the campaign?',
-  multipleResponses: true,
+  question: undefined,
+  multipleResponses: false,
   choices: [
-    { value: 'Follow the campaign'},        // --> Modal w/ hard coded twilio text (add qr image pointing to campacampaign.id.blockstack)
-    { value: 'Share your thoughts' },     // --> Campaign Questionaire
-    { value: 'Purchase merchandise' },      // Nav to donation screen
-    { value: 'Donate' },      // Nav to donation screen
-    { value: 'Volunteer' },
+    { value: 'Questionaire'},
+    { value: 'Donation' },
+    { value: 'Text Information' },
   ],
   // choices: [
   //   { value: 'Follow the Campaign'},      // --> Modal w/ hard coded twilio text (add qr image pointing to campacampaign.id.blockstack)
@@ -273,4 +271,18 @@ export const contributionQuestion = {
   //   { value: 'Purchase Merchandise' },
   // ],
   response: ''
+}
+
+export const campaignLinkQuestion = {
+  type: QUESTION_TYPE.CHOICE,
+  id: getUniqueQuestionId(),
+  question: undefined,
+  multipleResponses: true,
+  choices: [
+    { value: 'Campaign News Feed'},
+    { value: 'Campaign Donations' },
+    { value: 'Campaign Volunteering' },
+    { value: 'Campaign Merchandise' },
+  ],
+  response: []
 }
