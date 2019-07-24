@@ -109,7 +109,7 @@ class CanvasConstituentContribution extends Component {
 `Hi ${this.selectedVoter.firstName}\n\n\
 Here are the campaign links you requested:\n\
 ${this.textMessage}\n
-Thank you for talking with us today about ${candidateData.getName()}'s campaign.'`
+Thank you for talking with us today about ${candidateData.getName()}'s campaign.`
     debugger
     // const message = `Hi Alex, Prabhaav has invited you to learn more about Ammar's campaign.\
     // You can interact, donate, and even chat with the campaign here: https://www.app.referenda.io/campacampa.id.blockstack`
