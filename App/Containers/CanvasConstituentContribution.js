@@ -16,6 +16,8 @@ const UIF = require('../Utils/UIFactory.js')
 const NUIF = require('../Utils/NavUIFactory.js')
 const moment = require('moment');
 
+const { candidateData } = require('../Data/CandidateData.js')
+
 class CanvasConstituentContribution extends Component {
   static propTypes = NUIF.requireNavBar
   static navigationOptions = NUIF.getNavOptions(
@@ -29,12 +31,16 @@ class CanvasConstituentContribution extends Component {
     this.contributionQuestion = C.contributionQuestion
     this.contributionQuestionTracking = {}
 
+    this.textMessageQuestion = C.campaignLinkQuestion
+    this.textMessage = ''
+
     this.householdVoters = Math.floor(Math.random()*5)
     this.modalTitle = ''
     this.state = {
       showTwitter: false,
       showFacebook: false,
       showTextModal: false,
+      updateTime: Date.now()
     }
   }
 
@@ -66,6 +72,19 @@ class CanvasConstituentContribution extends Component {
   }
 
   handleCampaignLinkQuestionResponses = (aQuestionId, aValue) => {
+    this.textMessage = ''
+    if (this.textMessageQuestion.response.includes(1)) {
+      this.textMessage += "\nInteract with the campaign here: <link>"
+    }
+    if (this.textMessageQuestion.response.includes(2)) {
+      this.textMessage += "\nDonate here: <link>"
+    }
+    if (this.textMessageQuestion.response.includes(3)) {
+      this.textMessage += "\nVolunteer here: <link>"
+    }
+    if (this.textMessageQuestion.response.includes(4)) {
+      this.textMessage += "\nCampaign merchandise here: <link>"
+    }
   }
 
   handleDoneButtonPressed = () => {  // TODO: pushuser_check to firebase for:
@@ -83,11 +102,17 @@ class CanvasConstituentContribution extends Component {
   }
 
   handleTextButton = () => {
-    // TODO: Launch a text message Saga ...
-    // If possible show an AI and when done make the modal disappear...
+    // // TODO: Launch a text message Saga ...
+    // // If possible show an AI and when done make the modal disappear...
+    // debugger
+    const message =
+`Hi ${this.selectedVoter.firstName}\n\n\
+Here are the campaign links you requested:\n\
+${this.textMessage}\n
+Thank you for talking with us today about ${candidateData.getName()}'s campaign.'`
     debugger
-    const message = `Hi Alex, Prabhaav has invited you to learn more about Ammar's campaign.\
-    You can interact, donate, and even chat with the campaign here: https://www.app.referenda.io/campacampa.id.blockstack`
+    // const message = `Hi Alex, Prabhaav has invited you to learn more about Ammar's campaign.\
+    // You can interact, donate, and even chat with the campaign here: https://www.app.referenda.io/campacampa.id.blockstack`
     fetch(Config.TWILIO_URL, {
       method: 'POST',
       headers: {
@@ -164,13 +189,21 @@ class CanvasConstituentContribution extends Component {
       }
 
       if (this.state.showTextModal) {
+        console.log('showTextModal!')
         const modalElements = []
-        modalElements.push(UIF.getHeading(`Text campaign links to ${voterName}, ${this.selectedVoter.phoneNumber}:`, 'h5'))
-        modalElements.push(UIF.getScrollingContainer(<ChoiceQuestion
+        modalElements.push(UIF.getHeading(`Text campaign info to ${voterName}, ${this.selectedVoter.phoneNumber}:`, 'h5'))
+        // TODO: figure out why this needs a scrolling container to get to the correct size.
+        const scrollyElements = []
+        scrollyElements.push(<ChoiceQuestion
                               key={UIF.getUniqueKey()}
-                              style={{flex:1}}
-                              questionData={C.campaignLinkQuestion}
-                              selectionHandlerFn={this.handleCampaignLinkQuestionResponses} />))
+                              questionData={this.textMessageQuestion}
+                              selectionHandlerFn={this.handleCampaignLinkQuestionResponses} />)
+        // TODO: refactor the whole modal into it's own comp that re-renders itself (otherwise it wipes itself out)
+        // scrollyElements.push(UIF.getVerticalSpacer(Metrics.doubleBaseMargin))
+        // const message = `Hi ${this.selectedVoter.firstName}, ${this.textMessage}\nThanks for your time today.`
+        // scrollyElements.push(UIF.getText(`Message:\n${message}`))
+        modalElements.push(UIF.getScrollingContainer(scrollyElements))
+        // modalElements.push(UIF.getText(`Message:  Hi ${this.selectedVoter.firstName}!`))
 
         // modalElements.push(UIF.getVerticalSpacer(Metrics.screenHeight/4))
 
