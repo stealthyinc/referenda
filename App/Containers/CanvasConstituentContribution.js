@@ -191,6 +191,7 @@ Thank you for talking with us today about ${candidateData.getName()}'s campaign.
       if (this.state.showTextModal) {
         console.log('showTextModal!')
         const modalElements = []
+        modalElements.push(UIF.getVerticalSpacer(Metrics.tripleBaseMargin))
         modalElements.push(UIF.getHeading(`Text campaign info to ${voterName}, ${this.selectedVoter.phoneNumber}:`, 'h5'))
         // TODO: figure out why this needs a scrolling container to get to the correct size.
         const scrollyElements = []
@@ -217,6 +218,7 @@ Thank you for talking with us today about ${candidateData.getName()}'s campaign.
             UIF.getButton(`Text ${this.selectedVoter.phoneNumber}`, undefined, this.handleTextButton),
             UIF.getButton('Back', 'chevron-left', () => {this.handleToggle('showTextModal')} )
           ]))
+        modalElements.push(UIF.getVerticalSpacer(Metrics.tripleBaseMargin))
 
         uiElements.push(UIF.getOptionsModal(modalElements))
       }
