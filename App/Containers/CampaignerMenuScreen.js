@@ -184,11 +184,13 @@ class CampaignerMenuScreen extends Component {
             style={styles.buttonStyle}
             onPress={() => { this.props.navigation.navigate('Donator Amount') }}/>
 
+            {/*
           <GradientButton
             rkType='medium'
             text='Progress'
             style={styles.buttonStyle}
             onPress={() => {this.props.navigation.navigate('Campaign Progress')}}/>
+            */}
         </View>
       </View>
     );

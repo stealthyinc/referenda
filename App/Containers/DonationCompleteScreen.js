@@ -41,7 +41,7 @@ class DonatorNameScreen extends Component {
     return {
       headerLeft: null,
       headerRight: null,
-      headerTitle: 'Campaign Donation'.toUpperCase(),
+      headerTitle: 'Donation Complete'.toUpperCase(),
     }
   };
 
@@ -84,10 +84,10 @@ class DonatorNameScreen extends Component {
                 width: imageDimension,
                 borderRadius: imageBorderRadius,
                 borderWidth: 1,
-                borderColor: '#389C95',
+                borderColor: 'black',
                 resizeMode: 'contain'}}/>
-            <Text style={styles.title}>Donation Complete</Text>
-            <Text style={styles.title}>Thank you!</Text>
+            {/*<Text style={styles.title}>Donation Complete</Text>*/}
+            <Text style={{...styles.title, marginTop:18}}>Thank you!</Text>
           </View>
 
           <GradientButton
@@ -103,20 +103,20 @@ class DonatorNameScreen extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#78CCC5',
+    backgroundColor: 'white',
     flex: 1,
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: '6%',
   },
   title: {
-    color: '#FFFFFF',
+    color: 'black',
     fontSize: 36,
     fontWeight: 'bold',
     textAlign: 'center',
   },
   description: {
-    color: '#FFFFFF',
+    color: 'black',
     fontSize: 14,
     textAlign: 'center',
   },

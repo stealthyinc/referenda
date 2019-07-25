@@ -78,27 +78,29 @@ export const getText = (theText, style=styles.text) =>
 export const getTextInput = (
   thePlaceHolderText,
   thePropertyName,
-  theTextChangeHandlerFun,
+  theTextChangeHandlerFn,
   theInitialValue=undefined,
-  theOnBlurHandlerFun=()=>{},
-  styleModifer={}) =>
+  options={} ) =>
 {
-  let textInputStyle = styles.textInput
-  if (styleModifer) {
-    textInputStyle = {...styles.textInput, ...styleModifer}
+  const fnOptions = {
+    theOnBlurHandlerFn: ()=>{},
+    styleModifer: {},
+    autoCapitalize: 'sentences',
+    ...options
   }
 
   return (
     <TextInput
       key={getUniqueKey()}
-      style={textInputStyle}
+      style={{...styles.textInput, ...fnOptions.styleModifer}}
       autoCorrect={false}
+      autoCapitalize={fnOptions.autoCapitalize}
       allowFontScaling={false}
       placeholder={thePlaceHolderText}
       placeholderTextColor={Colors.lightText}
       defaultValue={theInitialValue}
-      onChangeText={(theText) => theTextChangeHandlerFun(theText, thePropertyName)}
-      onBlur={() =>theOnBlurHandlerFun()}/>
+      onChangeText={ (theText) => theTextChangeHandlerFn(theText, thePropertyName) }
+      onBlur={ () => fnOptions.theOnBlurHandlerFn() } />
   )
 }
 
@@ -302,6 +304,7 @@ export const getKeyValueTextInputRow = (
       marginBottom:0,
       textAlign:'right'
     },
+    autoCapitalize: 'sentences',
     ...options
   }
 
@@ -312,8 +315,12 @@ export const getKeyValueTextInputRow = (
     fnOptions.theTextInputPropertyName,
     fnOptions.theTextInputChangeHandlerFn,
     theTextInputInitialValue,
-    fnOptions.theTextInputOnBlurHandlerFn,
-    fnOptions.theTextInputStyle))
+    {
+      theOnBlurHandlerFn: fnOptions.theTextInputOnBlurHandlerFn,
+      styleModifer: fnOptions.theTextInputStyle,
+      autoCapitalize: fnOptions.autoCapitalize
+    }
+  ))
 
   return getRow(rowElements)
 }

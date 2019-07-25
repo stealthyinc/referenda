@@ -150,10 +150,10 @@ class CanvasConstituentSearch extends Component {
     // uiElements.push(UIF.getButton('Register Voter', undefined, this.handleRegVoterPressed))
     uiElements.push(UIF.getHeading('Search for registered voters by name:', headingSize))
     uiElements.push(UIF.getTextInput('First Name', 'firstName', this.handleSearchTextChange, this.search.firstName))
-    uiElements.push(UIF.getTextInput('Last Name', 'lastName', this.handleSearchTextChange, this.search.lastName, this.handleSearchPressed))
+    uiElements.push(UIF.getTextInput('Last Name', 'lastName', this.handleSearchTextChange, this.search.lastName, {theOnBlurHandlerFn: this.handleSearchPressed}))
     uiElements.push(UIF.getHeading('or address:', headingSize))
     uiElements.push(UIF.getTextInput('Street Address', 'streetAddress', this.handleSearchTextChange, this.search.streetAddress))
-    uiElements.push(UIF.getTextInput('Zip', 'zip', this.handleSearchTextChange, this.search.zip, this.handleSearchPressed))
+    uiElements.push(UIF.getTextInput('Zip', 'zip', this.handleSearchTextChange, this.search.zip, {theOnBlurHandlerFn: this.handleSearchPressed}))
     uiElements.push(UIF.getVerticalSpacer(Metrics.doubleBaseMargin))
     uiElements.push(
       UIF.getRow([

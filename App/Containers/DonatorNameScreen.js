@@ -39,7 +39,7 @@ const { candidateData } = require('../Data/CandidateData.js')
 
 class DonatorNameScreen extends Component {
   static navigationOptions = {
-    title: 'Campaign Donation'.toUpperCase(),
+    title: 'Donor Name'.toUpperCase(),
   };
 
   constructor() {
@@ -196,11 +196,11 @@ class DonatorNameScreen extends Component {
               width: imageDimension,
               borderRadius: imageBorderRadius,
               borderWidth: 1,
-              borderColor: '#389C95',
+              borderColor: 'black',
               resizeMode: 'contain'}}/>
         </View>
 
-          <Text style={styles.title}>Donor Information</Text>
+          { /* <Text style={styles.title}>Donor Information</Text> */}
           {this.getInputElement('First Name', this.onFirstName, firstNameInputStyle, donationRecord.firstName)}
           {this.getInputElement('Last Name', this.onLastname, lastNameInputStyle, donationRecord.lastName)}
           {/* <RkTextInput rkType='rounded' placeholder='First Name' onChangeText={(firstName) => {this.onFirstName(firstName) }}/>
@@ -219,7 +219,7 @@ class DonatorNameScreen extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#78CCC5',
+    backgroundColor: 'white',
     flex: 1,
     alignItems: 'center',
     justifyContent: 'space-between',

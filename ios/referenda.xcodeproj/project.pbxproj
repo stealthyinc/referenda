@@ -82,6 +82,7 @@
 		75E59AEF22271EC1004B03B4 /* libRNKeychain.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 75E59AE622271EB3004B03B4 /* libRNKeychain.a */; };
 		75F24F20225294EB00F45EB7 /* libReactNativePayments.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 75F24F0B225294DE00F45EB7 /* libReactNativePayments.a */; };
 		78A8D5A06060405BBD518BDA /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C27A0B80903A4E58A4B9C122 /* EvilIcons.ttf */; };
+		79FCF0F922E97B7900804AFE /* libRNCWebView.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 79665BC822E78C81009ADDB8 /* libRNCWebView.a */; };
 		7BFA2681B9804CE640B6A406 /* Pods_referenda.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16AE0FA2D34CEE8F757C7688 /* Pods_referenda.framework */; };
 		7CEBA73872E047EEA41ABE18 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2FD7C4B943514E92A0A230DE /* Octicons.ttf */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
@@ -745,6 +746,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				79FCF0F922E97B7900804AFE /* libRNCWebView.a in Frameworks */,
 				753E108522D9124500B62A04 /* JavaScriptCore.framework in Frameworks */,
 				75E3D35622615F9800ADABC0 /* TSBackgroundFetch.framework in Frameworks */,
 				75E3D35422615F4400ADABC0 /* libRNBackgroundFetch.a in Frameworks */,

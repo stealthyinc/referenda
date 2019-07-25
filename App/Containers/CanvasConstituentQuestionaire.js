@@ -88,7 +88,7 @@ class CanvasConstituentQuestionaire extends Component {
     }
 
     uiElements.push(UIF.getVerticalSpacer(Metrics.doubleBaseMargin))
-    uiElements.push(UIF.getButton('Back', FontAwesome.chevronLeft, this.handleDoneButtonPressed))
+    uiElements.push(UIF.getButton('Back', 'chevron-left', this.handleDoneButtonPressed))
 
     return (UIF.getScrollingContainer(uiElements))
   }

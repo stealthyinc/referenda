@@ -72,7 +72,7 @@ const { candidateData } = require('../Data/CandidateData.js')
 
 class ChargeScreen extends Component {
   static navigationOptions = {
-    title: 'Campaign Donation'.toUpperCase(),
+    title: 'Summary'.toUpperCase(),
   };
 
   constructor() {
@@ -448,11 +448,11 @@ class ChargeScreen extends Component {
     console.log("donationError", donationError)
     console.log("donationSuccess", donationSuccess)
     console.log("donationFetching", donationFetching)
-    const nameStr = `Name: ${donationRecord.firstName} ${donationRecord.lastName}`
-    const phoneStr = `Mobile Phone: ${donationRecord.phoneNumber}`
-    const occupationStr = `Occupation: ${donationRecord.occupation}`
-    const employerStr = `Employer: ${donationRecord.employer}`
-    const amountStr = `Amount: ${donationRecord.amount}`
+    const nameStr = `Name:  ${donationRecord.firstName} ${donationRecord.lastName}`
+    const phoneStr = `Mobile Phone:  ${donationRecord.phoneNumber}`
+    const occupationStr = `Occupation:  ${donationRecord.occupation}`
+    const employerStr = `Employer:  ${donationRecord.employer}`
+    const amountStr = `Amount:  $${donationRecord.amount}`
 
     const occupation = (under200Exception) ?
       undefined: ( <Text style={styles.summary}>{occupationStr}</Text> )
@@ -487,12 +487,13 @@ class ChargeScreen extends Component {
                 width: imageDimension,
                 borderRadius: imageBorderRadius,
                 borderWidth: 1,
-                borderColor: '#389C95',
+                borderColor: 'black',
                 resizeMode: 'contain'}}/>
           </View>
 
           {ai}
-          <Text style={styles.title}>Donation Summary</Text>
+          {/* <Text style={styles.title}>Donation Summary</Text> */}
+          <Text style={{...styles.summary,fontWeight:'bold'}}>Donation Summary:</Text>
           <Text style={styles.summary}>{nameStr}</Text>
           <Text style={styles.summary}>{phoneStr}</Text>
           {occupation}
@@ -542,20 +543,20 @@ const styles = StyleSheet.create({
     margin: 0,
   },
   container: {
-    backgroundColor: '#78CCC5',
+    backgroundColor: 'white',
     flex: 1,
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: '6%',
   },
   title: {
-    color: '#FFFFFF',
+    color: 'black',
     fontSize: 36,
     fontWeight: 'bold',
     textAlign: 'center',
   },
   summary: {
-    color: '#FFFFFF',
+    color: 'black',
     fontSize: 20,
     textAlign: 'left',
     width: '100%',

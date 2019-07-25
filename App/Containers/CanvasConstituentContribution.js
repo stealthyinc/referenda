@@ -229,7 +229,7 @@ Thank you for talking with us today about ${candidateData.getName()}'s campaign.
       const voterAge = moment(this.selectedVoter.birthDate, "MM/DD/YYYY").fromNow(true /* no suffix */);
       uiPersonalDataEle.push(UIF.getKeyValueTextRow('Age', `${voterAge}`))
 
-      uiPersonalDataEle.push(UIF.getKeyValueTextInputRow('Email', this.selectedVoter.email))
+      uiPersonalDataEle.push(UIF.getKeyValueTextInputRow('Email', this.selectedVoter.email, {autoCapitalize: 'none'}))
       uiPersonalDataEle.push(UIF.getKeyValueTextInputRow('Phone', this.selectedVoter.phoneNumber))
 
       uiSocialDataEle.push(UIF.getKeyValueTextRow('Party Affiliation:', this.selectedVoter.politicalParty))

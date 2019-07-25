@@ -177,11 +177,11 @@ class DonatorOtherAmountScreen extends Component {
                 width: imageDimension,
                 borderRadius: imageBorderRadius,
                 borderWidth: 1,
-                borderColor: '#389C95',
+                borderColor: 'black',
                 resizeMode: 'contain'}}/>
           </View>
 
-          <Text style={styles.title}>Donor Contribution</Text>
+          <Text style={styles.title}>Contribution Amount</Text>
 
           {this.getInputElement('$1 to $2800', this.onOtherAmount, inputStyle, donationRecord.amount, true)}
 
@@ -194,20 +194,20 @@ class DonatorOtherAmountScreen extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#78CCC5',
+    backgroundColor: 'white',
     flex: 1,
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: '6%',
   },
   title: {
-    color: '#FFFFFF',
+    color: 'black',
     fontSize: 36,
     fontWeight: 'bold',
     textAlign: 'center',
   },
   description: {
-    color: '#FFFFFF',
+    color: 'black',
     fontSize: 14,
     textAlign: 'center',
   },

@@ -134,7 +134,7 @@ class CanvasConstituentRegister extends Component {
     uiElements.push(UIF.getTextInput('First Name', 'firstName', this.handleVoterTextChange, this.voter.firstName))
     uiElements.push(UIF.getTextInput('Last Name', 'lastName', this.handleVoterTextChange, this.voter.lastName))
     uiElements.push(UIF.getTextInput('Phone Number', 'phoneNumber', this.handleVoterTextChange, this.voter.phoneNumber))
-    uiElements.push(UIF.getTextInput('Email', 'email', this.handleVoterTextChange, this.voter.email))
+    uiElements.push(UIF.getTextInput('Email', 'email', this.handleVoterTextChange, this.voter.email, {autoCapitalize: 'none'}))
     uiElements.push(UIF.getTextInput('Birth Date (MM/DD/YYYY)', 'birthDate', this.handleVoterTextChange, this.voter.birthDate))
     uiElements.push(UIF.getTextInput('Street Address', 'streetAddress', this.handleVoterTextChange, this.voter.streetAddress))
     uiElements.push(UIF.getTextInput('Zip', 'zip', this.handleVoterTextChange, this.voter.zip))

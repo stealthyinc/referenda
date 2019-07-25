@@ -109,14 +109,8 @@ export const MainRoutes = [
     level: 0,
     title: 'Fundraising',
     icon: FontIcons.card,
-    screen: CampaignerMenuScreen,
+    screen: DonatorAmountScreen,
     children: [
-      {
-        id: 'Donator Amount',
-        title: 'Donator Amount',
-        screen: DonatorAmountScreen,
-        children: [],
-      },
       {
         id: 'Donator Other Amount',
         title: 'Donator Other Amount',
@@ -146,15 +140,60 @@ export const MainRoutes = [
         title: 'Donation Complete',
         screen: DonationCompleteScreen,
         children: [],
-      },
-      {
-        id: 'Campaign Progress',
-        title: 'Campaign Progress',
-        screen: CampaignerProgressScreen,
-        children: [],
-      },
+      }
     ],
   },
+  // {
+  //   id: 'CampaignerMenu',
+  //   level: 0,
+  //   title: 'Fundraising',
+  //   icon: FontIcons.card,
+  //   screen: CampaignerMenuScreen,
+  //   children: [
+  //     {
+  //       id: 'Donator Amount',
+  //       title: 'Donator Amount',
+  //       screen: DonatorAmountScreen,
+  //       children: [],
+  //     },
+  //     {
+  //       id: 'Donator Other Amount',
+  //       title: 'Donator Other Amount',
+  //       screen: DonatorOtherAmountScreen,
+  //       children: [],
+  //     },
+  //     {
+  //       id: 'Donator Info',
+  //       title: 'Donator Info',
+  //       screen: DonatorInfoScreen,
+  //       children: [],
+  //     },
+  //     {
+  //       id: 'Donator Name',
+  //       title: 'Donator Name',
+  //       screen: DonatorNameScreen,
+  //       children: [],
+  //     },
+  //     {
+  //       id: 'Donation',
+  //       title: 'Donation',
+  //       screen: ChargeScreen,
+  //       children: [],
+  //     },
+  //     {
+  //       id: 'Donation Complete',
+  //       title: 'Donation Complete',
+  //       screen: DonationCompleteScreen,
+  //       children: [],
+  //     },
+  //     {
+  //       id: 'Campaign Progress',
+  //       title: 'Campaign Progress',
+  //       screen: CampaignerProgressScreen,
+  //       children: [],
+  //     },
+  //   ],
+  // },
   {
     id: 'SocialMenu',
     level: 0,

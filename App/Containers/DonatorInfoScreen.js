@@ -40,7 +40,7 @@ const { candidateData } = require('../Data/CandidateData.js')
 
 class DonatorInfoScreen extends Component {
   static navigationOptions = {
-    title: 'Campaign Donation'.toUpperCase(),
+    title: 'Donor Info'.toUpperCase(),
   };
 
   constructor() {
@@ -233,7 +233,7 @@ class DonatorInfoScreen extends Component {
       undefined :
       (
         <Text style={{color: 'blue'}} onPress={() => Linking.openURL('https://transition.fec.gov/pages/brochures/fecfeca.shtml#Disclosure')}>
-          *Campaign finance laws require occupation & employer.
+          *Law requires occupation & employer.
         </Text>
       )
 
@@ -249,11 +249,11 @@ class DonatorInfoScreen extends Component {
               width: imageDimension,
               borderRadius: imageBorderRadius,
               borderWidth: 1,
-              borderColor: '#389C95',
+              borderColor: 'black',
               resizeMode: 'contain'}}/>
         </View>
 
-          <Text style={styles.title}>Donor Information</Text>
+          {/*<Text style={styles.title}>Donor Information</Text>*/}
           {this.getInputElement('Mobile Phone Number', this.onPhoneNumber, phoneNumberInputStyle, donationRecord.phoneNumber, true)}
           {occupationInput}
           {employerInput}
@@ -267,7 +267,7 @@ class DonatorInfoScreen extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#78CCC5',
+    backgroundColor: 'white',
     flex: 1,
     alignItems: 'center',
     justifyContent: 'space-between',

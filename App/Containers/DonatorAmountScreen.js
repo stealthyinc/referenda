@@ -39,7 +39,8 @@ const { candidateData } = require('../Data/CandidateData.js')
 
 class DonatorAmountScreen extends Component {
   static navigationOptions = {
-    title: 'Campaign Donation'.toUpperCase(),
+    // title: 'Campaign Donation'.toUpperCase(),
+    title: 'New Donation'.toUpperCase()
   };
 
   state = {
@@ -121,11 +122,14 @@ class DonatorAmountScreen extends Component {
                 width: imageDimension,
                 borderRadius: imageBorderRadius,
                 borderWidth: 1,
-                borderColor: '#389C95',
+                borderColor: 'black',
                 resizeMode: 'contain'}}/>
+            <RkText
+              rkType='large'
+              style={{color:'black', marginTop:9}}>{candidateData.getFundraisingTitle()}</RkText>
           </View>
 
-          <Text style={styles.title}>Donor Contribution</Text>
+          {/*<Text style={styles.title}>Donor Contribution</Text> */}
 
           <View style={{width: '100%', marginVertical: 9, flexDirection:'row', justifyContent:'flex-start'}}>
             <View style={styles.buttonBarLeftStyle}>
@@ -156,7 +160,7 @@ class DonatorAmountScreen extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#78CCC5',
+    backgroundColor: 'white',
     flex: 1,
     alignItems: 'center',
     justifyContent: 'space-between',
