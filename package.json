@@ -30,6 +30,7 @@
     "react-router-modal": "^1.4.2",
     "react-scripts": "3.0.1",
     "react-share": "^3.0.0",
+    "react-swipeable-views-native": "^0.13.2",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
     "runes": "^0.4.3",
