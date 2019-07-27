@@ -95,6 +95,12 @@ export default class Feed extends Component {
       descriptionStr: '',
     }
 
+    this.simpleIdData = {
+      userName: '',
+      email: '',
+      password: '',
+    }
+
     this.newPostId = undefined
     this.newPostTitle = undefined
     this.newPostDescription = undefined
@@ -1807,6 +1813,28 @@ export default class Feed extends Component {
     )
   }
 
+  handleSignUpTextChange = (aFieldName, aFieldValue) => {
+    // TODO: validation
+    switch (aFieldName) {
+      case 'userName':
+      case 'email':
+      case 'password':
+        this.simpleIdData[aFieldName] = aFieldValue
+        break;
+      default:
+        console.log(`ERROR: Unexpected ${aFieldName}. Expecting userName, email, or password.`)
+    }
+  }
+
+  handleSignUp = () => {
+    // TODO: Prabhaav
+    // FUTURE TODO:
+    //  - unique user name check?
+    //  - password recovery flow?
+    // Data is stored in this.simpleIdData
+    console.log(`simpleIdData: ${JSON.stringify(this.simpleIdData)}`)
+  }
+
   renderNewSchool() {
     // console.log('In render, data:', this.state.data)
     // const postEditor = (this.state.editingPost) ?
@@ -1862,6 +1890,7 @@ export default class Feed extends Component {
     let feedData = [...this.state.data]   // shallow copy
 
     const aBorder={borderStyle:'solid', borderWidth:1, borderColor:'black'}
+    const anUnderline={borderStyle:'solid', borderBottomWidth:'1', borderColor:'gray',marginHorizontal:10}
 
 
     return (
@@ -1884,22 +1913,31 @@ export default class Feed extends Component {
                 <Text>Sign Up</Text>
                 <Input
                   id='userNameInput'
+                  style={anUnderline}
                   inputStyle={{fontSize:40}}
                   multiline={false}
-                  onChangeText={()=>{}}
+                  onChangeText={(text)=>{this.handleSignUpTextChange('userName', text)}}
                   placeholder='User Name' />
                 <Input
                   id='emailInput'
+                  style={anUnderline}
                   inputStyle={{fontSize:40}}
                   multiline={false}
-                  onChangeText={()=>{}}
+                  onChangeText={(text)=>{this.handleSignUpTextChange('email', text)}}
                   placeholder='Email Address' />
                 <Input
                   id='passwordInput'
+                  style={anUnderline}
                   inputStyle={{fontSize:40}}
                   multiline={false}
-                  onChangeText={()=>{}}
+                  onChangeText={(text)=>{this.handleSignUpTextChange('password', text)}}
                   placeholder='Password' />
+                <Button
+                  small rounded success style={styles.firstCardButtonStyle}
+                  onPress={this.handleSignUp}>
+                  <Text>Sign Up</Text>
+                </Button>
+                <View style={{flex:1}} />
               </View>
             </View>
             <View style={{flexDirection:'row', width:'100%', maxWidth:1024}}>
