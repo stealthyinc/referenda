@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {
   FlatList,
   View,
+  ScrollView,
   TouchableOpacity,
   ActivityIndicator,
   StyleSheet,
@@ -1806,7 +1807,131 @@ export default class Feed extends Component {
     )
   }
 
-  render() {
+  renderNewSchool() {
+    // console.log('In render, data:', this.state.data)
+    // const postEditor = (this.state.editingPost) ?
+    //   this.renderPostEditor() : undefined
+    const loginButton = (!this.state.editingPost) ? this.getLogInFeedButton() : undefined
+    const newPostButton =
+      (!this.state.editingPost && this.state.isSignedIn) ? this.getNewPostFeedButton() : undefined
+    const contactUsButton = this.getContactUsFeedButton()
+    const shareButton = (this.state.isSignedIn) ? this.getShareFeedButton() : undefined
+
+    const newPostButtonMobile = isMobile ? newPostButton : undefined
+
+    const leftHeaderContent =
+      ( <Text style={styles.headerLogoText} onPress={()=>Linking.openURL('https://referenda.io')}>Referenda</Text> )
+
+    const buttonSpacer = (<View style={{width:5}} />)
+    const rightHeaderContent = isMobile ?
+      (
+        <View style={{flexDirection:'row', justifyContent:'flex-end'}}>
+          {shareButton}
+          {buttonSpacer}
+          {contactUsButton}
+          {buttonSpacer}
+          {loginButton}
+        </View>
+      ) :
+      (
+        <View style={{flexDirection:'row', justifyContent:'flex-end'}}>
+          {shareButton}
+          {buttonSpacer}
+          {contactUsButton}
+          {buttonSpacer}
+          {loginButton}
+          {buttonSpacer}
+          {newPostButton}
+        </View>
+      )
+
+    let activityIndicator = undefined
+    if (this.state.initializing || this.state.saving) {
+      const aiText = (this.state.initializing) ? ' Loading ...' : 'Saving ...'
+      activityIndicator = (
+        <View style={{paddingVertical:10, alignItems:'center', flexDirection:'row', justifyContent:'center', marginVertical:50, borderStyle:'solid', borderWidth:1, borderRadius:5, borderColor:'rgba(242, 242, 242, 1)'}}>
+            <ActivityIndicator size='large' color='black'/>
+            <Text style={{fontFamily:'arial', fontSize:27, color:'rgba(242, 242, 242, 1)'}}> {aiText}</Text>
+        </View> )
+    }
+
+    const headerWidthStyle = {
+      width: (isMobile ? '100%' : 2*C.MAX_CARD_WIDTH)
+    }
+
+    let feedData = [...this.state.data]   // shallow copy
+
+    const aBorder={borderStyle:'solid', borderWidth:1, borderColor:'black'}
+
+
+    return (
+      <Container>
+      { /* TODO: only appears if not webView */ }
+        <Header transparent style={styles.headerStyle}>
+          <View style={styles.headerContentStyle}>
+            {leftHeaderContent}
+            {rightHeaderContent}
+          </View>
+        </Header>
+
+        <ScrollView style={{width:'100%'}}>
+          <View style={{alignItems:'center', width:'100%'}}>
+            <View style={{flexDirection:'row', height:'33vh', width:'100%'}}>
+              <View style={{height:'100%', flex:2, ...aBorder}}>
+                <Text>Carousel</Text>
+              </View>
+              <View style={{height:'100%', flex:1, ...aBorder}}>
+                <Text>Sign Up</Text>
+                <Input
+                  id='userNameInput'
+                  inputStyle={{fontSize:40}}
+                  multiline={false}
+                  onChangeText={()=>{}}
+                  placeholder='User Name' />
+                <Input
+                  id='emailInput'
+                  inputStyle={{fontSize:40}}
+                  multiline={false}
+                  onChangeText={()=>{}}
+                  placeholder='Email Address' />
+                <Input
+                  id='passwordInput'
+                  inputStyle={{fontSize:40}}
+                  multiline={false}
+                  onChangeText={()=>{}}
+                  placeholder='Password' />
+              </View>
+            </View>
+            <View style={{flexDirection:'row', width:'100%', maxWidth:1024}}>
+              <View style={{flex:1, marginHorizontal:5}}>
+                  <FlatList
+                    data={feedData}
+                    renderItem={this.renderItem}
+                    keyExtractor={this.extractItemKey}
+                    style={styles.container} />
+              </View>
+              <View style={{flex:1, marginHorizontal:5}}>
+                  <FlatList
+                    data={feedData}
+                    renderItem={this.renderItem}
+                    keyExtractor={this.extractItemKey}
+                    style={styles.container} />
+              </View>
+              {/*<View style={{flex:1, marginHorizontal:5}}>
+                  <FlatList
+                    data={feedData}
+                    renderItem={this.renderItem}
+                    keyExtractor={this.extractItemKey}
+                    style={styles.container} />
+              </View> */}
+            </View>
+          </View>
+        </ScrollView>
+      </Container>
+    )
+  }
+
+  renderOldSchool() {
     // console.log('In render, data:', this.state.data)
     // const postEditor = (this.state.editingPost) ?
     //   this.renderPostEditor() : undefined
@@ -1966,6 +2091,10 @@ export default class Feed extends Component {
         {newPostButtonMobile}
       </Container>
     )
+  }
+
+  render() {
+    return this.renderNewSchool()
   }
 }
 
