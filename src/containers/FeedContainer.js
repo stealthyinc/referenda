@@ -35,6 +35,7 @@ import ArticleContainer from './ArticleContainer'
 import AppSignUp from '../components/AppSignUp'
 import PhoneNumber from '../components/PhoneNumber'
 import ShareBar from '../components/ShareBar'
+import SwipeView from '../components/SwipeView'
 import queryString from 'query-string'
 // TODO: how do we rip this out / disable it for mobile web and the app (use
 //       the photo chooser / picker for the app).
@@ -1907,7 +1908,7 @@ export default class Feed extends Component {
           <View style={{alignItems:'center', width:'100%'}}>
             <View style={{flexDirection:'row', height:'33vh', width:'100%'}}>
               <View style={{height:'100%', flex:2, ...aBorder}}>
-                <Text>Carousel</Text>
+                <SwipeView />
               </View>
               <View style={{height:'100%', flex:1, ...aBorder}}>
                 <Text>Sign Up</Text>
