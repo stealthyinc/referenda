@@ -108,6 +108,9 @@ export default class Feed extends Component {
 
     this.articleModalItem = undefined
     this.shareModelContent = undefined
+
+    // TODO: tie this to firebase to now for our list of customers.
+    this.campaignUser = false
   }
 
   componentWillMount = async () => {
@@ -763,7 +766,7 @@ export default class Feed extends Component {
         <ImageBackground
           source={{uri: bgImgUrl}}
           resizeMode='cover'
-          style={styles.firstCardStyle}>
+          style={this.campaignUser ? styles.firstCardStyleCampaign : styles.firstCardStyle}>
           <View style={{width:'100%', height:'100%', backgroundColor:'rgba(0,0,0,0.4)',
                         flexDirection:'column', justifyContent:'flex-end',}}>
             {statusDisplay}
@@ -792,6 +795,29 @@ export default class Feed extends Component {
         </ImageBackground>
       </View>
     )
+  }
+  getCardWidth = () => {
+    let width = C.MAX_CARD_WIDTH
+    if (!this.campaignUser) {
+      width = C.MIN_CARD_WIDTH
+    }
+    if (isMobile) {
+      width = '100%'
+    }
+
+    return width
+  }
+
+  getHeaderWidth = () => {
+    let width = 2*C.MAX_CARD_WIDTH
+    if (!this.campaignUser) {
+      width = 3*C.MIN_CARD_WIDTH
+    }
+    if (isMobile) {
+      width = '100%'
+    }
+
+    return width
   }
 
   getUniqueKey() {
@@ -862,9 +888,8 @@ export default class Feed extends Component {
     timeStr = (item.hasOwnProperty('pinned') && item.pinned) ?
       `pinned post - ${timeStr}` : timeStr
 
-    const widthStyle = {
-      width: (isMobile ? '100%' : C.MAX_CARD_WIDTH)
-    }
+
+    const widthStyle = { width: this.getCardWidth() }
 
     let profileImg = undefined
     if (this.indexFileData.profile.avatarImg) {
@@ -1789,7 +1814,7 @@ export default class Feed extends Component {
         justifyContent: 'center'
       }}>
         <View style={{
-          width:(isMobile ? '100%' : 2*C.MAX_CARD_WIDTH),
+          width: this.getHeaderWidth(),
           flexDirection:'row',
           justifyContent: 'space-between',
           backgroundColor: '#34bbed',
@@ -1884,20 +1909,21 @@ export default class Feed extends Component {
     }
 
     const headerWidthStyle = {
-      width: (isMobile ? '100%' : 2*C.MAX_CARD_WIDTH)
+      width: this.getHeaderWidth()
     }
 
     let feedData = [...this.state.data]   // shallow copy
 
-    const aBorder={borderStyle:'solid', borderWidth:1, borderColor:'black'}
-    const anUnderline={borderStyle:'solid', borderBottomWidth:'1', borderColor:'gray',marginHorizontal:10}
+    const aBorder={ borderStyle:'solid', borderWidth:1, borderColor:'black' }
+    const aFeedColumn={ width:C.MIN_CARD_WIDTH, marginHorizontal:5 }
+    const anUnderline={ borderStyle:'solid', borderBottomWidth:'1', borderColor:'gray', paddingHorizontal:10 }
 
 
     return (
       <Container>
       { /* TODO: only appears if not webView */ }
         <Header transparent style={styles.headerStyle}>
-          <View style={styles.headerContentStyle}>
+          <View style={this.campaignUser ? styles.headerContentStyleCampaign : styles.headerContentStyle}>
             {leftHeaderContent}
             {rightHeaderContent}
           </View>
@@ -1940,28 +1966,28 @@ export default class Feed extends Component {
                 <View style={{flex:1}} />
               </View>
             </View>
-            <View style={{flexDirection:'row', width:'100%', maxWidth:1024}}>
-              <View style={{flex:1, marginHorizontal:5}}>
+            <View style={{flexDirection:'row', justifyContent:'center', width:'100%', maxWidth:3*C.MIN_CARD_WIDTH}}>
+              <View style={aFeedColumn}>
                   <FlatList
                     data={feedData}
                     renderItem={this.renderItem}
                     keyExtractor={this.extractItemKey}
                     style={styles.container} />
               </View>
-              <View style={{flex:1, marginHorizontal:5}}>
+              <View style={aFeedColumn}>
                   <FlatList
                     data={feedData}
                     renderItem={this.renderItem}
                     keyExtractor={this.extractItemKey}
                     style={styles.container} />
               </View>
-              {/*<View style={{flex:1, marginHorizontal:5}}>
+              <View style={aFeedColumn}>
                   <FlatList
                     data={feedData}
                     renderItem={this.renderItem}
                     keyExtractor={this.extractItemKey}
                     style={styles.container} />
-              </View> */}
+              </View>
             </View>
           </View>
         </ScrollView>
@@ -2018,7 +2044,7 @@ export default class Feed extends Component {
     }
 
     const headerWidthStyle = {
-      width: (isMobile ? '100%' : 2*C.MAX_CARD_WIDTH)
+      width: this.getHeaderWidth()
     }
 
     let feedData = [...this.state.data]   // shallow copy
@@ -2107,7 +2133,7 @@ export default class Feed extends Component {
         />
         {this.renderUrlBar()}
         {(!this.state.isWebView) ? (<Header transparent style={styles.headerStyle}>
-          <View style={styles.headerContentStyle}>
+          <View style={this.campaignUser ? styles.headerContentStyleCampaign : styles.headerContentStyle}>
             {leftHeaderContent}
             {rightHeaderContent}
           </View>
@@ -2132,6 +2158,9 @@ export default class Feed extends Component {
   }
 
   render() {
+    if (this.campaignUser) {
+      return this.renderOldSchool()
+    }
     return this.renderNewSchool()
   }
 }
@@ -2146,6 +2175,15 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: 'center',
   },
+  headerContentStyleCampaign: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingLeft: (isMobile ? 5 : 0),
+    paddingRight: (isMobile ? 5 : 0),
+    alignItems: 'center',
+    maxWidth: (isMobile ? '100%' : 2 * C.MAX_CARD_WIDTH)
+  },
   headerContentStyle: {
     width: '100%',
     flexDirection: 'row',
@@ -2153,7 +2191,7 @@ const styles = StyleSheet.create({
     paddingLeft: (isMobile ? 5 : 0),
     paddingRight: (isMobile ? 5 : 0),
     alignItems: 'center',
-    maxWidth: (isMobile ? '100%' : 2*C.MAX_CARD_WIDTH)
+    maxWidth: (isMobile ? '100%' : 3 * C.MIN_CARD_WIDTH)
   },
   feedButtonText: {
     fontFamily:'arial',
@@ -2176,11 +2214,17 @@ const styles = StyleSheet.create({
     fontFamily:'arial',
     fontSize: (isMobile ? 14 : 21),
   },
-  firstCardStyle: {
+  firstCardStyleCampaign: {
     width: '100%',
     height: '33vh',
     minHeight: 200,
     maxWidth: (isMobile ? '100%' : 2 * C.MAX_CARD_WIDTH)
+  },
+  firstCardStyle: {
+    width: '100%',
+    height: '33vh',
+    minHeight: 200,
+    maxWidth: (isMobile ? '100%' : 3 * C.MIN_CARD_WIDTH)
   },
   firstCardButtonStyle: {
     borderColor:'lightgray',
