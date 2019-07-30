@@ -8,6 +8,7 @@ import {
   StyleSheet,
   ImageBackground,
   Linking,
+  Alert
 } from 'react-native';
 import {
   Button,
@@ -43,6 +44,8 @@ import FitImage from 'react-native-fit-image';
 import ReactPlayer from 'react-player'
 import Dropzone from 'react-dropzone'
 
+import { createUserAccount, login } from 'simpleid-js-sdk'
+
 import { isMobile } from "react-device-detect";
 
 const moment = require('moment');
@@ -56,18 +59,19 @@ export default class Feed extends Component {
   constructor(props) {
     super(props);
     // const origin = window.location.origin;
-    const appConfig = new AppConfig(['store_write', 'publish_data', 'email'])
-    this.userSession = new UserSession({ appConfig })
+    // const appConfig = new AppConfig(['store_write', 'publish_data', 'email'])
+    // this.userSession = new UserSession({ appConfig })
+    this.userSession = null
     const isSignedIn = this.checkSignedInStatus();
     const userData = isSignedIn && this.userSession.loadUserData();
-    const person = (userData.username) ? new Person(userData.profile) : false;
+    // const person = (userData.username) ? new Person(userData.profile) : false;
 
     cloudIO.setSignedIn(isSignedIn)
     cloudIO.setUserSession(this.userSession)
 
     this.state = {
       userData,
-      person,
+      // person,
       isSignedIn,
       data: [],
       editingProfile: false,
@@ -112,17 +116,7 @@ export default class Feed extends Component {
   }
 
   componentWillMount = async () => {
-    if(!this.userSession.isUserSignedIn() && this.userSession.isSignInPending()) {
-      this.userSession.handlePendingSignIn()
-      .then((userData) => {
-        if(!userData.username) {
-          throw new Error('This app requires a username.')
-        }
-        window.location = `/${userData.username}`
-        const person = (userData.username) ? new Person(userData.profile) : false;
-        this.setState({userData, person})
-      })
-    }
+    this.userLoggedIn()
     // set webview from here, so mobile app news feed functionality is changed
     const parsed = queryString.parse(window.location.search);
     if (parsed)
@@ -236,9 +230,19 @@ export default class Feed extends Component {
    *****************************************************************************
    */
 
+  userLoggedIn () {
+    if(this.userSession) {
+      const userData = this.userSession.loadUserData()
+      const { username } = userData
+      this.setState({userData, isSignedIn: true})
+    }
+  }
 
   checkSignedInStatus() {
-    if (this.userSession.isUserSignedIn()) {
+    if (!this.userSession) {
+      return false
+    }
+    else if (this.userSession.isUserSignedIn()) {
       return true;
     } else if (this.userSession.isSignInPending()) {
       this.userSession.handlePendingSignIn()
@@ -1827,13 +1831,48 @@ export default class Feed extends Component {
     }
   }
 
-  handleSignUp = () => {
+  handleSignUp = async () => {
     // TODO: Prabhaav
     // FUTURE TODO:
     //  - unique user name check?
     //  - password recovery flow?
     // Data is stored in this.simpleIdData
     console.log(`simpleIdData: ${JSON.stringify(this.simpleIdData)}`)
+    const { userName, email, password } = this.simpleIdData
+    const credObj = {
+        id: userName, //This is the name the user selects and will be checked against existing registered names automatically.
+        password, //This should be a complex password supplied by the user
+        hubUrl: "http://hub.blockstack.org", //This will likely be "http://hub.blockstack.org" but can be any storage hub you allow
+        email //Email address for the user, used during account recovery
+    }
+    const appObj = {
+        appOrigin: "https://www.app.referenda.io", //This is the domain for your app
+        scopes: ['store_write', 'publish_data', 'email'] //These are the scopes you are requesting to use
+    }
+    // const params = {
+    //     login: true,
+    //     credObj,
+    //     appObj,
+    //     userPayload: {},
+    //     email
+    // }
+    const create = await createUserAccount(credObj, appObj);
+    const { message, body } = create
+    if(message === "name taken") {
+      //show some error
+      Alert(message)
+    } else {
+      localStorage.setItem('blockstack-session', JSON.stringify(body.body.store.sessionData));
+      if (message === "Need to go through recovery flow") {
+        Alert(message)
+      }
+      else if(message === "successfully created user session") {
+        this.userSession = body.body
+        // this.setState({ signedin: true, pending: false });
+        this.userLoggedIn()
+      }
+    }
+    console.log(create)
   }
 
   renderNewSchool() {
