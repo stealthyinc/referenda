@@ -2117,6 +2117,8 @@ export default class Feed extends Component {
       }
     }
 
+    const stealthyBlue = '#34bbed'
+
     return (
       <Container>
       { /* TODO: only appears if not webView */ }
@@ -2129,11 +2131,14 @@ export default class Feed extends Component {
 
         <ScrollView style={{width:'100%'}}>
           <View style={{alignItems:'center', width:'100%'}}>
-            <View style={{flexDirection:'row', height:'33vh', width:'100%'}}>
-              <View style={{height:'100%', flex:2, ...aBorder}}>
+            <View style={{flexDirection:'row', height:'33vh', width:'100%',
+                          backgroundColor:stealthyBlue,
+                          borderStyle:'solid', borderTopWidth:2, borderBottomWidth:2, borderColor:'gray'}}>
+              <View style={{height:'100%', flex:2,
+                            borderStyle:'solid', borderRightWidth:2, borderColor:'gray'}}>
                 <SwipeView />
               </View>
-              <View style={{height:'100%', flex:1, ...aBorder}}>
+              <View style={{height:'100%', flex:1}}>
                 <Text>Sign Up</Text>
                 <Input
                   id='userNameInput'
