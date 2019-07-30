@@ -2094,7 +2094,8 @@ export default class Feed extends Component {
     let feedData = [...this.state.data]   // shallow copy
 
     const aBorder={ borderStyle:'solid', borderWidth:1, borderColor:'black' }
-    const anUnderline={ borderStyle:'solid', borderBottomWidth:'1', borderColor:'gray', paddingHorizontal:10 }
+    const inputStyle={ borderStyle:'solid', borderBottomWidth:'1', borderColor:'gray', paddingHorizontal:20, fontSize:30, color:'white'}
+    const signUpBackgroundColor = 'black'
 
     const feedColumns = ['col1', 'col2', 'col3']
     const feedElements = {}
@@ -2117,8 +2118,6 @@ export default class Feed extends Component {
       }
     }
 
-    const stealthyBlue = '#34bbed'
-
     return (
       <Container>
       { /* TODO: only appears if not webView */ }
@@ -2132,35 +2131,35 @@ export default class Feed extends Component {
         <ScrollView style={{width:'100%'}}>
           <View style={{alignItems:'center', width:'100%'}}>
             <View style={{flexDirection:'row', height:'33vh', width:'100%',
-                          backgroundColor:stealthyBlue,
+                          backgroundColor:signUpBackgroundColor,
                           borderStyle:'solid', borderTopWidth:2, borderBottomWidth:2, borderColor:'gray'}}>
               <View style={{height:'100%', flex:2,
                             borderStyle:'solid', borderRightWidth:2, borderColor:'gray'}}>
                 <SwipeView />
               </View>
-              <View style={{height:'100%', flex:1}}>
-                <Text>Sign Up</Text>
+              <View style={{height:'100%', flex:1, padding:30}}>
+                <Text style={[styles.headerLogoText, {color:'white'}]}>Referenda connects you to movements that matter.</Text>
                 <Input
                   id='userNameInput'
-                  style={anUnderline}
-                  inputStyle={{fontSize:40}}
+                  style={inputStyle}
                   multiline={false}
                   onChangeText={(text)=>{this.handleSignUpTextChange('userName', text)}}
-                  placeholder='User Name' />
+                  placeholder='User Name'
+                  placeholderTextColor='rgb(255,255,255)' />
                 <Input
                   id='emailInput'
-                  style={anUnderline}
-                  inputStyle={{fontSize:40}}
+                  style={inputStyle}
                   multiline={false}
                   onChangeText={(text)=>{this.handleSignUpTextChange('email', text)}}
-                  placeholder='Email Address' />
+                  placeholder='Email Address'
+                  placeholderTextColor='rgb(255,255,255)' />
                 <Input
                   id='passwordInput'
-                  style={anUnderline}
-                  inputStyle={{fontSize:40}}
+                  style={inputStyle}
                   multiline={false}
                   onChangeText={(text)=>{this.handleSignUpTextChange('password', text)}}
-                  placeholder='Password' />
+                  placeholder='Password'
+                  placeholderTextColor='rgb(255,255,255)' />
                 <Button
                   small rounded success style={styles.firstCardButtonStyle}
                   onPress={this.handleSignUp}>
