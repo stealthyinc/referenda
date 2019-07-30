@@ -2169,7 +2169,7 @@ export default class Feed extends Component {
 
         <ScrollView style={{width:'100%'}}>
           <View style={{alignItems:'center', width:'100%'}}>
-            <View style={{flexDirection:'row', height:'33vh', width:'100%',
+            <View style={{flexDirection:'row', height:450, width:'100%',
                           backgroundColor:signUpBackgroundColor}}>
               <View style={{height:'100%', flex:1,
                             borderStyle:'solid', borderRightWidth:2, borderColor:'white'}}>
