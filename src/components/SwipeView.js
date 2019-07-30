@@ -29,7 +29,9 @@ export default class SwipeView extends React.Component {
             </ImageBackground>
           </View>
           <View style={[styles.slideContainer]}>
-            <Text>Humane technology that prioritizes privacy and data security.</Text>
+            <ImageBackground style={{width: '100%', height: '100%'}} source={require('../assets/human.jpeg')}>
+              <Text>Humane technology that prioritizes privacy and data security.</Text>
+            </ImageBackground>
           </View>
         </Swiper>
       </View>
