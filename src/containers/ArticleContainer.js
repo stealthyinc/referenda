@@ -20,7 +20,6 @@ import ShareBar from '../components/ShareBar'
 import SocialBar from '../components/SocialBar'
 import AppSignUp from '../components/AppSignUp'
 
-import Feed from './FeedContainer'
 import { isMobile } from "react-device-detect";
 import FitImage from 'react-native-fit-image';
 import ReactPlayer from 'react-player'
@@ -71,7 +70,6 @@ export default class Article extends Component {
           facebookQuote: aPost.title,
           emailSubject: aPost.title,
           emailBody: ''
-          // emailBody: Feed.getTruncatedStr(aPost.description, 255)
         }
     } else {
       this.shareModelContent = undefined

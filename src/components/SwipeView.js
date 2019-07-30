@@ -12,11 +12,11 @@ import SwipeableViews from 'react-swipeable-views-native';
 
 const styles = StyleSheet.create({
   slideContainer: {
-    height: 100,
+    height: '100%',
   },
   slide: {
     padding: 15,
-    height: 100,
+    height: '100%',
   },
   slide1: {
     backgroundColor: '#FEA900',

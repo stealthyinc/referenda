@@ -110,6 +110,40 @@ export default class Feed extends Component {
     this.articleModalItem = undefined
     this.shareModelContent = undefined
 
+    // There are multiple ways of viewing app.referenda content. Here is a
+    // summary of what we're trying to achieve:
+    //
+    // 1. Desktop / Mobile Web, User Not Logged In, No Specific Campaign:
+    //    - sees header
+    //    - sees carousel bar with sign up interface
+    //    - sees 3 columns of campaign info
+    //
+    // 2. Desktop / Mobile Web, User Not Logged In, Specific Campaign:
+    //    - sees header
+    //    - sees carousel bar with sign up interface
+    //    - sees 1 column campaign with profile bar
+    //
+    // 3. Mobile Phone, Specific Campaign
+    //    - no header
+    //    - no carousel bar
+    //    - sees 1 column campaign with profile bar
+    //
+    // 4. Desktop / Mobile Web, User Logged In, Not a Candidate, No Specific Campaign
+    //    - sees header
+    //    - sees carousel bar with NO sign up interface
+    //    - sees 3 columns of campaign info
+    //
+    // 4. Desktop / Mobile Web, User Logged In, Not a Candidate, Specific Campaign
+    //    - sees header
+    //    - sees carousel bar with NO sign up interface
+    //    - sees 1 column campaign with profile bar
+    //
+    // 5. Desktop / Mobile Web, User Logged In, A Candidate, No Specific Campaign
+    // 6. Desktop / Mobile Web, User Looged In, A Candidate, Specific Campaign
+    //    - same for 5 & 6 for now
+    //    - sees header
+    //    - sees their 1 column campaign editable
+    //
     // TODO: tie this to firebase to now for our list of customers.
     this.campaignUser = false
   }
@@ -132,6 +166,12 @@ export default class Feed extends Component {
       this.setState({isWebView: parsed.wv})
   }
 
+  getDefaultCampaignName = () => {
+    // Does this make any sense if you're not logged in or logged in for that matter?
+    // --if you're logged in, shouldn't it return your campaign?  TODO
+    return (this.campaignUser) ? 'default' : 'alex.stealthy.id'
+  }
+
   componentDidMount = async () => {
     // await firebaseInstance.loadUser()
     await firebaseInstance.loadSnapshot()
@@ -142,7 +182,7 @@ export default class Feed extends Component {
     //       if we can read from it. If not then redirect to the 'undefined'/
     //       default GAIA bucket which features or own content for new users.
     //
-    this.campaignName = 'default'
+    this.campaignName = this.getDefaultCampaignName()
     firebaseInstance.setCampaignName(this.campaignName)
     this.mediaUrlRoot = undefined
     this.showPostId = undefined
@@ -167,7 +207,7 @@ export default class Feed extends Component {
       } catch (suppressedError) {}
 
     } else {
-      this.campaignName = (this.props.navigation.getParam('campaignName')) ? this.props.navigation.getParam('campaignName') : 'default'
+      this.campaignName = (this.props.navigation.getParam('campaignName')) ? this.props.navigation.getParam('campaignName') : this.getDefaultCampaignName()
       let campaignName = this.campaignName.replace(/\./g, '_');
       if (campaignName in GAIA_MAP) {
         firebaseInstance.setCampaignName(this.campaignName)
@@ -186,7 +226,7 @@ export default class Feed extends Component {
       } else {
         // TODO: change this to a default with info for a prospective campaign
         // TODO: check if the path is a gaia hub and pull from that too.
-        const unsignedInUserDefault = 'default'
+        const unsignedInUserDefault = this.getDefaultCampaignName()
         // Quick test to see if a valid gaia bucket was specified--if so use that as the mediaUrlRoot
         // allowing any user's gaia bucket link to work
         let campaignNameIsGaiaBucket = false
@@ -207,6 +247,7 @@ export default class Feed extends Component {
         }
       }
     }
+
 
     await this.getIndexFileData()
 
@@ -317,6 +358,7 @@ export default class Feed extends Component {
     //
     try {
       this.indexFileData = await this.readIndex()
+      this.setState({ initializing: false })
     } catch (displayedSuppressedError) {
       console.log(displayedSuppressedError)
     }
@@ -962,13 +1004,149 @@ export default class Feed extends Component {
     );
   }
 
+  renderItemNewSchool = ({ item }) => {
+    // Render the header.
+    if (item && item.hasOwnProperty('header') && item.header) {
+      return undefined
+    }
+
+    if (item && item.hasOwnProperty('postEditor') && item.postEditor) {
+      return this.renderPostEditor()
+    }
+
+    let image = undefined
+    try {
+      if (item.media) {
+        const itemUrl = `${this.mediaUrlRoot}/${item.media.fileName}`
+        if (item.media.type === C.MEDIA_TYPES.IMAGE) {
+          image = (
+            <Amplitude eventProperties={{campaign: this.campaignName, postId: item.id, userId: firebaseInstance.getUserId()}}>
+              {({ logEvent }) =>
+                <TouchableOpacity
+                  delayPressIn={70}
+                  activeOpacity={0.8}
+                  onPress={() => this.onItemPressed(item, logEvent)}>
+                  <FitImage source={{uri: itemUrl}} />
+                </TouchableOpacity>
+              }
+            </Amplitude>
+          )
+        } else if (item.media.type === C.MEDIA_TYPES.VIDEO) {
+          // const canPlayStr =
+          //   `ReactPlayer.canPlay = ${ReactPlayer.canPlay(itemUrl)}`
+          image = (
+            <ReactPlayer
+              width='100%'
+              controls={true}
+              light={false}
+              muted={true}
+              playing={!isMobile}
+              url={itemUrl} />
+          )
+        }
+      }
+    } catch (suppressedError) {
+      console.log(`Couldn't render item.\n${suppressedError}`)
+    }
+
+    const pinButtonText = (item.hasOwnProperty('pinned') && item.pinned) ?
+      'Unpin' : 'Pin'
+    const editorControls = (this.state.isSignedIn) ?
+      (
+        <CardItem footer>
+          <View style={{flexDirection:'row', justifyContent:'flex-end', flex:1}}>
+            {this.getPostEditorButton('X', this.handleDelete, "trash", item.id, false)}
+            <View style={{width:5}} />
+            {this.getPostEditorButton(pinButtonText, this.handlePin, "pin", item.id, false)}
+          </View>
+        </CardItem>
+      ) :
+      undefined
+
+    let timeStr = moment(item.time).fromNow()
+    timeStr = (item.hasOwnProperty('pinned') && item.pinned) ?
+      `pinned post - ${timeStr}` : timeStr
+
+
+    const widthStyle = { width: this.getCardWidth() }
+
+    let profileImg = undefined
+    if (this.indexFileData.profile.avatarImg) {
+      const profileImgUrl = `${this.mediaUrlRoot}/${this.indexFileData.profile.avatarImg}`
+      profileImg =
+        ( <Thumbnail source={profileImgUrl}/> )
+    }
+
+    return (
+      <View style={{alignItems:'center'}}>
+        <View style={widthStyle}>
+          <Card style={{flex: 0}}>
+            <Amplitude eventProperties={{campaign: this.campaignName, postId: item.id, userId: firebaseInstance.getUserId()}}>
+              {({ logEvent }) =>
+                <CardItem bordered>
+                  {profileImg}
+                  <Body style={{marginHorizontal:10}}>
+                    <Text style={styles.postTitleText}>
+                      {(U.getTruncatedStr(item.title, 96))}
+                    </Text>
+                    {/*<Text style={styles.postTimeText}>{timeStr}</Text>*/}
+                  </Body>
+                  <Button
+                    bordered style={{borderColor:'lightgray'}}
+                    small
+                    rounded
+                    info
+                    onPress={() => {
+                      logEvent('Feed share button pressed')
+                      this.toggleShareModal(item)}}
+                  >
+                    <Icon name='share-alt' />
+                  </Button>
+                </CardItem>
+              }
+            </Amplitude>
+            <CardItem>
+              <Body>
+                {/* FitImage needs this view or it doesn't understand the width to size the image height to.' */}
+                <View style={{width:'100%'}}>
+                  {image}
+                </View>
+                <TouchableOpacity
+                  delayPressIn={70}
+                  activeOpacity={0.8}
+                  onPress={() => this.onItemPressed(item)}>
+                  <View style={{padding:10, width:'100%'}}>
+                    <Text style={styles.postBodyText}>
+                      {(U.getTruncatedStr(item.description, 128))}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              </Body>
+            </CardItem>
+            <SocialBar
+              chatFunction={() => this.toggleMessageModal()}
+              paymentFunction={() => this.togglePhoneModal()}
+              likeFunction={() => this.handlePostLike(item.id)}
+              likeCount={item.likes}
+              id={item.id}
+              origin={'feed'}
+              campaignName={this.props.campaignName}
+              webview={this.state.isWebView}
+            />
+            {editorControls}
+          </Card>
+        </View>
+      </View>
+    );
+  }
+
   /*
    * Feed Button methods
    */
   getLogInFeedButton = () => {
     const icon = this.state.isSignedIn ? 'log-out' : 'log-in'
-    const buttonName = this.state.isSignedIn ? 'Log Out' : 'Log In'
-    const buttonText = (isMobile && (buttonName !== 'Log In')) ?
+    const buttonName = this.state.isSignedIn ? 'Sign Out' : 'Sign In'
+    const buttonText = (isMobile && (buttonName !== 'Sign In')) ?
       undefined :
       ( <Text style={styles.feedButtonText} uppercase={false}>
           {buttonName}
@@ -1916,9 +2094,28 @@ export default class Feed extends Component {
     let feedData = [...this.state.data]   // shallow copy
 
     const aBorder={ borderStyle:'solid', borderWidth:1, borderColor:'black' }
-    const aFeedColumn={ width:C.MIN_CARD_WIDTH, marginHorizontal:5 }
     const anUnderline={ borderStyle:'solid', borderBottomWidth:'1', borderColor:'gray', paddingHorizontal:10 }
 
+    const feedColumns = ['col1', 'col2', 'col3']
+    const feedElements = {}
+    for (const feedColumn of feedColumns) {
+      feedElements[feedColumn] = []
+    }
+    let feedColIdx = 0
+    for (const feedElement of feedData) {
+      if (feedElement.hasOwnProperty('header') && feedElement.header === true) {
+        continue
+      }
+
+      feedElements[feedColumns[feedColIdx]].push(
+        this.renderItemNewSchool({item: feedElement})
+      )
+
+      feedColIdx++
+      if (feedColIdx == feedColumns.length) {
+        feedColIdx = 0
+      }
+    }
 
     return (
       <Container>
@@ -1967,27 +2164,15 @@ export default class Feed extends Component {
                 <View style={{flex:1}} />
               </View>
             </View>
-            <View style={{flexDirection:'row', justifyContent:'center', width:'100%', maxWidth:3*C.MIN_CARD_WIDTH}}>
-              <View style={aFeedColumn}>
-                  <FlatList
-                    data={feedData}
-                    renderItem={this.renderItem}
-                    keyExtractor={this.extractItemKey}
-                    style={styles.container} />
+            <View id='feedElements' style={{flexDirection:'row', justifyContent:'center', width:'100%', maxWidth:3*C.MIN_CARD_WIDTH}}>
+              <View id='feedElementsCol1' style={{flexDirection:'column', maxWidth:C.MIN_CARD_WIDTH}}>
+                {feedElements['col1']}
               </View>
-              <View style={aFeedColumn}>
-                  <FlatList
-                    data={feedData}
-                    renderItem={this.renderItem}
-                    keyExtractor={this.extractItemKey}
-                    style={styles.container} />
+              <View id='feedElementsCol2' style={{flexDirection:'column', maxWidth:C.MIN_CARD_WIDTH}}>
+                {feedElements['col2']}
               </View>
-              <View style={aFeedColumn}>
-                  <FlatList
-                    data={feedData}
-                    renderItem={this.renderItem}
-                    keyExtractor={this.extractItemKey}
-                    style={styles.container} />
+              <View id='feedElementsCol3' style={{flexDirection:'column', maxWidth:C.MIN_CARD_WIDTH}}>
+                {feedElements['col3']}
               </View>
             </View>
           </View>
@@ -2203,7 +2388,7 @@ const styles = StyleSheet.create({
   },
   postTitleText: {
     fontFamily:'arial',
-    fontSize: (isMobile ? 20 : 27)
+    fontSize: (isMobile ? 20 : 24)
   },
   postTimeText: {
     fontFamily:'arial',
