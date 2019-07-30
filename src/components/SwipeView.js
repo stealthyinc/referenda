@@ -62,7 +62,9 @@ export default class SwipeView extends React.Component {
           loop={true}
           autoplayTimeout={5}
           controlsWrapperStyle={{marginLeft:swiperControlOffset, marginRight:10}}
-          prevButtonText=''>
+          prevButtonText=''
+          nextButtonText='Next >'
+          nextButtonStyle={{fontSize:18,fontWeight:'bold'}}>
           {this.getSlide(require('../assets/bad.jpeg'),
                         'Traditional social media is infested with trolls & bots.',
                         'Online discourse is easily manipulated...see US Elections, Brexit, fake news, etc...')}
