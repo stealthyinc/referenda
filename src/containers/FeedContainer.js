@@ -2094,7 +2094,7 @@ export default class Feed extends Component {
     let feedData = [...this.state.data]   // shallow copy
 
     const aBorder={ borderStyle:'solid', borderWidth:1, borderColor:'black' }
-    const inputStyle={ borderStyle:'solid', borderBottomWidth:'1', borderColor:'gray', paddingHorizontal:20, fontSize:30, color:'white'}
+    const inputStyle={ borderStyle:'solid', borderBottomWidth:'1', borderColor:'gray', paddingHorizontal:20, fontSize:24, color:'white'}
     const signUpBackgroundColor = 'black'
 
     const feedColumns = ['col1', 'col2', 'col3']
@@ -2131,14 +2131,13 @@ export default class Feed extends Component {
         <ScrollView style={{width:'100%'}}>
           <View style={{alignItems:'center', width:'100%'}}>
             <View style={{flexDirection:'row', height:'33vh', width:'100%',
-                          backgroundColor:signUpBackgroundColor,
-                          borderStyle:'solid', borderTopWidth:2, borderBottomWidth:2, borderColor:'gray'}}>
-              <View style={{height:'100%', flex:2,
-                            borderStyle:'solid', borderRightWidth:2, borderColor:'gray'}}>
+                          backgroundColor:signUpBackgroundColor}}>
+              <View style={{height:'100%', flex:3,
+                            borderStyle:'solid', borderRightWidth:2, borderColor:'white'}}>
                 <SwipeView />
               </View>
               <View style={{height:'100%', flex:1, padding:30}}>
-                <Text style={[styles.headerLogoText, {color:'white'}]}>Referenda connects you to movements that matter.</Text>
+                <Text style={[styles.headerLogoText, {color:'white', paddingVertical:20}]}>Referenda connects you to movements that matter.</Text>
                 <Input
                   id='userNameInput'
                   style={inputStyle}
