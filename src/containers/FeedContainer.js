@@ -2132,15 +2132,15 @@ export default class Feed extends Component {
           <View style={{alignItems:'center', width:'100%'}}>
             <View style={{flexDirection:'row', height:'33vh', width:'100%',
                           backgroundColor:signUpBackgroundColor}}>
-              <View style={{height:'100%', flex:3,
+              <View style={{height:'100%', flex:1,
                             borderStyle:'solid', borderRightWidth:2, borderColor:'white'}}>
                 <SwipeView />
               </View>
-              <View style={{height:'100%', flex:1, padding:30}}>
-                <Text style={[styles.headerLogoText, {color:'white', paddingVertical:20}]}>Referenda connects you to movements that matter.</Text>
+              <View style={{height:'100%', width:400, paddingVertical:10, paddingHorizontal:15}}>
+                <Text style={[styles.headerLogoText, {color:'white', fontSize:40}]}>Referenda connects you with movements that matter.</Text>
                 <Input
                   id='userNameInput'
-                  style={inputStyle}
+                  style={[inputStyle, {height: 30}]}
                   multiline={false}
                   onChangeText={(text)=>{this.handleSignUpTextChange('userName', text)}}
                   placeholder='User Name'
@@ -2159,12 +2159,16 @@ export default class Feed extends Component {
                   onChangeText={(text)=>{this.handleSignUpTextChange('password', text)}}
                   placeholder='Password'
                   placeholderTextColor='rgb(255,255,255)' />
-                <Button
-                  small rounded success style={styles.firstCardButtonStyle}
-                  onPress={this.handleSignUp}>
-                  <Text>Sign Up</Text>
-                </Button>
-                <View style={{flex:1}} />
+                <View style={{flex: 1, flexDirection:'column', justifyContent: 'center', alignItems: 'center', width:'100%'}}>
+                  {/* Keep the next view--otherwise we can't seem to center this button. TODO: why? */}
+                  <View>
+                    <Button success small={false}
+                      style={styles.feedButton}
+                      onPress={this.handleSignUp}>
+                      <Text style={styles.feedButtonText} uppercase={false}>Sign Up</Text>
+                    </Button>
+                  </View>
+                </View>
               </View>
             </View>
             <View id='feedElements' style={{flexDirection:'row', justifyContent:'center', width:'100%', maxWidth:3*C.MIN_CARD_WIDTH}}>
