@@ -1,56 +1,38 @@
 import React from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
-
-import SwipeableViews from 'react-swipeable-views-native';
-// There is another version using the scroll component instead of animated.
-// I'm unsure which one give the best UX. Please give us some feedback.
-// import SwipeableViews from 'react-swipeable-views-native/lib/SwipeableViews.scroll';
+import { ImageBackground, StyleSheet, Text, View } from 'react-native';
+import Swiper from 'react-native-web-swiper';
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   slideContainer: {
-    height: '100%',
-  },
-  slide: {
-    padding: 15,
-    height: '100%',
-  },
-  slide1: {
-    backgroundColor: '#FEA900',
-  },
-  slide2: {
-    backgroundColor: '#B3DC4A',
-  },
-  slide3: {
-    backgroundColor: '#6AC0FF',
-  },
-  text: {
-    color: '#fff',
-    fontSize: 16,
-  },
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  }
 });
 
-const SwipeView = () => (
-  <SwipeableViews style={styles.slideContainer}>
-    <View style={[styles.slide, styles.slide1]}>
-      <Text style={styles.text}>
-        slide n°1
-      </Text>
-    </View>
-    <View style={[styles.slide, styles.slide2]}>
-      <Text style={styles.text}>
-        slide n°2
-      </Text>
-    </View>
-    <View style={[styles.slide, styles.slide3]}>
-      <Text style={styles.text}>
-        slide n°3
-      </Text>
-    </View>
-  </SwipeableViews>
-);
-
-export default SwipeView;
+export default class SwipeView extends React.Component {
+  render() {
+    return (
+      <View style={styles.container}>
+        <Swiper loop={true}>
+          <View style={[styles.slideContainer]}>
+            <ImageBackground style={{width: '100%', height: '100%'}} source={require('../assets/bad.jpeg')}>
+              <Text>Traditional social media is infested with trolls & bots.</Text>
+            </ImageBackground>
+          </View>
+          <View style={[styles.slideContainer]}>
+            <ImageBackground style={{width: '100%', height: '100%'}} source={require('../assets/good.jpeg')}>
+              <Text>Authentic social communication with real stakeholders.</Text>
+            </ImageBackground>
+          </View>
+          <View style={[styles.slideContainer]}>
+            <Text>Humane technology that prioritizes privacy and data security.</Text>
+          </View>
+        </Swiper>
+      </View>
+    );
+  }
+}
