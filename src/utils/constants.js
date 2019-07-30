@@ -46,3 +46,4 @@ export const VIDEO_EXTENSIONS = ['mp4', 'mpeg', 'mpg', 'avi', 'mov']
 export const IMAGE_EXTENSIONS = ['png', 'jpg', 'jpeg', 'bmp', 'gif']
 
 export const MAX_CARD_WIDTH = 512
+export const MIN_CARD_WIDTH = 400
