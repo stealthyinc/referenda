@@ -64,14 +64,14 @@ export default class SwipeView extends React.Component {
           controlsWrapperStyle={{marginLeft:swiperControlOffset, marginRight:10}}
           prevButtonText=''>
           {this.getSlide(require('../assets/bad.jpeg'),
-                         'Traditional social media is infested with trolls & bots.',
-                         'A sub-title: a whole buncha text someone may actually read someday, but probably not soon, in this run-on sentence....')}
+                        'Traditional social media is infested with trolls & bots.',
+                        'Online discourse is easily manipulated...see US Elections, Brexit, fake news, etc...')}
          {this.getSlide(require('../assets/good.jpeg'),
                         'Authentic social communication with real stakeholders.',
-                        'A sub-title: a whole buncha text someone may actually read someday, but probably not soon, in this run-on sentence....')}
+                        'Referenda is an authentic private social network for humans in a movement, district, state, or country')}
          {this.getSlide(require('../assets/human.jpeg'),
                         'Humane technology that prioritizes privacy and data security.',
-                        'A sub-title: a whole buncha text someone may actually read someday, but probably not soon, in this run-on sentence....')}
+                        'We are focused on providing actual utility to stakeholders and not be at the mercy of Advertisers and Clicks')}
         </Swiper>
       </View>
     );
