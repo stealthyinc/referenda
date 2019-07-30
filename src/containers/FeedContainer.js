@@ -8,7 +8,8 @@ import {
   StyleSheet,
   ImageBackground,
   Linking,
-  Alert
+  Alert,
+  Dimensions
 } from 'react-native';
 import {
   Button,
@@ -47,6 +48,9 @@ import Dropzone from 'react-dropzone'
 import { createUserAccount, login } from 'simpleid-js-sdk'
 
 import { isMobile } from "react-device-detect";
+
+// TODO: consider using window & window listener to do updating
+const { width, height } = Dimensions.get('window')
 
 const moment = require('moment');
 const { firebaseInstance } = require('../utils/firebaseWrapper.js')
@@ -2136,7 +2140,11 @@ export default class Feed extends Component {
     const inputStyle={ borderStyle:'solid', borderBottomWidth:'1', borderColor:'gray', paddingHorizontal:20, fontSize:24, color:'white'}
     const signUpBackgroundColor = 'black'
 
-    const feedColumns = ['col1', 'col2', 'col3']
+    let feedColumns = ['col1', 'col2']
+    if (width > 1200) {
+      feedColumns = ['col1', 'col2', 'col3']
+    }
+
     const feedElements = {}
     for (const feedColumn of feedColumns) {
       feedElements[feedColumn] = []
@@ -2157,9 +2165,62 @@ export default class Feed extends Component {
       }
     }
 
+    const feeds = []
+    for (const feedColumn of feedColumns) {
+      feeds.push(
+        <View style={{flexDirection:'column', maxWidth:C.MIN_CARD_WIDTH}}>
+          {feedElements[feedColumn]}
+        </View>
+      )
+    }
+
+    let avatarImg = undefined
+    try {
+      avatarImg = this.indexFileData.profile.avatarImg
+    } catch (suppressedError) {}
+
     return (
       <Container>
       { /* TODO: only appears if not webView */ }
+        <ModalContainer
+          component={<ShareBar campaignName={this.props.campaignName} content={this.shareModelContent}/>}
+          showModal={this.state.showShareModal}
+          toggleModal={this.toggleShareModal}
+          modalHeader='Social Share'
+        />
+        {/*<ModalContainer
+          component={<SquareContainer />}
+          showModal={this.state.showSquareModal}
+          toggleModal={this.toggleSquareModal}
+          modalHeader='Campaign Donation'
+        />*/}
+        <ModalContainer
+          component={<PhoneNumber campaignName={this.state.campaignName} toggleModal={this.togglePhoneModal}/>}
+          showModal={this.state.showPhoneModal}
+          toggleModal={this.togglePhoneModal}
+          modalHeader='Text Campaign Donation Link'
+        />
+        <ModalContainer
+          component={ <ArticleContainer
+                          avatarImg={avatarImg}
+                          toggleModal={this.toggleArticleModal}
+                          togglePhoneModal={this.togglePhoneModal}
+                          item={this.articleModalItem}
+                          campaignName={this.campaignName}
+                          mediaUrlRoot={this.mediaUrlRoot}
+                          handlePostLike={(id) => this.handlePostLike(id)}
+                          />}
+          showModal={this.state.showArticleModal}
+          toggleModal={this.toggleArticleModal}
+          modalHeader='Article View'
+        />
+        <ModalContainer
+          component={<AppSignUp toggleModal={this.toggleMessageModal}/>}
+          showModal={this.state.showMessageModal}
+          toggleModal={this.toggleMessageModal}
+          modalHeader='App Sign Up'
+        />
+
         <Header transparent style={styles.headerStyle}>
           <View style={this.campaignUser ? styles.headerContentStyleCampaign : styles.headerContentStyle}>
             {leftHeaderContent}
@@ -2175,8 +2236,8 @@ export default class Feed extends Component {
                             borderStyle:'solid', borderRightWidth:2, borderColor:'white'}}>
                 <SwipeView />
               </View>
-              <View style={{height:'100%', width:400, paddingVertical:10, paddingHorizontal:15}}>
-                <Text style={[styles.headerLogoText, {color:'white', fontSize:40}]}>Referenda connects you with movements that matter.</Text>
+              <View style={{height:'100%', width:300, paddingVertical:10, paddingHorizontal:15}}>
+                <Text style={[styles.headerLogoText, {color:'white', fontSize:32}]}>Referenda connects you with movements that matter.</Text>
                 <Input
                   id='userNameInput'
                   style={[inputStyle, {height: 30}]}
@@ -2211,15 +2272,7 @@ export default class Feed extends Component {
               </View>
             </View>
             <View id='feedElements' style={{flexDirection:'row', justifyContent:'center', width:'100%', maxWidth:3*C.MIN_CARD_WIDTH}}>
-              <View id='feedElementsCol1' style={{flexDirection:'column', maxWidth:C.MIN_CARD_WIDTH}}>
-                {feedElements['col1']}
-              </View>
-              <View id='feedElementsCol2' style={{flexDirection:'column', maxWidth:C.MIN_CARD_WIDTH}}>
-                {feedElements['col2']}
-              </View>
-              <View id='feedElementsCol3' style={{flexDirection:'column', maxWidth:C.MIN_CARD_WIDTH}}>
-                {feedElements['col3']}
-              </View>
+              {feeds}
             </View>
           </View>
         </ScrollView>

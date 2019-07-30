@@ -31,7 +31,10 @@ const styles = StyleSheet.create({
 
 export default class SwipeView extends React.Component {
   getSlide = (anImage, aTitle, aSubTitle) => {
-    const textRibbonOffset = (width - 3*C.MIN_CARD_WIDTH) / 2
+    let textRibbonOffset = 0
+    if (width > 1200) {
+      textRibbonOffset = (width - 3*C.MIN_CARD_WIDTH) / 2
+    }
 
     const imgBgStyle = {width: '100%', height: '100%', flexDirection: 'row'}
     const textBoxStyle = {width: 400, height: '100%', paddingVertical:25, paddingHorizontal: 35, flexDirection: 'column', backgroundColor:'rgba(0,0,0,0.65)'}
