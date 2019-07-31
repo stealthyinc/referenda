@@ -88,6 +88,7 @@ export default class Feed extends Component {
       showPhoneModal: false,
       showArticleModal: false,
       showMessageModal: false,
+      showSignUpModal: false,
       profileImgUploading: undefined,
       bgImgUploading: undefined,
       showUrlBar: undefined,
@@ -605,6 +606,10 @@ export default class Feed extends Component {
     this.setState({showMessageModal: !this.state.showMessageModal})
   }
 
+  toggleSignUpModal = () => {
+    this.setState({showSignUpModal: !this.state.showSignUpModal})
+  }
+
   renderHeader = (headerData) => {
     let statusDisplay = undefined
 
@@ -949,6 +954,10 @@ export default class Feed extends Component {
         ( <Thumbnail source={profileImgUrl}/> )
     }
 
+    const likeFunction = (this.state.isSignedIn) ?
+      this.handlePostLike :
+      this.toggleSignUpModal
+
     return (
       <View style={{alignItems:'center'}}>
         <View style={widthStyle}>
@@ -998,7 +1007,7 @@ export default class Feed extends Component {
             <SocialBar
               chatFunction={() => this.toggleMessageModal()}
               paymentFunction={() => this.togglePhoneModal()}
-              likeFunction={() => this.handlePostLike(item.id)}
+              likeFunction={() => likeFunction(item.id)}
               likeCount={item.likes}
               id={item.id}
               origin={'feed'}
@@ -1085,6 +1094,10 @@ export default class Feed extends Component {
         ( <Thumbnail source={profileImgUrl}/> )
     }
 
+    const likeFunction = (this.state.isSignedIn) ?
+      this.handlePostLike :
+      this.toggleSignUpModal
+
     return (
       <View style={{alignItems:'center'}}>
         <View style={widthStyle}>
@@ -1134,7 +1147,7 @@ export default class Feed extends Component {
             <SocialBar
               chatFunction={() => this.toggleMessageModal()}
               paymentFunction={() => this.togglePhoneModal()}
-              likeFunction={() => this.handlePostLike(item.id)}
+              likeFunction={() => likeFunction(item.id)}
               likeCount={item.likes}
               id={item.id}
               origin={'feed'}
@@ -2218,8 +2231,18 @@ export default class Feed extends Component {
           component={<AppSignUp toggleModal={this.toggleMessageModal}/>}
           showModal={this.state.showMessageModal}
           toggleModal={this.toggleMessageModal}
-          modalHeader='App Sign Up'
+          modalHeader='Add your email to access this feature in the Referenda mobile app!'
         />
+        <ModalContainer
+          component={
+            <View style={{backgroundColor:'white'}}>
+              <Text style={{color:'black', fontSize:40}}>Sign up!</Text>
+            </View>}
+          showModal={this.state.showSignUpModal}
+          toggleModal={this.toggleSignUpModal}
+          modalHeader='Sign-up now to get more features!'
+        />
+
 
         <Header transparent style={styles.headerStyle}>
           <View style={this.campaignUser ? styles.headerContentStyleCampaign : styles.headerContentStyle}>
@@ -2414,7 +2437,7 @@ export default class Feed extends Component {
           component={<AppSignUp toggleModal={this.toggleMessageModal}/>}
           showModal={this.state.showMessageModal}
           toggleModal={this.toggleMessageModal}
-          modalHeader='App Sign Up'
+          modalHeader='Add your email to access this feature in the Referenda mobile app!'
         />
         {this.renderUrlBar()}
         {(!this.state.isWebView) ? (<Header transparent style={styles.headerStyle}>

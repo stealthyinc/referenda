@@ -67,7 +67,7 @@ export default class SwipeView extends React.Component {
           nextButtonStyle={{fontSize:18,fontWeight:'bold'}}>
           {this.getSlide(require('../assets/bad.jpeg'),
                         'Traditional social media is infested with trolls & bots.',
-                        'Online discourse is easily manipulated...see US Elections, Brexit, fake news, etc...')}
+                        'Online discourse is easily manipulated...see US 🇺🇸 Elections, Brexit, fake news, etc...')}
          {this.getSlide(require('../assets/good.jpeg'),
                         'Authentic social communication with real stakeholders.',
                         'Referenda is an authentic private social network for humans in a movement, district, state, or country')}
