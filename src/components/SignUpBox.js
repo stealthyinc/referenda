@@ -1,6 +1,6 @@
 import React from 'react'
 import { Alert, View } from 'react-native';
-import { Input, Button, Text } from 'native-base'
+import { Button, Input, Item, Text } from 'native-base'
 
 import { createUserAccount, login } from 'simpleid-js-sdk'
 const { firebaseInstance } = require('../utils/firebaseWrapper.js')
@@ -9,7 +9,9 @@ export default class SignUpBox extends React.Component {
   constructor(props) {
     super(props)
     this.props = props
-
+    this.state = {
+      errorUsername: false
+    }
     this.simpleIdData = {
       userName: '',
       email: '',
@@ -61,6 +63,7 @@ export default class SignUpBox extends React.Component {
     if(message === "name taken") {
       //show some error
       Alert(message)
+      this.setState({errorUsername: true})
     } else {
       localStorage.setItem('blockstack-session', JSON.stringify(body.body.store.sessionData));
       if (message === "Need to go through recovery flow") {
@@ -82,27 +85,30 @@ export default class SignUpBox extends React.Component {
     return (
       <View style={{height:450, width:300, paddingVertical:10, paddingHorizontal:15}}>
         <Text style={[styles.headerLogoText, {color:'white', fontSize:32}]}>{headingText}</Text>
-        <Input
-          id='userNameInput'
-          style={[styles.inputStyle, {height: 30}]}
-          multiline={false}
-          onChangeText={(text)=>{this.handleSignUpTextChange('userName', text)}}
-          placeholder='User Name'
-          placeholderTextColor='rgb(255,255,255)' />
-        <Input
-          id='emailInput'
-          style={styles.inputStyle}
-          multiline={false}
-          onChangeText={(text)=>{this.handleSignUpTextChange('email', text)}}
-          placeholder='Email Address'
-          placeholderTextColor='rgb(255,255,255)' />
-        <Input
-          id='passwordInput'
-          style={styles.inputStyle}
-          multiline={false}
-          onChangeText={(text)=>{this.handleSignUpTextChange('password', text)}}
-          placeholder='Password'
-          placeholderTextColor='rgb(255,255,255)' />
+        <Item error={this.state.errorUsername}>
+          <Input
+            id='userNameInput'
+            multiline={false}
+            onChangeText={(text)=>{this.handleSignUpTextChange('userName', text)}}
+            placeholder='User Name'
+            placeholderTextColor='rgb(255,255,255)' />
+        </Item>
+        <Item error>
+          <Input
+            id='emailInput'
+            multiline={false}
+            onChangeText={(text)=>{this.handleSignUpTextChange('email', text)}}
+            placeholder='Email Address'
+            placeholderTextColor='rgb(255,255,255)' />
+        </Item>
+        <Item disabled>
+          <Input
+            id='passwordInput'
+            multiline={false}
+            onChangeText={(text)=>{this.handleSignUpTextChange('password', text)}}
+            placeholder='Password'
+            placeholderTextColor='rgb(255,255,255)' />
+        </Item>
         <View style={{flex: 1, flexDirection:'column', justifyContent: 'center', alignItems: 'center', width:'100%'}}>
           {/* Keep the next view--otherwise we can't seem to center this button. TODO: why? */}
           <View>

@@ -2083,7 +2083,7 @@ export default class Feed extends Component {
 
     const aBorder={ borderStyle:'solid', borderWidth:1, borderColor:'black' }
     const inputStyle={ borderStyle:'solid', borderBottomWidth:'1', borderColor:'gray', paddingHorizontal:20, fontSize:24, color:'white'}
-    const signUpBackgroundColor = 'black'
+    const signUpBackgroundColor = '#a4a4a4'
 
     let feedColumns = ['col1', 'col2']
     if (width > 1200) {
@@ -2192,7 +2192,7 @@ export default class Feed extends Component {
                 <SwipeView />
               </View>
               <SignUpBox
-                title="Referenda connects you with movements that matter."
+                title="Connect with movements that matter."
                 styles={styles}
                 updateUserSessionFn={this.updateUserSession} />
               { /*
