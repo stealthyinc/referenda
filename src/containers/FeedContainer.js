@@ -8,7 +8,6 @@ import {
   StyleSheet,
   ImageBackground,
   Linking,
-  Alert,
   Dimensions
 } from 'react-native';
 import {
@@ -31,6 +30,7 @@ import {
 } from "@amplitude/react-amplitude";
 import { AppConfig, UserSession, Person } from 'blockstack'
 import SocialBar from '../components/SocialBar'
+import SignUpBox from '../components/SignUpBox'
 import ModalContainer from './ModalContainer'
 // import SquareContainer from './SquareContainer'
 import ArticleContainer from './ArticleContainer'
@@ -44,8 +44,6 @@ import queryString from 'query-string'
 import FitImage from 'react-native-fit-image';
 import ReactPlayer from 'react-player'
 import Dropzone from 'react-dropzone'
-
-import { createUserAccount, login } from 'simpleid-js-sdk'
 
 import { isMobile } from "react-device-detect";
 
@@ -105,12 +103,6 @@ export default class Feed extends Component {
       descriptionStr: '',
     }
 
-    this.simpleIdData = {
-      userName: '',
-      email: '',
-      password: '',
-    }
-
     this.newPostId = undefined
     this.newPostTitle = undefined
     this.newPostDescription = undefined
@@ -155,6 +147,12 @@ export default class Feed extends Component {
     //
     // TODO: tie this to firebase to now for our list of customers.
     this.campaignUser = false
+  }
+
+  updateUserSession = (aUserSession) => {
+    this.userSession = aUserSession
+    // this.setState({ signedin: true, pending: false });
+    this.userLoggedIn()
   }
 
   componentWillMount = async () => {
@@ -1054,6 +1052,7 @@ export default class Feed extends Component {
           image = (
             <ReactPlayer
               width='100%'
+              height='auto'
               controls={true}
               light={false}
               muted={true}
@@ -1104,29 +1103,18 @@ export default class Feed extends Component {
           <Card style={{flex: 0}}>
             <Amplitude eventProperties={{campaign: this.campaignName, postId: item.id, userId: firebaseInstance.getUserId()}}>
               {({ logEvent }) =>
-                <CardItem bordered>
+                <CardItem bordered style={{alignItems:'center', paddingTop:10, paddingBottom:10, paddingRight:10, paddingLeft:10}}>
                   {profileImg}
-                  <Body style={{marginHorizontal:10}}>
+                  <Body style={{marginLeft:10,marginRight:0}}>
                     <Text style={styles.postTitleText}>
-                      {(U.getTruncatedStr(item.title, 96))}
+                      {(U.getTruncatedStr(item.title, 80))}
                     </Text>
-                    {/*<Text style={styles.postTimeText}>{timeStr}</Text>*/}
+                    <Text style={styles.postTimeText}>{timeStr}</Text>
                   </Body>
-                  <Button
-                    bordered style={{borderColor:'lightgray'}}
-                    small
-                    rounded
-                    info
-                    onPress={() => {
-                      logEvent('Feed share button pressed')
-                      this.toggleShareModal(item)}}
-                  >
-                    <Icon name='share-alt' />
-                  </Button>
                 </CardItem>
               }
             </Amplitude>
-            <CardItem>
+            <CardItem style={{paddingTop:10, paddingBottom:10, paddingRight:10, paddingLeft:10}}>
               <Body>
                 {/* FitImage needs this view or it doesn't understand the width to size the image height to.' */}
                 <View style={{width:'100%'}}>
@@ -1153,6 +1141,7 @@ export default class Feed extends Component {
               origin={'feed'}
               campaignName={this.props.campaignName}
               webview={this.state.isWebView}
+              shareFunction={() => this.toggleShareModal(item)}
             />
             {editorControls}
           </Card>
@@ -2038,63 +2027,6 @@ export default class Feed extends Component {
     )
   }
 
-  handleSignUpTextChange = (aFieldName, aFieldValue) => {
-    // TODO: validation
-    switch (aFieldName) {
-      case 'userName':
-      case 'email':
-      case 'password':
-        this.simpleIdData[aFieldName] = aFieldValue
-        break;
-      default:
-        console.log(`ERROR: Unexpected ${aFieldName}. Expecting userName, email, or password.`)
-    }
-  }
-
-  handleSignUp = async () => {
-    // TODO: Prabhaav
-    // FUTURE TODO:
-    //  - unique user name check?
-    //  - password recovery flow?
-    // Data is stored in this.simpleIdData
-    console.log(`simpleIdData: ${JSON.stringify(this.simpleIdData)}`)
-    const { userName, email, password } = this.simpleIdData
-    const credObj = {
-        id: userName, //This is the name the user selects and will be checked against existing registered names automatically.
-        password, //This should be a complex password supplied by the user
-        hubUrl: "http://hub.blockstack.org", //This will likely be "http://hub.blockstack.org" but can be any storage hub you allow
-        email //Email address for the user, used during account recovery
-    }
-    const appObj = {
-        appOrigin: "https://www.app.referenda.io", //This is the domain for your app
-        scopes: ['store_write', 'publish_data', 'email'] //These are the scopes you are requesting to use
-    }
-    // const params = {
-    //     login: true,
-    //     credObj,
-    //     appObj,
-    //     userPayload: {},
-    //     email
-    // }
-    const create = await createUserAccount(credObj, appObj);
-    const { message, body } = create
-    if(message === "name taken") {
-      //show some error
-      Alert(message)
-    } else {
-      localStorage.setItem('blockstack-session', JSON.stringify(body.body.store.sessionData));
-      if (message === "Need to go through recovery flow") {
-        Alert(message)
-      }
-      else if(message === "successfully created user session") {
-        this.userSession = body.body
-        // this.setState({ signedin: true, pending: false });
-        this.userLoggedIn()
-      }
-    }
-    console.log(create)
-  }
-
   renderNewSchool() {
     // console.log('In render, data:', this.state.data)
     // const postEditor = (this.state.editingPost) ?
@@ -2259,7 +2191,12 @@ export default class Feed extends Component {
                             borderStyle:'solid', borderRightWidth:2, borderColor:'white'}}>
                 <SwipeView />
               </View>
-              <View style={{height:'100%', width:300, paddingVertical:10, paddingHorizontal:15}}>
+              <SignUpBox
+                title="Referenda connects you with movements that matter."
+                styles={styles}
+                updateUserSessionFn={this.updateUserSession} />
+              { /*
+              <View style={{height:450, width:300, paddingVertical:10, paddingHorizontal:15}}>
                 <Text style={[styles.headerLogoText, {color:'white', fontSize:32}]}>Referenda connects you with movements that matter.</Text>
                 <Input
                   id='userNameInput'
@@ -2284,7 +2221,7 @@ export default class Feed extends Component {
                   placeholderTextColor='rgb(255,255,255)' />
                 <View style={{flex: 1, flexDirection:'column', justifyContent: 'center', alignItems: 'center', width:'100%'}}>
                   {/* Keep the next view--otherwise we can't seem to center this button. TODO: why? */}
-                  <View>
+                  { /*<View>
                     <Button success small={false}
                       style={styles.feedButton}
                       onPress={this.handleSignUp}>
@@ -2293,6 +2230,7 @@ export default class Feed extends Component {
                   </View>
                 </View>
               </View>
+              */ }
             </View>
             <View id='feedElements' style={{flexDirection:'row', justifyContent:'center', width:'100%', maxWidth:3*C.MIN_CARD_WIDTH}}>
               {feeds}
@@ -2510,17 +2448,19 @@ const styles = StyleSheet.create({
   },
   postTitleText: {
     fontFamily:'arial',
-    fontSize: (isMobile ? 20 : 24)
+    fontWeight:'bold',
+    color:'rgb(70,70,70)',
+    fontSize: (isMobile ? 16 : 20)
   },
   postTimeText: {
     fontFamily:'arial',
-    fontSize: (isMobile ? 14 : 21),
+    fontSize: (isMobile ? 14 : 18),
     fontStyle: 'italic',
     color:'lightgray'
   },
   postBodyText: {
     fontFamily:'arial',
-    fontSize: (isMobile ? 14 : 21),
+    fontSize: (isMobile ? 14 : 18),
   },
   firstCardStyleCampaign: {
     width: '100%',
@@ -2660,5 +2600,13 @@ const styles = StyleSheet.create({
     borderWidth:2,
     borderColor:'white',
     borderStyle:'solid'
+  },
+  inputStyle : {
+    borderStyle:'solid',
+    borderBottomWidth:'1',
+    borderColor:'gray',
+    paddingHorizontal:20,
+    fontSize:24,
+    color:'white'
   }
 });
