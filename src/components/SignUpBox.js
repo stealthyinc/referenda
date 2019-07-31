@@ -1,6 +1,6 @@
 import React from 'react'
 import { Alert, View } from 'react-native';
-import { Input, Button, Text } from 'native-base'
+import { Input, Button, Text, Icon } from 'native-base'
 
 import { createUserAccount, login } from 'simpleid-js-sdk'
 const { firebaseInstance } = require('../utils/firebaseWrapper.js')
@@ -74,17 +74,27 @@ export default class SignUpBox extends React.Component {
   }
 
   render() {
-    const { title, styles, updateUserSessionFn } = this.props
+    const { title, styles, updateUserSessionFn, closeButtonFn } = this.props
 
     const headingText = (title) ?
       title : "Referenda connects you with movements that matter."
 
+    const closeButton = (closeButtonFn) ?
+      (
+        <Button rounded onClick={closeButtonFn} danger>
+          <Icon active name="close" />
+        </Button>
+      ) : undefined
+
     return (
       <View style={{height:450, width:300, paddingVertical:10, paddingHorizontal:15}}>
-        <Text style={[styles.headerLogoText, {color:'white', fontSize:32}]}>{headingText}</Text>
+        <View style={{flexDirection:'row', alignItems:'flex-start', marginBottom:30}}>
+          <Text style={[styles.headerLogoText, {color:'white', fontSize:32}]}>{headingText}</Text>
+          {closeButton}
+        </View>
         <Input
           id='userNameInput'
-          style={[styles.inputStyle, {height: 30}]}
+          style={styles.inputStyle}
           multiline={false}
           onChangeText={(text)=>{this.handleSignUpTextChange('userName', text)}}
           placeholder='User Name'

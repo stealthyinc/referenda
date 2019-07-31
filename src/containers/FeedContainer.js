@@ -952,10 +952,6 @@ export default class Feed extends Component {
         ( <Thumbnail source={profileImgUrl}/> )
     }
 
-    const likeFunction = (this.state.isSignedIn) ?
-      this.handlePostLike :
-      this.toggleSignUpModal
-
     return (
       <View style={{alignItems:'center'}}>
         <View style={widthStyle}>
@@ -1005,7 +1001,7 @@ export default class Feed extends Component {
             <SocialBar
               chatFunction={() => this.toggleMessageModal()}
               paymentFunction={() => this.togglePhoneModal()}
-              likeFunction={() => likeFunction(item.id)}
+              likeFunction={() => this.handlePostLikeFn(item.id)}
               likeCount={item.likes}
               id={item.id}
               origin={'feed'}
@@ -1093,10 +1089,6 @@ export default class Feed extends Component {
         ( <Thumbnail source={profileImgUrl}/> )
     }
 
-    const likeFunction = (this.state.isSignedIn) ?
-      this.handlePostLike :
-      this.toggleSignUpModal
-
     return (
       <View style={{alignItems:'center'}}>
         <View style={widthStyle}>
@@ -1135,7 +1127,7 @@ export default class Feed extends Component {
             <SocialBar
               chatFunction={() => this.toggleMessageModal()}
               paymentFunction={() => this.togglePhoneModal()}
-              likeFunction={() => likeFunction(item.id)}
+              likeFunction={() => this.handlePostLikeFn(item.id)}
               likeCount={item.likes}
               id={item.id}
               origin={'feed'}
@@ -1529,6 +1521,14 @@ export default class Feed extends Component {
       editingPost: false,
       saving: false
     })
+  }
+
+  handlePostLikeFn = (anItemId) => {
+    if (this.state.isSignedIn) {
+      this.handlePostLike(anItemId)
+    } else {
+      this.toggleSignUpModal()
+    }
   }
 
   handlePostLike = async (aPostId, logEvent) => {
@@ -2147,20 +2147,21 @@ export default class Feed extends Component {
         />
         <ModalContainer
           component={ <ArticleContainer
+                          styles={styles}
                           avatarImg={avatarImg}
                           toggleModal={this.toggleArticleModal}
                           togglePhoneModal={this.togglePhoneModal}
                           item={this.articleModalItem}
                           campaignName={this.campaignName}
                           mediaUrlRoot={this.mediaUrlRoot}
-                          handlePostLike={(id) => this.handlePostLike(id)}
+                          handlePostLike={((id) => this.handlePostLikeFn(id))}
                           />}
           showModal={this.state.showArticleModal}
           toggleModal={this.toggleArticleModal}
           modalHeader='Article View'
         />
         <ModalContainer
-          component={<AppSignUp toggleModal={this.toggleMessageModal}/>}
+          component={<AppSignUp styles={styles} toggleModal={this.toggleMessageModal} closeButtonFn={this.toggleMessageModal}/>}
           showModal={this.state.showMessageModal}
           toggleModal={this.toggleMessageModal}
           modalHeader='Add your email to access this feature in the Referenda mobile app!'
@@ -2171,7 +2172,8 @@ export default class Feed extends Component {
               <SignUpBox
                 title="Sign-up to like posts and more!"
                 styles={styles}
-                updateUserSessionFn={this.updateUserSession} />
+                updateUserSessionFn={this.updateUserSession}
+                closeButtonFn={this.toggleSignUpModal} />
             </View>}
           showModal={this.state.showSignUpModal}
           toggleModal={this.toggleSignUpModal}
@@ -2326,20 +2328,21 @@ export default class Feed extends Component {
         />
         <ModalContainer
           component={ <ArticleContainer
+                          styles={styles}
                           avatarImg={avatarImg}
                           toggleModal={this.toggleArticleModal}
                           togglePhoneModal={this.togglePhoneModal}
                           item={this.articleModalItem}
                           campaignName={this.campaignName}
                           mediaUrlRoot={this.mediaUrlRoot}
-                          handlePostLike={(id) => this.handlePostLike(id)}
+                          handlePostLike={((id) => this.handlePostLikeFn(id))}
                           />}
           showModal={this.state.showArticleModal}
           toggleModal={this.toggleArticleModal}
           modalHeader='Article View'
         />
         <ModalContainer
-          component={<AppSignUp toggleModal={this.toggleMessageModal}/>}
+          component={<AppSignUp styles={styles} toggleModal={this.toggleMessageModal} closeButtonFn={this.toggleMessageModal}/>}
           showModal={this.state.showMessageModal}
           toggleModal={this.toggleMessageModal}
           modalHeader='Add your email to access this feature in the Referenda mobile app!'
@@ -2574,6 +2577,8 @@ const styles = StyleSheet.create({
     borderColor:'gray',
     paddingHorizontal:20,
     fontSize:24,
-    color:'white'
+    color:'white',
+    flex:0,
+    paddingVertical:15
   }
 });

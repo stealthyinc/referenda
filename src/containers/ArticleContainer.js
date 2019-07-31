@@ -46,6 +46,8 @@ export default class Article extends Component {
       showMessageModal: false,
       isWebView: false
     }
+
+    this.props = props
   }
 
   componentWillMount = async () => {
@@ -206,6 +208,8 @@ export default class Article extends Component {
   }
 
   render = () => {
+    const feedStyles = this.props.styles
+
     let MAX_ZOOM_CARD_DIM = 768
     let zoomStyle = {}
     if (!isMobile) {
@@ -230,7 +234,7 @@ export default class Article extends Component {
           modalHeader='Text Campaign Donation Link'
         />
         <ModalContainer
-          component={<AppSignUp toggleModal={this.toggleMessageModal}/>}
+          component={<AppSignUp styles={feedStyles} toggleModal={this.toggleMessageModal}/>}
           showModal={this.state.showMessageModal}
           toggleModal={this.toggleMessageModal}
           modalHeader='App Sign Up'

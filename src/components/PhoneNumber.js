@@ -22,13 +22,21 @@ const SQUARE_URL = process.env.REACT_APP_SQUARE_URL
 const request = require('request-promise')
 
 export default class PhoneNumber extends Component {
-  state = {
-    phoneNumber: '',
-    amount: undefined,
-    showSpinner: false,
-    showToast: false,
-    error: ''
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      phoneNumber: '',
+      amount: undefined,
+      showSpinner: false,
+      showToast: false,
+      error: ''
+    }
+
+    this.props = props
   }
+
+
   renderButton = (amount) => {
     return (
       <Button
@@ -42,69 +50,8 @@ export default class PhoneNumber extends Component {
       </Button>
     )
   }
-  getAmountInCentsFromDonation(aDonationStrUSD) {
-    //
-    // Convert from USD to Cents, discard fractional portion:
-    const totalCents = Math.floor(parseFloat(aDonationStrUSD) * 100)
-    //
-    // Calculate 1% commission, rounded to the nearest cent:
-    const feeCents = Math.ceil(totalCents / 100)
-    //
-    return {
-      totalCents: totalCents,
-      proceedsCents: (totalCents - feeCents),
-      feeCents: feeCents
-    }
-  }
-  sendInformation = async () => {
-    this.setState({showSpinner: true})
-    let candidateName = ''
-    let locationId = ''
-    if (this.props.campaignName === 'agatha') {
-      candidateName = `Agatha Bacelar's`
-      locationId = '0WNJSXGSXWG89'
-    }
-    else if (this.props.campaignName === 'guaido') {
-      candidateName = `Juan Guaido's`
-      locationId = 'NVXZ9K1H1K3T5'
-    }
-    else {
-      candidateName = `Default Politician's`
-      locationId = 'NVXZ9K1H1K3T5'
-    }
-    const message = `Thank you for your donation to ${candidateName} Campaign. Here's a helpful link for you to donate. We will notify you when the Referenda App is ready!`
-    const campaign_message = `Donation to ${candidateName} Campaign`
-    const amounts = this.getAmountInCentsFromDonation(this.state.amount)
-    const feeAmount = amounts.feeCents
-    const donationAmount = amounts.proceedsCents
-    const data = {
-      message,
-      campaign_message,
-      locationId,
-      donationAmount,
-      feeAmount,
-      phoneNumber: this.state.phoneNumber,
-      pre_populate_shipping_address: {},
-      isMobile: false
-    }
-    return request(`${SQUARE_URL}/createCheckout`, {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      form: data,
-    })
-    .then((response) => {
-      this.setState({showSpinner: false})
-      this.props.toggleModal()
-      return response
-    })
-    .catch((error) => {
-      this.setState({error, showSpinner: false})
-      // console.error(error);
-    });
-  }
+
+
   renderSpinner = () => {
     if (this.state.showSpinner) {
       return <Spinner />
@@ -113,6 +60,7 @@ export default class PhoneNumber extends Component {
       return null
     }
   }
+
   renderHeader = () => {
     if (this.state.error) {
       return (
@@ -125,6 +73,7 @@ export default class PhoneNumber extends Component {
       return null
     }
   }
+
   renderButtonContent = () => {
     if (isMobile) {
       return (
@@ -175,6 +124,7 @@ export default class PhoneNumber extends Component {
       )
     }
   }
+
   render () {
     return (
       <Card style={{marginBottom: 15}}>
@@ -215,5 +165,75 @@ export default class PhoneNumber extends Component {
         </CardItem>
       </Card>
     )
+  }
+
+
+  /* Non-render related / UI related code below here
+  /*
+  /****************************************************************************/
+
+  getAmountInCentsFromDonation(aDonationStrUSD) {
+    //
+    // Convert from USD to Cents, discard fractional portion:
+    const totalCents = Math.floor(parseFloat(aDonationStrUSD) * 100)
+    //
+    // Calculate 1% commission, rounded to the nearest cent:
+    const feeCents = Math.ceil(totalCents / 100)
+    //
+    return {
+      totalCents: totalCents,
+      proceedsCents: (totalCents - feeCents),
+      feeCents: feeCents
+    }
+  }
+
+  sendInformation = async () => {
+    this.setState({showSpinner: true})
+    let candidateName = ''
+    let locationId = ''
+    if (this.props.campaignName === 'agatha') {
+      candidateName = `Agatha Bacelar's`
+      locationId = '0WNJSXGSXWG89'
+    }
+    else if (this.props.campaignName === 'guaido') {
+      candidateName = `Juan Guaido's`
+      locationId = 'NVXZ9K1H1K3T5'
+    }
+    else {
+      candidateName = `Default Politician's`
+      locationId = 'NVXZ9K1H1K3T5'
+    }
+    const message = `Thank you for your donation to ${candidateName} Campaign. Here's a helpful link for you to donate. We will notify you when the Referenda App is ready!`
+    const campaign_message = `Donation to ${candidateName} Campaign`
+    const amounts = this.getAmountInCentsFromDonation(this.state.amount)
+    const feeAmount = amounts.feeCents
+    const donationAmount = amounts.proceedsCents
+    const data = {
+      message,
+      campaign_message,
+      locationId,
+      donationAmount,
+      feeAmount,
+      phoneNumber: this.state.phoneNumber,
+      pre_populate_shipping_address: {},
+      isMobile: false
+    }
+    return request(`${SQUARE_URL}/createCheckout`, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      form: data,
+    })
+    .then((response) => {
+      this.setState({showSpinner: false})
+      this.props.toggleModal()
+      return response
+    })
+    .catch((error) => {
+      this.setState({error, showSpinner: false})
+      // console.error(error);
+    });
   }
 }
