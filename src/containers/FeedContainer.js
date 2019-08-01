@@ -28,7 +28,7 @@ import {
   Amplitude,
   LogOnMount
 } from "@amplitude/react-amplitude";
-// import { AppConfig, UserSession, Person } from 'blockstack'
+import { AppConfig, UserSession, Person } from 'blockstack'
 import SocialBar from '../components/SocialBar'
 import SignUpBox from '../components/SignUpBox'
 import ModalContainer from './ModalContainer'
