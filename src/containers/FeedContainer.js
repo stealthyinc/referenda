@@ -8,7 +8,8 @@ import {
   StyleSheet,
   ImageBackground,
   Linking,
-  Dimensions
+  Dimensions,
+  Image
 } from 'react-native';
 import {
   Button,
@@ -53,6 +54,7 @@ const { firebaseInstance } = require('../utils/firebaseWrapper.js')
 const C = require('../utils/constants.js')
 const U = require('../utils/utils.js')
 const { cloudIO } = require('../utils/cloudIO.js')
+const simple = require('../assets/simple.png')
 
 export default class Feed extends Component {
   constructor(props) {
