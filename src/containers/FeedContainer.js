@@ -456,7 +456,6 @@ export default class Feed extends Component {
           })
         )
       }
-
       const rawPostDataArr = await Promise.all(readPromises)
       for (const rawPostData of rawPostDataArr) {
         if (!rawPostData) {
@@ -494,7 +493,6 @@ export default class Feed extends Component {
     } catch (error) {
       console.error(`Problem reading posts.\n${error}`)
     }
-
     // TODO: check this.showPostId and if set to something in the model, do the
     //       toggleArticleModal work (i.e. set state appropriately to show the
     //       modal).
@@ -1090,10 +1088,15 @@ export default class Feed extends Component {
     const widthStyle = { width: this.getCardWidth() }
 
     let profileImg = undefined
+    const id_string = item.id.toString()
+    const id = parseInt(id_string[id_string.length -1])
     if (this.indexFileData.profile.avatarImg) {
       const profileImgUrl = `${this.mediaUrlRoot}/${this.indexFileData.profile.avatarImg}`
-      profileImg =
-        ( <Thumbnail source={profileImgUrl}/> )
+      profileImg = (this.getDefaultCampaignName() !== 'alex.stealthy.id') ? (
+        <Thumbnail source={profileImgUrl}/>
+      ) : (
+        <Thumbnail source={U.avatarArr[id]}/>
+      )
     }
 
     return (

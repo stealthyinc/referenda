@@ -30,6 +30,7 @@ import {
 import queryString from 'query-string'
 const { firebaseInstance } = require('../utils/firebaseWrapper.js')
 const C = require('../utils/constants.js')
+const U = require('../utils/utils.js')
 
 const moment = require('moment')
 
@@ -95,11 +96,18 @@ export default class Article extends Component {
     if (!item || !toggleFn) {
       return undefined
     }
-
     let avatarImgUrl = undefined
     try {
       avatarImgUrl = `${this.props.mediaUrlRoot}/${this.props.avatarImg}`
     } catch (suppressedError) {}
+    const id_string = item.id.toString()
+    const id = parseInt(id_string[id_string.length -1])
+    // this.campaignUser = 'alex.stealthy.id'
+    const thumbnail = (this.props.campaignName !== 'alex.stealthy.id') ? (
+      <Thumbnail source={avatarImgUrl}/>
+    ) : (
+      <Thumbnail source={U.avatarArr[id]}/>
+    )
 
     let image = undefined
     try {
@@ -139,7 +147,7 @@ export default class Article extends Component {
                    onPress={() => {
                     // logEvent('Article avatar pressed')
                     toggleFn()}}>
-                  <Thumbnail source={avatarImgUrl}/>
+                  {thumbnail}
                 </TouchableOpacity>
                 <Body style={{marginHorizontal:10}}>
                   <TouchableOpacity

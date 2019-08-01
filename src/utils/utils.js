@@ -1,6 +1,23 @@
 const runes = require('runes')
 const C = require('./constants.js')
 
+export const avatarArr = {
+  0: require('../assets/avatars/Image0.png'),
+  1: require('../assets/avatars/Image1.png'),
+  2: require('../assets/avatars/Image2.png'),
+  3: require('../assets/avatars/Image3.png'),
+  4: require('../assets/avatars/Image4.png'),
+  5: require('../assets/avatars/Image5.png'),
+  6: require('../assets/avatars/Image6.png'),
+  7: require('../assets/avatars/Image7.png'),
+  8: require('../assets/avatars/Image8.png'),
+  9: require('../assets/avatars/Image9.png'),
+ 10: require('../assets/avatars/Image10.png'),
+ 11: require('../assets/avatars/Image11.png'),
+}
+
+// export const randomAvatar = avatarArr[Math.floor(Math.random() * Math.floor(12))]
+
 export const getPostFileName = (aPostId) => {
   return `p${aPostId}.json`
 }
