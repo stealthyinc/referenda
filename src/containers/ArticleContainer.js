@@ -128,16 +128,6 @@ export default class Article extends Component {
       timeStr = `${id} days ago`
     }
 
-    let fcData = {
-      avatarImg: undefined,
-      fcBackgroundImg: undefined,
-      nameStr: 'Your Name',
-      positionStr: 'Your Position',
-      followers: '0'
-    }
-    if (this.props.mediaUrlRoot in C.FIRST_CARD_WORKAROUND) {
-      fcData = C.FIRST_CARD_WORKAROUND[this.props.mediaUrlRoot]
-    }
     return (
       <ScrollView style={{width:'100%', height:'100%'}}>
         <Card style={{flex: 0, marginLeft:(isMobile? 2 : 0), marginRight:(isMobile ? 2 : 0)}}>
