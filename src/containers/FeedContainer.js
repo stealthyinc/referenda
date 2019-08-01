@@ -2083,7 +2083,7 @@ export default class Feed extends Component {
 
     const aBorder={ borderStyle:'solid', borderWidth:1, borderColor:'black' }
     const inputStyle={ borderStyle:'solid', borderBottomWidth:'1', borderColor:'gray', paddingHorizontal:20, fontSize:24, color:'white'}
-    const signUpBackgroundColor = '#a4a4a4'
+    const signUpBackgroundColor = 'black'
 
     let feedColumns = ['col1', 'col2']
     if (width > 1200) {
@@ -2575,6 +2575,13 @@ const styles = StyleSheet.create({
     borderStyle:'solid',
     borderBottomWidth:'1',
     borderColor:'gray',
+    paddingHorizontal:20,
+    fontSize:24,
+    color:'white',
+    flex:0,
+    paddingVertical:15
+  },
+  inputStyleWithError : {
     paddingHorizontal:20,
     fontSize:24,
     color:'white',

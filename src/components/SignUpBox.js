@@ -5,7 +5,7 @@ import { Button, Icon, Input, Item, Text } from 'native-base'
 import { createUserAccount, login } from 'simpleid-js-sdk'
 const { firebaseInstance } = require('../utils/firebaseWrapper.js')
 
-function validateEmail(email) {
+function validateEmail (email) {
   var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(email);
 }
@@ -109,6 +109,7 @@ export default class SignUpBox extends React.Component {
         <Item error={this.state.errorUsername}>
           <Input
             id='userNameInput'
+            style={styles.inputStyleWithError}
             multiline={false}
             onChangeText={(text)=>{this.handleSignUpTextChange('userName', text)}}
             placeholder='User Name'
@@ -118,6 +119,7 @@ export default class SignUpBox extends React.Component {
         <Item error={this.state.errorEmail}>
           <Input
             id='emailInput'
+            style={styles.inputStyleWithError}
             multiline={false}
             onChangeText={(text)=>{this.handleSignUpTextChange('email', text)}}
             placeholder='Email Address'
@@ -127,6 +129,7 @@ export default class SignUpBox extends React.Component {
         <Item>
           <Input
             id='passwordInput'
+            style={styles.inputStyleWithError}
             multiline={false}
             onChangeText={(text)=>{this.handleSignUpTextChange('password', text)}}
             placeholder='Password'

@@ -15,38 +15,52 @@ import {
 import {
   View,
 } from 'react-native';
+
 const firebase = require('firebase');
+
+// TODO: unify this with other versions of it in utilities.
+function validateEmail (email) {
+  var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(email);
+}
+
 export default class AppSignUp extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      email: '',
-      error: true
+      errorEmail: false,
     }
 
+    this.email = ''
     this.props = props
   }
 
-  validateEmail(email) {
-    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return re.test(email);
-  }
-  setEmail(email) {
-    const error = !(this.validateEmail(email))
-    this.setState({email, error})
-  }
+  // setEmail(email) {
+  //   const error = !(this.validateEmail(email))
+  //   this.setState({email, error})
+  // }
+
   cleanClose = () => {
-    this.setState({ email: ''})
+    this.email = ''
     this.props.toggleModal()
   }
+
   sendInformation = async () => {
-    if (!this.state.error) {
+    if (validateEmail(this.email)) {
+      if (this.state.errorEmail) {
+        this.setState({errorEmail: false})
+      }
+
       firebase.database().ref('/global/webapp/signup').push({
         time: Date.now(),
-        email: this.state.email
+        email: this.email
       })
+
       this.cleanClose()
+    } else if (!this.state.errorEmail) {
+      this.setState({errorEmail: true})
     }
+
   }
 
 
@@ -106,7 +120,6 @@ export default class AppSignUp extends Component {
         </Button>
       ) : undefined
 
-    // TODO: pull in error checking from PBJ work in SignUpBox for dealing with
 
     return (
       <View style={{height:450, width:300, paddingVertical:10, paddingHorizontal:15, backgroundColor:'black'}}>
@@ -114,15 +127,16 @@ export default class AppSignUp extends Component {
           <Text style={[styles.headerLogoText, {color:'white', fontSize:32}]}>{headingText}</Text>
           {closeButton}
         </View>
-        <Input
-          id='emailInput'
-          style={styles.inputStyle}
-          multiline={false}
-          value={this.state.email}
-          onChangeText={(text) => this.setEmail(text)}
-          placeholder='example@gmail.com'
-          placeholderTextColor='rgb(255,255,255)' />
-
+        <Item error={this.state.errorEmail}>
+          <Input
+            id='emailInput'
+            style={styles.inputStyleWithError}
+            multiline={false}
+            onChangeText={(text) => {this.email = text}}
+            placeholder='Email Address'
+            placeholderTextColor='rgb(255,255,255)' />
+            {(this.state.errorEmail) ? <Icon name='close-circle' /> : null}
+        </Item>
         <View style={{flex: 1, flexDirection:'column', justifyContent: 'center', alignItems: 'center', width:'100%'}}>
           {/* Keep the next view--otherwise we can't seem to center this button. TODO: why? */}
           <View>
