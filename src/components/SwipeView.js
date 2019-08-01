@@ -4,7 +4,6 @@ import Swiper from 'react-native-web-swiper';
 import { isMobile } from "react-device-detect";
 
 const C = require('../utils/constants.js')
-const { width, height } = Dimensions.get('window')
 
 const styles = StyleSheet.create({
   container: {
@@ -30,10 +29,21 @@ const styles = StyleSheet.create({
 });
 
 export default class SwipeView extends React.Component {
+  constructor(props) {
+    super(props)
+    
+    const { width, height } = Dimensions.get('window')
+    this.width = width
+    this.height = height
+  }
   getSlide = (anImage, aTitle, aSubTitle) => {
     let textRibbonOffset = 0
-    if (width > 1200) {
-      textRibbonOffset = (width - 3*C.MIN_CARD_WIDTH) / 2
+    if (this.width > 3*C.MIN_CARD_WIDTH) {
+      textRibbonOffset = (this.width - 3*C.MIN_CARD_WIDTH) / 2
+    } else if (this.width > 2*C.MIN_CARD_WIDTH) {
+      textRibbonOffset = (this.width - 2*C.MIN_CARD_WIDTH) / 2
+    } else if (this.width > C.MIN_CARD_WIDTH) {
+      textRibbonOffset = (this.width - C.MIN_CARD_WIDTH) / 2
     }
 
     const imgBgStyle = {width: '100%', height: '100%', flexDirection: 'row'}
@@ -52,7 +62,12 @@ export default class SwipeView extends React.Component {
       </View>
     )
   }
+
   render() {
+    const { width, height } = Dimensions.get('window')
+    this.width = width
+    this.height = height
+
     const textRibbonOffset = (width - 3*C.MIN_CARD_WIDTH) / 2
     const swiperControlOffset = textRibbonOffset + C.MIN_CARD_WIDTH
 

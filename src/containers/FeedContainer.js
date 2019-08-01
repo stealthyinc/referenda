@@ -47,9 +47,6 @@ import Dropzone from 'react-dropzone'
 
 import { isMobile } from "react-device-detect";
 
-// TODO: consider using window & window listener to do updating
-const { width, height } = Dimensions.get('window')
-
 const moment = require('moment');
 const { firebaseInstance } = require('../utils/firebaseWrapper.js')
 
@@ -64,7 +61,7 @@ export default class Feed extends Component {
     // const origin = window.location.origin;
     // const appConfig = new AppConfig(['store_write', 'publish_data', 'email'])
     // this.userSession = new UserSession({ appConfig })
-    // this.userSession = null
+    this.userSession = null
     const isSignedIn = this.checkSignedInStatus();
     const userData = isSignedIn && this.userSession.loadUserData();
     // const person = (userData.username) ? new Person(userData.profile) : false;
@@ -72,7 +69,11 @@ export default class Feed extends Component {
     cloudIO.setSignedIn(isSignedIn)
     cloudIO.setUserSession(this.userSession)
 
+    const { width, height } = Dimensions.get('window')
+
     this.state = {
+      width: width,
+      height: height,
       userData,
       // person,
       isSignedIn,
@@ -112,39 +113,19 @@ export default class Feed extends Component {
     this.articleModalItem = undefined
     this.shareModelContent = undefined
 
-    // There are multiple ways of viewing app.referenda content. Here is a
-    // summary of what we're trying to achieve:
+    // For the 2nd app mining we release, we support the following referenda functionality:
     //
-    // 1. Desktop / Mobile Web, User Not Logged In, No Specific Campaign:
-    //    - sees header
-    //    - sees carousel bar with sign up interface
-    //    - sees 3 columns of campaign info
+    // Non-campaign users:
+    //    - view new school render and get directed to sign up
+    //    - when logged in, view the new school render and like posts
     //
-    // 2. Desktop / Mobile Web, User Not Logged In, Specific Campaign:
-    //    - sees header
-    //    - sees carousel bar with sign up interface
-    //    - sees 1 column campaign with profile bar
+    // Campaign users:
+    //    - when logged in, view the old school render so they can edit their posts.
     //
-    // 3. Mobile Phone, Specific Campaign
-    //    - no header
-    //    - no carousel bar
-    //    - sees 1 column campaign with profile bar
-    //
-    // 4. Desktop / Mobile Web, User Logged In, Not a Candidate, No Specific Campaign
-    //    - sees header
-    //    - sees carousel bar with NO sign up interface
-    //    - sees 3 columns of campaign info
-    //
-    // 4. Desktop / Mobile Web, User Logged In, Not a Candidate, Specific Campaign
-    //    - sees header
-    //    - sees carousel bar with NO sign up interface
-    //    - sees 1 column campaign with profile bar
-    //
-    // 5. Desktop / Mobile Web, User Logged In, A Candidate, No Specific Campaign
-    // 6. Desktop / Mobile Web, User Looged In, A Candidate, Specific Campaign
-    //    - same for 5 & 6 for now
-    //    - sees header
-    //    - sees their 1 column campaign editable
+    // Mobile users:
+    //    - always view the old school render for now (prevents the app web view from
+    //      breaking and minimizes engineering--we can look at changing that for
+    //      next App rewards)
     //
     // TODO: tie this to firebase to now for our list of customers.
     this.campaignUser = false
@@ -170,7 +151,30 @@ export default class Feed extends Component {
     return (this.campaignUser) ? 'default' : 'alex.stealthy.id'
   }
 
+  updateDimensions = () => {
+    let { width, height } = Dimensions.get('window')
+
+    const MIN_AXIS_CHANGE_TO_RERENDER = 50
+
+    // Re-render if we moved a minimum amount or cross a major threshold (multiples of C.MIN_CARD_WIDTH: 1, 2, or 3)
+    if ( (Math.abs(width - this.state.width) > MIN_AXIS_CHANGE_TO_RERENDER) ||
+          (Math.abs(height - this.state.height) > MIN_AXIS_CHANGE_TO_RERENDER) ) {
+      this.setState({width: width, height: height})
+    } else if ( ((this.state.width >= 3 * C.MIN_CARD_WIDTH) && (width < 3 * C.MIN_CARD_WIDTH)) ||
+                ((this.state.width >= 2 * C.MIN_CARD_WIDTH) && (width < 2 * C.MIN_CARD_WIDTH)) ||
+                ((width >= 2 * C.MIN_CARD_WIDTH) && (this.state.width < 2 * C.MIN_CARD_WIDTH)) ||
+                ((width >= 3 * C.MIN_CARD_WIDTH) && (this.state.width < 3 * C.MIN_CARD_WIDTH)) ) {
+      this.setState({width: width, height: height})
+    }
+  }
+
+  componentWillUnmount = () => {
+    window.removeEventListener("resize", this.updateDimensions)
+  }
+
   componentDidMount = async () => {
+    window.addEventListener("resize", this.updateDimensions)
+
     // await firebaseInstance.loadUser()
     await firebaseInstance.loadSnapshot()
     const GAIA_MAP = firebaseInstance.getSnapshotValue('gaiaMap')
@@ -562,9 +566,6 @@ export default class Feed extends Component {
       if (logEvent)
         logEvent('Button Pressed')
 
-      const origin = window.location.origin;
-      const appConfig = new AppConfig(['store_write', 'publish_data', 'email'])
-      this.userSession = new UserSession({ appConfig })
       this.userSession.redirectToSignIn();
     }
   }
@@ -2094,9 +2095,11 @@ export default class Feed extends Component {
     const inputStyle={ borderStyle:'solid', borderBottomWidth:'1', borderColor:'gray', paddingHorizontal:20, fontSize:24, color:'white'}
     const signUpBackgroundColor = 'black'
 
-    let feedColumns = ['col1', 'col2']
-    if (width > 1200) {
+    let feedColumns = ['col1']
+    if (this.state.width > 3*C.MIN_CARD_WIDTH) {
       feedColumns = ['col1', 'col2', 'col3']
+    } else if (this.state.width > 2*C.MIN_CARD_WIDTH) {
+      feedColumns = ['col1', 'col2']
     }
 
     const feedElements = {}
@@ -2133,11 +2136,20 @@ export default class Feed extends Component {
       avatarImg = this.indexFileData.profile.avatarImg
     } catch (suppressedError) {}
 
-    const signUpBoxElement = (!this.state.isSignedIn) ?
+    const signUpBoxElement = (!this.state.isSignedIn && this.state.width >= 2*C.MIN_CARD_WIDTH) ?
       ( <SignUpBox
           title="Connect with movements that matter."
           styles={styles}
           updateUserSessionFn={this.updateUserSession} /> ) : undefined
+
+    const signUpBoxElementNarrow = (!this.state.isSignedIn && this.state.width < 2*C.MIN_CARD_WIDTH) ?
+    ( <View style={{width:C.MIN_CARD_WIDTH, backgroundColor:'black'}}>
+        <SignUpBox
+          title="Connect with movements that matter."
+          styles={styles}
+          updateUserSessionFn={this.updateUserSession} />
+      </View> ) : undefined
+
 
     return (
       <Container>
@@ -2213,6 +2225,7 @@ export default class Feed extends Component {
               </View>
               {signUpBoxElement}
             </View>
+            {signUpBoxElementNarrow}
             <View style={{width:'100%', alignItems:'center'}} >
               <View style={headerWidthStyle} >
                 { /* postEditor */ }
