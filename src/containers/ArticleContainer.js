@@ -124,6 +124,9 @@ export default class Article extends Component {
     }
 
     let timeStr = moment(item.time).fromNow()
+    if (this.props.campaignName === 'alex.stealthy.id') {
+      timeStr = `${id} days ago`
+    }
 
     let fcData = {
       avatarImg: undefined,

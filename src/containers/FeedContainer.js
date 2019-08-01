@@ -1083,13 +1083,14 @@ export default class Feed extends Component {
     let timeStr = moment(item.time).fromNow()
     timeStr = (item.hasOwnProperty('pinned') && item.pinned) ?
       `pinned post - ${timeStr}` : timeStr
-
-
     const widthStyle = { width: this.getCardWidth() }
 
     let profileImg = undefined
     const id_string = item.id.toString()
     const id = parseInt(id_string[id_string.length -1])
+    if (this.getDefaultCampaignName() === 'alex.stealthy.id') {
+      timeStr = `${id} days ago`
+    }
     if (this.indexFileData.profile.avatarImg) {
       const profileImgUrl = `${this.mediaUrlRoot}/${this.indexFileData.profile.avatarImg}`
       profileImg = (this.getDefaultCampaignName() !== 'alex.stealthy.id') ? (
