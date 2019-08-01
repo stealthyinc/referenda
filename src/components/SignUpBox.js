@@ -1,6 +1,12 @@
 import React from 'react'
-import { Alert, View } from 'react-native';
-import { Button, Icon, Input, Item, Text } from 'native-base'
+import { Alert, Image, View, TouchableHighlight } from 'react-native';
+import {
+  Button,
+  Icon,
+  Input,
+  Item,
+  Text
+} from 'native-base'
 
 import { createUserAccount, login } from 'simpleid-js-sdk'
 const { firebaseInstance } = require('../utils/firebaseWrapper.js')
@@ -47,6 +53,9 @@ export default class SignUpBox extends React.Component {
     // Data is stored in this.simpleIdData
     console.log(`simpleIdData: ${JSON.stringify(this.simpleIdData)}`)
     const { userName, email, password } = this.simpleIdData
+    if (!userName.length) {
+      this.setState({errorUsername: true})
+    }
     if (!validateEmail(email)) {
       this.setState({errorEmail: true})
     }
@@ -138,11 +147,9 @@ export default class SignUpBox extends React.Component {
         <View style={{flex: 1, flexDirection:'column', justifyContent: 'center', alignItems: 'center', width:'100%'}}>
           {/* Keep the next view--otherwise we can't seem to center this button. TODO: why? */}
           <View>
-            <Button success small={false}
-              style={styles.feedButton}
-              onPress={this.handleSignUp}>
-              <Text style={[styles.feedButtonText, {paddingRight:10}]} uppercase={false}>Sign Up</Text>
-            </Button>
+            <TouchableHighlight style={{alignItems: 'center', padding: 10}}onPress={this.handleSignUp}>
+              <Image style={{backgroundColor: '#003dff', width: 300, height: 60}} source={require('../assets/simple.png')} />
+            </TouchableHighlight>
           </View>
         </View>
       </View>
