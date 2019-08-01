@@ -151,6 +151,9 @@ export default class SignUpBox extends React.Component {
               <Image style={{backgroundColor: '#003dff', width: 300, height: 60}} source={require('../assets/simple.png')} />
             </TouchableHighlight>
           </View>
+            <TouchableHighlight style={{alignItems: 'center', padding: 10}}onPress={this.handleSignUp}>
+              <Image style={{backgroundColor: '#003dff', width: 300, height: 60}} source={require('../assets/block.png')} />
+            </TouchableHighlight>
         </View>
       </View>
     )
