@@ -60,10 +60,10 @@ const { cloudIO } = require('../utils/cloudIO.js')
 export default class Feed extends Component {
   constructor(props) {
     super(props);
-    // const origin = window.location.origin;
-    // const appConfig = new AppConfig(['store_write', 'publish_data', 'email'])
-    // this.userSession = new UserSession({ appConfig })
-    this.userSession = null
+    const origin = window.location.origin;
+    const appConfig = new AppConfig(['store_write', 'publish_data', 'email'])
+    this.userSession = new UserSession({ appConfig })
+    // this.userSession = null
     const isSignedIn = this.checkSignedInStatus();
     const userData = isSignedIn && this.userSession.loadUserData();
     // const person = (userData.username) ? new Person(userData.profile) : false;
@@ -1061,19 +1061,20 @@ export default class Feed extends Component {
       console.log(`Couldn't render item.\n${suppressedError}`)
     }
 
-    const pinButtonText = (item.hasOwnProperty('pinned') && item.pinned) ?
-      'Unpin' : 'Pin'
-    const editorControls = (this.state.isSignedIn) ?
-      (
-        <CardItem footer>
-          <View style={{flexDirection:'row', justifyContent:'flex-end', flex:1}}>
-            {this.getPostEditorButton('X', this.handleDelete, "trash", item.id, false)}
-            <View style={{width:5}} />
-            {this.getPostEditorButton(pinButtonText, this.handlePin, "pin", item.id, false)}
-          </View>
-        </CardItem>
-      ) :
-      undefined
+    // const pinButtonText = (item.hasOwnProperty('pinned') && item.pinned) ?
+    //   'Unpin' : 'Pin'
+    // const editorControls = (this.state.isSignedIn) ?
+    //   (
+    //     <CardItem footer>
+    //       <View style={{flexDirection:'row', justifyContent:'flex-end', flex:1}}>
+    //         {this.getPostEditorButton('X', this.handleDelete, "trash", item.id, false)}
+    //         <View style={{width:5}} />
+    //         {this.getPostEditorButton(pinButtonText, this.handlePin, "pin", item.id, false)}
+    //       </View>
+    //     </CardItem>
+    //   ) :
+    //   undefined
+    const editorControls = undefined    // New school render doesn't support editing.
 
     let timeStr = moment(item.time).fromNow()
     timeStr = (item.hasOwnProperty('pinned') && item.pinned) ?
@@ -2032,12 +2033,15 @@ export default class Feed extends Component {
     // const postEditor = (this.state.editingPost) ?
     //   this.renderPostEditor() : undefined
     const loginButton = (!this.state.editingPost) ? this.getLogInFeedButton() : undefined
-    const newPostButton =
-      (!this.state.editingPost && this.state.isSignedIn) ? this.getNewPostFeedButton() : undefined
+    // const newPostButton =
+    //   (!this.state.editingPost && this.state.isSignedIn) ? this.getNewPostFeedButton() : undefined
+    const newPostButton = undefined   // Users in new school render can't add posts.
     const contactUsButton = this.getContactUsFeedButton()
-    const shareButton = (this.state.isSignedIn) ? this.getShareFeedButton() : undefined
+    // const shareButton = (this.state.isSignedIn) ? this.getShareFeedButton() : undefined
+    const shareButton = undefined   // Users in new school don't have their own feeds so this makes no sense
 
-    const newPostButtonMobile = isMobile ? newPostButton : undefined
+    // const newPostButtonMobile = isMobile ? newPostButton : undefined
+    const newPostButtonMobile = undefined   // Users in new school render can't add posts
 
     const leftHeaderContent =
       ( <Text style={styles.headerLogoText} onPress={()=>Linking.openURL('https://referenda.io')}>Referenda</Text> )
@@ -2124,6 +2128,12 @@ export default class Feed extends Component {
       avatarImg = this.indexFileData.profile.avatarImg
     } catch (suppressedError) {}
 
+    const signUpBoxElement = (!this.state.isSignedIn) ?
+      ( <SignUpBox
+          title="Connect with movements that matter."
+          styles={styles}
+          updateUserSessionFn={this.updateUserSession} /> ) : undefined
+
     return (
       <Container>
       { /* TODO: only appears if not webView */ }
@@ -2196,10 +2206,13 @@ export default class Feed extends Component {
                             borderStyle:'solid', borderRightWidth:2, borderColor:'white'}}>
                 <SwipeView />
               </View>
-              <SignUpBox
-                title="Connect with movements that matter."
-                styles={styles}
-                updateUserSessionFn={this.updateUserSession} />
+              {signUpBoxElement}
+            </View>
+            <View style={{width:'100%', alignItems:'center'}} >
+              <View style={headerWidthStyle} >
+                { /* postEditor */ }
+                {activityIndicator}
+              </View>
             </View>
             <View id='feedElements' style={{flexDirection:'row', justifyContent:'center', width:'100%', maxWidth:3*C.MIN_CARD_WIDTH}}>
               {feeds}

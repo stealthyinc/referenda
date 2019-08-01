@@ -35,11 +35,6 @@ export default class AppSignUp extends Component {
     this.props = props
   }
 
-  // setEmail(email) {
-  //   const error = !(this.validateEmail(email))
-  //   this.setState({email, error})
-  // }
-
   cleanClose = () => {
     this.email = ''
     this.props.toggleModal()
@@ -60,55 +55,11 @@ export default class AppSignUp extends Component {
     } else if (!this.state.errorEmail) {
       this.setState({errorEmail: true})
     }
-
   }
 
 
-  // render() {
-  //   return (
-  //     <Card style={{marginBottom: 15}}>
-  //       <CardItem header bordered>
-  //         <View style={{width: '100%', flexDirection:'row', justifyContent:'space-between'}}>
-  //           <H3>This feature is only available in the App, sign-up now to get the App:</H3>
-  //           <View style={{width:15}} />
-  //           <Button rounded onClick={()=>this.cleanClose()} danger style={{marginBottom: 15}}>
-  //             <Icon active name="close" />
-  //           </Button>
-  //         </View>
-  //       </CardItem>
-  //       <CardItem>
-  //         <Content>
-  //           <Form>
-  //             <Item error={this.state.error} success={!this.state.error} inlineLabel>
-  //               <Label>E-Mail</Label>
-  //               <Input placeholder="example@gmail.com" value={this.state.email} onChangeText={(text) => this.setEmail(text)} />
-  //             </Item>
-  //           </Form>
-  //         </Content>
-  //       </CardItem>
-  //       <CardItem>
-  //         <Content padder>
-  //           <Button
-  //             success
-  //             block
-  //             disabled={this.state.error}
-  //             style={{ margin: 15 }}
-  //             onPress={() => this.sendInformation() }
-  //           >
-  //             <Text>Submit</Text>
-  //           </Button>
-  //         </Content>
-  //       </CardItem>
-  //     </Card>
-  //   );
-  // }
-
   render() {
     const { title, styles, closeButtonFn } = this.props
-
-    if (!styles || !styles.headerLogoText) {
-      debugger
-    }
 
     const headingText = (title) ?
       title : "Get notified by email when commenting is available in Referenda's mobile app."
