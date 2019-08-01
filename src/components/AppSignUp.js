@@ -94,7 +94,7 @@ export default class AppSignUp extends Component {
             <Button success small={false}
               style={styles.feedButton}
               onPress={() => this.sendInformation() }>
-              <Text style={styles.feedButtonText} uppercase={false}>Get Notified</Text>
+              <Text style={[styles.feedButtonText, {paddingRight:10}]} uppercase={false}>Get Notified</Text>
             </Button>
           </View>
         </View>

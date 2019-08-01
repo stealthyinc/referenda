@@ -141,7 +141,7 @@ export default class SignUpBox extends React.Component {
             <Button success small={false}
               style={styles.feedButton}
               onPress={this.handleSignUp}>
-              <Text style={styles.feedButtonText} uppercase={false}>Sign Up</Text>
+              <Text style={[styles.feedButtonText, {paddingRight:10}]} uppercase={false}>Sign Up</Text>
             </Button>
           </View>
         </View>

@@ -60,9 +60,10 @@ const { cloudIO } = require('../utils/cloudIO.js')
 export default class Feed extends Component {
   constructor(props) {
     super(props);
-    const origin = window.location.origin;
-    const appConfig = new AppConfig(['store_write', 'publish_data', 'email'])
-    this.userSession = new UserSession({ appConfig })
+
+    // const origin = window.location.origin;
+    // const appConfig = new AppConfig(['store_write', 'publish_data', 'email'])
+    // this.userSession = new UserSession({ appConfig })
     // this.userSession = null
     const isSignedIn = this.checkSignedInStatus();
     const userData = isSignedIn && this.userSession.loadUserData();
@@ -278,7 +279,7 @@ export default class Feed extends Component {
    */
 
   userLoggedIn () {
-    if(this.userSession) {
+    if (this.userSession) {
       const userData = this.userSession.loadUserData()
       const { username } = userData
       this.setState({userData, isSignedIn: true})
@@ -560,6 +561,10 @@ export default class Feed extends Component {
       event.preventDefault()
       if (logEvent)
         logEvent('Button Pressed')
+
+      const origin = window.location.origin;
+      const appConfig = new AppConfig(['store_write', 'publish_data', 'email'])
+      this.userSession = new UserSession({ appConfig })
       this.userSession.redirectToSignIn();
     }
   }
@@ -2387,7 +2392,7 @@ export default class Feed extends Component {
   }
 
   render() {
-    if (this.campaignUser) {
+    if (isMobile || this.campaignUser) {
       return this.renderOldSchool()
     }
     return this.renderNewSchool()
@@ -2424,7 +2429,9 @@ const styles = StyleSheet.create({
   },
   feedButtonText: {
     fontFamily:'arial',
-    fontSize: (isMobile ? 14 : 27)
+    fontSize: (isMobile ? 14 : 27),
+    paddingLeft: 10,
+    paddingRight: 0
   },
   feedButton: {
     borderRadius: (isMobile ? 10 : 15)
