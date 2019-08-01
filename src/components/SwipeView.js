@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
 export default class SwipeView extends React.Component {
   constructor(props) {
     super(props)
-    
+
     const { width, height } = Dimensions.get('window')
     this.width = width
     this.height = height
@@ -48,7 +48,6 @@ export default class SwipeView extends React.Component {
 
     const imgBgStyle = {width: '100%', height: '100%', flexDirection: 'row'}
     const textBoxStyle = {width: 400, height: '100%', paddingVertical:25, paddingHorizontal: 35, flexDirection: 'column', backgroundColor:'rgba(0,0,0,0.65)'}
-    const titleStyle = {color: 'white'}
 
     return (
       <View style={[styles.slideContainer]}>

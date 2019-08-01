@@ -1,16 +1,5 @@
 import React, { Component } from 'react';
-import {
-  Button,
-  Card,
-  CardItem,
-  Content,
-  Form,
-  Icon,
-  H3,
-  Item,
-  Input,
-  Label,
-  Text
+import { Button, Icon, Item, Input, Text
 } from 'native-base';
 import {
   View,

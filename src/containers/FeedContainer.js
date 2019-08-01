@@ -9,7 +9,6 @@ import {
   ImageBackground,
   Linking,
   Dimensions,
-  Image
 } from 'react-native';
 import {
   Button,
@@ -29,7 +28,7 @@ import {
   Amplitude,
   LogOnMount
 } from "@amplitude/react-amplitude";
-import { AppConfig, UserSession, Person } from 'blockstack'
+// import { AppConfig, UserSession, Person } from 'blockstack'
 import SocialBar from '../components/SocialBar'
 import SignUpBox from '../components/SignUpBox'
 import ModalContainer from './ModalContainer'
@@ -54,7 +53,6 @@ const { firebaseInstance } = require('../utils/firebaseWrapper.js')
 const C = require('../utils/constants.js')
 const U = require('../utils/utils.js')
 const { cloudIO } = require('../utils/cloudIO.js')
-const simple = require('../assets/simple.png')
 
 export default class Feed extends Component {
   constructor(props) {
@@ -2052,9 +2050,6 @@ export default class Feed extends Component {
     // const shareButton = (this.state.isSignedIn) ? this.getShareFeedButton() : undefined
     const shareButton = undefined   // Users in new school don't have their own feeds so this makes no sense
 
-    // const newPostButtonMobile = isMobile ? newPostButton : undefined
-    const newPostButtonMobile = undefined   // Users in new school render can't add posts
-
     const leftHeaderContent =
       ( <Text style={styles.headerLogoText} onPress={()=>Linking.openURL('https://referenda.io')}>Referenda</Text> )
 
@@ -2097,8 +2092,6 @@ export default class Feed extends Component {
 
     let feedData = [...this.state.data]   // shallow copy
 
-    const aBorder={ borderStyle:'solid', borderWidth:1, borderColor:'black' }
-    const inputStyle={ borderStyle:'solid', borderBottomWidth:'1', borderColor:'gray', paddingHorizontal:20, fontSize:24, color:'white'}
     const signUpBackgroundColor = 'black'
 
     let feedColumns = ['col1']

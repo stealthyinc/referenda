@@ -1,6 +1,5 @@
 import React from "react";
 import _ from 'lodash';
-import { StyleSheet, View } from "react-native";
 import { VictoryChart, VictoryScatter } from "victory-native";
 
 function getRandom(min, max) {

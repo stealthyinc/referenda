@@ -8,8 +8,7 @@ import {
   Text
 } from 'native-base'
 
-import { createUserAccount, login } from 'simpleid-js-sdk'
-const { firebaseInstance } = require('../utils/firebaseWrapper.js')
+import { createUserAccount } from 'simpleid-js-sdk'
 
 function validateEmail (email) {
   var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -70,13 +69,7 @@ export default class SignUpBox extends React.Component {
           appOrigin: "https://www.app.referenda.io", //This is the domain for your app
           scopes: ['store_write', 'publish_data', 'email'] //These are the scopes you are requesting to use
       }
-      // const params = {
-      //     login: true,
-      //     credObj,
-      //     appObj,
-      //     userPayload: {},
-      //     email
-      // }
+
       const create = await createUserAccount(credObj, appObj);
       const { message, body } = create
       if(message === "name taken") {
