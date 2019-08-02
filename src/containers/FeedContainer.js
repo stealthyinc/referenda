@@ -225,7 +225,9 @@ export default class Feed extends Component {
     } else {
       this.campaignName = (this.props.navigation.getParam('campaignName')) ? this.props.navigation.getParam('campaignName') : this.getDefaultCampaignName()
       let campaignName = this.campaignName.replace(/\./g, '_');
-      if (this.campaignUser &&
+      // We check mobile here or campaign user b/c on mobile we want to load the feed for the campaign
+      // instead of pushing folks elsewhere.
+      if (
           campaignName in GAIA_MAP) {
         firebaseInstance.setCampaignName(this.campaignName)
         this.mediaUrlRoot = GAIA_MAP[campaignName].url
@@ -946,6 +948,7 @@ export default class Feed extends Component {
           image = (
             <ReactPlayer
               width='100%'
+              height='auto'
               controls={true}
               light={false}
               muted={true}

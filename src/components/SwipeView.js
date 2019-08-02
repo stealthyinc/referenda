@@ -13,6 +13,7 @@ const styles = StyleSheet.create({
   slideContainer: {
     flex: 1,
     height:450,
+    minHeight:450,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -49,11 +50,11 @@ export default class SwipeView extends React.Component {
     }
 
     const imgBgStyle = {width: '100%', height: '100%', flexDirection: 'row'}
-    const textBoxStyle = {width: 400, height: '100%', paddingVertical:25, paddingHorizontal: 35, flexDirection: 'column', backgroundColor:'rgba(0,0,0,0.65)'}
+    const textBoxStyle = {width: 400, height: '100%', paddingVertical:25, paddingHorizontal: 35, flexDirection: 'column', backgroundColor:'rgba(0,0,0,0.75)'}
 
     return (
       <View style={[styles.slideContainer]}>
-        <ImageBackground style={imgBgStyle} source={anImage}>
+        <ImageBackground resizeMode="cover" style={imgBgStyle} source={anImage}>
           <View style={{width:textRibbonOffset}} />
           <View style={textBoxStyle}>
             <Text style={styles.postTitleText}>{aTitle}</Text>
