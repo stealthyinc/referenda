@@ -153,7 +153,9 @@ export default class Feed extends Component {
   updateDimensions = () => {
     let { width, height } = Dimensions.get('window')
 
-    const MIN_AXIS_CHANGE_TO_RERENDER = 50
+    // TODO: Implement a move delay that sets a timer that waits for the user to stop and then trigger a re-render.
+    //
+    const MIN_AXIS_CHANGE_TO_RERENDER = C.MIN_AXIS_CHANGE_TO_RERENDER_PX
 
     // Re-render if we moved a minimum amount or cross a major threshold (multiples of C.MIN_CARD_WIDTH: 1, 2, or 3)
     if ( (Math.abs(width - this.state.width) > MIN_AXIS_CHANGE_TO_RERENDER) ||
