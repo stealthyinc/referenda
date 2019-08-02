@@ -48,7 +48,6 @@ export default class SignUpBox extends React.Component {
   }
 
   handleSignUp = async () => {
-    debugger
     // TODO: Prabhaav
     // FUTURE TODO:
     //  - unique user name check?

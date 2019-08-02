@@ -79,7 +79,7 @@ export default class SwipeView extends React.Component {
       <View style={styles.container}>
         <Swiper
           loop={true}
-          controlsWrapperStyle={{flexDirection:'row', marginLeft:swiperControlOffset, marginRight:5, height:'100%', alignItems:'center'}}
+          controlsWrapperStyle={{flexDirection:'row', marginLeft:swiperControlOffset, marginRight:10, height:'100%', alignItems:'center'}}
           prevButtonText=''
           dotElement={<View />}
           activeDotElement={<View />}

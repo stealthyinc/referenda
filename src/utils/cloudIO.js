@@ -3,6 +3,7 @@ class CloudIO {
     this.isSignedIn = false
     this.userSession = undefined
     this.mediaUrlRoot = undefined
+    this.campaignUser = false
   }
 
   setSignedIn(theSignedInStatus=true) {
@@ -17,7 +18,11 @@ class CloudIO {
     this.mediaUrlRoot = aMediaUrlRoot
   }
 
-  // Get File Blockstack
+  setCampaignUser(isCampaignUser) {
+    this.campaignUser = isCampaignUser
+  }
+
+  // Get File Blockstack (getFileBlockstack)
   getFileBS = async(aFileName, theOptions={ decrypt:false }) => {
     return this.userSession.getFile(aFileName, theOptions)
     .then((response) => {
@@ -49,7 +54,7 @@ class CloudIO {
   //          signed in for reading files for static site load
   //
   getFile = async(aFileName, theOptions={ decrypt:false }) => {
-    if (this.isSignedIn) {
+    if (this.isSignedIn && this.campaignUser) {
       return this.getFileBS(aFileName, theOptions)
     } else {
       return this.getFileWeb(aFileName, theOptions)

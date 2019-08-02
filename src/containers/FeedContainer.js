@@ -181,6 +181,18 @@ export default class Feed extends Component {
     const GAIA_MAP = firebaseInstance.getSnapshotValue('gaiaMap')
     const { userData } = this.state
 
+    // Campaign check:
+    // - if a user ID is a campaign, they get to add, delete, and pin posts,
+    //   otherwise they don't.
+    const campaignIds = ['alex.stealthy.id']
+    if (userData && campaignIds.includes(userData.username)) {
+      this.campaignUser = true
+    }
+    // Important: this determines where data is read from and how. If campaign
+    // user is false, then data is read from HTTP fetch instead of BlockStack.
+    // To read from blockstack you have to explicitly call getFileBS.
+    cloudIO.setCampaignUser(this.campaignUser)
+
     // TODO: check if campaignName is valid (i.e. either in the GAIA_MAP or
     //       if we can read from it. If not then redirect to the 'undefined'/
     //       default GAIA bucket which features or own content for new users.
@@ -189,7 +201,8 @@ export default class Feed extends Component {
     firebaseInstance.setCampaignName(this.campaignName)
     this.mediaUrlRoot = undefined
     this.showPostId = undefined
-    if (userData &&
+    if (this.campaignUser &&
+        userData &&
         userData.hasOwnProperty('gaiaHubConfig') && userData.gaiaHubConfig &&
         userData.gaiaHubConfig.hasOwnProperty('url_prefix') && userData.gaiaHubConfig.url_prefix &&
         userData.gaiaHubConfig.hasOwnProperty('address') && userData.gaiaHubConfig.address) {
@@ -212,7 +225,8 @@ export default class Feed extends Component {
     } else {
       this.campaignName = (this.props.navigation.getParam('campaignName')) ? this.props.navigation.getParam('campaignName') : this.getDefaultCampaignName()
       let campaignName = this.campaignName.replace(/\./g, '_');
-      if (campaignName in GAIA_MAP) {
+      if (this.campaignUser &&
+          campaignName in GAIA_MAP) {
         firebaseInstance.setCampaignName(this.campaignName)
         this.mediaUrlRoot = GAIA_MAP[campaignName].url
         cloudIO.setMediaUrlRoot(this.mediaUrlRoot)
@@ -244,8 +258,9 @@ export default class Feed extends Component {
           }
         }
         //
-        if (!campaignNameIsGaiaBucket) {
-          this.mediaUrlRoot = GAIA_MAP[unsignedInUserDefault]
+        if (!this.campaignUser || !campaignNameIsGaiaBucket) {
+          const campaignNameForFirebase = unsignedInUserDefault.replace(/\./g, '_');
+          this.mediaUrlRoot = GAIA_MAP[campaignNameForFirebase].url
           cloudIO.setMediaUrlRoot(this.mediaUrlRoot)
         }
       }
@@ -392,7 +407,7 @@ export default class Feed extends Component {
     //    if we are signed in.
     //
     if (!this.indexFileData || forceNewIndex) {
-      if (this.state.isSignedIn) {
+      if (this.campaignUser && this.state.isSignedIn) {
         this.indexFileData = this.getNewIndex()
 
         try {
@@ -432,11 +447,13 @@ export default class Feed extends Component {
         }
       }
 
-      // Save the updated index
-      try {
-        await this.writeIndex()
-      } catch (error) {
-        console.error(`Error creating ${C.INDEX_FILE}.\n${error}`)
+      if (this.campaignUser) {
+        // Save the updated index
+        try {
+          await this.writeIndex()
+        } catch (error) {
+          console.error(`Error creating ${C.INDEX_FILE}.\n${error}`)
+        }
       }
     }
 
