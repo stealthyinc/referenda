@@ -88,13 +88,13 @@ export default class SwipeView extends React.Component {
           nextButtonStyle={{fontSize:72,fontWeight:'bold'}}> */}
           {this.getSlide(require('../assets/bad.jpeg'),
                         'Traditional social media is infested with trolls & bots.',
-                        'Online discourse is easily manipulated...see US 🇺🇸 Elections, Brexit, fake news, etc...')}
+                        'Our digital reality and discussions are being manipulated. See US 🇺🇸 Elections, Brexit 🇬🇧, fake news, etc.')}
          {this.getSlide(require('../assets/good.jpeg'),
-                        'Authentic social communication with real stakeholders.',
-                        'Referenda is an authentic private social network for humans in a movement, district, state, or country')}
+                        'Referenda provides the authenticity and connection to your community.',
+                        'Get involved in a grassroots movement, local elections, your favorite cause, or even a cultural change!')}
          {this.getSlide(require('../assets/human.jpeg'),
-                        'Humane technology that prioritizes privacy and data security.',
-                        'We are focused on providing actual utility to stakeholders and not be at the mercy of Advertisers and Clicks')}
+                        'Our technology prioritizes you and your security over advertisers.',
+                        'We are focused on providing actual utility to people instead of stoking outrage for attention and clicks.')}
         </Swiper>
       </View>
     );

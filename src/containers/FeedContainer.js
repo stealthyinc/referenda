@@ -2168,7 +2168,7 @@ export default class Feed extends Component {
 
     const signUpBoxElement = (!this.state.isSignedIn && this.state.width >= 2*C.MIN_CARD_WIDTH) ?
       ( <SignUpBox
-          title="Connect with movements that matter."
+          title="Connect with movements that matter.            Login and have your voice matter!"
           styles={styles}
           blockstackSignUp={this.handleLogin}
           updateUserSessionFn={this.updateUserSession} /> ) : undefined
