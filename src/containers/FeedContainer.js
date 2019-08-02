@@ -28,7 +28,7 @@ import {
   Amplitude,
   LogOnMount
 } from "@amplitude/react-amplitude";
-// import { AppConfig, UserSession, Person } from 'blockstack'
+import { AppConfig, UserSession, Person } from 'blockstack'
 import SocialBar from '../components/SocialBar'
 import SignUpBox from '../components/SignUpBox'
 import ModalContainer from './ModalContainer'
@@ -57,14 +57,11 @@ const { cloudIO } = require('../utils/cloudIO.js')
 export default class Feed extends Component {
   constructor(props) {
     super(props);
-
-    // const origin = window.location.origin;
-    // const appConfig = new AppConfig(['store_write', 'publish_data', 'email'])
-    // this.userSession = new UserSession({ appConfig })
-    this.userSession = null
+    const appConfig = new AppConfig(['store_write', 'publish_data', 'email'])
+    this.userSession = new UserSession({ appConfig })
     const isSignedIn = this.checkSignedInStatus();
     const userData = isSignedIn && this.userSession.loadUserData();
-    // const person = (userData.username) ? new Person(userData.profile) : false;
+    const person = (userData.username) ? new Person(userData.profile) : false;
 
     cloudIO.setSignedIn(isSignedIn)
     cloudIO.setUserSession(this.userSession)
@@ -75,7 +72,7 @@ export default class Feed extends Component {
       width: width,
       height: height,
       userData,
-      // person,
+      person,
       isSignedIn,
       data: [],
       editingProfile: false,
@@ -250,7 +247,6 @@ export default class Feed extends Component {
       }
     }
 
-
     await this.getIndexFileData()
 
     // Load the config data to show signed in users the URL bar if needed (only
@@ -283,18 +279,21 @@ export default class Feed extends Component {
    */
 
   userLoggedIn () {
-    if (this.userSession) {
-      const userData = this.userSession.loadUserData()
-      const { username } = userData
-      this.setState({userData, isSignedIn: true})
+    if(!this.userSession.isUserSignedIn() && this.userSession.isSignInPending()) {
+      this.userSession.handlePendingSignIn()
+      .then((userData) => {
+        if(!userData.username) {
+          throw new Error('This app requires a username.')
+        }
+        window.location = `/${userData.username}`
+        const person = (userData.username) ? new Person(userData.profile) : false;
+        this.setState({userData, person, isSignedIn: true})
+      })
     }
   }
 
   checkSignedInStatus() {
-    if (!this.userSession) {
-      return false
-    }
-    else if (this.userSession.isUserSignedIn()) {
+    if (this.userSession.isUserSignedIn()) {
       return true;
     } else if (this.userSession.isSignInPending()) {
       this.userSession.handlePendingSignIn()
@@ -2139,6 +2138,7 @@ export default class Feed extends Component {
       ( <SignUpBox
           title="Connect with movements that matter."
           styles={styles}
+          blockstackSignUp={this.handleLogin}
           updateUserSessionFn={this.updateUserSession} /> ) : undefined
 
     const signUpBoxElementNarrow = (!this.state.isSignedIn && this.state.width < 2*C.MIN_CARD_WIDTH) ?

@@ -5,6 +5,8 @@ import {
   View,
 } from 'react-native';
 
+const C = require('../utils/constants.js')
+
 const firebase = require('firebase');
 
 // TODO: unify this with other versions of it in utilities.
@@ -62,7 +64,7 @@ export default class AppSignUp extends Component {
 
 
     return (
-      <View style={{height:450, width:300, paddingVertical:10, paddingHorizontal:15, backgroundColor:'black'}}>
+      <View style={{height:450, width:300, paddingVertical:10, paddingHorizontal:15, backgroundColor:C.DIALOG_BOX_BACKGROUND}}>
         <View style={{flexDirection:'row', alignItems:'flex-start', marginBottom:30}}>
           <Text style={[styles.headerLogoText, {color:'white', fontSize:32}]}>{headingText}</Text>
           {closeButton}

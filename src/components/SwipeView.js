@@ -1,5 +1,6 @@
 import React from 'react';
 import { Dimensions, ImageBackground, StyleSheet, Text, View } from 'react-native';
+import { Icon } from 'native-base';
 import Swiper from 'react-native-web-swiper';
 import { isMobile } from "react-device-detect";
 
@@ -71,15 +72,20 @@ export default class SwipeView extends React.Component {
     const textRibbonOffset = (width - 3*C.MIN_CARD_WIDTH) / 2
     const swiperControlOffset = textRibbonOffset + C.MIN_CARD_WIDTH
 
+    const nextButtonIcon = (
+        <Icon style={{color:'#30a9de',fontSize:128}} name='arrow-dropright' /> )
+
     return (
       <View style={styles.container}>
         <Swiper
           loop={true}
-          autoplayTimeout={5}
-          controlsWrapperStyle={{marginLeft:swiperControlOffset, marginRight:10}}
+          controlsWrapperStyle={{flexDirection:'row', marginLeft:swiperControlOffset, marginRight:5, height:'100%', alignItems:'center'}}
           prevButtonText=''
-          nextButtonText='Next >'
-          nextButtonStyle={{fontSize:18,fontWeight:'bold'}}>
+          dotElement={<View />}
+          activeDotElement={<View />}
+          nextButtonElement={nextButtonIcon}>
+          { /* nextButtonText='>'
+          nextButtonStyle={{fontSize:72,fontWeight:'bold'}}> */}
           {this.getSlide(require('../assets/bad.jpeg'),
                         'Traditional social media is infested with trolls & bots.',
                         'Online discourse is easily manipulated...see US 🇺🇸 Elections, Brexit, fake news, etc...')}

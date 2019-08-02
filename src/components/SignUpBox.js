@@ -12,6 +12,8 @@ import FitImage from 'react-native-fit-image';
 
 import { createUserAccount } from 'simpleid-js-sdk'
 
+const C = require('../utils/constants.js')
+
 function validateEmail (email) {
   var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(email);
@@ -107,7 +109,7 @@ export default class SignUpBox extends React.Component {
       width:'100%',
       flex:1,
       borderRadius:15,
-      borderColor:'rgba(255,255,255,0.15)',
+      borderColor:'rgba(255,255,255,0.35)',
       borderWidth:1,
       // borderStyle:'solid',
       // borderColor:'blue',
@@ -131,61 +133,66 @@ export default class SignUpBox extends React.Component {
         </Button>
       ) : undefined
 
+    const simpleIdInput = (C.ENABLE_SIMPLE_ID) ?
+      (
+        <View>
+          <Item error={this.state.errorUsername}>
+            <Input
+              id='userNameInput'
+              style={styles.inputStyleWithError}
+              multiline={false}
+              onChangeText={(text)=>{this.handleSignUpTextChange('userName', text)}}
+              placeholder='User Name'
+              placeholderTextColor='rgb(255,255,255)' />
+              {(this.state.errorUsername) ? <Icon name='close-circle' /> : null}
+          </Item>
+          <Item error={this.state.errorEmail}>
+            <Input
+              id='emailInput'
+              style={styles.inputStyleWithError}
+              multiline={false}
+              onChangeText={(text)=>{this.handleSignUpTextChange('email', text)}}
+              placeholder='Email Address'
+              placeholderTextColor='rgb(255,255,255)' />
+              {(this.state.errorEmail) ? <Icon name='close-circle' /> : null}
+          </Item>
+          <Item>
+            <Input
+              id='passwordInput'
+              style={styles.inputStyleWithError}
+              multiline={false}
+              onChangeText={(text)=>{this.handleSignUpTextChange('password', text)}}
+              placeholder='Password'
+              placeholderTextColor='rgb(255,255,255)' />
+          </Item>
+        </View>
+      ) : undefined
+
+    const simpleIdButton = (C.ENABLE_SIMPLE_ID) ?
+      (
+        <TouchableHighlight style={buttonTouchableHighlightStyle} onPress={this.handleSignUp}>
+          <View style={[buttonWrapperViewStyle, {backgroundColor: '#003dff'}]} >
+            <FitImage resizeMode="contain" style={[buttonFitImageStyle, {width:'75%'}]} source={require('../assets/simple.png')} />
+          </View>
+        </TouchableHighlight>
+      ) : undefined
+
+    const simpleIdSpacer = (C.ENABLE_SIMPLE_ID) ? ( <View style={{height:15}} /> ) : undefined
+
     return (
-      <View style={{height:450, width:300, paddingVertical:10, paddingHorizontal:15}}>
+      <View style={{height:450, width:300, paddingVertical:10, paddingHorizontal:15, backgroundColor:C.DIALOG_BOX_BACKGROUND}}>
         <View style={{flexDirection:'row', alignItems:'flex-start', marginBottom:30}}>
           <Text style={[styles.headerLogoText, {color:'white', fontSize:32}]}>{headingText}</Text>
           {closeButton}
         </View>
-        <Item error={this.state.errorUsername}>
-          <Input
-            id='userNameInput'
-            style={styles.inputStyleWithError}
-            multiline={false}
-            onChangeText={(text)=>{this.handleSignUpTextChange('userName', text)}}
-            placeholder='User Name'
-            placeholderTextColor='rgb(255,255,255)' />
-            {(this.state.errorUsername) ? <Icon name='close-circle' /> : null}
-        </Item>
-        <Item error={this.state.errorEmail}>
-          <Input
-            id='emailInput'
-            style={styles.inputStyleWithError}
-            multiline={false}
-            onChangeText={(text)=>{this.handleSignUpTextChange('email', text)}}
-            placeholder='Email Address'
-            placeholderTextColor='rgb(255,255,255)' />
-            {(this.state.errorEmail) ? <Icon name='close-circle' /> : null}
-        </Item>
-        <Item>
-          <Input
-            id='passwordInput'
-            style={styles.inputStyleWithError}
-            multiline={false}
-            onChangeText={(text)=>{this.handleSignUpTextChange('password', text)}}
-            placeholder='Password'
-            placeholderTextColor='rgb(255,255,255)' />
-        </Item>
+        {simpleIdInput}
         <View style={{height:15}} />
         <View style={{flex: 1, flexDirection:'column', justifyContent: 'center', alignItems: 'center', width:'100%'}}>
-          {/* Keep the next view--otherwise we can't seem to center this button. TODO: why? */}
-          {/* <View>
-            <TouchableHighlight style={{alignItems: 'center', padding: 10}}onPress={this.handleSignUp}>
-              <FitImage style={{backgroundColor: '#003dff'}} source={require('../assets/simple.png')} />
-            </TouchableHighlight>
-          </View>
-            <TouchableHighlight style={{alignItems: 'center', padding: 10}}onPress={this.handleSignUp}>
-              <FitImage style={{backgroundColor: '#003dff'}} source={require('../assets/block.png')} />
-            </TouchableHighlight> */}
-            <TouchableHighlight style={buttonTouchableHighlightStyle} onPress={this.handleSignUp}>
-              <View style={[buttonWrapperViewStyle, {backgroundColor: '#003dff'}]} >
-                <FitImage resizeMode="contain" style={[buttonFitImageStyle, {width:'75%'}]} source={require('../assets/simple.png')} />
-              </View>
-            </TouchableHighlight>
 
-            <View style={{height:15}} />
+            {simpleIdButton}
+            {simpleIdSpacer}
 
-            <TouchableHighlight style={buttonTouchableHighlightStyle} onPress={this.handleSignUp}>
+            <TouchableHighlight style={buttonTouchableHighlightStyle} onPress={this.props.blockstackSignUp}>
               <View style={[buttonWrapperViewStyle, {backgroundColor: '#230d2e'}]} >
                 <FitImage resizeMode="contain" style={[buttonFitImageStyle, {backgroundColor:'#230d2e', width:'90%'}]} source={require('../assets/block.png')} />
               </View>
