@@ -2055,7 +2055,8 @@ export default class Feed extends Component {
     // console.log('In render, data:', this.state.data)
     // const postEditor = (this.state.editingPost) ?
     //   this.renderPostEditor() : undefined
-    const loginButton = (!this.state.editingPost) ? this.getLogInFeedButton() : undefined
+    // const loginButton = (!this.state.editingPost) ? this.getLogInFeedButton() : undefined
+    const loginButton = this.getLogInFeedButton()
     // const newPostButton =
     //   (!this.state.editingPost && this.state.isSignedIn) ? this.getNewPostFeedButton() : undefined
     const newPostButton = undefined   // Users in new school render can't add posts.
