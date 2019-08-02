@@ -54,11 +54,11 @@ const { firebaseInstance } = require('../utils/firebaseWrapper.js')
 const C = require('../utils/constants.js')
 const U = require('../utils/utils.js')
 const { cloudIO } = require('../utils/cloudIO.js')
+const appObj = { appOrigin: window.location.origin, scopes: ['store_write', 'publish_data', 'email']}
 
 export default class Feed extends Component {
   constructor(props) {
     super(props);
-    const appObj = { appOrigin: window.location.origin, scopes: ['store_write', 'publish_data', 'email']}
     const appConfig = new AppConfig(['store_write', 'publish_data', 'email'])
     this.userSession = new UserSession({ appConfig })
     const isSignedIn = this.checkSignedInStatus();
@@ -314,7 +314,8 @@ export default class Feed extends Component {
         if(!userData.username) {
           throw new Error('This app requires a username.')
         }
-        window.location = `/${userData.username}`
+        // window.location = `/${userData.username}`
+        window.location = `/`
       })
     }
     return false;
@@ -1180,7 +1181,7 @@ export default class Feed extends Component {
     return (
       <Amplitude eventProperties={{campaign: this.campaignName, buttonAction: icon, isMobile, userId: firebaseInstance.getUserId()}}>
         {({ logEvent }) =>
-          <Button success bordered small={isMobile} iconLeft={!isMobile}
+          <Button info small={isMobile} iconLeft={!isMobile}
             style={styles.feedButton}
             onPress={(event) => this.handleLogin(event, logEvent)}>
             <Icon style={{marginLeft:0, marginRight:0}} name={icon}/>
@@ -1234,7 +1235,7 @@ export default class Feed extends Component {
       return (
         <Amplitude eventProperties={{campaign: this.campaignName, buttonAction: icon, isMobile, userId: firebaseInstance.getUserId()}}>
           {({ logEvent }) =>
-            <Button success bordered small={isMobile} iconLeft={!isMobile}
+            <Button info small={isMobile} iconLeft={!isMobile}
               style={styles.feedButton}
               onPress={(event) => this.handlePostEditorRequest(event, logEvent)}>
               <Icon style={{marginLeft:0, marginRight:0}} name={icon}/>
@@ -1252,7 +1253,7 @@ export default class Feed extends Component {
     return (
       <Amplitude eventProperties={{campaign: this.campaignName, buttonAction: icon, isMobile, userId: firebaseInstance.getUserId()}}>
         {({ logEvent }) =>
-          <Button success bordered small={isMobile} iconLeft={!isMobile}
+          <Button success small={isMobile} iconLeft={!isMobile}
             style={styles.feedButton}
             onPress={(event) => {Linking.openURL('mailto:campaign@referenda.io?subject=help with campaign&body=')}}>
             <Icon style={{marginLeft:0, marginRight:0}} name={icon}/>
@@ -2159,6 +2160,7 @@ export default class Feed extends Component {
         <SignUpBox
           title="Connect with movements that matter."
           styles={styles}
+          blockstackSignUp={this.handleLogin}
           updateUserSessionFn={this.updateUserSession} />
       </View> ) : undefined
 
@@ -2211,6 +2213,7 @@ export default class Feed extends Component {
               <SignUpBox
                 title="Sign-up to like posts and more!"
                 styles={styles}
+                blockstackSignUp={this.handleLogin}
                 updateUserSessionFn={this.updateUserSession}
                 closeButtonFn={this.toggleSignUpModal} />
             </View>}
