@@ -227,8 +227,7 @@ export default class Feed extends Component {
       let campaignName = this.campaignName.replace(/\./g, '_');
       // We check mobile here or campaign user b/c on mobile we want to load the feed for the campaign
       // instead of pushing folks elsewhere.
-      if (
-          campaignName in GAIA_MAP) {
+      if (campaignName in GAIA_MAP) {
         firebaseInstance.setCampaignName(this.campaignName)
         this.mediaUrlRoot = GAIA_MAP[campaignName].url
         cloudIO.setMediaUrlRoot(this.mediaUrlRoot)
@@ -2126,8 +2125,6 @@ export default class Feed extends Component {
 
     let feedData = [...this.state.data]   // shallow copy
 
-    const signUpBackgroundColor = 'black'
-
     let feedColumns = ['col1']
     if (this.state.width > 3*C.MIN_CARD_WIDTH) {
       feedColumns = ['col1', 'col2', 'col3']
@@ -2177,7 +2174,7 @@ export default class Feed extends Component {
           updateUserSessionFn={this.updateUserSession} /> ) : undefined
 
     const signUpBoxElementNarrow = (!this.state.isSignedIn && this.state.width < 2*C.MIN_CARD_WIDTH) ?
-    ( <View style={{width:C.MIN_CARD_WIDTH, backgroundColor:'black'}}>
+    ( <View style={{width:C.MIN_CARD_WIDTH, backgroundColor:C.DIALOG_BOX_BACKGROUND, alignItems:'center'}}>
         <SignUpBox
           title="Connect with movements that matter."
           styles={styles}
@@ -2254,7 +2251,7 @@ export default class Feed extends Component {
         <ScrollView style={{width:'100%'}}>
           <View style={{alignItems:'center', width:'100%'}}>
             <View style={{flexDirection:'row', height:450, width:'100%',
-                          backgroundColor:signUpBackgroundColor}}>
+                          backgroundColor:C.DIALOG_BOX_BACKGROUND}}>
               <View style={{height:'100%', flex:1,
                             borderStyle:'solid', borderRightWidth:2, borderColor:'white'}}>
                 <SwipeView />

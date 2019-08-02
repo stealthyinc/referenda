@@ -49,7 +49,7 @@ export default class SwipeView extends React.Component {
       textRibbonOffset = (this.width - C.MIN_CARD_WIDTH) / 2
     }
 
-    const imgBgStyle = {width: '100%', height: '100%', flexDirection: 'row'}
+    const imgBgStyle = {width: '100%', height: '100%', minHeight:450, flexDirection: 'row'}
     const textBoxStyle = {width: 400, height: '100%', paddingVertical:25, paddingHorizontal: 35, flexDirection: 'column', backgroundColor:'rgba(0,0,0,0.75)'}
 
     return (
