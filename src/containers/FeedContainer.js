@@ -46,6 +46,7 @@ import ReactPlayer from 'react-player'
 import Dropzone from 'react-dropzone'
 
 import { isMobile } from "react-device-detect";
+import { login, createUserAccount } from 'simpleid-js-sdk';
 
 const moment = require('moment');
 const { firebaseInstance } = require('../utils/firebaseWrapper.js')
@@ -57,6 +58,7 @@ const { cloudIO } = require('../utils/cloudIO.js')
 export default class Feed extends Component {
   constructor(props) {
     super(props);
+    const appObj = { appOrigin: window.location.origin, scopes: ['store_write', 'publish_data', 'email']}
     const appConfig = new AppConfig(['store_write', 'publish_data', 'email'])
     this.userSession = new UserSession({ appConfig })
     const isSignedIn = this.checkSignedInStatus();
@@ -289,6 +291,15 @@ export default class Feed extends Component {
         const person = (userData.username) ? new Person(userData.profile) : false;
         this.setState({userData, person, isSignedIn: true})
       })
+    }
+    const userSessionInStorage = JSON.parse(localStorage.getItem('blockstack-session'));
+    console.log(userSessionInStorage)
+    if(userSessionInStorage) {
+       const appConfig = new AppConfig(appObj.scopes);
+       const userSession = new UserSession({ appConfig });
+       this.setState({ signedin: true })
+    } else {
+      this.setState({ userSession: {}, signedin: false })
     }
   }
 
