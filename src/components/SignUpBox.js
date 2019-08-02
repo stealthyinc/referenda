@@ -8,6 +8,8 @@ import {
   Text
 } from 'native-base'
 
+import FitImage from 'react-native-fit-image';
+
 import { createUserAccount } from 'simpleid-js-sdk'
 
 function validateEmail (email) {
@@ -92,6 +94,33 @@ export default class SignUpBox extends React.Component {
   render() {
     const { title, styles, updateUserSessionFn, closeButtonFn } = this.props
 
+    const buttonTouchableHighlightStyle = {
+      width:'100%',
+      height:50,
+      flexDirection:'column',
+      justifyContent: 'center',
+      alignItems:'center'
+    }
+    const buttonWrapperViewStyle = {
+      backgroundColor: '#003dff',
+      alignItems:'center',
+      width:'100%',
+      flex:1,
+      borderRadius:15,
+      borderColor:'rgba(255,255,255,0.15)',
+      borderWidth:1,
+      // borderStyle:'solid',
+      // borderColor:'blue',
+      // borderWidth:2
+    }
+    const buttonFitImageStyle = {
+      backgroundColor: '#003dff',
+      height:'auto',
+      // borderStyle:'solid',
+      // borderColor:'red',
+      // borderWidth:2,
+    }
+
     const headingText = (title) ?
       title : "Referenda connects you with movements that matter."
 
@@ -137,16 +166,32 @@ export default class SignUpBox extends React.Component {
             placeholder='Password'
             placeholderTextColor='rgb(255,255,255)' />
         </Item>
+        <View style={{height:15}} />
         <View style={{flex: 1, flexDirection:'column', justifyContent: 'center', alignItems: 'center', width:'100%'}}>
           {/* Keep the next view--otherwise we can't seem to center this button. TODO: why? */}
-          <View>
+          {/* <View>
             <TouchableHighlight style={{alignItems: 'center', padding: 10}}onPress={this.handleSignUp}>
-              <Image style={{backgroundColor: '#003dff', width: 300, height: 60}} source={require('../assets/simple.png')} />
+              <FitImage style={{backgroundColor: '#003dff'}} source={require('../assets/simple.png')} />
             </TouchableHighlight>
           </View>
             <TouchableHighlight style={{alignItems: 'center', padding: 10}}onPress={this.handleSignUp}>
-              <Image style={{backgroundColor: '#003dff', width: 300, height: 60}} source={require('../assets/block.png')} />
+              <FitImage style={{backgroundColor: '#003dff'}} source={require('../assets/block.png')} />
+            </TouchableHighlight> */}
+            <TouchableHighlight style={buttonTouchableHighlightStyle} onPress={this.handleSignUp}>
+              <View style={[buttonWrapperViewStyle, {backgroundColor: '#003dff'}]} >
+                <FitImage resizeMode="contain" style={[buttonFitImageStyle, {width:'75%'}]} source={require('../assets/simple.png')} />
+              </View>
             </TouchableHighlight>
+
+            <View style={{height:15}} />
+
+            <TouchableHighlight style={buttonTouchableHighlightStyle} onPress={this.handleSignUp}>
+              <View style={[buttonWrapperViewStyle, {backgroundColor: '#230d2e'}]} >
+                <FitImage resizeMode="contain" style={[buttonFitImageStyle, {backgroundColor:'#230d2e', width:'90%'}]} source={require('../assets/block.png')} />
+              </View>
+            </TouchableHighlight>
+
+            <View style={{flex:1}} />
         </View>
       </View>
     )

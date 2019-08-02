@@ -11,6 +11,7 @@ const styles = StyleSheet.create({
   },
   slideContainer: {
     flex: 1,
+    height:450,
     alignItems: 'center',
     justifyContent: 'center',
   },
