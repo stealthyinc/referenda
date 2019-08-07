@@ -26,32 +26,6 @@ const candidates = [
     },
   },
   {
-    name: 'Ammar Campa-Najjar',
-    id: undefined,
-    district: 'CA-50',
-    districtType: 'Congress',
-    campaign: {
-      title: 'Ammar Campa-Najjar for Congress 🇺🇸',
-      link: 'https://www.app.referenda.io/campacampa.id.blockstack/?wv=1',
-    },
-    loginPage: {                                            // IntroductionScreen.js
-      title: 'Ammar Campa-Najjar for Congress 🇺🇸',
-      description: 'Referenda makes your voice heard by your political leaders for actionable change.',
-      photoUrl: '../Assets/images/launch2-candidate.jpg',
-      photo: require('../Assets/images/launch2-candidate.jpg'),
-    },
-    fundraising: {
-      title: 'Ammar for Congress 🇺🇸',                       // CampaignerMenuScreen.js
-      photoUrl: '../Assets/avatars/campa.jpg',             // CampaignerMenuScreen.js
-      photo: require('../Assets/avatars/campa.jpg'),
-      label: 'Ammar Campa-Najjar - 2020 Campaign',          // DonationBar.js, SocialBar
-      campaignMessage: 'Donation to Ammar Campa-Najjar\'s Campaign',    // DonationSagas.js
-      receiptMessageWeb: 'Thank you for your donation to Ammar Campa-Najjar\'s Campaign. Here\'s a helpful link for you to donate. We will notify you when the Referenda App is ready!',
-      receiptMessage: 'Thank you for your donation to Ammar\'s Campaign. We will notify you when the Referenda App is ready!',
-      bitcoinUrl: 'https://checkout.opennode.co/p/55769f7d-ebcd-4543-8bbc-bedbe8c9dbe0',
-    },
-  },
-  {
     name: 'Nabilah Islam',
     id: undefined,
     district: 'GA-07',
@@ -78,28 +52,28 @@ const candidates = [
     },
   },
   {
-    name: 'Russell Cirincione',
+    name: 'Ammar Campa-Najjar',
     id: undefined,
-    district: 'NJ-06',
+    district: 'CA-50',
     districtType: 'Congress',
     campaign: {
-      title: 'Russell Cirincione for Congress 🇺🇸',
-      link: 'https://www.app.referenda.io/russcirincione.id.blockstack/?wv=1',
+      title: 'Ammar Campa-Najjar for Congress 🇺🇸',
+      link: 'https://www.app.referenda.io/campacampa.id.blockstack/?wv=1',
     },
     loginPage: {                                            // IntroductionScreen.js
-      title: 'Russell Cirincione for Congress 🇺🇸',
+      title: 'Ammar Campa-Najjar for Congress 🇺🇸',
       description: 'Referenda makes your voice heard by your political leaders for actionable change.',
-      photoUrl: './CandidateImgs/Russel_Cirincione.jpg',
-      photo: require('./CandidateImgs/Russel_Cirincione.jpg'),
+      photoUrl: '../Assets/images/launch2-candidate.jpg',
+      photo: require('../Assets/images/launch2-candidate.jpg'),
     },
     fundraising: {
-      title: 'Russell for Congress 🇺🇸',                     // CampaignerMenuScreen.js
-      photoUrl: './CandidateImgs/Russel_Cirincione_Avatar.jpg',    // CampaignerMenuScreen.js
-      photo: require('./CandidateImgs/Russel_Cirincione_Avatar.jpg',),
-      label: 'Russ Cirincione - 2020 Campaign',             // DonationBar.js, SocialBar
-      campaignMessage: 'Donation to Russ Cirincione\'s Campaign',    // DonationSagas.js
-      receiptMessageWeb: 'Thank you for your donation to Russell Cirincione\'s Campaign. Here\'s a helpful link for you to donate. We will notify you when the Referenda App is ready!',
-      receiptMessage: 'Thank you for your donation to Russell\'s Campaign. We will notify you when the Referenda App is ready!',
+      title: 'Ammar for Congress 🇺🇸',                       // CampaignerMenuScreen.js
+      photoUrl: '../Assets/avatars/campa.jpg',             // CampaignerMenuScreen.js
+      photo: require('../Assets/avatars/campa.jpg'),
+      label: 'Ammar Campa-Najjar - 2020 Campaign',          // DonationBar.js, SocialBar
+      campaignMessage: 'Donation to Ammar Campa-Najjar\'s Campaign',    // DonationSagas.js
+      receiptMessageWeb: 'Thank you for your donation to Ammar Campa-Najjar\'s Campaign. Here\'s a helpful link for you to donate. We will notify you when the Referenda App is ready!',
+      receiptMessage: 'Thank you for your donation to Ammar\'s Campaign. We will notify you when the Referenda App is ready!',
       bitcoinUrl: 'https://checkout.opennode.co/p/55769f7d-ebcd-4543-8bbc-bedbe8c9dbe0',
     },
   },
@@ -130,32 +104,6 @@ const candidates = [
     },
   },
   {
-    name: 'Jon Hoadley',
-    id: undefined,
-    district: 'MI-06',
-    districtType: 'Congress',
-    campaign: {
-      title: 'Jon Hoadley for Congress 🇺🇸',
-      link: 'https://www.app.referenda.io/relay.stealthy.id/?wv=1',
-    },
-    loginPage: {                                            // IntroductionScreen.js
-      title: 'Jon Hoadley for Congress 🇺🇸',
-      description: 'Referenda makes your voice heard by your political leaders for actionable change.',
-      photoUrl: '../Assets/images/launch5-candidate.png',
-      photo: require('../Assets/images/launch5-candidate.png'),
-    },
-    fundraising: {
-      title: 'Jon Hoadley for Congress 🇺🇸',                      // CampaignerMenuScreen.js
-      photoUrl: '../Assets/avatars/hoadley.png',             // CampaignerMenuScreen.js
-      photo: require('../Assets/avatars/hoadley.png'),
-      label: 'Jon Hoadley - 2020 Campaign',              // DonationBar.js, SocialBar
-      campaignMessage: 'Donation to Jon Hoadley\'s Campaign',    // DonationSagas.js
-      receiptMessageWeb: 'Thank you for your donation to Jon Hoadley\'s Campaign. Here\'s a helpful link for you to donate. We will notify you when the Referenda App is ready!',
-      receiptMessage: 'Thank you for your donation to Jon Hoadley\'s Campaign. We will notify you when the Referenda App is ready!',
-      bitcoinUrl: 'https://checkout.opennode.co/p/55769f7d-ebcd-4543-8bbc-bedbe8c9dbe0',
-    },
-  },
-  {
     name: 'Kim Olson',
     id: undefined,
     district: 'TX-24',
@@ -178,6 +126,58 @@ const candidates = [
       campaignMessage: 'Donation to Kim Olson\'s Campaign',    // DonationSagas.js
       receiptMessageWeb: 'Thank you for your donation to Kim Olson\'s Campaign. Here\'s a helpful link for you to donate. We will notify you when the Referenda App is ready!',
       receiptMessage: 'Thank you for your donation to Kim Olson\'s Campaign. We will notify you when the Referenda App is ready!',
+      bitcoinUrl: 'https://checkout.opennode.co/p/55769f7d-ebcd-4543-8bbc-bedbe8c9dbe0',
+    },
+  },
+  {
+    name: 'Marc Flores',
+    id: undefined,
+    district: 'TX-18',
+    districtType: 'Congress',
+    campaign: {
+      title: 'Marc Flores for Congress 🇺🇸',
+      link: 'https://www.app.referenda.io/marcflores.id.blockstack/?wv=1',
+    },
+    loginPage: {                                            // IntroductionScreen.js
+      title: 'Marc Flores for Congress 🇺🇸',
+      description: 'Referenda makes your voice heard by your political leaders for actionable change.',
+      photoUrl: '../Assets/images/launch8-candidate.jpg',
+      photo: require('../Assets/images/launch8-candidate.jpg'),
+    },
+    fundraising: {
+      title: 'Marc Flores for Congress 🇺🇸',                      // CampaignerMenuScreen.js
+      photoUrl: '../Assets/avatars/marc.jpg',             // CampaignerMenuScreen.js
+      photo: require('../Assets/avatars/marc.jpg'),
+      label: 'Marc Flores - 2020 Campaign',              // DonationBar.js, SocialBar
+      campaignMessage: 'Donation to Marc Flores\'s Campaign',    // DonationSagas.js
+      receiptMessageWeb: 'Thank you for your donation to Marc Flores\'s Campaign. Here\'s a helpful link for you to donate. We will notify you when the Referenda App is ready!',
+      receiptMessage: 'Thank you for your donation to Marc Flores\'s Campaign. We will notify you when the Referenda App is ready!',
+      bitcoinUrl: 'https://checkout.opennode.co/p/55769f7d-ebcd-4543-8bbc-bedbe8c9dbe0',
+    },
+  },
+  {
+    name: 'Sri Kulkarni',
+    id: undefined,
+    district: 'TX-22',
+    districtType: 'Congress',
+    campaign: {
+      title: 'Sri Kulkarni for Congress 🇺🇸',
+      link: 'https://www.app.referenda.io/srikulkarni.id.blockstack/?wv=1',
+    },
+    loginPage: {                                            // IntroductionScreen.js
+      title: 'Sri Kulkarni for Congress 🇺🇸',
+      description: 'Referenda makes your voice heard by your political leaders for actionable change.',
+      photoUrl: '../Assets/images/launch9-candidate.png',
+      photo: require('../Assets/images/launch9-candidate.png'),
+    },
+    fundraising: {
+      title: 'Ammar for Congress 🇺🇸',                       // CampaignerMenuScreen.js
+      photoUrl: '../Assets/avatars/sri.png',             // CampaignerMenuScreen.js
+      photo: require('../Assets/avatars/sri.png'),
+      label: 'Sri Kulkarni - 2020 Campaign',          // DonationBar.js, SocialBar
+      campaignMessage: 'Donation to Sri Kulkarni\'s Campaign',    // DonationSagas.js
+      receiptMessageWeb: 'Thank you for your donation to Sri Kulkarni\'s Campaign. Here\'s a helpful link for you to donate. We will notify you when the Referenda App is ready!',
+      receiptMessage: 'Thank you for your donation to Sri\'s Campaign. We will notify you when the Referenda App is ready!',
       bitcoinUrl: 'https://checkout.opennode.co/p/55769f7d-ebcd-4543-8bbc-bedbe8c9dbe0',
     },
   },
