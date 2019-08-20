@@ -29,13 +29,23 @@ export default class SignUpBox extends React.Component {
     this.state = {
       errorUsername: false,
       errorEmail: false,
-      loading: false
+      loading: false,
+      showSignUpDialog: true,
     }
     this.simpleIdData = {
       userName: '',
       email: '',
       password: '',
     }
+    this.key = 0
+  }
+
+  getUniqueKey = () => {
+    return `${Date.now()}_${this.key++}`
+  }
+
+  handleSignUpSignInToggle = () => {
+    this.setState({showSignUpDialog: !this.state.showSignUpDialog})
   }
 
   handleSignUpTextChange = (aFieldName, aFieldValue) => {
@@ -142,10 +152,23 @@ export default class SignUpBox extends React.Component {
         </Button>
       ) : undefined
 
-    const simpleIdInput = (C.ENABLE_SIMPLE_ID) ?
-      (
-        <View>
-          <Item error={this.state.errorUsername}>
+    let signUpToggle = undefined
+    let simpleIdInput = undefined
+    let simpleIdButton = undefined
+    let simpleIdSpacer = undefined
+
+    if (C.ENABLE_SIMPLE_ID) {
+      let signUpToggleText = (this.state.showSignUpDialog) ?
+        'sign in to your account.' : 'sign up for an account.'
+      signUpToggle = (
+        <TouchableHighlight onPress={this.handleSignUpSignInToggle}>
+          <Text style={{fontFamily: 'arial', color:'white'}}>or  <Text style={{fontFamily: 'arial', color:'rgb(98, 177, 246)'}}>{signUpToggleText}</Text></Text>
+        </TouchableHighlight>
+      )
+
+      let simpleIdInputElements = [
+        (
+          <Item key={this.getUniqueKey()} error={this.state.errorUsername}>
             <Input
               id='userNameInput'
               style={styles.inputStyleWithError}
@@ -155,7 +178,12 @@ export default class SignUpBox extends React.Component {
               placeholderTextColor='rgb(255,255,255)' />
               {(this.state.errorUsername) ? <Icon name='close-circle' /> : null}
           </Item>
-          <Item error={this.state.errorEmail}>
+        )
+      ]
+
+      if (this.state.showSignUpDialog) {
+        simpleIdInputElements.push(
+          <Item key={this.getUniqueKey()} error={this.state.errorEmail}>
             <Input
               id='emailInput'
               style={styles.inputStyleWithError}
@@ -165,38 +193,54 @@ export default class SignUpBox extends React.Component {
               placeholderTextColor='rgb(255,255,255)' />
               {(this.state.errorEmail) ? <Icon name='close-circle' /> : null}
           </Item>
-          <Item>
-            <Input
-              id='passwordInput'
-              style={styles.inputStyleWithError}
-              multiline={false}
-              onChangeText={(text)=>{this.handleSignUpTextChange('password', text)}}
-              placeholder='Password'
-              placeholderTextColor='rgb(255,255,255)' />
-          </Item>
-        </View>
-      ) : undefined
+        )
+      }
 
-    const simpleIdButton = (C.ENABLE_SIMPLE_ID) ?
-      (
-        <TouchableHighlight style={buttonTouchableHighlightStyle} onPress={() => {
+      simpleIdInputElements.push(
+        <Item key={this.getUniqueKey()}>
+          <Input
+            id='passwordInput'
+            style={styles.inputStyleWithError}
+            multiline={false}
+            onChangeText={(text)=>{this.handleSignUpTextChange('password', text)}}
+            placeholder='Password'
+            placeholderTextColor='rgb(255,255,255)' />
+        </Item>
+      )
+
+      simpleIdInput = (
+        <View>
+          {simpleIdInputElements}
+        </View>
+      )
+
+
+      simpleIdButton = (
+        <TouchableHighlight
+          style={buttonTouchableHighlightStyle}
+          onPress={() => {
           this.setState({loading: true})
           this.handleSignUp()
         }}>
-          <View style={[buttonWrapperViewStyle, {backgroundColor: '#fffff'}]} >
+          <View style={[buttonWrapperViewStyle, {backgroundColor: 'black'}]} >
             <FitImage resizeMode="contain" style={[buttonFitImageStyle, {width:'100%'}]} source={require('../assets/loginButton.png')} />
           </View>
         </TouchableHighlight>
-      ) : undefined
+      )
 
-    const simpleIdSpacer = (C.ENABLE_SIMPLE_ID) ? ( <View style={{height:15}} /> ) : undefined
+      simpleIdSpacer = ( <View style={{height:15}} /> )
+    }
+
     const activityIndicator = (this.state.loading) ? <ActivityIndicator size="large" color="#0000ff" /> : null
 
     return (
       <View style={{height:450, width:300, paddingVertical:10, paddingHorizontal:15, backgroundColor:C.DIALOG_BOX_BACKGROUND}}>
-        <View style={{flexDirection:'row', alignItems:'flex-start', marginBottom:30}}>
-          <Text style={[styles.headerLogoText, {color:'white', fontSize:32}]}>{headingText}</Text>
-          {closeButton}
+        <View style={{marginBottom:30}}>
+          <View style={{flexDirection:'row', alignItems:'flex-start'}}>
+            <Text style={[styles.headerLogoText, {color:'white', fontSize:32}]}>{headingText}</Text>
+            {closeButton}
+          </View>
+          {signUpToggle}
         </View>
         {simpleIdInput}
         <View style={{height:15}} />

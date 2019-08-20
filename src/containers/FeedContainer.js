@@ -128,6 +128,8 @@ export default class Feed extends Component {
     //
     // TODO: tie this to firebase to now for our list of customers.
     this.campaignUser = false
+
+    this.key = 0
   }
 
   updateUserSession = (aUserSession) => {
@@ -909,8 +911,8 @@ export default class Feed extends Component {
     return width
   }
 
-  getUniqueKey() {
-    return Date.now()
+  getUniqueKey = () => {
+    return `${Date.now()}_${this.key++}`
   }
 
   renderItem = ({ item }) => {
@@ -1133,7 +1135,7 @@ export default class Feed extends Component {
     }
 
     return (
-      <View style={{alignItems:'center'}}>
+      <View key={this.getUniqueKey()} style={{alignItems:'center'}}>
         <View style={widthStyle}>
           <Card style={{flex: 0}}>
             <Amplitude eventProperties={{campaign: this.campaignName, postId: item.id, userId: firebaseInstance.getUserId()}}>
@@ -2155,7 +2157,7 @@ export default class Feed extends Component {
     const feeds = []
     for (const feedColumn of feedColumns) {
       feeds.push(
-        <View style={{flexDirection:'column', maxWidth:C.MIN_CARD_WIDTH}}>
+        <View key={this.getUniqueKey()} style={{flexDirection:'column', maxWidth:C.MIN_CARD_WIDTH}}>
           {feedElements[feedColumn]}
         </View>
       )
@@ -2168,7 +2170,7 @@ export default class Feed extends Component {
 
     const signUpBoxElement = (!this.state.isSignedIn && this.state.width >= 2*C.MIN_CARD_WIDTH) ?
       ( <SignUpBox
-          title="Login and have your voice matter!"
+          title="Sign-up to like posts and more!"
           styles={styles}
           blockstackSignUp={this.handleLogin}
           updateUserSessionFn={this.updateUserSession} /> ) : undefined
@@ -2176,7 +2178,7 @@ export default class Feed extends Component {
     const signUpBoxElementNarrow = (!this.state.isSignedIn && this.state.width < 2*C.MIN_CARD_WIDTH) ?
     ( <View style={{width:C.MIN_CARD_WIDTH, backgroundColor:C.DIALOG_BOX_BACKGROUND, alignItems:'center'}}>
         <SignUpBox
-          title="Connect with movements that matter."
+          title="Sign-up to like posts and more!"
           styles={styles}
           blockstackSignUp={this.handleLogin}
           updateUserSessionFn={this.updateUserSession} />
