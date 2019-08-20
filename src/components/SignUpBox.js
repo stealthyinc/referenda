@@ -67,6 +67,7 @@ export default class SignUpBox extends React.Component {
         this.setState({errorEmail: true, loading: false})
       }
       else {
+        debugger
         const credObj = {
             id: userName, //This is the name the user selects and will be checked against existing registered names automatically.
             password, //This should be a complex password supplied by the user
@@ -77,8 +78,17 @@ export default class SignUpBox extends React.Component {
             appOrigin: "https://www.app.referenda.io", //This is the domain for your app
             scopes: ['store_write', 'publish_data', 'email'] //These are the scopes you are requesting to use
         }
+        const config = {
+          apiKey: process.env.REACT_APP_SIMPLE_ID_API_KEY,
+          authProviders: ['blockstack'],
+          storageProviders: ['blockstack'],
+          appOrigin: "https://www.app.referenda.io",
+          scopes: ['publish_data', 'store_write', 'email']
+        }
         try {
-          const create = await createUserAccount(credObj, appObj);
+          const create = await createUserAccount(credObj, config);
+          debugger
+          console.log("USER ACCOUNT CREATED", create)
           const { message, body } = create
           if(message === "name taken") {
             //show some error
@@ -184,7 +194,7 @@ export default class SignUpBox extends React.Component {
           this.handleSignUp()
         }}>
           <View style={[buttonWrapperViewStyle, {backgroundColor: '#fffff'}]} >
-            <FitImage resizeMode="contain" style={[buttonFitImageStyle, {width:'100%'}]} source={require('../assets/loginButton.png')} />
+            <FitImage resizeMode="contain" style={[buttonFitImageStyle, {width:'100%'}]} source={require('../assets/signupButton.png')} />
           </View>
         </TouchableHighlight>
       ) : undefined

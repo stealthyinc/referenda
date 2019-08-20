@@ -34,7 +34,7 @@
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
     "runes": "^0.4.3",
-    "simpleid-js-sdk": "^0.1.5",
+    "simpleid-js-sdk": "^0.3.1",
     "victory-native": "^32.0.2"
   },
   "scripts": {
