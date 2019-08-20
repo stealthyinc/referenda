@@ -1,5 +1,11 @@
 import React from 'react'
-import { Alert, Image, View, TouchableHighlight } from 'react-native';
+import {
+  ActivityIndicator,
+  Alert,
+  Image,
+  View,
+  TouchableHighlight
+} from 'react-native'
 import {
   Button,
   Icon,
@@ -7,11 +13,8 @@ import {
   Item,
   Text
 } from 'native-base'
-
 import FitImage from 'react-native-fit-image';
-
 import { createUserAccount } from 'simpleid-js-sdk'
-
 const C = require('../utils/constants.js')
 
 function validateEmail (email) {
@@ -26,6 +29,7 @@ export default class SignUpBox extends React.Component {
     this.state = {
       errorUsername: false,
       errorEmail: false,
+      loading: false
     }
     this.simpleIdData = {
       userName: '',
@@ -56,39 +60,45 @@ export default class SignUpBox extends React.Component {
     console.log(`simpleIdData: ${JSON.stringify(this.simpleIdData)}`)
     const { userName, email, password } = this.simpleIdData
     if (!userName.length) {
-      this.setState({errorUsername: true})
-    }
-    if (!validateEmail(email)) {
-      this.setState({errorEmail: true})
+      this.setState({errorUsername: true, loading: false})
     }
     else {
-      const credObj = {
-          id: userName, //This is the name the user selects and will be checked against existing registered names automatically.
-          password, //This should be a complex password supplied by the user
-          hubUrl: "http://hub.blockstack.org", //This will likely be "http://hub.blockstack.org" but can be any storage hub you allow
-          email //Email address for the user, used during account recovery
+      if (!validateEmail(email)) {
+        this.setState({errorEmail: true, loading: false})
       }
-      const appObj = {
-          appOrigin: "https://www.app.referenda.io", //This is the domain for your app
-          scopes: ['store_write', 'publish_data', 'email'] //These are the scopes you are requesting to use
-      }
-
-      const create = await createUserAccount(credObj, appObj);
-      const { message, body } = create
-      if(message === "name taken") {
-        //show some error
-        Alert(message)
-        this.setState({errorUsername: true})
-      } else {
-        localStorage.setItem('blockstack-session', JSON.stringify(body.body.store.sessionData));
-        if (message === "Need to go through recovery flow") {
-          Alert(message)
+      else {
+        const credObj = {
+            id: userName, //This is the name the user selects and will be checked against existing registered names automatically.
+            password, //This should be a complex password supplied by the user
+            hubUrl: "http://hub.blockstack.org", //This will likely be "http://hub.blockstack.org" but can be any storage hub you allow
+            email //Email address for the user, used during account recovery
         }
-        else if(message === "successfully created user session") {
-          this.updateUserSessionFn(body.body)
+        const appObj = {
+            appOrigin: "https://www.app.referenda.io", //This is the domain for your app
+            scopes: ['store_write', 'publish_data', 'email'] //These are the scopes you are requesting to use
+        }
+        try {
+          const create = await createUserAccount(credObj, appObj);
+          const { message, body } = create
+          if(message === "name taken") {
+            //show some error
+            Alert(message)
+            this.setState({errorUsername: true, loading: false})
+          } else {
+            localStorage.setItem('blockstack-session', JSON.stringify(body.body.store.sessionData));
+            if (message === "Need to go through recovery flow") {
+              Alert(message)
+            }
+            else if(message === "successfully created user session") {
+              this.updateUserSessionFn(body.body)
+            }
+          }
+          console.log(create)
+        }
+        catch (error) {
+          console.log(error)
         }
       }
-      console.log(create)
     }
   }
 
@@ -97,7 +107,7 @@ export default class SignUpBox extends React.Component {
 
     const buttonTouchableHighlightStyle = {
       width:'100%',
-      height:50,
+      height:45,
       flexDirection:'column',
       justifyContent: 'center',
       alignItems:'center'
@@ -115,7 +125,7 @@ export default class SignUpBox extends React.Component {
       // borderWidth:2
     }
     const buttonFitImageStyle = {
-      backgroundColor: '#003dff',
+      // backgroundColor: '#003dff',
       height:'auto',
       // borderStyle:'solid',
       // borderColor:'red',
@@ -169,14 +179,18 @@ export default class SignUpBox extends React.Component {
 
     const simpleIdButton = (C.ENABLE_SIMPLE_ID) ?
       (
-        <TouchableHighlight style={buttonTouchableHighlightStyle} onPress={this.handleSignUp}>
-          <View style={[buttonWrapperViewStyle, {backgroundColor: '#003dff'}]} >
-            <FitImage resizeMode="contain" style={[buttonFitImageStyle, {width:'75%'}]} source={require('../assets/simple.png')} />
+        <TouchableHighlight style={buttonTouchableHighlightStyle} onPress={() => {
+          this.setState({loading: true})
+          this.handleSignUp()
+        }}>
+          <View style={[buttonWrapperViewStyle, {backgroundColor: '#fffff'}]} >
+            <FitImage resizeMode="contain" style={[buttonFitImageStyle, {width:'100%'}]} source={require('../assets/loginButton.png')} />
           </View>
         </TouchableHighlight>
       ) : undefined
 
     const simpleIdSpacer = (C.ENABLE_SIMPLE_ID) ? ( <View style={{height:15}} /> ) : undefined
+    const activityIndicator = (this.state.loading) ? <ActivityIndicator size="large" color="#0000ff" /> : null
 
     return (
       <View style={{height:450, width:300, paddingVertical:10, paddingHorizontal:15, backgroundColor:C.DIALOG_BOX_BACKGROUND}}>

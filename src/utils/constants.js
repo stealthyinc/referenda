@@ -49,6 +49,6 @@ export const MAX_CARD_WIDTH = 512
 export const MIN_CARD_WIDTH = 400
 
 export const DIALOG_BOX_BACKGROUND = 'rgba(100,100,100,1.0)'
-export const ENABLE_SIMPLE_ID = false
+export const ENABLE_SIMPLE_ID = true
 
 export const MIN_AXIS_CHANGE_TO_RERENDER_PX = 25

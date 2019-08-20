@@ -184,7 +184,7 @@ export default class Feed extends Component {
     // Campaign check:
     // - if a user ID is a campaign, they get to add, delete, and pin posts,
     //   otherwise they don't.
-    const campaignIds = ['alex.stealthy.id']
+    const campaignIds = ['alex.stealthy.id', 'ginaortiz.id.blockstack']
     if (userData && campaignIds.includes(userData.username)) {
       this.campaignUser = true
     }
@@ -305,7 +305,7 @@ export default class Feed extends Component {
         if(!userData.username) {
           throw new Error('This app requires a username.')
         }
-        window.location = `/${userData.username}`
+        window.location = `/`
         const person = (userData.username) ? new Person(userData.profile) : false;
         this.setState({userData, person, isSignedIn: true})
       })
@@ -2168,7 +2168,7 @@ export default class Feed extends Component {
 
     const signUpBoxElement = (!this.state.isSignedIn && this.state.width >= 2*C.MIN_CARD_WIDTH) ?
       ( <SignUpBox
-          title="Connect with movements that matter.            Login and have your voice matter!"
+          title="Login and have your voice matter!"
           styles={styles}
           blockstackSignUp={this.handleLogin}
           updateUserSessionFn={this.updateUserSession} /> ) : undefined
